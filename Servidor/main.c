@@ -2,23 +2,32 @@
 
 int main()
 {
-    int resultado;
+    ///Variables de Winsocket
     WSADATA wsaData;
+    ///Variables de servidor
     struct sockaddr_in direccionServidor;
-    SOCKET sock;
-    SOCKET cliente1, cliente2;
-    u_long modo = 1; //no bloqueante
-    struct sockaddr_in direccionCliente1, direccionCliente2;
-    int tamCliente;
+    u_long modoSocket = 1; //Sockets modo NO bloqueante
+    ///Variables de mensajes
     char buffer [MAX_BUFFER];
     int bytesRecibidos;
 
+    SOCKET cliente1, cliente2;
+    struct sockaddr_in direccionCliente1, direccionCliente2;
+    int tamCliente;
+
+
+
+
+    ///Inicializo Winsock
+    int resultado;
     resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
     if (resultado != 0)
     {
         printf ("Error al inicializar Winsock: %d.\n", resultado);
         return 1;
     }
+    ///Inicializo socket de listen
+    SOCKET sock;
     sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sock == INVALID_SOCKET)
     {
@@ -26,9 +35,11 @@ int main()
         WSACleanup ();
         return 1;
     }
+    ///Lo configuro
     direccionServidor.sin_family = AF_INET;
-    direccionServidor.sin_port = htons (PUERTO);
-    direccionServidor.sin_addr.s_addr = INADDR_ANY;
+    direccionServidor.sin_port = htons (PUERTO); //Escucha en este puerto
+    direccionServidor.sin_addr.s_addr = INADDR_ANY; //Acepta cualquier direccion IP
+    ///Lo asigno
     if (bind (sock, (struct sockaddr*)&direccionServidor, sizeof (direccionServidor)) == SOCKET_ERROR)
     {
         printf ("Error en el bind: %d.\n", WSAGetLastError ());
@@ -36,6 +47,7 @@ int main()
         WSACleanup ();
         return 1;
     }
+    ///Lo pongo en modo escucha
     if (listen (sock, SOMAXCONN) == SOCKET_ERROR)
     {
         printf ("Error en el listen: %d.\n", WSAGetLastError ());
@@ -44,6 +56,7 @@ int main()
         return 1;
     }
 
+    /*
     tamCliente = sizeof (direccionCliente1);
     cliente1 = accept (sock, (struct sockaddr*)&direccionCliente1, &tamCliente);
     if (cliente1 == INVALID_SOCKET)
@@ -66,6 +79,7 @@ int main()
     }
     ioctlsocket (cliente2, FIONBIO, &modo);
     printf ("Cliente 2 conectado.\n");
+    */
 
     while (1)
     {
@@ -81,6 +95,8 @@ int main()
             buffer [bytesRecibidos] = '\0';
             send (cliente1, buffer, strlen (buffer), 0);
         }
+
+        Sleep (1000); //Para evitar ciclos innecesarios
     }
 
     closesocket (cliente1);
@@ -90,3 +106,24 @@ int main()
 
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
