@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1733615966 source:c:\users\ignac\desktop\test\cliente\main.c
+	"main.h"
+
+1733608648 c:\users\ignac\desktop\test\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+
