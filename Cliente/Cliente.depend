@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1734411505 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+	"main.h"
+
+1733619834 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+

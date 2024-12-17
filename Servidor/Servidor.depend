@@ -11,3 +11,20 @@
 1733601234 c:\users\ignac\desktop\app de mensajes\servidor\main.h
 	"../ListaSimple/listaSimple.h"
 
+1733601279 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1733600964 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+
+1734411474 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+	"main.h"
+
+1734324617 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	"../ListaSimple/listaSimple.h"
+

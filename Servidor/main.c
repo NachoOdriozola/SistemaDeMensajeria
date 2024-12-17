@@ -81,6 +81,7 @@ int main()
             buffer [bytesRecibidos] = '\0';
             send (cliente1, buffer, strlen (buffer), 0);
         }
+        Sleep (100);
     }
 
     closesocket (cliente1);

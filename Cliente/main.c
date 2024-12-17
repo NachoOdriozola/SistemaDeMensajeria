@@ -27,7 +27,7 @@ int main()
 
     direccionServidor.sin_family = AF_INET;
     direccionServidor.sin_port = htons (PUERTO);
-    direccionServidor.sin_addr.s_addr = inet_addr ("200.127.235.73");
+    direccionServidor.sin_addr.s_addr = inet_addr ("127.0.0.1");
     if (connect (sock, (struct sockaddr*)&direccionServidor, sizeof (direccionServidor)) != SOCKET_ERROR)
     {
         printf ("Error al conectarse con el servidor: %d.\n", WSAGetLastError ());
@@ -50,6 +50,7 @@ int main()
             buffer [bytesRecibidos] = '\0';
             printf ("Mensaje recibido: %s", buffer);
         }
+        Sleep (100);
     }
 
     closesocket (sock);
