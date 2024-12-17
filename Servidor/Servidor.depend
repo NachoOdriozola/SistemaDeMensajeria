@@ -31,3 +31,38 @@
 	<ws2tcpip.h>
 	"../ListaSimple/listaSimple.h"
 
+1734473140 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1734473145 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1734473185 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+	"funciones.h"
+
+1734473018 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1734473297 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+	"main.h"
+
+1734463424 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+

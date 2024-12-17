@@ -3,7 +3,7 @@
 int main()
 {
     int resultado;
-    char buffer [MAX_BUFFER];
+    char buffer [MAX_BUFFER] = "\0";
     int bytesRecibidos;
     u_long modo = 1; //no bloqueante
     WSADATA wsaData;
@@ -27,8 +27,8 @@ int main()
 
     direccionServidor.sin_family = AF_INET;
     direccionServidor.sin_port = htons (PUERTO);
-    direccionServidor.sin_addr.s_addr = inet_addr ("200.127.235.73");
-    if (connect (sock, (struct sockaddr*)&direccionServidor, sizeof (direccionServidor)) != SOCKET_ERROR)
+    direccionServidor.sin_addr.s_addr = inet_addr ("127.0.0.1");
+    if (connect (sock, (struct sockaddr*)(&direccionServidor), sizeof (direccionServidor)) != SOCKET_ERROR)
     {
         printf ("Error al conectarse con el servidor: %d.\n", WSAGetLastError ());
         closesocket (sock);
@@ -36,8 +36,8 @@ int main()
         return 1;
     }
     printf ("Conectado al servidor.\n");
-
-    while (1)
+    printf ("Escriba 'x' para cerrar.\n");
+    while (strcmp (buffer, "x\n") != 0)
     {
         if (_kbhit ())
         {
@@ -50,10 +50,26 @@ int main()
             buffer [bytesRecibidos] = '\0';
             printf ("Mensaje recibido: %s", buffer);
         }
+        Sleep (10);
     }
 
     closesocket (sock);
     WSACleanup ();
 
+    system ("pause");
+
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

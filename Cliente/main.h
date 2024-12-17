@@ -10,6 +10,6 @@
 
 #define PUERTO 8080
 
-#define MAX_BUFFER 201
+#define MAX_BUFFER 512
 
 #endif // MAIN_H_INCLUDED
