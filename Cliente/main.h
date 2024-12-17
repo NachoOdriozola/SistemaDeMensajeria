@@ -8,8 +8,6 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-#define PUERTO 8080
-
-#define MAX_BUFFER 201
+#include "funciones.h"
 
 #endif // MAIN_H_INCLUDED

@@ -2,58 +2,47 @@
 
 int main()
 {
-    int resultado;
-    char buffer [MAX_BUFFER];
-    int bytesRecibidos;
-    u_long modo = 1; //no bloqueante
-    WSADATA wsaData;
-    SOCKET sock;
-    struct sockaddr_in direccionServidor;
+    s_estadoAplicacion app;
+    s_recursos recursos;
+    s_socket socket;
 
-    resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
-    if (resultado != 0)
+    inicializar (&app, &recursos, &socket);
+    setup (&app, &recursos, &socket);
+    while (app.aplicacionEjecutandose)
     {
-        printf ("Error al inicializar Winsock: %d.\n", resultado);
-        return 1;
+        accion (&app, &recursos, &socket);
+        actualizar (&recursos, &socket);
+        renderizar (&app, &recursos);
     }
-    sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sock == INVALID_SOCKET)
-    {
-        printf ("Error al crear el socket: %d.\n", WSAGetLastError ());
-        WSACleanup ();
-        return 1;
-    }
-    ioctlsocket (sock, FIONBIO, &modo);
+    liberar (&app, &recursos, &socket);
+    system ("pause");
 
-    direccionServidor.sin_family = AF_INET;
-    direccionServidor.sin_port = htons (PUERTO);
-    direccionServidor.sin_addr.s_addr = inet_addr ("200.127.235.73");
-    if (connect (sock, (struct sockaddr*)&direccionServidor, sizeof (direccionServidor)) != SOCKET_ERROR)
-    {
-        printf ("Error al conectarse con el servidor: %d.\n", WSAGetLastError ());
-        closesocket (sock);
-        WSACleanup ();
-        return 1;
-    }
-    printf ("Conectado al servidor.\n");
-
-    while (1)
-    {
-        if (_kbhit ())
-        {
-            fgets (buffer, sizeof (buffer), stdin);
-            send (sock, buffer, strlen (buffer), 0);
-        }
-        bytesRecibidos = recv (sock, buffer, sizeof (buffer) - 1, 0);
-        if (bytesRecibidos > 0)
-        {
-            buffer [bytesRecibidos] = '\0';
-            printf ("Mensaje recibido: %s", buffer);
-        }
-    }
-
-    closesocket (sock);
-    WSACleanup ();
-
-    return 0;
+    return OK;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
