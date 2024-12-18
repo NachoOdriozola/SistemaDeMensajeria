@@ -74,7 +74,7 @@ int recibirMensajes (s_lista *listaClientes, char *buffer)
         if (bytesRecibidos > 0)
         {
             buffer += bytesRecibidos;
-            buffer = '\0';
+            *buffer = '\0';
             return MENSAJE_RECIBIDO;
         }
         listaClientes = &((*listaClientes)->sig);

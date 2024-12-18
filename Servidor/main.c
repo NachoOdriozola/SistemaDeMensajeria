@@ -20,10 +20,7 @@ int main ()
     {
         aceptarCliente (&servidor, &listaClientes);
         if (recibirMensajes (&listaClientes, buffer))
-        {
             enviarMensajes (&listaClientes, buffer);
-            *buffer = '\0';
-        }
 
         if (kbhit ())
         {
@@ -32,7 +29,6 @@ int main ()
             if (ingresoTecla != TECLA_CERRAR_SERVIDOR)
                     printf ("Tecla incorrecta.\nPresione '%c' para apagar servidor.\n", TECLA_CERRAR_SERVIDOR);
         }
-
         Sleep (10);
     }
 
