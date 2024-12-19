@@ -1,29 +1,15 @@
 #include "funciones.h"
 
-void inicializar (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
+///INICIALIZACION
+void inicializar (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock)
 {
     ///INICIALIZAR APLICACION
     app->aplicacionEjecutandose = CONTINUAR_APLICACION;
 
-    app->renderizado = sfRenderWindow_create (sfVideoMode_getDesktopMode (), "App", sfDefaultStyle, NULL);
+    app->renderizado = sfRenderWindow_create ((sfVideoMode){1920, 1080}, "App", sfDefaultStyle, NULL);
     if (!app->renderizado)
     {
         perror ("ERROR - Inicializar renderizado.\n");
-        app->aplicacionEjecutandose = CERRAR_APLICACION;
-    }
-
-
-    ///INICIALIZAR RECURSOS
-    recursos->texto.fuente = sfFont_createFromFile ("fuente.ttf");
-    if (!recursos->texto.fuente)
-    {
-        perror ("ERROR - Inicializar fuente.\n");
-        app->aplicacionEjecutandose = CERRAR_APLICACION;
-    }
-    recursos->texto.texto = sfText_create ();
-    if (!recursos->texto.texto)
-    {
-        perror ("ERROR - Inicializar texto.\n");
         app->aplicacionEjecutandose = CERRAR_APLICACION;
     }
 
@@ -44,19 +30,57 @@ void inicializar (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
         WSACleanup ();
         app->aplicacionEjecutandose = CERRAR_APLICACION;
     }
+
+
+    ///INICIALIZAR recursosGraficos
+    recursosGraficos->texto.fuente = sfFont_createFromFile ("fuente.ttf");
+    if (!recursosGraficos->texto.fuente)
+    {
+        perror ("ERROR - Inicializar fuente.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->texto.texto = sfText_create ();
+    if (!recursosGraficos->texto.texto)
+    {
+        perror ("ERROR - Inicializar texto.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->elementos.recIzquierda = sfRectangleShape_create ();
+    if (!recursosGraficos->elementos.recIzquierda)
+    {
+        perror ("ERROR - Inicializar rectangulo de la izquierda.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->elementos.barraSeparacionUsuarios = sfRectangleShape_create ();
+    if (!recursosGraficos->elementos.barraSeparacionUsuarios)
+    {
+        perror ("ERROR - Inicializar barra de separacion de usuarios activos.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->elementos.barraSeparacionNombre = sfRectangleShape_create ();
+    if (!recursosGraficos->elementos.barraSeparacionNombre)
+    {
+        perror ("ERROR - Inicializar barra de separacion de nombre de usuarios.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->elementos.textoNombreUsuario = sfText_create ();
+    if (!recursosGraficos->elementos.textoNombreUsuario)
+    {
+        perror ("ERROR - Inicializar texto nombre de usuario.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
+    recursosGraficos->elementos.textoAuxUsuariosActivos = sfText_create ();
+    if (!recursosGraficos->elementos.textoAuxUsuariosActivos)
+    {
+        perror ("ERROR - Inicializar texto auxiliar usuarios activos.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+    }
 }
 
-void setup (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
+void setup (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock)
 {
     ///SETUP APLICACION
     sfRenderWindow_setFramerateLimit (app->renderizado, 60);
-
-
-    ///SETUP RECURSOS
-    sfText_setFont (recursos->texto.texto, recursos->texto.fuente);
-    sfText_setPosition (recursos->texto.texto, (sfVector2f){0, 0});
-    sfText_setCharacterSize (recursos->texto.texto, 24);
-    sfText_setColor (recursos->texto.texto, sfColor_fromRGB (255, 255, 255));
 
 
     ///SETUP SOCKET
@@ -73,9 +97,73 @@ void setup (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
     }
     else
         printf ("Conectado al servidor.\n");
+
+
+    ///SETUP recursosGraficos
+    ///TEXTO
+    sfText_setFont (recursosGraficos->texto.texto, recursosGraficos->texto.fuente);
+    sfText_setPosition (recursosGraficos->texto.texto, (sfVector2f){0, 0});
+    sfText_setCharacterSize (recursosGraficos->texto.texto, 24);
+    sfText_setColor (recursosGraficos->texto.texto, sfColor_fromRGB (255, 255, 255));
+
+    ///ELEMENTOS
+    //rectangulo de la izquierda
+    sfRectangleShape_setFillColor (recursosGraficos->elementos.recIzquierda, sfColor_fromRGB (232, 217, 205));
+    sfRectangleShape_setSize (recursosGraficos->elementos.recIzquierda, (sfVector2f){300, 1080});
+    sfRectangleShape_setPosition (recursosGraficos->elementos.recIzquierda, (sfVector2f){0, 0});
+
+    //barra separacion usuarios activos
+    sfRectangleShape_setFillColor (recursosGraficos->elementos.barraSeparacionUsuarios, sfColor_fromRGB (82, 61, 53));
+    sfRectangleShape_setSize (recursosGraficos->elementos.barraSeparacionUsuarios, (sfVector2f){250, 3});
+    sfRectangleShape_setPosition (recursosGraficos->elementos.barraSeparacionUsuarios, (sfVector2f){24, 120});
+
+    //barra separacion nombre de usuario
+    sfRectangleShape_setFillColor (recursosGraficos->elementos.barraSeparacionNombre, sfColor_fromRGB (82, 61, 53));
+    sfRectangleShape_setSize (recursosGraficos->elementos.barraSeparacionNombre, (sfVector2f){250, 3});
+    sfRectangleShape_setPosition (recursosGraficos->elementos.barraSeparacionNombre, (sfVector2f){24, 960});
+
+    //texto nombre de usuario
+    sfText_setFont (recursosGraficos->elementos.textoNombreUsuario, recursosGraficos->texto.fuente);
+    sfText_setString (recursosGraficos->elementos.textoNombreUsuario, "mi usuario");
+    sfText_setPosition (recursosGraficos->elementos.textoNombreUsuario, (sfVector2f){60, 1000});
+    sfText_setColor (recursosGraficos->elementos.textoNombreUsuario, sfColor_fromRGB (34, 48, 48));
+    sfText_setCharacterSize (recursosGraficos->elementos.textoNombreUsuario, 22);
+
+    //texto auxiliar usuarios activos
+    sfText_setFont (recursosGraficos->elementos.textoAuxUsuariosActivos, recursosGraficos->texto.fuente);
+    sfText_setString (recursosGraficos->elementos.textoAuxUsuariosActivos, "Usuarios activos");
+    sfText_setPosition (recursosGraficos->elementos.textoAuxUsuariosActivos, (sfVector2f){60, 50});
+    sfText_setColor (recursosGraficos->elementos.textoAuxUsuariosActivos, sfColor_fromRGB (34, 48, 48));
+    sfText_setCharacterSize (recursosGraficos->elementos.textoAuxUsuariosActivos, 28);
 }
 
-void accion (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
+
+
+///INTERFAZ DE INICIO
+void accionInicio ()
+{
+
+}
+
+void actualizarInicio ()
+{
+
+}
+
+void renderizarInicio ()
+{
+
+}
+
+void liberarInicio ()
+{
+
+}
+
+
+
+///INTERFAZ DE MENSAJES
+void accionMensajes (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock)
 {
     sfEvent evento;
     char buffer [MAX_BUFFER];
@@ -92,7 +180,7 @@ void accion (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
     }
 }
 
-void actualizar (s_recursos *recursos, s_socket *sock)
+void actualizarMensajes (s_recursosGraficos *recursosGraficos, s_socket *sock)
 {
     char buffer [MAX_BUFFER];
     int bytesRecibidos;
@@ -102,32 +190,43 @@ void actualizar (s_recursos *recursos, s_socket *sock)
     {
         buffer [bytesRecibidos] = '\0';
         printf ("Mensaje recibido: %s", buffer);
-        sfText_setString (recursos->texto.texto, buffer);
+        sfText_setString (recursosGraficos->texto.texto, buffer);
     }
 }
 
-void renderizar (const s_estadoAplicacion *app, s_recursos *recursos)
+void renderizarMensajes (const s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos)
 {
-    sfRenderWindow_clear (app->renderizado, sfColor_fromRGB (0, 0, 0));
+    sfRenderWindow_clear (app->renderizado, sfColor_fromRGB (239, 239, 233));
 
-    sfRenderWindow_drawText (app->renderizado, recursos->texto.texto, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficos->texto.texto, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficos->elementos.recIzquierda, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficos->elementos.barraSeparacionUsuarios, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficos->elementos.barraSeparacionNombre, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficos->elementos.textoAuxUsuariosActivos, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficos->elementos.textoNombreUsuario, NULL);
 
     sfRenderWindow_display (app->renderizado);
 }
 
-void liberar (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock)
+void liberarMensajes (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock)
 {
     ///LIBERAR APLICACION
     sfRenderWindow_destroy (app->renderizado);
-
-    ///LIBERAR RECURSOS
-    sfFont_destroy (recursos->texto.fuente);
-    sfText_destroy (recursos->texto.texto);
 
 
     ///LIBERAR SOCKET
     closesocket (sock->sock);
     WSACleanup ();
+
+
+    ///LIBERAR recursosGraficos
+    sfFont_destroy (recursosGraficos->texto.fuente);
+    sfText_destroy (recursosGraficos->texto.texto);
+    sfRectangleShape_destroy (recursosGraficos->elementos.recIzquierda);
+    sfRectangleShape_destroy (recursosGraficos->elementos.barraSeparacionUsuarios);
+    sfRectangleShape_destroy (recursosGraficos->elementos.barraSeparacionNombre);
+    sfText_destroy (recursosGraficos->elementos.textoNombreUsuario);
+    sfText_destroy (recursosGraficos->elementos.textoAuxUsuariosActivos);
 }
 
 

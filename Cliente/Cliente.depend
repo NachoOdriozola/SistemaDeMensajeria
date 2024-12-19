@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1734421676 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\funciones.c
+1734587399 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\funciones.c
 	"funciones.h"
 
-1734421681 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\funciones.h
+1734588420 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\funciones.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -16,10 +16,10 @@
 	"SFML/Audio.h"
 	"SFML/Network.h"
 
-1734420160 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+1734588454 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.c
 	"main.h"
 
-1734418316 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+1734588239 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>

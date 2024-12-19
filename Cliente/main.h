@@ -10,4 +10,7 @@
 
 #include "funciones.h"
 
+#define INTERFAZ_INICIO 1
+#define INTERFAZ_MENSAJES 2
+
 #endif // MAIN_H_INCLUDED

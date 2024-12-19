@@ -20,9 +20,13 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
+#define ACTIVO 1
+#define AUSENTE 0
+
 #define PUERTO 8080
 
 #define MAX_BUFFER 201
+
 
 typedef struct
 {
@@ -32,14 +36,9 @@ typedef struct
 
 typedef struct
 {
-    sfFont *fuente;
-    sfText *texto;
-} s_texto;
-
-typedef struct
-{
-    s_texto texto;
-} s_recursos;
+    char nombreUsuario [21];
+    bool estado;
+} s_usuario;
 
 typedef struct
 {
@@ -49,14 +48,45 @@ typedef struct
     u_long modoSocket;
 } s_socket;
 
-void inicializar (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock);
-void setup (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock);
-//En accion se utiliza logica que cambie el estado de la aplicacion pero que SI este relacionada con la interaccion del usuario.
-void accion (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock);
-//En actualizar se utiliza logica que cambie el estado de la aplicacion pero que NO este relacionada con la interaccion del usuario.
-void actualizar (s_recursos *recursos, s_socket *sock);
-void renderizar (const s_estadoAplicacion *app, s_recursos *recursos);
-void liberar (s_estadoAplicacion *app, s_recursos *recursos, s_socket *sock);
+typedef struct
+{
+    sfFont *fuente;
+    sfText *texto;
+} s_texto;
+
+typedef struct
+{
+    sfRectangleShape *recIzquierda;
+    sfRectangleShape *barraSeparacionUsuarios;
+    sfRectangleShape *barraSeparacionNombre;
+    sfText *textoAuxUsuariosActivos;
+    sfText *textoNombreUsuario;
+} s_elementos;
+//pasar sftext de s_elementos a s_texto
+typedef struct
+{
+    s_texto texto;
+    s_elementos elementos;
+} s_recursosGraficos;
+
+typedef struct
+
+
+///INICIALIZACION
+void inicializar (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock);
+void setup (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock);
+
+///INTERFAZ DE INICIO
+void accionInicio ();
+void actualizarInicio ();
+void renderizarInicio ();
+void liberarInicio ();
+
+///INTERFAZ DE MENSAJES
+void accionMensajes (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock);
+void actualizarMensajes (s_recursosGraficos *recursosGraficos, s_socket *sock);
+void renderizarMensajes (const s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos);
+void liberarMensajes (s_estadoAplicacion *app, s_recursosGraficos *recursosGraficos, s_socket *sock);
 
 #endif // FUNCIONES_H_INCLUDED
 
