@@ -31,6 +31,18 @@ int insertarAlInicioLista (s_lista *pl, const void *dato, unsigned tamDato)
     return OK;
 }
 
+void eliminarNodoConAccion (s_lista *pl, void *dato, unsigned tamDato, void accion (void *dato))
+{
+    s_nodo *nodoElim = *pl;
+
+    *pl = nodoElim->sig;
+    if (dato != NULL)
+        memcpy (dato, nodoElim->dato, MINIMO (nodoElim->tam, tamDato));
+    accion (nodoElim->dato);
+    free (nodoElim->dato);
+    free (nodoElim);
+}
+
 void vaciarListaConAccion (s_lista *pl, void accion (void *dato))
 {
     s_nodo *nodoElim;

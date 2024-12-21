@@ -77,7 +77,13 @@ int recibirMensajes (s_lista *listaClientes, char *buffer)
             *buffer = '\0';
             return MENSAJE_RECIBIDO;
         }
-        listaClientes = &((*listaClientes)->sig);
+        else if ((bytesRecibidos == 0) || ((bytesRecibidos == SOCKET_ERROR) && (WSAGetLastError() == WSAECONNRESET)))
+        {
+            eliminarNodoConAccion (listaClientes, NULL, 0, liberarCliente);
+            printf ("Cliente desconectado.\n");
+        }
+        if (*listaClientes != NULL)
+            listaClientes = &((*listaClientes)->sig);
     }
     return NO_RECIBIO_MENSAJE;
 }
@@ -85,12 +91,23 @@ int recibirMensajes (s_lista *listaClientes, char *buffer)
 void enviarMensajes (s_lista *listaClientes, char *buffer)
 {
     s_cliente *cliente;
+    int resultado, error;
 
     while (*listaClientes != NULL)
     {
         cliente = (*listaClientes)->dato;
-        send (cliente->sock, buffer, strlen (buffer), 0);
-        listaClientes = &((*listaClientes)->sig);
+        resultado = send (cliente->sock, buffer, strlen (buffer), 0);
+        if (resultado == SOCKET_ERROR)
+        {
+            error = WSAGetLastError ();
+            if ((error == WSAECONNRESET) || (error == WSAENOTCONN))
+            {
+                eliminarNodoConAccion (listaClientes, NULL, 0, liberarCliente);
+                printf ("Cliente desconectado.\n");
+            }
+        }
+        if (*listaClientes != NULL)
+            listaClientes = &((*listaClientes)->sig);
     }
 }
 

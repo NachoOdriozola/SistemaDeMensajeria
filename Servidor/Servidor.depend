@@ -66,3 +66,38 @@
 	<ws2tcpip.h>
 	"funciones.h"
 
+1734793790 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1734791498 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1734763392 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+	"main.h"
+
+1734763392 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
+1734763836 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1734793782 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+	"funciones.h"
+

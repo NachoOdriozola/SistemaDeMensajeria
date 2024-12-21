@@ -10,3 +10,14 @@
 	<winsock2.h>
 	<ws2tcpip.h>
 
+1734792807 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+	"main.h"
+
+1734763392 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+

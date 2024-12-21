@@ -48,7 +48,10 @@ int main()
         if (bytesRecibidos > 0)
         {
             buffer [bytesRecibidos] = '\0';
-            printf ("Mensaje recibido: %s", buffer);
+            if (strcmp (buffer, "x\n") == 0)
+                *buffer = '\0';
+            else
+                printf ("Mensaje recibido: %s", buffer);
         }
         Sleep (10);
     }
