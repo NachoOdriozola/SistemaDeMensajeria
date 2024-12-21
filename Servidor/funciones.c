@@ -2,21 +2,21 @@
 
 void inicializar (s_servidor *servidor)
 {
-    servidor->servidorEjecutandose = CONTINUAR_SERVIDOR;
+    servidor->estado = CONTINUAR_SERVIDOR;
 
     int resultado;
     resultado = WSAStartup (MAKEWORD (2, 2), &(servidor->wsaData));
     if (resultado != 0)
     {
         printf ("ERROR - Inicializar Winsock: %d.\n", resultado);
-        servidor->servidorEjecutandose = CERRAR_SERVIDOR;
+        servidor->estado = APAGAR_SERVIDOR;
     }
     servidor->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (servidor->sock == INVALID_SOCKET)
     {
         printf ("ERROR - Inicializar socket servidor: %d.\n", WSAGetLastError ());
         WSACleanup ();
-        servidor->servidorEjecutandose = CERRAR_SERVIDOR;
+        servidor->estado = APAGAR_SERVIDOR;
     }
 }
 
@@ -32,14 +32,14 @@ void setup (s_servidor *servidor)
         printf ("ERROR - Bind socket a servidor: %d.\n", WSAGetLastError ());
         closesocket (servidor->sock);
         WSACleanup ();
-        servidor->servidorEjecutandose = CERRAR_SERVIDOR;
+        servidor->estado = APAGAR_SERVIDOR;
     }
     if (listen (servidor->sock, SOMAXCONN) == SOCKET_ERROR)
     {
         printf ("ERROR - Listen socket de servidor %d.\n", WSAGetLastError ());
         closesocket (servidor->sock);
         WSACleanup ();
-        servidor->servidorEjecutandose = CERRAR_SERVIDOR;
+        servidor->estado = APAGAR_SERVIDOR;
     }
     ioctlsocket (servidor->sock, FIONBIO, &modoSocket);
 }

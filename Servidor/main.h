@@ -13,6 +13,6 @@
 #include "funciones.h"
 
 #define ERROR_INICIALIZACION_SERVIDOR -1
-#define TECLA_CERRAR_SERVIDOR 'X'
+#define TECLA_APAGAR_SERVIDOR 'X'
 
 #endif // MAIN_H_INCLUDED

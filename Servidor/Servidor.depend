@@ -87,7 +87,7 @@
 	<ws2tcpip.h>
 	"funciones.h"
 
-1734763836 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+1734822156 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -98,6 +98,6 @@
 	<stdbool.h>
 	"../ListaSimple/listaSimple.h"
 
-1734793782 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+1734822266 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
 	"funciones.h"
 

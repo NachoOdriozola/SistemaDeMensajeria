@@ -11,12 +11,12 @@ int main ()
     crearLista (&listaClientes);
     setup (&servidor);
 
-    if (servidor.servidorEjecutandose == CERRAR_SERVIDOR)
+    if (servidor.estado == APAGAR_SERVIDOR)
         return ERROR_INICIALIZACION_SERVIDOR;
     printf ("SERVIDOR INICIADO.\n");
-    printf ("Presione '%c' para apagar servidor.\n", TECLA_CERRAR_SERVIDOR);
+    printf ("Presione '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
 
-    while ((ingresoTecla != TECLA_CERRAR_SERVIDOR) && (servidor.servidorEjecutandose == CONTINUAR_SERVIDOR))
+    while ((ingresoTecla != TECLA_APAGAR_SERVIDOR) && (servidor.estado == CONTINUAR_SERVIDOR))
     {
         aceptarCliente (&servidor, &listaClientes);
         if (recibirMensajes (&listaClientes, buffer))
@@ -26,8 +26,8 @@ int main ()
         {
             ingresoTecla = getch ();
             ingresoTecla = toupper (ingresoTecla);
-            if (ingresoTecla != TECLA_CERRAR_SERVIDOR)
-                    printf ("Tecla incorrecta.\nPresione '%c' para apagar servidor.\n", TECLA_CERRAR_SERVIDOR);
+            if (ingresoTecla != TECLA_APAGAR_SERVIDOR)
+                    printf ("Tecla incorrecta.\nPresione '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
         }
         Sleep (10);
     }

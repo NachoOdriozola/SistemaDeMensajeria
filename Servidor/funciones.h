@@ -19,17 +19,18 @@
 
 #define PUERTO 8080
 #define ERROR_ACEPTAR_CLIENTE 1
-#define CONTINUAR_SERVIDOR 1
-#define CERRAR_SERVIDOR 0
 #define MENSAJE_RECIBIDO 1
 #define NO_RECIBIO_MENSAJE 0
+
+#define CONTINUAR_SERVIDOR 1
+#define APAGAR_SERVIDOR 0
 
 typedef struct
 {
     WSADATA wsaData;
     SOCKET sock;
     struct sockaddr_in direccionServidor;
-    bool servidorEjecutandose;
+    bool estado;
 } s_servidor;
 
 typedef struct
