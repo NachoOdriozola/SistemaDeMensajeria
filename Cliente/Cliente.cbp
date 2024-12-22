@@ -31,10 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="funciones.c">
+		<Unit filename="interfazInicio.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="funciones.h" />
+		<Unit filename="interfazInicio.h" />
+		<Unit filename="interfazMensajes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfazMensajes.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

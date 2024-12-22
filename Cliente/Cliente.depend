@@ -28,3 +28,32 @@
 	<ws2tcpip.h>
 	"funciones.h"
 
+1734828953 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\funciones.c
+	"funciones.h"
+
+1734828630 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+
+1734828981 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+	"main.h"
+
+1734822349 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
