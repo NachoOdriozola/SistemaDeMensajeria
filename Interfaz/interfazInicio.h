@@ -9,6 +9,8 @@
 #include <ws2tcpip.h>
 #include <stdbool.h>
 
+#include "../Cliente/estructuras.h"
+
 #include "SFML/Graphics.h"
 #include "SFML/Window.h"
 #include "SFML/System.h"
@@ -27,14 +29,13 @@
 
 #define MAX_BUFFER 512
 
-#include "main.h"
-
 typedef struct
 {
 
 } s_recursosGraficosInicio;
 
-void inicializarInicio ();
+int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
+void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void accionInicio ();
 void actualizarInicio ();
 void renderizarInicio ();

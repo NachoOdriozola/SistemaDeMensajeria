@@ -15,6 +15,8 @@
 #include "SFML/Audio.h"
 #include "SFML/Network.h"
 
+#include "../Cliente/estructuras.h"
+
 #define OK 0
 #define ERROR_INICIALIZACION -1
 #define CONTINUAR_APLICACION 1
@@ -27,12 +29,12 @@
 
 #define MAX_BUFFER 512
 
-#include "main.h"
-
 typedef struct
 {
     sfFont *fuente;
-    sfText *texto;
+    sfText *mensajeRecibido;
+    sfText *textoAuxUsuariosActivos;
+    sfText *textoNombreUsuario;
 } s_texto;
 
 typedef struct
@@ -40,20 +42,41 @@ typedef struct
     sfRectangleShape *recIzquierda;
     sfRectangleShape *barraSeparacionUsuarios;
     sfRectangleShape *barraSeparacionNombre;
-    sfText *textoAuxUsuariosActivos;
-    sfText *textoNombreUsuario;
 } s_elementos;
-//pasar sftext de s_elementos a s_texto
+
 typedef struct
 {
     s_texto texto;
     s_elementos elementos;
+    sfView *pantalla;
 } s_recursosGraficosMensajes;
 
-void inicializarMensajes ();
+int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
+void setupMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void actualizarMensajes (s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void renderizarMensajes (const s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
-void liberarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
+
+void modificarTamPantalla (s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f tamPantalla);
 
 #endif // INTERFAZMENSAJES_H_INCLUDED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
