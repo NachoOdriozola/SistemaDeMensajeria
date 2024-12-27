@@ -19,6 +19,7 @@ typedef struct
 {
     sfRenderWindow *renderizado;
     bool estado;
+    sfVector2u tamOriginalPantalla;
 } s_aplicacion;
 
 typedef struct

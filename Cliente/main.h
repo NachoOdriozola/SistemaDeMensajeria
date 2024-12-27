@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <ws2tcpip.h>
 
 #include "estructuras.h"

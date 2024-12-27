@@ -58,14 +58,17 @@ void inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *r
     ///INICIALIZAR APLICACION
     app->estado = CONTINUAR_APLICACION;
 
+    HWND hwnd;
     sfVideoMode tamPantalla;
     tamPantalla = sfVideoMode_getDesktopMode ();
-    app->renderizado = sfRenderWindow_create ((sfVideoMode){tamPantalla.width, tamPantalla.height - 20}, "App", sfDefaultStyle, NULL);
+    app->renderizado = sfRenderWindow_create ((sfVideoMode){tamPantalla.width, tamPantalla.height - 1}, "App", sfDefaultStyle, NULL);
     if (!app->renderizado)
     {
         perror ("ERROR - Inicializar renderizado.\n");
         app->estado = CERRAR_APLICACION;
     }
+    hwnd = sfRenderWindow_getSystemHandle (app->renderizado);
+    ShowWindow (hwnd, SW_MAXIMIZE);
 
 
     ///INICIALIZAR SOCKET
@@ -101,6 +104,7 @@ void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recurso
 
     ///SETUP APLICACION
     sfRenderWindow_setFramerateLimit (app->renderizado, 60);
+    app->tamOriginalPantalla = sfRenderWindow_getSize (app->renderizado);
 
 
     ///SETUP SOCKET

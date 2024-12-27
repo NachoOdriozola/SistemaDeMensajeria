@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <math.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdbool.h>
@@ -24,6 +25,8 @@
 
 #define ACTIVO 1
 #define AUSENTE 0
+#define HABILITAR_ESCRITURA 1
+#define DESHABILITAR_ESCRITURA 0
 
 #define PUERTO 8080
 
@@ -33,8 +36,8 @@ typedef struct
 {
     sfFont *fuente;
     sfText *mensajeRecibido;
-    sfText *textoAuxUsuariosActivos;
-    sfText *textoNombreUsuario;
+    sfText *auxUsuariosActivos;
+    sfText *nombreUsuario;
 } s_texto;
 
 typedef struct
@@ -42,13 +45,13 @@ typedef struct
     sfRectangleShape *recIzquierda;
     sfRectangleShape *barraSeparacionUsuarios;
     sfRectangleShape *barraSeparacionNombre;
+    sfRectangleShape *barraIngresarMensaje;
 } s_elementos;
 
 typedef struct
 {
     s_texto texto;
     s_elementos elementos;
-    sfView *pantalla;
 } s_recursosGraficosMensajes;
 
 int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
@@ -58,7 +61,8 @@ void actualizarMensajes (s_socket *sock, s_recursosGraficosMensajes *recursosGra
 void renderizarMensajes (const s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
-void modificarTamPantalla (s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f tamPantalla);
+void modificarTamPantalla (s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2u tamOriginalPantalla, sfVector2f nuevoTamPantalla);
+bool clickEnEscribirMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfEvent evento);
 
 #endif // INTERFAZMENSAJES_H_INCLUDED
 

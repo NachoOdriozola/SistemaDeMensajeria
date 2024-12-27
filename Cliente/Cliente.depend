@@ -45,15 +45,16 @@
 	"SFML/Audio.h"
 	"SFML/Network.h"
 
-1735192988 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+1735274863 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.c
 	"main.h"
 
-1735182421 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+1735271116 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<conio.h>
 	<winsock2.h>
+	<windows.h>
 	<ws2tcpip.h>
 	"estructuras.h"
 	"../Interfaz/interfazInicio.h"
@@ -77,7 +78,7 @@
 	"SFML/Audio.h"
 	"SFML/Network.h"
 
-1734995943 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\estructuras.h
+1735274836 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -91,14 +92,15 @@
 	"SFML/Audio.h"
 	"SFML/Network.h"
 
-1735191864 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.c
+1735278725 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.c
 	"interfazMensajes.h"
 
-1735191441 d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.h
+1735278336 d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<conio.h>
+	<math.h>
 	<winsock2.h>
 	<ws2tcpip.h>
 	<stdbool.h>
