@@ -44,8 +44,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
-		<Extensions>
-			<lib_finder disable_auto="1" />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

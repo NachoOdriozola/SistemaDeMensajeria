@@ -72,13 +72,13 @@ int main()
         bytesRecibidos = recv (cliente1, buffer, sizeof (buffer), 0);
         if (bytesRecibidos > 0)
         {
-            buffer [bytesRecibidos] = '\0';
+            buffer [bytesRecibidos - 1] = '\0';
             send (cliente2, buffer, strlen (buffer), 0);
         }
         bytesRecibidos = recv (cliente2, buffer, sizeof (buffer), 0);
         if (bytesRecibidos > 0)
         {
-            buffer [bytesRecibidos] = '\0';
+            buffer [bytesRecibidos - 1] = '\0';
             send (cliente1, buffer, strlen (buffer), 0);
         }
     }

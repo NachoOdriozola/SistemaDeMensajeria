@@ -159,36 +159,34 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
         break;
 
     case sfEvtTextEntered:
-        if (recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA)
+        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) && (evento.text.unicode < 128) && (evento.text.unicode != '\n'))
         {
-            if (evento.text.unicode < 128)
+            int largoBufferMensaje;
+            largoBufferMensaje = strlen (recursosGraficosMensajes->bufferMensaje);
+            if (evento.text.unicode != '\b')
             {
-                int largoBufferMensaje;
-                largoBufferMensaje = strlen (recursosGraficosMensajes->bufferMensaje);
                 recursosGraficosMensajes->bufferMensaje [largoBufferMensaje] = (char)evento.text.unicode;
                 recursosGraficosMensajes->bufferMensaje [largoBufferMensaje + 1] = '\0';
-                sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferMensaje);
             }
+            else if (largoBufferMensaje > 0)
+                recursosGraficosMensajes->bufferMensaje [largoBufferMensaje - 1] = '\0';
+
+            sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferMensaje);
         }
         break;
 
     case sfEvtKeyPressed:
-        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) && (evento.key.code == sfKeyEnter))
+        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) && (evento.key.code == sfKeyEnter) && (strlen (recursosGraficosMensajes->bufferMensaje) > 0))
         {
-            if (strlen (recursosGraficosMensajes->bufferMensaje) > 0)
-            {
-                send (sock->sock, recursosGraficosMensajes->bufferMensaje, MAX_BUFFER, 0);
-                sfText_setString (recursosGraficosMensajes->texto.mensajeEnviado, recursosGraficosMensajes->bufferMensaje);
-                sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, "Ingrese mensaje...");
-                recursosGraficosMensajes->bufferMensaje [0] = '\0';
-                recursosGraficosMensajes->habilitarEscritura = DESHABILITAR_ESCRITURA;
-            }
+            send (sock->sock, recursosGraficosMensajes->bufferMensaje, MAX_BUFFER, 0);
+            sfText_setString (recursosGraficosMensajes->texto.mensajeEnviado, recursosGraficosMensajes->bufferMensaje);
+            sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, "Ingrese mensaje...");
+            recursosGraficosMensajes->bufferMensaje [0] = '\0';
         }
 
     default:
         break;
     }
-
 }
 
 void actualizarMensajes (s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
