@@ -36,8 +36,10 @@ typedef struct
 {
     sfFont *fuente;
     sfText *mensajeRecibido;
+    sfText *mensajeEnviado;
     sfText *auxUsuariosActivos;
     sfText *nombreUsuario;
+    sfText *auxEscribirMensaje;
 } s_texto;
 
 typedef struct
@@ -50,6 +52,8 @@ typedef struct
 
 typedef struct
 {
+    char bufferMensaje [MAX_BUFFER];
+    bool habilitarEscritura;
     s_texto texto;
     s_elementos elementos;
 } s_recursosGraficosMensajes;
@@ -62,7 +66,7 @@ void renderizarMensajes (const s_aplicacion *app, s_recursosGraficosMensajes *re
 void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 void modificarTamPantalla (s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2u tamOriginalPantalla, sfVector2f nuevoTamPantalla);
-bool clickEnEscribirMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfEvent evento);
+bool clickEnEscribirMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 #endif // INTERFAZMENSAJES_H_INCLUDED
 
