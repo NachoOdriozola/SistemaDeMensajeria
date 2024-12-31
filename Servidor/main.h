@@ -12,7 +12,13 @@
 
 #include "funciones.h"
 
-#define ERROR_INICIALIZACION_SERVIDOR -1
+
+#define OK 0
+#define ERROR_INICIALIZACION_SERVIDOR 1
+
 #define TECLA_APAGAR_SERVIDOR 'X'
+
+#define MAX_BUFFER 512
+
 
 #endif // MAIN_H_INCLUDED

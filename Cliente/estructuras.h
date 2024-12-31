@@ -13,13 +13,13 @@
 #include "SFML/Window.h"
 #include "SFML/System.h"
 #include "SFML/Audio.h"
-#include "SFML/Network.h"
+
 
 typedef struct
 {
     sfRenderWindow *renderizado;
-    bool estado;
     sfVector2u tamOriginalPantalla;
+    bool estado;
 } s_aplicacion;
 
 typedef struct
@@ -35,5 +35,6 @@ typedef struct
     char nombreUsuario [21];
     bool estado;
 } s_usuario;
+
 
 #endif // ESTRUCTURAS_H_INCLUDED

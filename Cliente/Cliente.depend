@@ -155,3 +155,66 @@
 	"../Interfaz/interfazInicio.h"
 	"../Interfaz/interfazMensajes.h"
 
+1735608676 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.c
+	"interfazInicio.h"
+
+1735623120 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1735623145 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1735621903 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.c
+	"interfazMensajes.h"
+
+1735623134 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+
+1735609095 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
+	"main.h"
+
+1735623140 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"estructuras.h"
+	"../Interfaz/interfazInicio.h"
+	"../Interfaz/interfazMensajes.h"
+

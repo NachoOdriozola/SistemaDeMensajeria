@@ -15,7 +15,7 @@
 #include "SFML/Window.h"
 #include "SFML/System.h"
 #include "SFML/Audio.h"
-#include "SFML/Network.h"
+
 
 #define OK 0
 #define ERROR_INICIALIZACION -1
@@ -29,10 +29,12 @@
 
 #define MAX_BUFFER 512
 
+
 typedef struct
 {
 
 } s_recursosGraficosInicio;
+
 
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio);
@@ -40,5 +42,6 @@ void accionInicio ();
 void actualizarInicio ();
 void renderizarInicio ();
 void liberarInicio ();
+
 
 #endif // INTERFAZINICIO_H_INCLUDED
