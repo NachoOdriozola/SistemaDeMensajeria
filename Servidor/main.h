@@ -4,13 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <conio.h>
+#include <ctype.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <ws2tcpip.h>
 
-#include "../ListaSimple/listaSimple.h"
+#include "funciones.h"
 
-#define PUERTO 8080
-
-#define MAX_BUFFER 201
+#define ERROR_INICIALIZACION_SERVIDOR -1
+#define TECLA_APAGAR_SERVIDOR 'X'
 
 #endif // MAIN_H_INCLUDED
