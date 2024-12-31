@@ -6,10 +6,18 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <winsock2.h>
+#include <windows.h>
 #include <ws2tcpip.h>
 
-#define PUERTO 8080
+#include "estructuras.h"
+#include "../Interfaz/interfazInicio.h"
+#include "../Interfaz/interfazMensajes.h"
 
-#define MAX_BUFFER 201
+#define INTERFAZ_INICIO 1
+#define INTERFAZ_MENSAJES 2
+
+void inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 #endif // MAIN_H_INCLUDED

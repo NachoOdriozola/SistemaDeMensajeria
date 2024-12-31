@@ -31,12 +31,19 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../Interfaz/interfazInicio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaz/interfazInicio.h" />
+		<Unit filename="../Interfaz/interfazMensajes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaz/interfazMensajes.h" />
+		<Unit filename="estructuras.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
-		<Extensions>
-			<lib_finder disable_auto="1" />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

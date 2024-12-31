@@ -17,7 +17,11 @@
 1733600964 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
 	<stdlib.h>
 
+<<<<<<< HEAD
 1734411474 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+=======
+1734411704 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+>>>>>>> frontend
 	"main.h"
 
 1734324617 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
@@ -28,3 +32,12 @@
 	<ws2tcpip.h>
 	"../ListaSimple/listaSimple.h"
 
+<<<<<<< HEAD
+=======
+1734822349 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1734822349 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+
+>>>>>>> frontend

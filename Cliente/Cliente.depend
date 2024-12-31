@@ -1,12 +1,143 @@
 # depslib dependency file v1.0
+<<<<<<< HEAD
 1734411505 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.c
 	"main.h"
 
 1733619834 d:\recursos\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+=======
+1735181143 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazinicio.c
+	"interfazInicio.h"
+
+1735180699 d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazinicio.h
+>>>>>>> frontend
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<conio.h>
 	<winsock2.h>
 	<ws2tcpip.h>
+<<<<<<< HEAD
+=======
+	<stdbool.h>
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+
+1735274836 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+
+1735356084 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.c
+	"interfazMensajes.h"
+
+1735344564 d:\cosas\proyectos\proyectos importantes\app de mensajes\interfaz\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+	"../Cliente/estructuras.h"
+
+1735348090 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.c
+	"main.h"
+
+1735271116 d:\cosas\proyectos\proyectos importantes\app de mensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"estructuras.h"
+	"../Interfaz/interfazInicio.h"
+	"../Interfaz/interfazMensajes.h"
+
+1735181143 source:c:\users\ignac\desktop\interfaz\interfazinicio.c
+	"interfazInicio.h"
+
+1735180699 c:\users\ignac\desktop\interfaz\interfazinicio.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+
+1735274836 c:\users\ignac\desktop\cliente\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+
+1735346146 source:c:\users\ignac\desktop\interfaz\interfazmensajes.c
+	"interfazMensajes.h"
+
+1735344564 c:\users\ignac\desktop\interfaz\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"SFML/Network.h"
+	"../Cliente/estructuras.h"
+
+1735348090 source:c:\users\ignac\desktop\cliente\main.c
+	"main.h"
+
+1735271116 c:\users\ignac\desktop\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"estructuras.h"
+	"../Interfaz/interfazInicio.h"
+	"../Interfaz/interfazMensajes.h"
+>>>>>>> frontend
 
