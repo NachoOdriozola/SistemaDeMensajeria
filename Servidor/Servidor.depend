@@ -18,38 +18,47 @@
 	<ws2tcpip.h>
 	"../ListaSimple/listaSimple.h"
 
-<<<<<<< HEAD
-1733601279 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+1734324617 D
+
+1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
 	"listaSimple.h"
 
-1733600964 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
 	<stdlib.h>
+	<stdlib.h>
+	<string.h>
 
-<<<<<<< HEAD
-1734411474 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
-=======
-1734411704 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
->>>>>>> frontend
+1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
 	"main.h"
 
-1734324617 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+1734822349 ntend
+	"main.h"
+
+1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<winsock2.h>
 	<ws2tcpip.h>
 	"../ListaSimple/listaSimple.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
 
-<<<<<<< HEAD
-=======
-1734822349 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+1735608685 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
 	"listaSimple.h"
 
-1734822349 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+1735608685 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
 	<stdlib.h>
+	<string.h>
 
->>>>>>> frontend
-=======
 1733621580 source:c:\users\ignac\desktop\app de mensajes\servidor\funciones.c
 	"funciones.h"
 
@@ -62,13 +71,6 @@
 	<windows.h>
 	<ws2tcpip.h>
 	"../ListaSimple/listaSimple.h"
-
-1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
-	"listaSimple.h"
-
-1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
-	<stdlib.h>
-	<string.h>
 
 1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
 	"funciones.h"
@@ -84,27 +86,6 @@
 	<stdbool.h>
 	"../ListaSimple/listaSimple.h"
 
-1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
-	"main.h"
-
-1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
-	<stdio.h>
-	<string.h>
-	<stdlib.h>
-	<conio.h>
-	<ctype.h>
-	<winsock2.h>
-	<windows.h>
-	<ws2tcpip.h>
-	"funciones.h"
-
-1734793790 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
-	"listaSimple.h"
-
-1734791498 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
-	<stdlib.h>
-	<string.h>
-
 1734763392 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\main.c
 	"main.h"
 
@@ -119,7 +100,7 @@
 	<ws2tcpip.h>
 	"funciones.h"
 
-1734822156 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+1735609507 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -130,7 +111,8 @@
 	<stdbool.h>
 	"../ListaSimple/listaSimple.h"
 
-1734822266 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+1735608685 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
 	"funciones.h"
 
->>>>>>> servidor
+1734822266 vidor
+

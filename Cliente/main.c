@@ -88,12 +88,6 @@ void inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *r
         app->estado = CERRAR_APLICACION;
     }
 
-<<<<<<< HEAD
-    direccionServidor.sin_family = AF_INET;
-    direccionServidor.sin_port = htons (PUERTO);
-    direccionServidor.sin_addr.s_addr = inet_addr ("127.0.0.1");
-    if (connect (sock, (struct sockaddr*)&direccionServidor, sizeof (direccionServidor)) != SOCKET_ERROR)
-=======
 
     ///INICIALIZAR RECURSOS GRAFICOS DE INTERFAZ DE INICIO
     app->estado = inicializarInicio (recursosGraficosInicio);
@@ -119,7 +113,6 @@ void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recurso
     sock->direccionServidor.sin_port = htons (PUERTO);
     sock->direccionServidor.sin_addr.s_addr = inet_addr ("127.0.0.1");
     if (connect (sock->sock, (struct sockaddr*)&(sock->direccionServidor), sizeof (sock->direccionServidor)) != SOCKET_ERROR)
->>>>>>> frontend
     {
         printf ("ERROR - Conectarse con el servidor: %d.\n", WSAGetLastError ());
         closesocket (sock->sock);
@@ -129,24 +122,6 @@ void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recurso
     else
         printf ("CONECTADO CON EL SERVIDOR.\n");
 
-<<<<<<< HEAD
-    while (1)
-    {
-        if (_kbhit ())
-        {
-            fgets (buffer, sizeof (buffer), stdin);
-            send (sock, buffer, strlen (buffer), 0);
-        }
-        bytesRecibidos = recv (sock, buffer, sizeof (buffer) - 1, 0);
-        if (bytesRecibidos > 0)
-        {
-            buffer [bytesRecibidos] = '\0';
-            printf ("Mensaje recibido: %s", buffer);
-        }
-        Sleep (100);
-    }
-=======
->>>>>>> frontend
 
     ///SETUP RECURSOS GRAFICOS DE INTERFAZ DE INICIO
     setupInicio (recursosGraficosInicio);

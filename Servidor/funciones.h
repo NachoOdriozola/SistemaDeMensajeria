@@ -8,24 +8,6 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <ws2tcpip.h>
-<<<<<<< HEAD
-
-#include "../ListaSimple/listaSimple.h"
-
-#define PUERTO 8080
-#define MAX_BUFFER 512
-
-typedef struct
-{
-    SOCKET sock;
-    struct sockaddr_in direccion;
-    int tamCliente;
-} t_cliente;
-
-BOOL WINAPI manejadorDeConsola (DWORD senial);
-
-#endif // FUNCIONES_H_INCLUDED
-=======
 #include <stdbool.h>
 
 #include "../ListaSimple/listaSimple.h"
@@ -92,5 +74,3 @@ void liberar (s_servidor *servidor, s_lista *listaClientes);
 
 
 
-
->>>>>>> servidor

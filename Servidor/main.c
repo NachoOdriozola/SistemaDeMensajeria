@@ -24,25 +24,12 @@ int main ()
 
         if (kbhit ())
         {
-<<<<<<< HEAD
-            buffer [bytesRecibidos - 1] = '\0';
-            send (cliente2, buffer, strlen (buffer), 0);
-        }
-        bytesRecibidos = recv (cliente2, buffer, sizeof (buffer), 0);
-        if (bytesRecibidos > 0)
-        {
-            buffer [bytesRecibidos - 1] = '\0';
-            send (cliente1, buffer, strlen (buffer), 0);
-        }
-        Sleep (100);
-=======
             ingresoTecla = getch ();
             ingresoTecla = toupper (ingresoTecla);
             if (ingresoTecla != TECLA_APAGAR_SERVIDOR)
                     printf ("Tecla incorrecta.\nPresione '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
         }
         Sleep (10);
->>>>>>> servidor
     }
 
     liberar (&servidor, &listaClientes);
