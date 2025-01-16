@@ -172,7 +172,7 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1735623145 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
+1736990112 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -185,10 +185,10 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1735621903 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.c
+1736990685 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.c
 	"interfazMensajes.h"
 
-1735623134 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.h
+1736990644 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -202,11 +202,12 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
+	"../ListaCircular/listaCircular.h"
 
-1735609095 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
+1736991634 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
 	"main.h"
 
-1735623140 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
+1736797632 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -217,4 +218,18 @@
 	"estructuras.h"
 	"../Interfaz/interfazInicio.h"
 	"../Interfaz/interfazMensajes.h"
+
+1735857342 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1735857325 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1736982768 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.c
+	"listaCircular.h"
+
+1736982778 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.h
+	<stdlib.h>
+	<string.h>
 

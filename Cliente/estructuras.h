@@ -17,9 +17,17 @@
 
 typedef struct
 {
+    sfVector2f tamOriginalPantalla;
+    sfVector2f tamActualPantalla;
+    float escala;
+} s_ventana;
+
+typedef struct
+{
     sfRenderWindow *renderizado;
-    sfVector2u tamOriginalPantalla;
-    bool estado;
+    s_ventana ventana;
+    bool primerMaximizado;
+    bool aplicacionEjecutandose;
 } s_aplicacion;
 
 typedef struct
@@ -27,14 +35,27 @@ typedef struct
     WSADATA wsaData;
     SOCKET sock;
     struct sockaddr_in direccionServidor;
-    u_long modoSocket;
 } s_socket;
-
-typedef struct
-{
-    char nombreUsuario [21];
-    bool estado;
-} s_usuario;
 
 
 #endif // ESTRUCTURAS_H_INCLUDED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

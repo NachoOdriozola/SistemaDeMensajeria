@@ -116,17 +116,17 @@
 
 1734822266 vidor
 
-1735608685 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.c
+1735928643 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.c
 	"listaSimple.h"
 
-1735623094 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.h
+1735928648 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.h
 	<stdlib.h>
 	<string.h>
 
-1735623011 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.c
+1735973877 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.c
 	"funciones.h"
 
-1735623003 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.h
+1735973654 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -137,10 +137,10 @@
 	<stdbool.h>
 	"../ListaSimple/listaSimple.h"
 
-1735623079 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.c
+1735973508 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.c
 	"main.h"
 
-1735622451 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.h
+1735973579 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>

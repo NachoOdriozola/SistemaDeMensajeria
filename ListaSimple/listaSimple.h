@@ -17,6 +17,7 @@ typedef struct r_nodo
     unsigned tam;
     struct r_nodo *sig;
 } s_nodo;
+
 typedef s_nodo *s_lista;
 
 void crearLista (s_lista *pl);

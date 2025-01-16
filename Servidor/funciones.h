@@ -14,17 +14,21 @@
 
 
 #define OK 0
-#define ERROR_INICIALIZACION_SERVIDOR 1
-#define SIN_MEMORIA -1
+#define ERROR_INICIALIZACION_SERVIDOR -1
 
 #define CONTINUAR_SERVIDOR 1
 #define APAGAR_SERVIDOR 0
 
-#define MAX_BUFFER 512
-#define PUERTO 8080
-#define ERROR_ACEPTAR_CLIENTE -1
+#define NO_ACEPTO_CLIENTE 1
+
 #define MENSAJE_RECIBIDO 1
 #define NO_RECIBIO_MENSAJE 0
+
+#define ENVIO_MENSAJE 1
+#define NO_ENVIO_MENSAJE 0
+
+#define MAX_BUFFER 512
+#define PUERTO 8080
 
 
 typedef struct
@@ -38,6 +42,7 @@ typedef struct
 {
     SOCKET sock;
     struct sockaddr_in direccionCliente;
+    bool envioMensaje;
 } s_cliente;
 
 

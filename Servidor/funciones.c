@@ -27,7 +27,7 @@ int inicializar (s_servidor *servidor)
 
 int setup (s_servidor *servidor)
 {
-    printf ("SETUP SERVIDOR.\n");
+    printf ("SETUP DE SERVIDOR.\n");
 
 
     u_long modoSocket = 1; //modo no bloqueante
@@ -64,9 +64,10 @@ int aceptarCliente (s_servidor *servidor, s_lista *listaClientes)
     tamCliente = sizeof (nuevoCliente.direccionCliente);
     nuevoCliente.sock = accept (servidor->sock, (struct sockaddr*)(&(nuevoCliente.direccionCliente)), &tamCliente);
     if (nuevoCliente.sock == INVALID_SOCKET)
-        return ERROR_ACEPTAR_CLIENTE;
+        return NO_ACEPTO_CLIENTE;
     printf ("Cliente aceptado.\n");
     ioctlsocket (nuevoCliente.sock, FIONBIO, &modoSocket);
+    nuevoCliente.envioMensaje = NO_ENVIO_MENSAJE;
 
     insertarAlInicioLista (listaClientes, &nuevoCliente, sizeof (s_cliente));
 
@@ -86,6 +87,7 @@ int recibirMensajes (s_lista *listaClientes, char *buffer)
         {
             buffer += bytesRecibidos;
             *buffer = '\0';
+            cliente->envioMensaje = ENVIO_MENSAJE;
             return MENSAJE_RECIBIDO;
         }
         else if ((bytesRecibidos == 0) || ((bytesRecibidos == SOCKET_ERROR) && (WSAGetLastError() == WSAECONNRESET)))
@@ -107,14 +109,19 @@ void enviarMensajes (s_lista *listaClientes, char *buffer)
     while (*listaClientes != NULL)
     {
         cliente = (*listaClientes)->dato;
-        resultado = send (cliente->sock, buffer, strlen (buffer), 0);
-        if (resultado == SOCKET_ERROR)
+        if (cliente->envioMensaje == ENVIO_MENSAJE)
+            cliente->envioMensaje = NO_ENVIO_MENSAJE;
+        else
         {
-            error = WSAGetLastError ();
-            if ((error == WSAECONNRESET) || (error == WSAENOTCONN))
+            resultado = send (cliente->sock, buffer, strlen (buffer), 0);
+            if (resultado == SOCKET_ERROR)
             {
-                eliminarNodoConAccion (listaClientes, NULL, 0, liberarCliente);
-                printf ("Cliente desconectado.\n");
+                error = WSAGetLastError ();
+                if ((error == WSAECONNRESET) || (error == WSAENOTCONN))
+                {
+                    eliminarNodoConAccion (listaClientes, NULL, 0, liberarCliente);
+                    printf ("Cliente desconectado.\n");
+                }
             }
         }
         if (*listaClientes != NULL)
@@ -125,6 +132,7 @@ void enviarMensajes (s_lista *listaClientes, char *buffer)
 void liberarCliente (void *cliente)
 {
     s_cliente *x = (s_cliente*)cliente;
+
     closesocket (x->sock);
 }
 

@@ -1,0 +1,3 @@
+-Hacer una pantalla de carga inicial donde cargue la logica del primer maximizado que ahora tengo en la interfaz de mensajes.
+-Corregir los returns y hacer cosas en base a ellos.
+-Analizar los CONST

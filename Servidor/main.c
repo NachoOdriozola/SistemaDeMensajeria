@@ -9,9 +9,9 @@ int main ()
     char buffer [MAX_BUFFER];
 
     crearLista (&listaClientes);
-    if (inicializar (&servidor))
+    if (inicializar (&servidor) == ERROR_INICIALIZACION_SERVIDOR)
         return ERROR_INICIALIZACION_SERVIDOR;
-    if (setup (&servidor))
+    if (setup (&servidor) == ERROR_INICIALIZACION_SERVIDOR)
         return ERROR_INICIALIZACION_SERVIDOR;
 
     printf ("SERVIDOR INICIADO CORRECTAMENTE.\n\n");

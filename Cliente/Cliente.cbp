@@ -39,6 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../Interfaz/interfazMensajes.h" />
+		<Unit filename="../ListaCircular/listaCircular.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../ListaCircular/listaCircular.h" />
 		<Unit filename="estructuras.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
