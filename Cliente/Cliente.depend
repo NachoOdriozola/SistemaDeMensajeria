@@ -155,14 +155,15 @@
 	"../Interfaz/interfazInicio.h"
 	"../Interfaz/interfazMensajes.h"
 
-1735608676 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.c
+1737002210 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.c
 	"interfazInicio.h"
 
-1735623120 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.h
+1737002229 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazinicio.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
 	<conio.h>
+	<math.h>
 	<winsock2.h>
 	<ws2tcpip.h>
 	<stdbool.h>
@@ -172,7 +173,7 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1736990112 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
+1737002217 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -185,10 +186,10 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1736990685 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.c
+1737002031 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.c
 	"interfazMensajes.h"
 
-1736990644 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.h
+1737001873 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaz\interfazmensajes.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -204,10 +205,10 @@
 	"../Cliente/estructuras.h"
 	"../ListaCircular/listaCircular.h"
 
-1736991634 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
+1737002246 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
 	"main.h"
 
-1736797632 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
+1736998218 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -226,10 +227,10 @@
 1735857325 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.c
 	"listaSimple.h"
 
-1736982768 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.c
+1736996982 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.c
 	"listaCircular.h"
 
-1736982778 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.h
+1736996982 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listacircular\listacircular.h
 	<stdlib.h>
 	<string.h>
 

@@ -18,6 +18,7 @@
 #include "../Cliente/estructuras.h"
 #include "../ListaCircular/listaCircular.h"
 
+
 #define OK 0
 #define ERROR_INICIALIZACION -1
 
@@ -30,9 +31,6 @@
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
 
-#define PRIMER_MAXIMIZADO 1
-#define NO_PRIMER_MAXIMIZADO 0
-
 #define MAX_BUFFER 512
 #define MAX_MENSAJES_EN_MEM 5
 
@@ -43,7 +41,7 @@ typedef struct
     sfText *auxUsuariosActivos;
     sfText *nombreUsuario;
     sfText *auxEscribirMensaje;
-} s_texto;
+} s_textoMensajes;
 
 typedef struct
 {
@@ -51,7 +49,7 @@ typedef struct
     sfRectangleShape *barraSeparacionUsuarios;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;
-} s_elementos;
+} s_elementosMensajes;
 
 typedef struct
 {
@@ -62,8 +60,8 @@ typedef struct
 
 typedef struct
 {
-    s_texto texto;
-    s_elementos elementos;
+    s_textoMensajes texto;
+    s_elementosMensajes elementos;
     bool habilitarEscritura;
     char bufferEscribirMensaje [MAX_BUFFER];
     s_nodo *siguienteMensaje;
@@ -73,7 +71,7 @@ typedef struct
 
 ///FUNCIONES ESTRUCTURALES
 int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
-void setupMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
+void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void renderizarMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
@@ -81,7 +79,7 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 ///FUNCIONES LOGICAS
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor);
-void modificarTamPantalla (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f nuevoTamPantalla);
+void modificarTamPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f nuevoTamPantalla);
 bool clickEnEscribirMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 ///FUNCIONES COMPLEMENTARIAS

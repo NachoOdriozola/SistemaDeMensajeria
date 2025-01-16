@@ -8,28 +8,28 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     recursosGraficosMensajes->texto.fuente = sfFont_createFromFile ("fuente.ttf");
     if (!recursosGraficosMensajes->texto.fuente)
     {
-        perror ("ERROR - Inicializar fuente.\n");
+        perror ("ERROR - Crear fuente.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->texto.auxUsuariosActivos = sfText_create ();
     if (!recursosGraficosMensajes->texto.auxUsuariosActivos)
     {
-        perror ("ERROR - Inicializar texto auxiliar usuarios activos.\n");
+        perror ("ERROR - Crear texto auxiliar usuarios activos.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->texto.nombreUsuario = sfText_create ();
     if (!recursosGraficosMensajes->texto.nombreUsuario)
     {
-        perror ("ERROR - Inicializar texto nombre de usuario.\n");
+        perror ("ERROR - Crear texto nombre de usuario.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->texto.auxEscribirMensaje = sfText_create ();
     if (!recursosGraficosMensajes->texto.auxEscribirMensaje)
     {
-        perror ("ERROR - Inicializar texto para escribir mensaje.\n");
+        perror ("ERROR - Crear texto para escribir mensaje.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -39,28 +39,28 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     recursosGraficosMensajes->elementos.recIzquierda = sfRectangleShape_create ();
     if (!recursosGraficosMensajes->elementos.recIzquierda)
     {
-        perror ("ERROR - Inicializar rectangulo de la izquierda.\n");
+        perror ("ERROR - Crear rectangulo de la izquierda.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->elementos.barraSeparacionUsuarios = sfRectangleShape_create ();
     if (!recursosGraficosMensajes->elementos.barraSeparacionUsuarios)
     {
-        perror ("ERROR - Inicializar barra de separacion de usuarios activos.\n");
+        perror ("ERROR - Crear barra de separacion de usuarios activos.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->elementos.barraSeparacionNombre = sfRectangleShape_create ();
     if (!recursosGraficosMensajes->elementos.barraSeparacionNombre)
     {
-        perror ("ERROR - Inicializar barra de separacion de nombre de usuarios.\n");
+        perror ("ERROR - Crear barra de separacion de nombre de usuarios.\n");
         return ERROR_INICIALIZACION;
     }
 
     recursosGraficosMensajes->elementos.barraIngresarMensaje = sfRectangleShape_create ();
     if (!recursosGraficosMensajes->elementos.barraIngresarMensaje)
     {
-        perror ("ERROR - Inicializar barra de ingresar mensaje.\n");
+        perror ("ERROR - Crear barra de ingresar mensaje.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -82,12 +82,11 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     return OK;
 }
 
-void setupMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
+void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     ///HABILITAR ESCRITURA
     recursosGraficosMensajes->habilitarEscritura = DESHABILITAR_ESCRITURA;
     *(recursosGraficosMensajes->bufferEscribirMensaje) = '\0';
-
 
 
     ///SETUP TEXTO
@@ -103,8 +102,7 @@ void setupMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
 
     //Texto para escribir mensaje
     sfText_setFont (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->texto.fuente);
-    sfText_setColor (recursosGraficosMensajes->texto.auxEscribirMensaje, sfColor_fromRGB (255, 255, 255));
-
+    sfText_setColor (recursosGraficosMensajes->texto.auxEscribirMensaje, sfColor_fromRGB (40, 54, 54));
 
 
     ///SETUP ELEMENTOS
@@ -121,10 +119,13 @@ void setupMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     sfRectangleShape_setFillColor (recursosGraficosMensajes->elementos.barraIngresarMensaje, sfColor_fromRGB (208, 208, 208));
 
 
-
     ///SETUP MENSAJES
     mapListaCircularConComplemento (&(recursosGraficosMensajes->listaMensajes), recursosGraficosMensajes->texto.fuente, setupListaMensaje);
     recursosGraficosMensajes->siguienteMensaje = recursosGraficosMensajes->listaMensajes;
+
+
+    ///SETUP POSICIONES Y TAMANIOS
+    modificarTamPantallaMensajes (app, recursosGraficosMensajes, app->ventana.tamActualPantalla);
 }
 
 void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
@@ -144,7 +145,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
     case sfEvtResized:
         nuevoTamPantalla.x = evento.size.width;
         nuevoTamPantalla.y = evento.size.height;
-        modificarTamPantalla (app, recursosGraficosMensajes, nuevoTamPantalla);
+        modificarTamPantallaMensajes (app, recursosGraficosMensajes, nuevoTamPantalla);
         break;
 
     case sfEvtMouseButtonPressed:
@@ -203,7 +204,6 @@ void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMe
         bufferMensaje [bytesRecibidos] = '\0';
         asignarMensaje (app, recursosGraficosMensajes, bufferMensaje, OTRO_USUARIO);
     }
-
 
     ///TEXTO AUXILIAR ESCRIBIR MENSAJE
     if ((recursosGraficosMensajes->habilitarEscritura == DESHABILITAR_ESCRITURA) && ((strlen (recursosGraficosMensajes->bufferEscribirMensaje) == 0)))
@@ -275,16 +275,9 @@ void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraf
     recursosGraficosMensajes->siguienteMensaje = recursosGraficosMensajes->siguienteMensaje->sig;
 }
 
-void modificarTamPantalla (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f nuevoTamPantalla)
+void modificarTamPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f nuevoTamPantalla)
 {
     //TAM REAL 1920 X 1009
-    ///PRIMER MAXIMIZADO INICIAL
-    if (app->primerMaximizado == PRIMER_MAXIMIZADO)
-    {
-        app->ventana.tamOriginalPantalla = nuevoTamPantalla;
-        app->primerMaximizado = NO_PRIMER_MAXIMIZADO;
-    }
-
 
     ///AJUSTAR VISTA
     sfView *nuevaVista;
@@ -321,7 +314,6 @@ void modificarTamPantalla (s_aplicacion *app, s_recursosGraficosMensajes *recurs
     //Texto para escribir mensaje
     sfText_setPosition (recursosGraficosMensajes->texto.auxEscribirMensaje, (sfVector2f){nuevoTamPantalla.x / 3.84, nuevoTamPantalla.y / 1.103});
     sfText_setCharacterSize (recursosGraficosMensajes->texto.auxEscribirMensaje, 24 * escala);
-
 
 
     ///MODIFICAR TAM ELEMENTOS

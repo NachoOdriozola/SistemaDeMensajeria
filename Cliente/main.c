@@ -25,18 +25,23 @@ int main()
     }
 
     printf ("INICIALIZACION Y SETUP EXITOSOS.\n");
-    interfaz = INTERFAZ_MENSAJES;
+    interfaz = INTERFAZ_INICIO;
+    app.usuario.estado = AUSENTE;
     app.aplicacionEjecutandose = CONTINUAR_APLICACION;
     while (app.aplicacionEjecutandose)
     {
         switch (interfaz)
         {
         case INTERFAZ_INICIO:
-            accionInicio ();
-            actualizarInicio ();
-            renderizarInicio ();
-            interfaz = INTERFAZ_MENSAJES;
-            liberarInicio ();
+            accionInicio (&app, &recursosGraficosInicio);
+            actualizarInicio (&recursosGraficosInicio);
+            renderizarInicio (&app, &recursosGraficosInicio);
+            app.usuario.estado = ACTIVO; //comentar
+            if (app.usuario.estado == ACTIVO)
+            {
+                interfaz = INTERFAZ_MENSAJES;
+                liberarInicio (&recursosGraficosInicio);
+            }
             break;
 
         case INTERFAZ_MENSAJES:
@@ -66,7 +71,7 @@ int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *re
     app->renderizado = sfRenderWindow_create ((sfVideoMode){tamPantalla.width, tamPantalla.height - 1}, "App", sfDefaultStyle, NULL);
     if (!app->renderizado)
     {
-        perror ("ERROR - Inicializar renderizado.\n");
+        perror ("ERROR - Crear renderizado.\n");
         return ERROR_INICIALIZACION;
     }
     hwnd = sfRenderWindow_getSystemHandle (app->renderizado);
@@ -110,7 +115,6 @@ int setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursos
 
     ///SETUP APLICACION
     sfRenderWindow_setFramerateLimit (app->renderizado, 60);
-    app->primerMaximizado = PRIMER_MAXIMIZADO;
 
 
     ///SETUP SOCKET
@@ -130,11 +134,11 @@ int setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursos
 
 
     ///SETUP RECURSOS GRAFICOS DE INTERFAZ DE INICIO
-    setupInicio (recursosGraficosInicio);
+    setupInicio (app, recursosGraficosInicio);
 
 
     ///SETUP RECURSOS GRAFICOS DE INTERFAZ DE MENSAJES
-    setupMensajes (recursosGraficosMensajes);
+    setupMensajes (app, recursosGraficosMensajes);
 
 
     return OK;

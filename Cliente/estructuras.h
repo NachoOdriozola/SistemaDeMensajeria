@@ -15,6 +15,15 @@
 #include "SFML/Audio.h"
 
 
+#define MAX_NOMBRE_USUARIO 21
+
+
+typedef struct
+{
+    char usuario [MAX_NOMBRE_USUARIO];
+    bool estado;
+} s_usuario;
+
 typedef struct
 {
     sfVector2f tamOriginalPantalla;
@@ -25,8 +34,8 @@ typedef struct
 typedef struct
 {
     sfRenderWindow *renderizado;
+    s_usuario usuario;
     s_ventana ventana;
-    bool primerMaximizado;
     bool aplicacionEjecutandose;
 } s_aplicacion;
 

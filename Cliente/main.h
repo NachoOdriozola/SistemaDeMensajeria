@@ -23,6 +23,9 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
+#define ACTIVO 1
+#define AUSENTE 0
+
 
 int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
 int setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
