@@ -129,7 +129,7 @@ void modificarTamPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *re
 
     ///MODIFICAR TAM ELEMENTOS
     //Rectangulo central
-    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.rectanguloCentral, (sfVector2f){nuevoTamPantalla.x / 2.9, nuevoTamPantalla.y / 3.5});
+    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.rectanguloCentral, (sfVector2f){nuevoTamPantalla.x / 1.45, nuevoTamPantalla.y / 3.5});
     sfRectangleShape_setSize (recursosGraficosInicio->elementos.rectanguloCentral, (sfVector2f){nuevoTamPantalla.x / 3.2, nuevoTamPantalla.y / 2});
 
 

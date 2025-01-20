@@ -134,6 +134,16 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
     sfVector2f nuevoTamPantalla;
     int largoBufferMensaje;
 
+    sfView *nuevaVista;
+
+    nuevaVista = sfView_create ();
+    if (!nuevaVista)
+    {
+        perror ("ERROR - Crear nueva vista para redimensionar ventana.\n");
+        app->aplicacionEjecutandose = CERRAR_APLICACION;
+        return;
+    }
+
 
     sfRenderWindow_pollEvent (app->renderizado, &evento);
     switch (evento.type)
@@ -145,7 +155,13 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
     case sfEvtResized:
         nuevoTamPantalla.x = evento.size.width;
         nuevoTamPantalla.y = evento.size.height;
-        modificarTamPantallaMensajes (app, recursosGraficosMensajes, nuevoTamPantalla);
+
+        sfView_setSize (nuevaVista, nuevoTamPantalla);
+        sfView_setCenter (nuevaVista, (sfVector2f){nuevoTamPantalla.x / 2.0f, nuevoTamPantalla.y / 2.0f});
+        sfRenderWindow_setView (app->renderizado, nuevaVista);
+        sfView_destroy (nuevaVista);
+
+        //modificarTamPantallaMensajes (app, recursosGraficosMensajes, nuevoTamPantalla);
         break;
 
     case sfEvtMouseButtonPressed:
@@ -186,6 +202,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
             *(recursosGraficosMensajes->bufferEscribirMensaje) = '\0';
             sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
         }
+        break;
 
     default:
         break;

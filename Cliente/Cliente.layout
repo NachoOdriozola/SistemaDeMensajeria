@@ -2,39 +2,44 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="..\ListaCircular\listaCircular.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1775" topLine="40" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaz\interfazMensajes.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="858" topLine="28" />
-		</Cursor>
-	</File>
-	<File name="estructuras.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="544" topLine="11" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaz\interfazInicio.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3408" topLine="75" />
-		</Cursor>
-	</File>
 	<File name="main.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="486" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\Interfaz\interfazInicio.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\Interfaz\interfazMensajes.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2387" topLine="43" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaz\interfazMensajes.c" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8349" topLine="191" />
+		</Cursor>
+		<Folding>
+			<Collapse line="230" />
+			<Collapse line="255" />
+			<Collapse line="362" />
+			<Collapse line="375" />
+			<Collapse line="384" />
+			<Collapse line="393" />
+			<Collapse line="410" />
+			<Collapse line="418" />
+		</Folding>
+	</File>
+	<File name="..\Interfaz\interfazInicio.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="538" topLine="21" />
 		</Cursor>
 	</File>
-	<File name="main.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\ListaCircular\listaCircular.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2461" topLine="13" />
+			<Cursor1 position="1775" topLine="40" />
+		</Cursor>
+	</File>
+	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="873" topLine="15" />
 		</Cursor>
 	</File>
 	<File name="..\ListaCircular\listaCircular.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -42,17 +47,14 @@
 			<Cursor1 position="819" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\Interfaz\interfazMensajes.c" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="estructuras.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="13593" topLine="215" />
+			<Cursor1 position="579" topLine="11" />
 		</Cursor>
-		<Folding>
-			<Collapse line="345" />
-			<Collapse line="358" />
-			<Collapse line="367" />
-			<Collapse line="376" />
-			<Collapse line="393" />
-			<Collapse line="401" />
-		</Folding>
+	</File>
+	<File name="..\Interfaz\interfazInicio.c" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2903" topLine="80" />
+		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

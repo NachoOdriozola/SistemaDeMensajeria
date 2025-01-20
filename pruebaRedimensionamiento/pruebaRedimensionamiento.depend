@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1737271436 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\pruebaredimensionamiento\main.c
+	"main.h"
+
+1737270494 d:\cosas\proyectos\proyectosimportantes\appdemensajes\pruebaredimensionamiento\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+

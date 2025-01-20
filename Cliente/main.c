@@ -25,7 +25,7 @@ int main()
     }
 
     printf ("INICIALIZACION Y SETUP EXITOSOS.\n");
-    interfaz = INTERFAZ_INICIO;
+    interfaz = INTERFAZ_MENSAJES;
     app.usuario.estado = AUSENTE;
     app.aplicacionEjecutandose = CONTINUAR_APLICACION;
     while (app.aplicacionEjecutandose)
@@ -36,7 +36,7 @@ int main()
             accionInicio (&app, &recursosGraficosInicio);
             actualizarInicio (&recursosGraficosInicio);
             renderizarInicio (&app, &recursosGraficosInicio);
-            app.usuario.estado = ACTIVO; //comentar
+            //app.usuario.estado = ACTIVO; //comentar
             if (app.usuario.estado == ACTIVO)
             {
                 interfaz = INTERFAZ_MENSAJES;
