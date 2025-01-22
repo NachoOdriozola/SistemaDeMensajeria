@@ -255,3 +255,96 @@
 1737508688 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesgenerales\funcionesgenerales.c
 	"funcionesGenerales.h"
 
+1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.c
+	"funcionesGenerales.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.c
+	"interfazInicio.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../FuncionesGenerales/funcionesGenerales.h"
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.c
+	"interfazMensajes.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+	"../FuncionesGenerales/funcionesGenerales.h"
+	"../ListaCircular/listaCircular.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\listacircular\listacircular.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listacircular\listacircular.c
+	"listaCircular.h"
+
+1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
+	"main.h"
+
+1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"estructuras.h"
+	"../Interfaz/interfazInicio.h"
+	"../Interfaz/interfazMensajes.h"
+

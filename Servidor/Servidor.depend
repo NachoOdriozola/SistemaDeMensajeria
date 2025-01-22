@@ -151,3 +151,38 @@
 	<ws2tcpip.h>
 	"funciones.h"
 
+1737416424 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1737574767 c:\users\ignac\documents\appdemensajes\appdemensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1737416425 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funciones.c
+	"funciones.h"
+
+1737416425 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1737574767 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\main.c
+	"main.h"
+
+1737416425 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
