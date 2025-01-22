@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../FuncionesGenerales/funcionesGenerales.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../FuncionesGenerales/funcionesGenerales.h" />
 		<Unit filename="../Interfaz/interfazInicio.c">
 			<Option compilerVar="CC" />
 		</Unit>

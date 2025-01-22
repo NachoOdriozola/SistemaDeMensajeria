@@ -71,22 +71,6 @@ void mapListaCircularConComplemento (s_listaCircular *pl, void *complemento, voi
     }
 }
 
-void mapListaCircularConDobleComplemento (s_listaCircular *pl, void *primerComplemento, void *segundoComplemento, void accion (void *dato, void *primerComplemento, void *segundoComplemento))
-{
-    s_nodo *nodoInicio = *pl;
-
-    if (*pl != NULL)
-    {
-        accion ((*pl)->dato, primerComplemento, segundoComplemento);
-        pl = &((*pl)->sig);
-    }
-    while (*pl != nodoInicio)
-    {
-        accion ((*pl)->dato, primerComplemento, segundoComplemento);
-        pl = &((*pl)->sig);
-    }
-}
-
 void vaciarListaCircularConAccion (s_listaCircular *pl, void accion (void *dato))
 {
     s_listaCircular *ptrMain = pl;

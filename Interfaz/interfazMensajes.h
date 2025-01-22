@@ -1,6 +1,7 @@
 #ifndef INTERFAZMENSAJES_H_INCLUDED
 #define INTERFAZMENSAJES_H_INCLUDED
 
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,6 +17,7 @@
 #include "SFML/Audio.h"
 
 #include "../Cliente/estructuras.h"
+#include "../FuncionesGenerales/funcionesGenerales.h"
 #include "../ListaCircular/listaCircular.h"
 
 
@@ -38,7 +40,8 @@
 typedef struct
 {
     sfFont *fuente;
-    sfText *auxUsuariosActivos;
+    sfText *auxTexto;
+    sfText *usuariosActivos;
     sfText *nombreUsuario;
     sfText *auxEscribirMensaje;
 } s_textoMensajes;
@@ -54,7 +57,6 @@ typedef struct
 typedef struct
 {
     sfText *mensaje;
-    bool enviadoPor;
     sfVector2f posicionMensaje;
 } s_mensaje;
 
@@ -77,16 +79,18 @@ void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMe
 void renderizarMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
+
 ///FUNCIONES LOGICAS
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor);
-void modificarTamPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, sfVector2f nuevoTamPantalla);
-bool clickEnEscribirMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
+bool clickEnEscribirMensaje (sfRenderWindow *renderizado, sfRectangleShape *barraIngresarMensaje);
+
 
 ///FUNCIONES COMPLEMENTARIAS
+void setupListaMensajes (void *mensaje, void *recursosGraficosMensajes);
+void tamListaMensajes (void *mensaje, void *escalaPixeles);
+void modificarPosicionListaMensajes (void *mensaje, void *escalaPixeles);
 void renderizarListaMensajes (void *mensaje, void *renderizado);
-void modificarPosicionMensajes (void *mensaje, void *escala);
-void modificarTamYPosMensajes (void *mensaje, void *nuevoTamPantalla, void *app);
-void setupListaMensaje (void *mensaje, void *recursosGraficosMensajes);
 void liberarMensaje (void *mensaje);
 
 

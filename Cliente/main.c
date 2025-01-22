@@ -1,5 +1,6 @@
 #include "main.h"
 
+
 int main()
 {
     unsigned short int interfaz;
@@ -25,8 +26,8 @@ int main()
     }
 
     printf ("INICIALIZACION Y SETUP EXITOSOS.\n");
-    interfaz = INTERFAZ_MENSAJES;
-    app.usuario.estado = AUSENTE;
+    interfaz = INTERFAZ_INICIO;
+    app.usuario.actividadUsuario = AUSENTE;
     app.aplicacionEjecutandose = CONTINUAR_APLICACION;
     while (app.aplicacionEjecutandose)
     {
@@ -36,10 +37,10 @@ int main()
             accionInicio (&app, &recursosGraficosInicio);
             actualizarInicio (&recursosGraficosInicio);
             renderizarInicio (&app, &recursosGraficosInicio);
-            //app.usuario.estado = ACTIVO; //comentar
-            if (app.usuario.estado == ACTIVO)
+            if (app.usuario.actividadUsuario == ACTIVO)
             {
                 interfaz = INTERFAZ_MENSAJES;
+                sfText_setString (recursosGraficosMensajes.texto.nombreUsuario, app.usuario.nombreUsuario);
                 liberarInicio (&recursosGraficosInicio);
             }
             break;
@@ -117,6 +118,21 @@ int setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursos
     sfRenderWindow_setFramerateLimit (app->renderizado, 60);
 
 
+    ///SETUP EVENTO PRIMER MAXIMIZADO
+    sfEvent eventoPrimerMaximizado;
+    sfVector2f nuevoTamPantalla;
+
+    sfRenderWindow_pollEvent (app->renderizado, &eventoPrimerMaximizado);
+    nuevoTamPantalla.x = eventoPrimerMaximizado.size.width;
+    nuevoTamPantalla.y = eventoPrimerMaximizado.size.height;
+    app->ventana.tamOriginalPantalla = nuevoTamPantalla;
+    app->ventana.tamActualPantalla = nuevoTamPantalla;
+
+    crearEscalaElementos (app);
+    crearEscalaPixeles (app);
+    ajustarVista (app, nuevoTamPantalla);
+
+
     ///SETUP SOCKET
     u_long modoSocket = 1; //Socket modo no bloqueante
 
@@ -158,7 +174,6 @@ void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *rec
     ///LIBERAR APLICACION
     sfRenderWindow_destroy (app->renderizado);
 }
-
 
 
 

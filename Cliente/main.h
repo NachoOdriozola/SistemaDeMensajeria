@@ -1,6 +1,7 @@
 #ifndef MAIN_H_INCLUDED
 #define MAIN_H_INCLUDED
 
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +14,8 @@
 #include "../Interfaz/interfazInicio.h"
 #include "../Interfaz/interfazMensajes.h"
 
+
+#define PUERTO 8080
 
 #define INTERFAZ_INICIO 1
 #define INTERFAZ_MENSAJES 2

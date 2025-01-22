@@ -1,6 +1,7 @@
 #ifndef ESTRUCTURAS_H_INCLUDED
 #define ESTRUCTURAS_H_INCLUDED
 
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,18 +18,22 @@
 
 #define MAX_NOMBRE_USUARIO 21
 
+#define RESOLUCION_BASE_X 1920
+#define RESOLUCION_BASE_Y 1009
+
 
 typedef struct
 {
-    char usuario [MAX_NOMBRE_USUARIO];
-    bool estado;
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    bool actividadUsuario;
 } s_usuario;
 
 typedef struct
 {
     sfVector2f tamOriginalPantalla;
     sfVector2f tamActualPantalla;
-    float escala;
+    sfVector2f escalaElementos;
+    float escalaPixeles;
 } s_ventana;
 
 typedef struct

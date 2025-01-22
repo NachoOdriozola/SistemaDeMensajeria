@@ -1,6 +1,7 @@
 #ifndef INTERFAZINICIO_H_INCLUDED
 #define INTERFAZINICIO_H_INCLUDED
 
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,6 +11,7 @@
 #include <ws2tcpip.h>
 #include <stdbool.h>
 
+#include "../FuncionesGenerales/funcionesGenerales.h"
 #include "../Cliente/estructuras.h"
 
 #include "SFML/Graphics.h"
@@ -24,27 +26,32 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
+#define HABILITAR_ESCRITURA 1
+#define DESHABILITAR_ESCRITURA 0
+
 #define ACTIVO 1
 #define AUSENTE 0
-
-#define PUERTO 8080
-#define MAX_BUFFER 512
 
 
 typedef struct
 {
-
+    sfFont *fuente;
+    sfText *ingresarNombre;
+    sfText *auxEscribirNombre;
 } s_textoInicio;
 
 typedef struct
 {
     sfRectangleShape *rectanguloCentral;
+    sfRectangleShape *barraIngresarNombre;
 } s_elementosInicio;
 
 typedef struct
 {
     s_textoInicio texto;
     s_elementosInicio elementos;
+    bool habilitarEscritura;
+    char bufferEscribirNombre [MAX_NOMBRE_USUARIO];
 } s_recursosGraficosInicio;
 
 
@@ -56,8 +63,10 @@ void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 
+
 ///FUNCIONES LOGICAS
-void modificarTamPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio, sfVector2f nuevoTamPantalla);
+void tamYPosPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
+bool clickEnEscribirNombre (sfRenderWindow *renderizado, sfRectangleShape *barraIngresarNombre);
 
 
 #endif // INTERFAZINICIO_H_INCLUDED
