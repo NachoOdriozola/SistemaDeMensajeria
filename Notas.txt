@@ -1,10 +1,14 @@
--Hacer una pantalla de carga inicial donde cargue la logica del primer maximizado que ahora tengo en la interfaz de mensajes.
--Corregir los returns y hacer cosas en base a ellos.
 -Analizar los CONST.
--Analizar el manejo de los frees.
+-Analizar los returns.
+-Analizar el manejo de los frees cuando el programa falla.
+-Considerar que hacer cuando no conecte con el servidor o cuando la conexion falle.
 -Arreglar comentarios donde escribo la "ñ".
--MAS QUE EL TAMANIO ORIGINAL NO SE PUEDE AGRANDAR.
--Crear botones para enviar (enviar nombre de usuario, enviar mensaje).
+-Documentar mucho mas.
+-LA PANTALLA NO SE PUEDE AGRANDAR MAS QUE EL TAMANIO ORIGINAL.
+-Crear botones para enviar (enviar mensaje).
 -Ajustar el nombre de usuario según el ancho.
--Agregar mensaje de que te quedaste sin caracteres dispobibles en el buffer de escribir nombre o mensajes.
+-Agregar mensaje de que te quedaste sin caracteres dispobibles en el buffer de escribir mensajes.
 -Barra de scroll para navegar por mensajes anteriores (mas arriba).
+-Agregar un modo oscuro y un zoom para el texto.
+-Analizar cambiar la paleta de colores.
+-Ocular el cmd cuando inicio la app.

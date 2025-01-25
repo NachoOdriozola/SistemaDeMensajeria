@@ -31,7 +31,16 @@ void crearEscalaPixeles (s_aplicacion *app)
     app->ventana.escalaPixeles = fminf (app->ventana.tamOriginalPantalla.x / (float)RESOLUCION_BASE_X, app->ventana.tamOriginalPantalla.y / (float)RESOLUCION_BASE_Y);
 }
 
+bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo)
+{
+    sfVector2i posMouse;
+    sfFloatRect limiteRectangulo;
 
+    posMouse = sfMouse_getPositionRenderWindow (renderizado);
+    limiteRectangulo = sfRectangleShape_getGlobalBounds (rectangulo);
+
+    return sfFloatRect_contains (&limiteRectangulo, posMouse.x, posMouse.y);
+}
 
 
 

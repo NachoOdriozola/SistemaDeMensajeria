@@ -74,6 +74,7 @@ typedef struct
 ///FUNCIONES ESTRUCTURALES
 int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void renderizarMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
@@ -82,8 +83,6 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 ///FUNCIONES LOGICAS
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor);
-void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
-bool clickEnEscribirMensaje (sfRenderWindow *renderizado, sfRectangleShape *barraIngresarMensaje);
 
 
 ///FUNCIONES COMPLEMENTARIAS

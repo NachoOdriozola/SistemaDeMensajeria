@@ -255,10 +255,10 @@
 1737508688 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesgenerales\funcionesgenerales.c
 	"funcionesGenerales.h"
 
-1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.c
+1737761689 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.c
 	"funcionesGenerales.h"
 
-1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.h
+1737761719 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesgenerales\funcionesgenerales.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -286,10 +286,10 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.c
+1737771083 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.c
 	"interfazInicio.h"
 
-1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.h
+1737769422 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -305,10 +305,10 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.c
+1737769329 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.c
 	"interfazMensajes.h"
 
-1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.h
+1737762078 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazmensajes.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -333,7 +333,7 @@
 1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listacircular\listacircular.c
 	"listaCircular.h"
 
-1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
+1737763847 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
 	"main.h"
 
 1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h

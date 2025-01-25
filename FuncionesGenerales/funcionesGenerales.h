@@ -26,6 +26,7 @@
 void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla);
 void crearEscalaElementos (s_aplicacion *app);
 void crearEscalaPixeles (s_aplicacion *app);
+bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo);
 
 
 #endif // FUNCIONESGENERALES_H_INCLUDED

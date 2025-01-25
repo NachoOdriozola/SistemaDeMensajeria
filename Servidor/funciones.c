@@ -17,7 +17,7 @@ int inicializar (s_servidor *servidor)
     servidor->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (servidor->sock == INVALID_SOCKET)
     {
-        printf ("ERROR - Inicializar socket servidor: %d.\n", WSAGetLastError ());
+        printf ("ERROR - Crear socket de servidor: %d.\n", WSAGetLastError ());
         WSACleanup ();
         return ERROR_INICIALIZACION_SERVIDOR;
     }

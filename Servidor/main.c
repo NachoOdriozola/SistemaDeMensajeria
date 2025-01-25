@@ -15,7 +15,7 @@ int main ()
         return ERROR_INICIALIZACION_SERVIDOR;
 
     printf ("SERVIDOR INICIADO CORRECTAMENTE.\n\n");
-    printf ("Presione '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
+    printf ("Presione la tecla '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
 
     while (ingresoTeclaApagar != TECLA_APAGAR_SERVIDOR)
     {
@@ -28,7 +28,7 @@ int main ()
             ingresoTeclaApagar = getch ();
             ingresoTeclaApagar = toupper (ingresoTeclaApagar);
             if (ingresoTeclaApagar != TECLA_APAGAR_SERVIDOR)
-                    printf ("Tecla incorrecta.\nPresione '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
+                    printf ("Tecla incorrecta.\nPresione la tecla '%c' para apagar servidor.\n", TECLA_APAGAR_SERVIDOR);
         }
         Sleep (10);
     }

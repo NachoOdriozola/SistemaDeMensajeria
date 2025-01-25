@@ -29,7 +29,7 @@ int main()
     interfaz = INTERFAZ_INICIO;
     app.usuario.actividadUsuario = AUSENTE;
     app.aplicacionEjecutandose = CONTINUAR_APLICACION;
-    while (app.aplicacionEjecutandose)
+    while (app.aplicacionEjecutandose == CONTINUAR_APLICACION)
     {
         switch (interfaz)
         {

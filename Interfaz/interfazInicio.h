@@ -38,12 +38,16 @@ typedef struct
     sfFont *fuente;
     sfText *ingresarNombre;
     sfText *auxEscribirNombre;
+    sfText *textoBotonAceptar;
+    sfText *textoInformativoTamNombre;
 } s_textoInicio;
 
 typedef struct
 {
     sfRectangleShape *rectanguloCentral;
     sfRectangleShape *barraIngresarNombre;
+    sfRectangleShape *botonAceptar;
+    sfCircleShape *circuloTextoInformativo;
 } s_elementosInicio;
 
 typedef struct
@@ -58,15 +62,11 @@ typedef struct
 ///FUNCIONES ESTRUCTURALES
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void setupInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
+void tamYPosPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
-
-
-///FUNCIONES LOGICAS
-void tamYPosPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
-bool clickEnEscribirNombre (sfRenderWindow *renderizado, sfRectangleShape *barraIngresarNombre);
 
 
 #endif // INTERFAZINICIO_H_INCLUDED
