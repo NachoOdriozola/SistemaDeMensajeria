@@ -15,8 +15,10 @@
 #include "SFML/System.h"
 #include "SFML/Audio.h"
 
+#define MAX_BUFFER_MENSAJE 50
 
 #define MAX_NOMBRE_USUARIO 21
+#define MAX_CONTRASENIA_USUARIO 21
 
 #define RESOLUCION_BASE_MAXIMIZADO_X 1920
 #define RESOLUCION_BASE_MAXIMIZADO_Y 1009
@@ -54,6 +56,12 @@ typedef struct
     SOCKET sock;
     struct sockaddr_in direccionServidor;
 } s_socket;
+
+typedef struct
+{
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    char bufferMensaje [MAX_BUFFER_MENSAJE];
+} s_paqueteMensaje;
 
 
 #endif // ESTRUCTURAS_H_INCLUDED

@@ -177,6 +177,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
+    s_paqueteMensaje paqueteMensaje;
     int largoBufferMensaje;
 
 
@@ -208,7 +209,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
         if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
             (evento.text.unicode < 128) &&
             (evento.text.unicode != 13) && //Detecta que no sea la tecla "Enter"
-            ((largoBufferMensaje = strlen(recursosGraficosMensajes->bufferEscribirMensaje)) < MAX_BUFFER - 1))
+            ((largoBufferMensaje = strlen(recursosGraficosMensajes->bufferEscribirMensaje)) < MAX_BUFFER_MENSAJE - 1))
         {
             if (evento.text.unicode != 8) //Detecta que no sea la tecla "Backspace"
             {
@@ -221,7 +222,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
 
         if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
             (evento.text.unicode == 8) && //Detecta que sea la tecla "Backspace"
-            (largoBufferMensaje == MAX_BUFFER - 1)) //Es el ultimo espacio
+            (largoBufferMensaje == MAX_BUFFER_MENSAJE - 1)) //Es el ultimo espacio
         {
             recursosGraficosMensajes->bufferEscribirMensaje [largoBufferMensaje - 1] = '\0';
         }
@@ -230,11 +231,15 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
         break;
 
     case sfEvtKeyPressed:
-        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
-            (evento.key.code == sfKeyEnter) &&
+        if ((evento.key.code == sfKeyEnter) &&
+            (recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
             (strlen (recursosGraficosMensajes->bufferEscribirMensaje) > 0))
         {
-            send (sock->sock, recursosGraficosMensajes->bufferEscribirMensaje, MAX_BUFFER, 0);
+            strcpy (paqueteMensaje.nombreUsuario, app->usuario.nombreUsuario);
+            paqueteMensaje.nombreUsuario [MAX_NOMBRE_USUARIO] = '\0';
+            strcpy (paqueteMensaje.bufferMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
+            paqueteMensaje.bufferMensaje [MAX_BUFFER_MENSAJE] = '\0';
+            send (sock->sock, (char*)(&paqueteMensaje), sizeof (s_paqueteMensaje), 0);
             asignarMensaje (app, recursosGraficosMensajes, recursosGraficosMensajes->bufferEscribirMensaje, MI_USUARIO);
             *(recursosGraficosMensajes->bufferEscribirMensaje) = '\0';
             sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
@@ -249,15 +254,15 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
 void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     ///RECIBIR MENSAJES DE OTROS USUARIOS
-    char bufferMensaje [MAX_BUFFER];
-    int bytesRecibidos;
+    s_paqueteMensaje paqueteMensaje;
 
-    bytesRecibidos = recv (sock->sock, bufferMensaje, MAX_BUFFER - 1, 0);
-    if (bytesRecibidos > 0)
+    if (recibirMensajeCompleto (sock->sock, (char*)(&paqueteMensaje), sizeof (s_paqueteMensaje)) == sizeof (s_paqueteMensaje))
     {
-        bufferMensaje [bytesRecibidos] = '\0';
-        asignarMensaje (app, recursosGraficosMensajes, bufferMensaje, OTRO_USUARIO);
+        puts (paqueteMensaje.nombreUsuario);
+        puts (paqueteMensaje.bufferMensaje);
     }
+
+    //asignarMensaje (app, recursosGraficosMensajes, bufferMensaje, OTRO_USUARIO);
 
     ///TEXTO AUXILIAR ESCRIBIR MENSAJE
     if ((recursosGraficosMensajes->habilitarEscritura == DESHABILITAR_ESCRITURA) && ((strlen (recursosGraficosMensajes->bufferEscribirMensaje) == 0)))
@@ -312,6 +317,22 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
 
 
 ///FUNCIONES LOGICAS
+
+
+int recibirMensajeCompleto (SOCKET sock, char *buffer, int tamBytesMensaje)
+{
+    int bytesTotalRecibidos = 0, bytesRecibidos;
+
+    while (bytesTotalRecibidos < tamBytesMensaje)
+    {
+        bytesRecibidos = recv (sock, buffer + bytesTotalRecibidos, tamBytesMensaje - bytesTotalRecibidos, 0);
+        if (bytesRecibidos < 0)
+            return 1; //Error o conexion fallida
+        bytesTotalRecibidos += bytesRecibidos;
+    }
+
+    return bytesTotalRecibidos;
+}
 
 
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor)

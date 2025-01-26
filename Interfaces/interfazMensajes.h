@@ -33,7 +33,7 @@
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
 
-#define MAX_BUFFER 512
+#define MAX_BUFFER_MENSAJE 50
 #define MAX_MENSAJES_EN_MEM 5
 
 
@@ -65,7 +65,7 @@ typedef struct
     s_textoMensajes texto;
     s_elementosMensajes elementos;
     bool habilitarEscritura;
-    char bufferEscribirMensaje [MAX_BUFFER];
+    char bufferEscribirMensaje [MAX_BUFFER_MENSAJE];
     s_nodo *siguienteMensaje;
     s_listaCircular listaMensajes;
 } s_recursosGraficosMensajes;
@@ -82,6 +82,7 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 
 ///FUNCIONES LOGICAS
+int recibirMensajeCompleto (SOCKET sock, char *buffer, int tamBytesMensaje);
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor);
 
 

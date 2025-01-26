@@ -174,7 +174,7 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1737516031 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
+1737869469 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -207,10 +207,10 @@
 	"../FuncionesGenerales/funcionesGenerales.h"
 	"../ListaCircular/listaCircular.h"
 
-1737519088 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
+1737863138 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.c
 	"main.h"
 
-1737501277 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
+1737863138 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -219,8 +219,9 @@
 	<windows.h>
 	<ws2tcpip.h>
 	"estructuras.h"
-	"../Interfaz/interfazInicio.h"
-	"../Interfaz/interfazMensajes.h"
+	"../FuncionesEspecificas/especificas.h"
+	"../Interfaces/interfazInicio.h"
+	"../Interfaces/interfazMensajes.h"
 
 1735857342 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.h
 	<stdlib.h>
@@ -424,4 +425,80 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
+
+1737863138 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesespecificas\especificas.c
+	"especificas.h"
+
+1737863138 d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesespecificas\especificas.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+	"../FuncionesUtiles/utiles.h"
+
+1737863138 d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesutiles\utiles.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+
+1737863138 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\funcionesutiles\utiles.c
+	"utiles.h"
+
+1737869084 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaces\interfazinicio.c
+	"interfazInicio.h"
+
+1737868579 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaces\interfazinicio.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../FuncionesUtiles/utiles.h"
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1737871786 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaces\interfazmensajes.c
+	"interfazMensajes.h"
+
+1737871769 d:\cosas\proyectos\proyectosimportantes\appdemensajes\interfaces\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+	"../FuncionesUtiles/utiles.h"
+	"../ListaCircular/listaCircular.h"
 

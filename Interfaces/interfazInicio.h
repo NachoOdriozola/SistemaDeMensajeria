@@ -26,40 +26,50 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
-#define HABILITAR_ESCRITURA 1
-#define DESHABILITAR_ESCRITURA 0
+#define HABILITAR_ESCRITURA_NOMBRE 1
+#define DESHABILITAR_ESCRITURA_NOMBRE 0
 
-#define ACTIVO 1
-#define AUSENTE 0
+#define HABILITAR_ESCRITURA_CONTRASENIA 1
+#define DESHABILITAR_ESCRITURA_CONTRASENIA 0
+
+#define HABILITAR_INGRESO 1
+#define DESHABILITAR_INGRESO 0
+
+#define MAX_INGRESO_TECLADO 26
 
 
 typedef struct
 {
     sfFont *fuente;
     sfText *ingresarUsuario;
+    sfText *textoInformativoTam;
     sfText *ingresarNombre;
     sfText *auxEscribirNombre;
     sfText *ingresarContrasenia;
     sfText *auxEscribirContrasenia;
     sfText *textoRegistrarUsuario;
-    sfText *textoBotonAceptar;
-    sfText *textoInformativoTam;
+    sfText *textoBotonIngresar;
 } s_textoInicio;
 
 typedef struct
 {
+    sfRectangleShape *subrayadoTitulo;
+    sfCircleShape *circuloTextoInformativoTam;
     sfRectangleShape *barraIngresarNombre;
     sfRectangleShape *barraIngresarContrasenia;
-    sfRectangleShape *botonAceptar;
-    sfCircleShape *circuloTextoInformativoTam;
+    sfRectangleShape *botonIngresar;
+    sfRectangleShape *rectanguloInvisibleRegistrar;
 } s_elementosInicio;
 
 typedef struct
 {
     s_textoInicio texto;
     s_elementosInicio elementos;
-    bool habilitarEscritura;
-    char bufferEscribirNombre [MAX_NOMBRE_USUARIO];
+    bool habilitarEscrituraNombre;
+    bool habilitarEscrituraContrasenia;
+    bool habilitarIngreso;
+    char bufferEscribirNombre [MAX_INGRESO_TECLADO];
+    char bufferEscribirContrasenia [MAX_INGRESO_TECLADO];
 } s_recursosGraficosInicio;
 
 
@@ -71,6 +81,10 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
 void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
+
+
+///FUNCIONES LOGICAS
+void ingresoTexto (char *buffer, sfEvent evento);
 
 
 #endif // INTERFAZINICIO_H_INCLUDED
