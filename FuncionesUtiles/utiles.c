@@ -1,4 +1,7 @@
-#include "funcionesGenerales.h"
+#include "utiles.h"
+
+
+///FUNCIONES UTILES
 
 
 void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla)
@@ -18,17 +21,6 @@ void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla)
     sfRenderWindow_setView (app->renderizado, nuevaVista);
 
     sfView_destroy (nuevaVista);
-}
-
-void crearEscalaElementos (s_aplicacion *app)
-{
-    app->ventana.escalaElementos.x = app->ventana.tamOriginalPantalla.x / (float)RESOLUCION_BASE_X;
-    app->ventana.escalaElementos.y = app->ventana.tamOriginalPantalla.y / (float)RESOLUCION_BASE_Y;
-}
-
-void crearEscalaPixeles (s_aplicacion *app)
-{
-    app->ventana.escalaPixeles = fminf (app->ventana.tamOriginalPantalla.x / (float)RESOLUCION_BASE_X, app->ventana.tamOriginalPantalla.y / (float)RESOLUCION_BASE_Y);
 }
 
 bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo)

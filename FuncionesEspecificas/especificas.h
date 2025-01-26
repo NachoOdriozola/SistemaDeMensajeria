@@ -1,5 +1,5 @@
-#ifndef FUNCIONESGENERALES_H_INCLUDED
-#define FUNCIONESGENERALES_H_INCLUDED
+#ifndef ESPECIFICAS_H_INCLUDED
+#define ESPECIFICAS_H_INCLUDED
 
 
 #include <stdio.h>
@@ -17,16 +17,25 @@
 #include "SFML/Audio.h"
 
 #include "../Cliente/estructuras.h"
+#include "../FuncionesUtiles/utiles.h"
 
 
-#define CONTINUAR_APLICACION 1
-#define CERRAR_APLICACION 0
-
-
-void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla);
+///FUNCIONES DE INICIALIZACION ESPECIFICAS
 void crearEscalaElementos (s_aplicacion *app);
 void crearEscalaPixeles (s_aplicacion *app);
-bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo);
+void eventoMaximizadoAutomatico (s_aplicacion *app);
+void maximizadoAutomaticoVentana (s_aplicacion *app);
 
 
-#endif // FUNCIONESGENERALES_H_INCLUDED
+#endif // ESPECIFICAS_H_INCLUDED
+
+
+
+
+
+
+
+
+
+
+

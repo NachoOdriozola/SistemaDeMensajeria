@@ -14,6 +14,13 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosInicio->texto.ingresarUsuario = sfText_create ();
+    if (!recursosGraficosInicio->texto.ingresarUsuario)
+    {
+        perror ("ERROR - Crear texto ingresar usuario.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosInicio->texto.ingresarNombre = sfText_create ();
     if (!recursosGraficosInicio->texto.ingresarNombre)
     {
@@ -28,6 +35,27 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosInicio->texto.ingresarContrasenia = sfText_create ();
+    if (!recursosGraficosInicio->texto.ingresarContrasenia)
+    {
+        perror ("ERROR - Crear texto ingresar contrasenia.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosInicio->texto.auxEscribirContrasenia = sfText_create ();
+    if (!recursosGraficosInicio->texto.auxEscribirContrasenia)
+    {
+        perror ("ERROR - Crear texto auxiliar escribir contrasenia.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosInicio->texto.textoRegistrarUsuario = sfText_create ();
+    if (!recursosGraficosInicio->texto.textoRegistrarUsuario)
+    {
+        perror ("ERROR - Crear texto registrar usuario.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosInicio->texto.textoBotonAceptar = sfText_create ();
     if (!recursosGraficosInicio->texto.textoBotonAceptar)
     {
@@ -35,8 +63,8 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosInicio->texto.textoInformativoTamNombre = sfText_create ();
-    if (!recursosGraficosInicio->texto.textoInformativoTamNombre)
+    recursosGraficosInicio->texto.textoInformativoTam = sfText_create ();
+    if (!recursosGraficosInicio->texto.textoInformativoTam)
     {
         perror ("ERROR - Crear texto informativo para tam maximo del nombre.\n");
         return ERROR_INICIALIZACION;
@@ -44,17 +72,17 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 
 
     ///INICIALIZAR ELEMENTOS
-    recursosGraficosInicio->elementos.rectanguloCentral = sfRectangleShape_create ();
-    if (!recursosGraficosInicio->elementos.rectanguloCentral)
-    {
-        perror ("ERROR - Crear rectangulo central.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosInicio->elementos.barraIngresarNombre = sfRectangleShape_create ();
     if (!recursosGraficosInicio->elementos.barraIngresarNombre)
     {
         perror ("ERROR - Crear barra para ingresar nombre.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosInicio->elementos.barraIngresarContrasenia = sfRectangleShape_create ();
+    if (!recursosGraficosInicio->elementos.barraIngresarContrasenia)
+    {
+        perror ("ERROR - Crear barra para ingresar contrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -65,8 +93,8 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosInicio->elementos.circuloTextoInformativo = sfCircleShape_create ();
-    if (!recursosGraficosInicio->elementos.circuloTextoInformativo)
+    recursosGraficosInicio->elementos.circuloTextoInformativoTam = sfCircleShape_create ();
+    if (!recursosGraficosInicio->elementos.circuloTextoInformativoTam)
     {
         perror ("ERROR - Crear circulo de texto informativo.\n");
         return ERROR_INICIALIZACION;
@@ -84,29 +112,48 @@ void setupInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosI
 
     ///SETUP TEXTO
     //Texto ingresar nombre
+    sfText_setFont (recursosGraficosInicio->texto.ingresarUsuario, recursosGraficosInicio->texto.fuente);
+    sfText_setString (recursosGraficosInicio->texto.ingresarUsuario, "INGRESE SU USUARIO");
+    sfText_setColor (recursosGraficosInicio->texto.ingresarUsuario, sfColor_fromRGB (34, 48, 48));
+
+    //Texto ingresar nombre
     sfText_setFont (recursosGraficosInicio->texto.ingresarNombre, recursosGraficosInicio->texto.fuente);
-    sfText_setString (recursosGraficosInicio->texto.ingresarNombre, "INGRESE SU NOMBRE DE USUARIO");
+    sfText_setString (recursosGraficosInicio->texto.ingresarNombre, "Ingrese su nombre:");
     sfText_setColor (recursosGraficosInicio->texto.ingresarNombre, sfColor_fromRGB (34, 48, 48));
 
     //Texto auxiliar escribir nombre
     sfText_setFont (recursosGraficosInicio->texto.auxEscribirNombre, recursosGraficosInicio->texto.fuente);
     sfText_setColor (recursosGraficosInicio->texto.auxEscribirNombre, sfColor_fromRGB (40, 54, 54));
 
+    //Texto ingresar contrasenia
+    sfText_setFont (recursosGraficosInicio->texto.ingresarContrasenia, recursosGraficosInicio->texto.fuente);
+    sfText_setString (recursosGraficosInicio->texto.ingresarContrasenia, "Ingrese su contraseña:");
+    sfText_setColor (recursosGraficosInicio->texto.ingresarContrasenia, sfColor_fromRGB (40, 54, 54));
+
+    //Texto auxiliar escribir contrasenia
+    sfText_setFont (recursosGraficosInicio->texto.auxEscribirContrasenia, recursosGraficosInicio->texto.fuente);
+    sfText_setColor (recursosGraficosInicio->texto.auxEscribirContrasenia, sfColor_fromRGB (40, 54, 54));
+
+    //Texto registrar usuario
+    sfText_setFont (recursosGraficosInicio->texto.textoRegistrarUsuario, recursosGraficosInicio->texto.fuente);
+    sfText_setString (recursosGraficosInicio->texto.textoRegistrarUsuario, "¿No tenes usuario? Registrate aca.");
+    sfText_setColor (recursosGraficosInicio->texto.textoRegistrarUsuario, sfColor_fromRGB (40, 54, 54));
+
     //Texto boton aceptar nombre de usuario
     sfText_setFont (recursosGraficosInicio->texto.textoBotonAceptar, recursosGraficosInicio->texto.fuente);
     sfText_setString (recursosGraficosInicio->texto.textoBotonAceptar, "ACEPTAR");
 
-    //Texto informativo tam maximo nombre de usuaio
-    sfText_setFont (recursosGraficosInicio->texto.textoInformativoTamNombre, recursosGraficosInicio->texto.fuente);
-    sfText_setString (recursosGraficosInicio->texto.textoInformativoTamNombre, "La longitud maxima del nombre es hasta 20 caracteres.");
+    //Texto informativo tam maximo nombre y contrasenia
+    sfText_setFont (recursosGraficosInicio->texto.textoInformativoTam, recursosGraficosInicio->texto.fuente);
+    sfText_setString (recursosGraficosInicio->texto.textoInformativoTam, "La longitud maxima del nombre y de la contraseña es\nhasta 20 caracteres.");
 
 
     ///SETUP ELEMENTOS
-    //Rectangulo central
-    sfRectangleShape_setFillColor (recursosGraficosInicio->elementos.rectanguloCentral, sfColor_fromRGB (232, 217, 205));
-
     //Barra para ingresar nombre
     sfRectangleShape_setFillColor (recursosGraficosInicio->elementos.barraIngresarNombre, sfColor_fromRGB (208, 208, 208));
+
+    //Barra para ingresar contrasenia
+    sfRectangleShape_setFillColor (recursosGraficosInicio->elementos.barraIngresarContrasenia, sfColor_fromRGB (208, 208, 208));
 
     //Boton aceptar nombre de usuario
     sfRectangleShape_setFillColor (recursosGraficosInicio->elementos.botonAceptar, sfColor_fromRGB (208, 208, 208));
@@ -119,40 +166,56 @@ void setupInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosI
 void tamYPosPantallaInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
 {
     ///SETUP POS Y TAM TEXTO
+    //Texto ingresar usuario
+    sfText_setPosition (recursosGraficosInicio->texto.ingresarUsuario, (sfVector2f){170, 25});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.ingresarUsuario, 36);
+
     //Texto ingresar nombre
-    sfText_setPosition (recursosGraficosInicio->texto.ingresarNombre, (sfVector2f){800 * app->ventana.escalaElementos.x, 390 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosInicio->texto.ingresarNombre, 36 * app->ventana.escalaPixeles);
+    sfText_setPosition (recursosGraficosInicio->texto.ingresarNombre, (sfVector2f){55, 180});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.ingresarNombre, 28);
 
     //Texto auxiliar escribir nombre
-    sfText_setPosition (recursosGraficosInicio->texto.auxEscribirNombre, (sfVector2f){750 * app->ventana.escalaElementos.x, 554 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosInicio->texto.auxEscribirNombre, 26 * app->ventana.escalaPixeles);
+    sfText_setPosition (recursosGraficosInicio->texto.auxEscribirNombre, (sfVector2f){64, 227});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.auxEscribirNombre, 24);
+
+    //Texto ingresar contrasenia
+    sfText_setPosition (recursosGraficosInicio->texto.ingresarContrasenia, (sfVector2f){55, 282});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.ingresarContrasenia, 28);
+
+    //Texto auxiliar escribir contrasenia
+    sfText_setPosition (recursosGraficosInicio->texto.auxEscribirContrasenia, (sfVector2f){64, 329});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.auxEscribirContrasenia, 24);
+
+    //Texto registrar usuario
+    sfText_setPosition (recursosGraficosInicio->texto.textoRegistrarUsuario, (sfVector2f){125, 386});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.textoRegistrarUsuario, 26);
 
     //Texto boton aceptar nombre de usuario
-    sfText_setPosition (recursosGraficosInicio->texto.textoBotonAceptar, (sfVector2f){918 * app->ventana.escalaElementos.x, 657 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosInicio->texto.textoBotonAceptar, 30 * app->ventana.escalaPixeles);
+    sfText_setPosition (recursosGraficosInicio->texto.textoBotonAceptar, (sfVector2f){255, 75});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.textoBotonAceptar, 30);
 
-    //Texto informativo tam maximo nombre de usuaio
-    sfText_setPosition (recursosGraficosInicio->texto.textoInformativoTamNombre, (sfVector2f){730 * app->ventana.escalaElementos.x, 475 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosInicio->texto.textoInformativoTamNombre, 30 * app->ventana.escalaPixeles);
+    //Texto informativo tam maximo nombre y contrasenia
+    sfText_setPosition (recursosGraficosInicio->texto.textoInformativoTam, (sfVector2f){55, 103});
+    sfText_setCharacterSize (recursosGraficosInicio->texto.textoInformativoTam, 24);
 
 
     ///SETUP POS Y TAM ELEMENTOS
-    //Rectangulo central
-    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.rectanguloCentral, (sfVector2f){660 * app->ventana.escalaElementos.x, 259 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosInicio->elementos.rectanguloCentral, (sfVector2f){600 * app->ventana.escalaElementos.x, 500 * app->ventana.escalaElementos.y});
-
     //Barra ingresar nombre
-    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.barraIngresarNombre, (sfVector2f){735 * app->ventana.escalaElementos.x, 550 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosInicio->elementos.barraIngresarNombre, (sfVector2f){450 * app->ventana.escalaElementos.x, 42 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.barraIngresarNombre, (sfVector2f){55, 228});
+    sfRectangleShape_setSize (recursosGraficosInicio->elementos.barraIngresarNombre, (sfVector2f){420, 30});
+
+    //Barra ingresar contrasenia
+    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.barraIngresarContrasenia, (sfVector2f){55, 330});
+    sfRectangleShape_setSize (recursosGraficosInicio->elementos.barraIngresarContrasenia, (sfVector2f){420, 30});
 
     //Boton aceptar nombre de usuario
-    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.botonAceptar, (sfVector2f){880 * app->ventana.escalaElementos.x, 650 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosInicio->elementos.botonAceptar, (sfVector2f){150 * app->ventana.escalaElementos.x, 50 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setOutlineThickness (recursosGraficosInicio->elementos.botonAceptar, 5 * app->ventana.escalaPixeles);
+    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.botonAceptar, (sfVector2f){250, 450});
+    sfRectangleShape_setSize (recursosGraficosInicio->elementos.botonAceptar, (sfVector2f){100, 60});
+    sfRectangleShape_setOutlineThickness (recursosGraficosInicio->elementos.botonAceptar, 3);
 
-    //Circulo de texto informativo
-    sfCircleShape_setPosition (recursosGraficosInicio->elementos.circuloTextoInformativo, (sfVector2f){710 * app->ventana.escalaElementos.x, 489 * app->ventana.escalaElementos.y});
-    sfCircleShape_setRadius (recursosGraficosInicio->elementos.circuloTextoInformativo, 6 * app->ventana.escalaPixeles);
+    //Circulo de texto informativo tam
+    sfCircleShape_setPosition (recursosGraficosInicio->elementos.circuloTextoInformativoTam, (sfVector2f){40, 115});
+    sfCircleShape_setRadius (recursosGraficosInicio->elementos.circuloTextoInformativoTam, 5);
 }
 
 void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
@@ -185,7 +248,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
 
             if ((strlen (recursosGraficosInicio->bufferEscribirNombre) > 0) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonAceptar)))
             {
-                app->usuario.actividadUsuario = ACTIVO;
+                app->interfaz = INTERFAZ_MENSAJES;
                 strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
             }
         }
@@ -205,8 +268,8 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
                 }
                 else
                 {
-                    sfText_setColor (recursosGraficosInicio->texto.textoInformativoTamNombre, sfColor_fromRGB (233, 12, 0));
-                    sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativo, sfColor_fromRGB (233, 12, 0));
+                    sfText_setColor (recursosGraficosInicio->texto.textoInformativoTam, sfColor_fromRGB (233, 12, 0));
+                    sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativoTam, sfColor_fromRGB (233, 12, 0));
                 }
             }
 
@@ -222,7 +285,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
             (evento.key.code == sfKeyEnter) &&
             (strlen (recursosGraficosInicio->bufferEscribirNombre) > 0))
         {
-            app->usuario.actividadUsuario = ACTIVO;
+            app->interfaz = INTERFAZ_MENSAJES;
             strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
         }
         break;
@@ -257,33 +320,37 @@ void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 
     if (largoBufferEscribirNombre == 0)
     {
-        sfText_setColor (recursosGraficosInicio->texto.textoInformativoTamNombre, sfColor_fromRGB (235, 235, 235));
-        sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativo, sfColor_fromRGB (235, 235, 235));
+        sfText_setColor (recursosGraficosInicio->texto.textoInformativoTam, sfColor_fromRGB (34, 48, 48));
+        sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativoTam, sfColor_fromRGB (34, 48, 48));
     }
     else if ((largoBufferEscribirNombre > 0) && (largoBufferEscribirNombre < MAX_NOMBRE_USUARIO - 1))
     {
-        sfText_setColor (recursosGraficosInicio->texto.textoInformativoTamNombre, sfColor_fromRGB (76, 175, 80));
-        sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativo, sfColor_fromRGB (76, 175, 80));
+        sfText_setColor (recursosGraficosInicio->texto.textoInformativoTam, sfColor_fromRGB (76, 175, 80));
+        sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoInformativoTam, sfColor_fromRGB (76, 175, 80));
     }
 }
 
 void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
 {
-    sfRenderWindow_clear (app->renderizado, sfColor_fromRGB (239, 239, 233));
+    sfRenderWindow_clear (app->renderizado, sfColor_fromRGB (223, 231, 233));
 
 
     ///RENDERIZAR ELEMENTOS
-    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.rectanguloCentral, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.barraIngresarNombre, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.barraIngresarContrasenia, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.botonAceptar, NULL);
-    sfRenderWindow_drawCircleShape (app->renderizado, recursosGraficosInicio->elementos.circuloTextoInformativo, NULL);
+    sfRenderWindow_drawCircleShape (app->renderizado, recursosGraficosInicio->elementos.circuloTextoInformativoTam, NULL);
 
 
     ///RENDERIZAR TEXTO
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.ingresarUsuario, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.ingresarNombre, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.auxEscribirNombre, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.ingresarContrasenia, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.auxEscribirContrasenia, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.textoRegistrarUsuario, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.textoBotonAceptar, NULL);
-    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.textoInformativoTamNombre, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosInicio->texto.textoInformativoTam, NULL);
 
 
     sfRenderWindow_display (app->renderizado);
@@ -293,17 +360,21 @@ void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 {
     ///LIBERAR TEXTO
     sfFont_destroy (recursosGraficosInicio->texto.fuente);
+    sfText_destroy (recursosGraficosInicio->texto.ingresarUsuario);
     sfText_destroy (recursosGraficosInicio->texto.ingresarNombre);
     sfText_destroy (recursosGraficosInicio->texto.auxEscribirNombre);
+    sfText_destroy (recursosGraficosInicio->texto.ingresarContrasenia);
+    sfText_destroy (recursosGraficosInicio->texto.auxEscribirContrasenia);
+    sfText_destroy (recursosGraficosInicio->texto.textoRegistrarUsuario);
     sfText_destroy (recursosGraficosInicio->texto.textoBotonAceptar);
-    sfText_destroy (recursosGraficosInicio->texto.textoInformativoTamNombre);
+    sfText_destroy (recursosGraficosInicio->texto.textoInformativoTam);
 
 
     ///LIBERAR ELEMENTOS
-    sfRectangleShape_destroy (recursosGraficosInicio->elementos.rectanguloCentral);
     sfRectangleShape_destroy (recursosGraficosInicio->elementos.barraIngresarNombre);
+    sfRectangleShape_destroy (recursosGraficosInicio->elementos.barraIngresarContrasenia);
     sfRectangleShape_destroy (recursosGraficosInicio->elementos.botonAceptar);
-    sfCircleShape_destroy (recursosGraficosInicio->elementos.circuloTextoInformativo);
+    sfCircleShape_destroy (recursosGraficosInicio->elementos.circuloTextoInformativoTam);
 }
 
 

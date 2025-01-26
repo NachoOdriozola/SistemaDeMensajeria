@@ -31,18 +31,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../FuncionesGenerales/funcionesGenerales.c">
+		<Unit filename="../FuncionesEspecificas/especificas.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../FuncionesGenerales/funcionesGenerales.h" />
-		<Unit filename="../Interfaz/interfazInicio.c">
+		<Unit filename="../FuncionesEspecificas/especificas.h" />
+		<Unit filename="../FuncionesUtiles/utiles.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Interfaz/interfazInicio.h" />
-		<Unit filename="../Interfaz/interfazMensajes.c">
+		<Unit filename="../FuncionesUtiles/utiles.h" />
+		<Unit filename="../Interfaces/interfazInicio.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Interfaz/interfazMensajes.h" />
+		<Unit filename="../Interfaces/interfazInicio.h" />
+		<Unit filename="../Interfaces/interfazMensajes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaces/interfazMensajes.h" />
 		<Unit filename="../ListaCircular/listaCircular.c">
 			<Option compilerVar="CC" />
 		</Unit>

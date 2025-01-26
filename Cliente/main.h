@@ -11,14 +11,12 @@
 #include <ws2tcpip.h>
 
 #include "estructuras.h"
-#include "../Interfaz/interfazInicio.h"
-#include "../Interfaz/interfazMensajes.h"
+#include "../FuncionesEspecificas/especificas.h"
+#include "../Interfaces/interfazInicio.h"
+#include "../Interfaces/interfazMensajes.h"
 
 
 #define PUERTO 8080
-
-#define INTERFAZ_INICIO 1
-#define INTERFAZ_MENSAJES 2
 
 #define OK 0
 #define ERROR_INICIALIZACION -1
@@ -30,9 +28,27 @@
 #define AUSENTE 0
 
 
+///FUNCIONES ESTRUCTURALES
 int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
-int setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
+void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 
 #endif // MAIN_H_INCLUDED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

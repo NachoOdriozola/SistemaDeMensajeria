@@ -273,7 +273,7 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 
-1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\estructuras.h
+1737833217 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -286,10 +286,10 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1737771083 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.c
+1737819322 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.c
 	"interfazInicio.h"
 
-1737769422 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.h
+1737819270 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaz\interfazinicio.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -333,10 +333,10 @@
 1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listacircular\listacircular.c
 	"listaCircular.h"
 
-1737763847 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
+1737833446 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
 	"main.h"
 
-1737574775 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h
+1737833211 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -345,6 +345,83 @@
 	<windows.h>
 	<ws2tcpip.h>
 	"estructuras.h"
-	"../Interfaz/interfazInicio.h"
-	"../Interfaz/interfazMensajes.h"
+	"../FuncionesEspecificas/especificas.h"
+	"../Interfaces/interfazInicio.h"
+	"../Interfaces/interfazMensajes.h"
+
+1737833488 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.c
+	"interfazInicio.h"
+
+1737857213 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../FuncionesUtiles/utiles.h"
+	"../Cliente/estructuras.h"
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+
+1737821203 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+
+1737833053 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.c
+	"interfazMensajes.h"
+
+1737822176 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+	"../FuncionesUtiles/utiles.h"
+	"../ListaCircular/listaCircular.h"
+
+1737822299 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.c
+	"utiles.h"
+
+1737834251 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.c
+	"especificas.h"
+
+1737833575 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"SFML/Audio.h"
+	"../Cliente/estructuras.h"
+	"../FuncionesUtiles/utiles.h"
 

@@ -18,8 +18,11 @@
 
 #define MAX_NOMBRE_USUARIO 21
 
-#define RESOLUCION_BASE_X 1920
-#define RESOLUCION_BASE_Y 1009
+#define RESOLUCION_BASE_MAXIMIZADO_X 1920
+#define RESOLUCION_BASE_MAXIMIZADO_Y 1009
+
+#define INTERFAZ_INICIO 1
+#define INTERFAZ_MENSAJES 2
 
 
 typedef struct
@@ -41,6 +44,7 @@ typedef struct
     sfRenderWindow *renderizado;
     s_usuario usuario;
     s_ventana ventana;
+    unsigned short int interfaz;
     bool aplicacionEjecutandose;
 } s_aplicacion;
 

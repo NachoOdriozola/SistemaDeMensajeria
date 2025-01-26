@@ -17,7 +17,7 @@
 #include "SFML/Audio.h"
 
 #include "../Cliente/estructuras.h"
-#include "../FuncionesGenerales/funcionesGenerales.h"
+#include "../FuncionesUtiles/utiles.h"
 #include "../ListaCircular/listaCircular.h"
 
 

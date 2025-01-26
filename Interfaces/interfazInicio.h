@@ -11,7 +11,7 @@
 #include <ws2tcpip.h>
 #include <stdbool.h>
 
-#include "../FuncionesGenerales/funcionesGenerales.h"
+#include "../FuncionesUtiles/utiles.h"
 #include "../Cliente/estructuras.h"
 
 #include "SFML/Graphics.h"
@@ -36,18 +36,22 @@
 typedef struct
 {
     sfFont *fuente;
+    sfText *ingresarUsuario;
     sfText *ingresarNombre;
     sfText *auxEscribirNombre;
+    sfText *ingresarContrasenia;
+    sfText *auxEscribirContrasenia;
+    sfText *textoRegistrarUsuario;
     sfText *textoBotonAceptar;
-    sfText *textoInformativoTamNombre;
+    sfText *textoInformativoTam;
 } s_textoInicio;
 
 typedef struct
 {
-    sfRectangleShape *rectanguloCentral;
     sfRectangleShape *barraIngresarNombre;
+    sfRectangleShape *barraIngresarContrasenia;
     sfRectangleShape *botonAceptar;
-    sfCircleShape *circuloTextoInformativo;
+    sfCircleShape *circuloTextoInformativoTam;
 } s_elementosInicio;
 
 typedef struct

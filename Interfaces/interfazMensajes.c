@@ -133,10 +133,6 @@ void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGrafi
     ///SETUP MENSAJES
     mapListaCircularConComplemento (&(recursosGraficosMensajes->listaMensajes), recursosGraficosMensajes->texto.fuente, setupListaMensajes);
     recursosGraficosMensajes->siguienteMensaje = recursosGraficosMensajes->listaMensajes;
-
-
-    ///SETUP POS Y TAM
-    TamYPosPantallaMensajes (app, recursosGraficosMensajes);
 }
 
 void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes)
