@@ -33,15 +33,14 @@
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
 
-#define MAX_BUFFER_MENSAJE 50
+#define MAX_BUFFER_MENSAJE 256
 #define MAX_MENSAJES_EN_MEM 5
 
 
 typedef struct
 {
     sfFont *fuente;
-    sfText *auxTexto;
-    sfText *usuariosActivos;
+    sfText *textoUsuariosActivos;
     sfText *nombreUsuario;
     sfText *auxEscribirMensaje;
 } s_textoMensajes;
@@ -56,12 +55,6 @@ typedef struct
 
 typedef struct
 {
-    sfText *mensaje;
-    sfVector2f posicionMensaje;
-} s_mensaje;
-
-typedef struct
-{
     s_textoMensajes texto;
     s_elementosMensajes elementos;
     bool habilitarEscritura;
@@ -70,7 +63,13 @@ typedef struct
     s_listaCircular listaMensajes;
 } s_recursosGraficosMensajes;
 
+typedef struct
+{
+    sfText *mensaje;
+    sfVector2f posicionMensaje;
+} s_mensaje;
 
+void ajustarMensajeDerecha(char* mensaje, sfText* texto, float anchoMaximo);
 ///FUNCIONES ESTRUCTURALES
 int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes);
@@ -82,7 +81,7 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes);
 
 
 ///FUNCIONES LOGICAS
-int recibirMensajeCompleto (SOCKET sock, char *buffer, int tamBytesMensaje);
+void enviarPaqueteMensaje (s_aplicacion *app, SOCKET sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor);
 
 

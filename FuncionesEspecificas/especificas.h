@@ -20,7 +20,12 @@
 #include "../FuncionesUtiles/utiles.h"
 
 
+#define INICIO_SESION_AUTOMATICO 1
+#define INICIO_SESION_MANUAL 0
+
+
 ///FUNCIONES DE INICIALIZACION ESPECIFICAS
+int verificarDatosGuardados (s_aplicacion *app);
 void crearEscalaElementos (s_aplicacion *app);
 void crearEscalaPixeles (s_aplicacion *app);
 void eventoMaximizadoAutomatico (s_aplicacion *app);

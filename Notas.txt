@@ -13,3 +13,4 @@
 -Analizar cambiar la paleta de colores.
 -Ocular el cmd cuando inicio la app.
 -Considerar formas para evitar ejecutar funciones innecesarias en "Actualizar", ej: Establecer un color siempre.
+-Verificar el inicio de sesion automatico en la base de datos.

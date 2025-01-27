@@ -10,13 +10,27 @@ int main()
     s_recursosGraficosMensajes recursosGraficosMensajes;
 
 
-    if (inicializar (&app, &socket, &recursosGraficosInicio, &recursosGraficosMensajes) == ERROR_INICIALIZACION)
+    if (inicializar (&app, &socket, &recursosGraficosMensajes) == ERROR_INICIALIZACION)
     {
         perror ("ERROR - Inicializar recursos.\n");
         liberar (&app, &socket, &recursosGraficosMensajes);
         return ERROR_INICIALIZACION;
     }
-    setup (&app, &socket, &recursosGraficosInicio, &recursosGraficosMensajes);
+    setup (&app, &socket, &recursosGraficosMensajes);
+
+    if (verificarDatosGuardados(&app) == INICIO_SESION_AUTOMATICO)
+    {
+        app.interfaz = INTERFAZ_MENSAJES;
+        maximizadoAutomaticoVentana (&app);
+        TamYPosPantallaMensajes (&app, &recursosGraficosMensajes);
+        sfText_setString (recursosGraficosMensajes.texto.nombreUsuario, app.usuario.nombreUsuario);
+    }
+    else
+    {
+        app.interfaz = INTERFAZ_INICIO;
+        inicializarInicio (&recursosGraficosInicio);
+        setupInicio (&recursosGraficosInicio);
+    }
 
 
     printf ("INICIALIZACION Y SETUP EXITOSOS.\n");
@@ -51,13 +65,13 @@ int main()
     return OK;
 }
 
-int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes)
+int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     printf ("INICIALIZANDO RECURSOS.\n");
 
 
     ///INICIALIZAR APLICACION
-    app->renderizado = sfRenderWindow_create ((sfVideoMode){540, 490}, "App", sfDefaultStyle, NULL);
+    app->renderizado = sfRenderWindow_create ((sfVideoMode){540, 540}, "App", sfDefaultStyle, NULL);
     if (!app->renderizado)
     {
         perror ("ERROR - Crear renderizado.\n");
@@ -95,11 +109,6 @@ int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *re
         printf ("CONECTADO CON EL SERVIDOR.\n");
 
 
-    ///INICIALIZAR RECURSOS GRAFICOS DE INTERFAZ DE INICIO
-    if (inicializarInicio (recursosGraficosInicio) == ERROR_INICIALIZACION)
-        return ERROR_INICIALIZACION;
-
-
     ///INICIALIZAR RECURSOS GRAFICOS DE INTERFAZ DE MENSAJES
     if (inicializarMensajes (recursosGraficosMensajes) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
@@ -108,7 +117,7 @@ int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *re
     return OK;
 }
 
-void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio, s_recursosGraficosMensajes *recursosGraficosMensajes)
+void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     printf ("SETUP DE RECURSOS.\n");
 
@@ -116,11 +125,8 @@ void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recurso
     ///SETUP APLICACION
     sfRenderWindow_setFramerateLimit (app->renderizado, 60);
     app->aplicacionEjecutandose = CONTINUAR_APLICACION;
-    app->interfaz = INTERFAZ_INICIO;
     app->usuario.actividadUsuario = ACTIVO;
 
-    ///SETUP RECURSOS GRAFICOS DE INTERFAZ DE INICIO
-    setupInicio (app, recursosGraficosInicio);
 
     ///SETUP RECURSOS GRAFICOS DE INTERFAZ DE MENSAJES
     setupMensajes (app, recursosGraficosMensajes);

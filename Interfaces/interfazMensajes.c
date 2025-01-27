@@ -10,21 +10,14 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     recursosGraficosMensajes->texto.fuente = sfFont_createFromFile ("fuente.ttf");
     if (!recursosGraficosMensajes->texto.fuente)
     {
-        perror ("ERROR - Crear fuente para recursos graficos de mensajes.\n");
+        perror ("ERROR - Crear fuente.\n");
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosMensajes->texto.auxTexto = sfText_create ();
-    if (!recursosGraficosMensajes->texto.auxTexto)
+    recursosGraficosMensajes->texto.textoUsuariosActivos = sfText_create ();
+    if (!recursosGraficosMensajes->texto.textoUsuariosActivos)
     {
-        perror ("ERROR - Crear texto temporal.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    recursosGraficosMensajes->texto.usuariosActivos = sfText_create ();
-    if (!recursosGraficosMensajes->texto.usuariosActivos)
-    {
-        perror ("ERROR - Crear texto auxiliar usuarios activos.\n");
+        perror ("ERROR - Crear texto usuarios activos.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -38,10 +31,9 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     recursosGraficosMensajes->texto.auxEscribirMensaje = sfText_create ();
     if (!recursosGraficosMensajes->texto.auxEscribirMensaje)
     {
-        perror ("ERROR - Crear texto para escribir mensaje.\n");
+        perror ("ERROR - Crear texto auxiliar para escribir mensaje.\n");
         return ERROR_INICIALIZACION;
     }
-
 
 
     ///INICIALIZAR ELEMENTOS
@@ -69,10 +61,9 @@ int inicializarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
     recursosGraficosMensajes->elementos.barraIngresarMensaje = sfRectangleShape_create ();
     if (!recursosGraficosMensajes->elementos.barraIngresarMensaje)
     {
-        perror ("ERROR - Crear barra de ingresar mensaje.\n");
+        perror ("ERROR - Crear barra para ingresar mensaje.\n");
         return ERROR_INICIALIZACION;
     }
-
 
 
     ///INICIALIZAR MENSAJES
@@ -99,13 +90,10 @@ void setupMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursosGrafi
 
 
     ///SETUP TEXTO
-    //Texto auxiliar
-    sfText_setFont (recursosGraficosMensajes->texto.auxTexto, recursosGraficosMensajes->texto.fuente);
-
-    //Texto auxiliar usuarios activos
-    sfText_setFont (recursosGraficosMensajes->texto.usuariosActivos, recursosGraficosMensajes->texto.fuente);
-    sfText_setString (recursosGraficosMensajes->texto.usuariosActivos, "Usuarios activos");
-    sfText_setColor (recursosGraficosMensajes->texto.usuariosActivos, sfColor_fromRGB (34, 48, 48));
+    //Texto usuarios activos
+    sfText_setFont (recursosGraficosMensajes->texto.textoUsuariosActivos, recursosGraficosMensajes->texto.fuente);
+    sfText_setString (recursosGraficosMensajes->texto.textoUsuariosActivos, "Usuarios activos");
+    sfText_setColor (recursosGraficosMensajes->texto.textoUsuariosActivos, sfColor_fromRGB (34, 48, 48));
 
     //Texto nombre de usuario
     sfText_setFont (recursosGraficosMensajes->texto.nombreUsuario, recursosGraficosMensajes->texto.fuente);
@@ -139,15 +127,15 @@ void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *rec
 {
     ///SETUP POS Y TAM TEXTO
     //Texto usuarios activos
-    sfText_setPosition (recursosGraficosMensajes->texto.usuariosActivos, (sfVector2f){62 * app->ventana.escalaElementos.x, 45 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosMensajes->texto.usuariosActivos, 36 * app->ventana.escalaPixeles);
+    sfText_setPosition (recursosGraficosMensajes->texto.textoUsuariosActivos, (sfVector2f){62 * app->ventana.escalaElementos.x, 45 * app->ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosMensajes->texto.textoUsuariosActivos, 36 * app->ventana.escalaPixeles);
 
     //Texto nombre de usuario
     sfText_setPosition (recursosGraficosMensajes->texto.nombreUsuario, (sfVector2f){35 * app->ventana.escalaElementos.x, 925 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosMensajes->texto.nombreUsuario, 36 * app->ventana.escalaPixeles);
 
-    //Texto para escribir mensaje
-    sfText_setPosition (recursosGraficosMensajes->texto.auxEscribirMensaje, (sfVector2f){500 * app->ventana.escalaElementos.x, 912 * app->ventana.escalaElementos.y});
+    //Texto auxiliar para escribir mensaje
+    sfText_setPosition (recursosGraficosMensajes->texto.auxEscribirMensaje, (sfVector2f){450 * app->ventana.escalaElementos.x, 912 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosMensajes->texto.auxEscribirMensaje, 26 * app->ventana.escalaPixeles);
 
 
@@ -165,8 +153,8 @@ void TamYPosPantallaMensajes (s_aplicacion *app, s_recursosGraficosMensajes *rec
     sfRectangleShape_setSize (recursosGraficosMensajes->elementos.barraSeparacionNombre, (sfVector2f){250 * app->ventana.escalaElementos.x, 3 * app->ventana.escalaElementos.y});
 
     //Barra de ingresar mensaje
-    sfRectangleShape_setPosition (recursosGraficosMensajes->elementos.barraIngresarMensaje, (sfVector2f){480 * app->ventana.escalaElementos.x, 909 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosMensajes->elementos.barraIngresarMensaje, (sfVector2f){1200 * app->ventana.escalaElementos.x, 42 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosMensajes->elementos.barraIngresarMensaje, (sfVector2f){430 * app->ventana.escalaElementos.x, 909 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setSize (recursosGraficosMensajes->elementos.barraIngresarMensaje, (sfVector2f){1350 * app->ventana.escalaElementos.x, 42 * app->ventana.escalaElementos.y});
 
 
     ///SETUP TAM MENSAJES
@@ -177,8 +165,6 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
-    s_paqueteMensaje paqueteMensaje;
-    int largoBufferMensaje;
 
 
     sfRenderWindow_pollEvent (app->renderizado, &evento);
@@ -206,28 +192,11 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
         break;
 
     case sfEvtTextEntered:
-        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
-            (evento.text.unicode < 128) &&
-            (evento.text.unicode != 13) && //Detecta que no sea la tecla "Enter"
-            ((largoBufferMensaje = strlen(recursosGraficosMensajes->bufferEscribirMensaje)) < MAX_BUFFER_MENSAJE - 1))
+        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) && (evento.text.unicode < 128))
         {
-            if (evento.text.unicode != 8) //Detecta que no sea la tecla "Backspace"
-            {
-                recursosGraficosMensajes->bufferEscribirMensaje [largoBufferMensaje] = (char)evento.text.unicode;
-                recursosGraficosMensajes->bufferEscribirMensaje [largoBufferMensaje + 1] = '\0';
-            }
-            else if (largoBufferMensaje > 0)
-                recursosGraficosMensajes->bufferEscribirMensaje [largoBufferMensaje - 1] = '\0';
+            ingresoTexto (recursosGraficosMensajes->bufferEscribirMensaje, MAX_BUFFER_MENSAJE - 5, evento);
+            sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
         }
-
-        if ((recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
-            (evento.text.unicode == 8) && //Detecta que sea la tecla "Backspace"
-            (largoBufferMensaje == MAX_BUFFER_MENSAJE - 1)) //Es el ultimo espacio
-        {
-            recursosGraficosMensajes->bufferEscribirMensaje [largoBufferMensaje - 1] = '\0';
-        }
-
-        sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
         break;
 
     case sfEvtKeyPressed:
@@ -235,14 +204,7 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
             (recursosGraficosMensajes->habilitarEscritura == HABILITAR_ESCRITURA) &&
             (strlen (recursosGraficosMensajes->bufferEscribirMensaje) > 0))
         {
-            strcpy (paqueteMensaje.nombreUsuario, app->usuario.nombreUsuario);
-            paqueteMensaje.nombreUsuario [MAX_NOMBRE_USUARIO] = '\0';
-            strcpy (paqueteMensaje.bufferMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
-            paqueteMensaje.bufferMensaje [MAX_BUFFER_MENSAJE] = '\0';
-            send (sock->sock, (char*)(&paqueteMensaje), sizeof (s_paqueteMensaje), 0);
-            asignarMensaje (app, recursosGraficosMensajes, recursosGraficosMensajes->bufferEscribirMensaje, MI_USUARIO);
-            *(recursosGraficosMensajes->bufferEscribirMensaje) = '\0';
-            sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
+            enviarPaqueteMensaje (app, sock->sock, recursosGraficosMensajes);
         }
         break;
 
@@ -254,15 +216,15 @@ void accionMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensaj
 void actualizarMensajes (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     ///RECIBIR MENSAJES DE OTROS USUARIOS
-    s_paqueteMensaje paqueteMensaje;
+    int bytesRecibidos;
+    char bufferPaquete [MAX_NOMBRE_USUARIO + MAX_BUFFER_MENSAJE];
 
-    if (recibirMensajeCompleto (sock->sock, (char*)(&paqueteMensaje), sizeof (s_paqueteMensaje)) == sizeof (s_paqueteMensaje))
+    bytesRecibidos = recv (sock->sock, bufferPaquete, sizeof (bufferPaquete), 0);
+    if (bytesRecibidos > 0)
     {
-        puts (paqueteMensaje.nombreUsuario);
-        puts (paqueteMensaje.bufferMensaje);
+        bufferPaquete [bytesRecibidos] = '\0';
+        asignarMensaje (app, recursosGraficosMensajes, bufferPaquete, OTRO_USUARIO);
     }
-
-    //asignarMensaje (app, recursosGraficosMensajes, bufferMensaje, OTRO_USUARIO);
 
     ///TEXTO AUXILIAR ESCRIBIR MENSAJE
     if ((recursosGraficosMensajes->habilitarEscritura == DESHABILITAR_ESCRITURA) && ((strlen (recursosGraficosMensajes->bufferEscribirMensaje) == 0)))
@@ -282,7 +244,7 @@ void renderizarMensajes (s_aplicacion *app, s_recursosGraficosMensajes *recursos
 
 
     ///RENDERIZAR TEXTO
-    sfRenderWindow_drawText (app->renderizado, recursosGraficosMensajes->texto.usuariosActivos, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosMensajes->texto.textoUsuariosActivos, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosMensajes->texto.nombreUsuario, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosMensajes->texto.auxEscribirMensaje, NULL);
 
@@ -298,8 +260,7 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
     ///LIBERAR TEXTO
     sfFont_destroy (recursosGraficosMensajes->texto.fuente);
-    sfText_destroy (recursosGraficosMensajes->texto.auxTexto);
-    sfText_destroy (recursosGraficosMensajes->texto.usuariosActivos);
+    sfText_destroy (recursosGraficosMensajes->texto.textoUsuariosActivos);
     sfText_destroy (recursosGraficosMensajes->texto.nombreUsuario);
     sfText_destroy (recursosGraficosMensajes->texto.auxEscribirMensaje);
 
@@ -319,57 +280,89 @@ void liberarMensajes (s_recursosGraficosMensajes *recursosGraficosMensajes)
 ///FUNCIONES LOGICAS
 
 
-int recibirMensajeCompleto (SOCKET sock, char *buffer, int tamBytesMensaje)
+void enviarPaqueteMensaje (s_aplicacion *app, SOCKET sock, s_recursosGraficosMensajes *recursosGraficosMensajes)
 {
-    int bytesTotalRecibidos = 0, bytesRecibidos;
+    char bufferPaquete [MAX_NOMBRE_USUARIO + MAX_BUFFER_MENSAJE], *ptrBufferPaquete = bufferPaquete;
 
-    while (bytesTotalRecibidos < tamBytesMensaje)
-    {
-        bytesRecibidos = recv (sock, buffer + bytesTotalRecibidos, tamBytesMensaje - bytesTotalRecibidos, 0);
-        if (bytesRecibidos < 0)
-            return 1; //Error o conexion fallida
-        bytesTotalRecibidos += bytesRecibidos;
+    s_mensaje *mensaje;
+
+    mensaje = recursosGraficosMensajes->siguienteMensaje->dato;
+    ajustarMensajeDerecha (recursosGraficosMensajes->bufferEscribirMensaje, mensaje->mensaje, 780 * app->ventana.escalaElementos.x);
+
+    //Logica para enviar el paquete del mensaje
+    strcpy (ptrBufferPaquete, app->usuario.nombreUsuario);
+    ptrBufferPaquete += strlen (ptrBufferPaquete);
+    *ptrBufferPaquete = '\n';
+    ptrBufferPaquete ++;
+    strcpy (ptrBufferPaquete, recursosGraficosMensajes->bufferEscribirMensaje);
+    send (sock, bufferPaquete, sizeof (bufferPaquete), 0);
+
+    //Asigna el mensaje a la lista de mensajes para el renderizado
+    //asignarMensaje (app, recursosGraficosMensajes, recursosGraficosMensajes->bufferEscribirMensaje, MI_USUARIO);
+
+    //Pone el texto auxiliar para escribir un nuevo mensaje de 0
+    *(recursosGraficosMensajes->bufferEscribirMensaje) = '\0';
+    sfText_setString (recursosGraficosMensajes->texto.auxEscribirMensaje, recursosGraficosMensajes->bufferEscribirMensaje);
+}
+
+
+void ajustarMensajeDerecha(char* mensaje, sfText* texto, float anchoMaximo)
+{
+    char buffer[1024] = ""; // Donde se almacenará el mensaje ajustado
+    char* palabra = strtok(mensaje, " "); // Dividimos el mensaje por palabras
+    char lineaActual[256] = "";
+
+    // Iteramos sobre cada palabra del mensaje
+    while (palabra != NULL) {
+        char pruebaLinea[256];
+        snprintf(pruebaLinea, sizeof(pruebaLinea), "%s %s", lineaActual, palabra);
+
+        // Ajustamos temporalmente el texto para medirlo
+        sfText_setString(texto, pruebaLinea);
+        sfFloatRect bounds = sfText_getLocalBounds(texto);
+
+        if (bounds.width > anchoMaximo) {
+            // Si la línea supera el ancho máximo, se rompe
+            strcat(buffer, lineaActual);
+            strcat(buffer, "\n");
+            snprintf(lineaActual, sizeof(lineaActual), "%s", palabra); // Nueva línea con la palabra que quedó fuera
+        } else {
+            // Si cabe, se agrega la palabra a la línea actual
+            snprintf(lineaActual, sizeof(lineaActual), "%s", pruebaLinea);
+        }
+
+        palabra = strtok(NULL, " "); // Siguiente palabra
     }
 
-    return bytesTotalRecibidos;
+    // Agregar la última línea
+    strcat(buffer, lineaActual);
+
+    // Guardar el mensaje ajustado con '\n'
+    strcpy(mensaje, buffer);
 }
 
 
 void asignarMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, const char *bufferMensaje, bool enviadoPor)
 {
     s_mensaje *mensaje;
+    sfFloatRect bordesMensaje;
 
     mapListaCircularConComplemento (&(recursosGraficosMensajes->listaMensajes), &(app->ventana.escalaPixeles), modificarPosicionListaMensajes);
     mensaje = recursosGraficosMensajes->siguienteMensaje->dato;
-    sfText_setString (mensaje->mensaje, bufferMensaje);
     if (enviadoPor == MI_USUARIO)
-        mensaje->posicionMensaje = (sfVector2f){1260 * app->ventana.escalaElementos.x, 827 * app->ventana.escalaElementos.y};
+    {
+        bordesMensaje = sfText_getLocalBounds (mensaje->mensaje);
+        mensaje->posicionMensaje = (sfVector2f){(1780 * app->ventana.escalaElementos.x) - bordesMensaje.width, 827 * app->ventana.escalaElementos.y};
+    }
     else
-        mensaje->posicionMensaje = (sfVector2f){480 * app->ventana.escalaElementos.x, 827 * app->ventana.escalaElementos.y};
+    {
+        mensaje->posicionMensaje = (sfVector2f){430 * app->ventana.escalaElementos.x, 827 * app->ventana.escalaElementos.y};
+    }
     sfText_setPosition (mensaje->mensaje, mensaje->posicionMensaje);
 
     recursosGraficosMensajes->siguienteMensaje = recursosGraficosMensajes->siguienteMensaje->sig;
 }
 
-/*
-void ajustarLargoMaxMensaje (s_aplicacion *app, s_recursosGraficosMensajes *recursosGraficosMensajes, char *bufferMensaje, sfVector2f posicion, unsigned int tamPixeles, float largoMax)
-{
-    float largoTexto, espacioActual = 0;
-    unsigned longitudPalabra;
-    char *ptrMensaje = bufferMensaje;
-
-    char palabraActual [101] = '\0';
-    char mensajeFinal [1024] = '\0';
-
-    sfText_setPosition (recursosGraficosMensajes->texto.auxTexto, posicion);
-    sfText_setCharacterSize (recursosGraficosMensajes->texto.auxTexto, tamPixeles * app->ventana.escalaPixeles);
-
-    while (*ptrMensaje != '\0')
-    {
-
-    }
-}
-*/
 
 ///FUNCIONES COMPLEMENTARIAS
 

@@ -274,7 +274,7 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 
-1737833217 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\estructuras.h
+1737934102 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -334,10 +334,10 @@
 1737574775 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listacircular\listacircular.c
 	"listaCircular.h"
 
-1737833446 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
+1737934926 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.c
 	"main.h"
 
-1737833211 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h
+1737935034 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -350,10 +350,10 @@
 	"../Interfaces/interfazInicio.h"
 	"../Interfaces/interfazMensajes.h"
 
-1737833488 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.c
+1737942463 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.c
 	"interfazInicio.h"
 
-1737857213 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.h
+1737942325 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazinicio.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -369,7 +369,7 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1737821203 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.h
+1737942314 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -384,10 +384,10 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 
-1737833053 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.c
+1737950222 source:c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.c
 	"interfazMensajes.h"
 
-1737822176 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.h
+1737949999 c:\users\ignac\documents\appdemensajes\appdemensajes\interfaces\interfazmensajes.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -404,13 +404,13 @@
 	"../FuncionesUtiles/utiles.h"
 	"../ListaCircular/listaCircular.h"
 
-1737822299 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.c
+1737942302 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesutiles\utiles.c
 	"utiles.h"
 
-1737834251 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.c
+1737935309 source:c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.c
 	"especificas.h"
 
-1737833575 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.h
+1737934614 c:\users\ignac\documents\appdemensajes\appdemensajes\funcionesespecificas\especificas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>

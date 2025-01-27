@@ -34,7 +34,23 @@ bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangul
     return sfFloatRect_contains (&limiteRectangulo, posMouse.x, posMouse.y);
 }
 
+void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento)
+{
+    int largoBuffer;
 
+    largoBuffer = strlen (buffer);
+
+    if ((evento.text.unicode != 13) && (evento.text.unicode != 8)) //Detecta que no sea la tecla "Enter" ni "Backspace"
+    {
+        if (largoBuffer < maxIngreso)
+        {
+            buffer [largoBuffer] = (char)evento.text.unicode;
+            buffer [largoBuffer + 1] = '\0';
+        }
+    }
+    else if ((evento.text.unicode == 8) && (largoBuffer > 0)) //Detecta que sea la tecla "Backspace"
+        buffer [largoBuffer - 1] = '\0';
+}
 
 
 

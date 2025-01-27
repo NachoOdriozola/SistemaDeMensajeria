@@ -4,6 +4,23 @@
 ///FUNCIONES DE INICIALIZACION ESPECIFICAS
 
 
+int verificarDatosGuardados (s_aplicacion *app)
+{
+    s_datosGuardados datosGuardados;
+    FILE *archDatos;
+
+    archDatos = fopen ("Datos.dat", "rb");
+    if (!archDatos)
+        return INICIO_SESION_MANUAL;
+
+    fread (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+    strcpy (app->usuario.nombreUsuario, datosGuardados.nombre);
+
+    fclose (archDatos);
+
+    return INICIO_SESION_AUTOMATICO;
+}
+
 void crearEscalaElementos (s_aplicacion *app)
 {
     app->ventana.escalaElementos.x = app->ventana.tamOriginalPantalla.x / (float)RESOLUCION_BASE_MAXIMIZADO_X;

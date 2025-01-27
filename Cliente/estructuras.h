@@ -15,7 +15,6 @@
 #include "SFML/System.h"
 #include "SFML/Audio.h"
 
-#define MAX_BUFFER_MENSAJE 50
 
 #define MAX_NOMBRE_USUARIO 21
 #define MAX_CONTRASENIA_USUARIO 21
@@ -59,9 +58,9 @@ typedef struct
 
 typedef struct
 {
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
-    char bufferMensaje [MAX_BUFFER_MENSAJE];
-} s_paqueteMensaje;
+    char nombre [MAX_NOMBRE_USUARIO];
+    char contrasenia [MAX_CONTRASENIA_USUARIO];
+} s_datosGuardados;
 
 
 #endif // ESTRUCTURAS_H_INCLUDED

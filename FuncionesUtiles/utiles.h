@@ -26,6 +26,7 @@
 ///FUNCIONES UTILES
 void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla);
 bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo);
+void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento);
 
 
 
