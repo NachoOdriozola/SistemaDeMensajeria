@@ -39,14 +39,26 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../FuncionesUtiles/utiles.h" />
+		<Unit filename="../Interfaces/interfazAmigos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaces/interfazAmigos.h" />
+		<Unit filename="../Interfaces/interfazConfig.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaces/interfazConfig.h" />
 		<Unit filename="../Interfaces/interfazInicio.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../Interfaces/interfazInicio.h" />
-		<Unit filename="../Interfaces/interfazMensajes.c">
+		<Unit filename="../Interfaces/interfazRegistro.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../Interfaces/interfazMensajes.h" />
+		<Unit filename="../Interfaces/interfazRegistro.h" />
+		<Unit filename="../Interfaces/interfazSalas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../Interfaces/interfazSalas.h" />
 		<Unit filename="../ListaCircular/listaCircular.c">
 			<Option compilerVar="CC" />
 		</Unit>

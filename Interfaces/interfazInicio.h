@@ -2,6 +2,8 @@
 #define INTERFAZINICIO_H_INCLUDED
 
 
+///INCLUDES
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,6 +21,8 @@
 #include "SFML/System.h"
 #include "SFML/Audio.h"
 
+
+///DEFINES
 
 #define OK 0
 #define ERROR_INICIALIZACION -1
@@ -40,6 +44,8 @@
 
 #define MAX_INGRESO_TECLADO 26
 
+
+///ESTRUCTURAS
 
 typedef struct
 {
@@ -86,6 +92,7 @@ typedef struct
 
 
 ///FUNCIONES ESTRUCTURALES
+
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void tamYPosPantallaInicio (s_recursosGraficosInicio *recursosGraficosInicio);
@@ -96,6 +103,7 @@ void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 
 
 ///FUNCIONES LOGICAS
+
 int guardarDatosEnArchivo (const char *bufferNombre, const char *bufferContrasenia);
 
 

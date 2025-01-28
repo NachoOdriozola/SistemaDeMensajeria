@@ -2,6 +2,8 @@
 #define FUNCIONESGENERALES_H_INCLUDED
 
 
+///INCLUDES
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,15 +21,17 @@
 #include "../Cliente/estructuras.h"
 
 
+///DEFINES
+
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
 
 ///FUNCIONES UTILES
+
 void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla);
 bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo);
 void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento);
-
 
 
 #endif // FUNCIONESGENERALES_H_INCLUDED

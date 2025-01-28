@@ -2,6 +2,8 @@
 #define ESPECIFICAS_H_INCLUDED
 
 
+///INCLUDES
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,11 +22,14 @@
 #include "../FuncionesUtiles/utiles.h"
 
 
+///DEFINES
+
 #define INICIO_SESION_AUTOMATICO 1
 #define INICIO_SESION_MANUAL 0
 
 
 ///FUNCIONES DE INICIALIZACION ESPECIFICAS
+
 int verificarDatosGuardados (s_aplicacion *app);
 void crearEscalaElementos (s_aplicacion *app);
 void crearEscalaPixeles (s_aplicacion *app);

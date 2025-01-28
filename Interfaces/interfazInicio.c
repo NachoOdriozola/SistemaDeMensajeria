@@ -349,13 +349,13 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
                 }
             }
 
-            if (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar)) //TEMPORAL
-                printf ("Se clickeo el rectangulo de registrar usuario.\n");
 
+            if (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar))
+                app->interfaz = INTERFAZ_REGISTRO;
 
             if ((recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonIngresar)))
             {
-                app->interfaz = INTERFAZ_MENSAJES;
+                app->interfaz = INTERFAZ_AMIGOS;
                 strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
                 if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
                     guardarDatosEnArchivo (recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
@@ -381,7 +381,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
             (recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) &&
             ((recursosGraficosInicio->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosInicio->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
-            app->interfaz = INTERFAZ_MENSAJES;
+            app->interfaz = INTERFAZ_AMIGOS;
             strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
             if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
                 guardarDatosEnArchivo (recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);

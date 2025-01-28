@@ -2,6 +2,8 @@
 #define ESTRUCTURAS_H_INCLUDED
 
 
+///INCLUDES
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -16,6 +18,8 @@
 #include "SFML/Audio.h"
 
 
+///DEFINES
+
 #define MAX_NOMBRE_USUARIO 21
 #define MAX_CONTRASENIA_USUARIO 21
 
@@ -23,13 +27,18 @@
 #define RESOLUCION_BASE_MAXIMIZADO_Y 1009
 
 #define INTERFAZ_INICIO 1
-#define INTERFAZ_MENSAJES 2
+#define INTERFAZ_REGISTRO 2
+#define INTERFAZ_AMIGOS 3
+#define INTERFAZ_SALAS 4
+#define INTERFAZ_CONFIG 5
 
+
+///ESTRUCTURAS
 
 typedef struct
 {
     char nombreUsuario [MAX_NOMBRE_USUARIO];
-    bool actividadUsuario;
+    unsigned short int ultimaInterfaz;
 } s_usuario;
 
 typedef struct

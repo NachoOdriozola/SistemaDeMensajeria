@@ -2,6 +2,8 @@
 #define MAIN_H_INCLUDED
 
 
+///INCLUDES
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,8 +15,13 @@
 #include "estructuras.h"
 #include "../FuncionesEspecificas/especificas.h"
 #include "../Interfaces/interfazInicio.h"
-#include "../Interfaces/interfazMensajes.h"
+#include "../Interfaces/interfazRegistro.h"
+#include "../Interfaces/interfazAmigos.h"
+#include "../Interfaces/interfazSalas.h"
+#include "../Interfaces/interfazConfig.h"
 
+
+///DEFINES
 
 #define PUERTO 8080
 
@@ -28,10 +35,23 @@
 #define AUSENTE 0
 
 
+///ESTRUCTURAS
+
+typedef struct
+{
+    s_recursosGraficosInicio recursosGraficosInicio;
+    s_recursosGraficosRegistro recursosGraficosRegistro;
+    s_recursosGraficosAmigos recursosGraficosAmigos;
+    s_recursosGraficosSalas recursosGraficosSalas;
+    s_recursosGraficosConfig recursosGraficosConfig;
+} s_recursosGraficos;
+
+
 ///FUNCIONES ESTRUCTURALES
-int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
-void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
-void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficosMensajes *recursosGraficosMensajes);
+
+int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
+void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
+void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
 
 
 #endif // MAIN_H_INCLUDED
