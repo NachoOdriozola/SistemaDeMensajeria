@@ -92,7 +92,7 @@ typedef struct
 int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
 void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
 void tamYPosPantallaRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
-void accionRegistro (s_aplicacion *app, s_socket *sock, s_recursosGraficosRegistro *recursosGraficosRegistro);
+void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro);
 void actualizarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
 void renderizarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro);
 void liberarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);

@@ -306,7 +306,7 @@ void tamYPosPantallaInicio (s_recursosGraficosInicio *recursosGraficosInicio)
     sfRectangleShape_setSize (recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar, (sfVector2f){285, 30});
 }
 
-void accionInicio (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio)
+void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
@@ -360,7 +360,7 @@ void accionInicio (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *
 
             if ((recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonIngresar)))
             {
-                if (enviarSolicitudUsuario (sock->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
+                if (enviarSolicitudUsuario (app->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
                 {
                     app->interfaz = INTERFAZ_AMIGOS;
                     strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
@@ -397,7 +397,7 @@ void accionInicio (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *
             (recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) &&
             ((recursosGraficosInicio->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosInicio->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
-            if (enviarSolicitudUsuario (sock->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
+            if (enviarSolicitudUsuario (app->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
                 {
                     app->interfaz = INTERFAZ_AMIGOS;
                     strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);

@@ -189,7 +189,7 @@ void TamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recurso
     mapListaCircularConComplemento (&(recursosGraficosAmigos->listaMensajes), &(app->ventana.escalaPixeles), tamListaMensajes);
 }
 
-void accionAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *recursosGraficosAmigos)
+void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos)
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
@@ -239,7 +239,7 @@ void accionAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *
             (recursosGraficosAmigos->habilitarEscritura == HABILITAR_ESCRITURA) &&
             (strlen (recursosGraficosAmigos->bufferEscribirMensaje) > 0))
         {
-            enviarPaqueteMensaje (app, sock->sock, recursosGraficosAmigos);
+            enviarPaqueteMensaje (app, app->sock, recursosGraficosAmigos);
         }
         break;
 
@@ -248,13 +248,13 @@ void accionAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *
     }
 }
 
-void actualizarAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *recursosGraficosAmigos)
+void actualizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos)
 {
     ///RECIBIR MENSAJES DE OTROS USUARIOS
     int bytesRecibidos;
     char bufferPaquete [MAX_NOMBRE_USUARIO + MAX_BUFFER_MENSAJE];
 
-    bytesRecibidos = recv (sock->sock, bufferPaquete, sizeof (bufferPaquete), 0);
+    bytesRecibidos = recv (app->sock, bufferPaquete, sizeof (bufferPaquete), 0);
     if (bytesRecibidos > 0)
     {
         bufferPaquete [bytesRecibidos] = '\0';

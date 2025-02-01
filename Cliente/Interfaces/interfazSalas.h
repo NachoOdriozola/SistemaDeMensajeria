@@ -58,8 +58,8 @@ typedef struct
 int inicializarSalas (s_recursosGraficosSalas *recursosGraficosSalas);
 void setupSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas);
 void tamYPosPantallaSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas);
-void accionSalas (s_aplicacion *app, s_socket *sock, s_recursosGraficosSalas *recursosGraficosSalas);
-void actualizarSalas (s_aplicacion *app, s_socket *sock, s_recursosGraficosSalas *recursosGraficosSalas);
+void accionSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas);
+void actualizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas);
 void renderizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas);
 void liberarSalas (s_recursosGraficosSalas *recursosGraficosSalas);
 

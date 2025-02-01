@@ -8,7 +8,7 @@ int aceptarCliente (s_servidor *servidor)
 {
     s_cliente nuevoCliente;
     struct sockaddr_in dirCliente;
-    u_long modoSocket = 1; //modo no bloqueante
+    u_long modoSocket = 1; //Modo no bloqueante
     int tamCliente;
 
     tamCliente = sizeof (dirCliente);
@@ -84,7 +84,6 @@ void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolic
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (*db));
         return;
     }
-
     sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
     sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
 
@@ -93,6 +92,7 @@ void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolic
         resultadoSolicitud = SOLICITUD_ACEPTADA;
 
     sqlite3_finalize (sentencia);
+
     send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
 }
 
@@ -101,7 +101,7 @@ void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud
     s_cliente *cliente;
     char *nombre = bufferSolicitud, *contrasenia;
     sqlite3_stmt *sentencia;
-    char consultaSelect [MAX_BUFFER_CONSULTA] = "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;";
+    char consultaSelect [MAX_BUFFER_CONSULTA] = "SELECT id FROM usuarios WHERE nombre = ?;";
     char consultaInsert [MAX_BUFFER_CONSULTA] = "INSERT INTO usuarios (nombre, contrasenia) VALUES (?, ?);";
     int resultadoConsulta;
     char resultadoSolicitud = SOLICITUD_RECHAZADA;
@@ -118,14 +118,16 @@ void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud
         return;
     }
     sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
-    if (resultadoConsulta == SQLITE_DONE)
-        resultadoSolicitud = SOLICITUD_ACEPTADA;
     sqlite3_finalize (sentencia);
 
-    send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
+    if (resultadoConsulta == SQLITE_ROW) //Encontro un usuario con el mismo nombre
+    {
+        send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
+        return;
+    }
+    resultadoSolicitud = SOLICITUD_ACEPTADA;
 
 
     if (sqlite3_prepare_v2 (*db, consultaInsert, -1, &sentencia, NULL) != SQLITE_OK)
@@ -143,7 +145,10 @@ void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud
         sqlite3_finalize (sentencia);
         return;
     }
+
     sqlite3_finalize (sentencia);
+
+    send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
 }
 
 /*

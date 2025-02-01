@@ -238,3 +238,55 @@
 	"../ListaSimple/listaSimple.h"
 	"../FuncionesServidor/funcionesServidor.h"
 
+1738388011 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.c
+	"funcionesServidor.h"
+
+1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../Servidor/estructuras.h"
+	"../ListaSimple/listaSimple.h"
+
+1738387216 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../ListaSimple/listaSimple.h"
+
+1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\listasimple\listasimple.c
+	"listaSimple.h"
+
+1738387104 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.c
+	"main.h"
+
+1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sqlite3.h>
+	"estructuras.h"
+	"../ListaSimple/listaSimple.h"
+	"../FuncionesServidor/funcionesServidor.h"
+

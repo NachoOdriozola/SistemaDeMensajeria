@@ -67,8 +67,10 @@ char enviarSolicitudUsuario (SOCKET sock, char *nombre, char *contrasenia, char 
     ptrBufferSolicitud ++;
     strcpy (ptrBufferSolicitud, contrasenia);
 
+    printf ("Envio: %s\n", bufferSolicitud);
     send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD_USUARIO, 0);
     recv (sock, &respuestaSolicitud, sizeof (respuestaSolicitud), 0);
+    printf ("Recibio: %c\n", respuestaSolicitud);
 
     return respuestaSolicitud;
 }

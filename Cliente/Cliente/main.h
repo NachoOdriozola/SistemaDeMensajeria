@@ -49,9 +49,9 @@ typedef struct
 
 ///FUNCIONES ESTRUCTURALES
 
-int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
-void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
-void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos);
+int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
+void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
+void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
 
 
 #endif // MAIN_H_INCLUDED

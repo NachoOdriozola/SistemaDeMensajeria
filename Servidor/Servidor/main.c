@@ -43,6 +43,7 @@ int main ()
 
         if (recibirSolicitud (&servidor, bufferSolicitud, &solicitud) == SOLICITUD_RECIBIDA)
         {
+            printf ("Recibido: %c|%s\n", solicitud, bufferSolicitud);
             switch (solicitud)
             {
             case INDICE_INICIO_SESION:

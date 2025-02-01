@@ -97,7 +97,7 @@ typedef struct
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void tamYPosPantallaInicio (s_recursosGraficosInicio *recursosGraficosInicio);
-void accionInicio (s_aplicacion *app, s_socket *sock, s_recursosGraficosInicio *recursosGraficosInicio);
+void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);

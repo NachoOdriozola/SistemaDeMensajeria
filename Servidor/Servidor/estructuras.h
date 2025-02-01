@@ -28,7 +28,7 @@
 #define INDICE_REGISTRO '2'
 #define INDICE_MENSAJE '3'
 
-#define MAX_NOMBRE 26
+#define MAX_BUFFER_NOMBRE 26
 
 
 ///ESTRUCTURAS
@@ -44,7 +44,7 @@ typedef struct
 {
     SOCKET sock;
     int id;
-    char nombre [MAX_NOMBRE];
+    char nombre [MAX_BUFFER_NOMBRE];
 } s_cliente;
 
 

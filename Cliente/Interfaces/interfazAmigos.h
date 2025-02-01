@@ -83,8 +83,8 @@ typedef struct
 int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
 void setupAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void TamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
-void accionAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *recursosGraficosAmigos);
-void actualizarAmigos (s_aplicacion *app, s_socket *sock, s_recursosGraficosAmigos *recursosGraficosAmigos);
+void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
+void actualizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
 

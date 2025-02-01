@@ -59,18 +59,12 @@ typedef struct
 typedef struct
 {
     sfRenderWindow *renderizado;
+    SOCKET sock;
     s_usuario usuario;
     s_ventana ventana;
     unsigned short int interfaz;
     bool aplicacionEjecutandose;
 } s_aplicacion;
-
-typedef struct
-{
-    WSADATA wsaData;
-    SOCKET sock;
-    struct sockaddr_in direccionServidor;
-} s_socket;
 
 typedef struct
 {

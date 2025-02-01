@@ -72,7 +72,7 @@ void tamYPosPantallaSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosG
     sfRectangleShape_setSize (recursosGraficosSalas->elementos.rectanguloConfig, (sfVector2f){60 * app->ventana.escalaElementos.x, 60 * app->ventana.escalaElementos.y});
 }
 
-void accionSalas (s_aplicacion *app, s_socket *sock, s_recursosGraficosSalas *recursosGraficosSalas)
+void accionSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas)
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
@@ -106,7 +106,7 @@ void accionSalas (s_aplicacion *app, s_socket *sock, s_recursosGraficosSalas *re
     }
 }
 
-void actualizarSalas (s_aplicacion *app, s_socket *sock, s_recursosGraficosSalas *recursosGraficosSalas)
+void actualizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas)
 {
 
 }

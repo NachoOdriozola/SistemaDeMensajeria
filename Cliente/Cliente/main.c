@@ -4,23 +4,29 @@
 int main()
 {
     s_aplicacion app;
-    s_socket socket;
     s_recursosGraficos recursosGraficos;
     u_long modoSocket = 1; //Socket modo no bloqueante
 
 
-    if (inicializar (&app, &socket, &recursosGraficos) == ERROR_INICIALIZACION)
+    ///INICIALIZAR WINSOCK
+    WSADATA wsaData;
+    int resultado;
+
+    resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
+    if (resultado != 0)
     {
-        perror ("ERROR - Inicializar recursos.\n");
-        liberar (&app, &socket, &recursosGraficos);
+        printf ("ERROR - Inicializar Winsock: %d.\n", resultado);
         return ERROR_INICIALIZACION;
     }
-    setup (&app, &socket, &recursosGraficos);
 
 
-    inicializarRegistro (&(recursosGraficos.recursosGraficosRegistro));
-    setupRegistro (&(recursosGraficos.recursosGraficosRegistro));
-
+    if (inicializar (&app, &recursosGraficos) == ERROR_INICIALIZACION)
+    {
+        perror ("ERROR - Inicializar recursos.\n");
+        liberar (&app, &recursosGraficos);
+        return ERROR_INICIALIZACION;
+    }
+    setup (&app, &recursosGraficos);
 
     if (verificarDatosGuardados (&app) == INICIO_SESION_AUTOMATICO)
     {
@@ -28,6 +34,7 @@ int main()
         maximizadoAutomaticoVentana (&app);
         TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
         tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
+        ioctlsocket (app.sock, FIONBIO, &modoSocket);
         sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
     }
     else //Inicio de sesion manual
@@ -35,59 +42,54 @@ int main()
         app.interfaz = INTERFAZ_INICIO;
         inicializarInicio (&(recursosGraficos.recursosGraficosInicio));
         setupInicio (&(recursosGraficos.recursosGraficosInicio));
+        inicializarRegistro (&(recursosGraficos.recursosGraficosRegistro));
+        setupRegistro (&(recursosGraficos.recursosGraficosRegistro));
     }
 
 
     printf ("INICIALIZACION Y SETUP EXITOSOS.\n");
+
     while (app.aplicacionEjecutandose == CONTINUAR_APLICACION)
     {
         switch (app.interfaz)
         {
         case INTERFAZ_INICIO:
-            accionInicio (&app, &socket, &(recursosGraficos.recursosGraficosInicio));
+            accionInicio (&app, &(recursosGraficos.recursosGraficosInicio));
             actualizarInicio (&(recursosGraficos.recursosGraficosInicio));
             renderizarInicio (&app, &(recursosGraficos.recursosGraficosInicio));
-            if (app.interfaz != INTERFAZ_INICIO)
+            if (app.interfaz == INTERFAZ_AMIGOS)
             {
-                if (app.interfaz == INTERFAZ_AMIGOS)
-                {
-                    maximizadoAutomaticoVentana (&app);
-                    TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-                    tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-                    ioctlsocket (socket.sock, FIONBIO, &modoSocket);
-                    sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
-                    liberarInicio (&(recursosGraficos.recursosGraficosInicio));
-                }
+                maximizadoAutomaticoVentana (&app);
+                TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
+                tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
+                ioctlsocket (app.sock, FIONBIO, &modoSocket);
+                sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
 
-                if (app.interfaz == INTERFAZ_REGISTRO)
-                {
-                    //inicializarRegistro (&(recursosGraficos.recursosGraficosRegistro));
-                    //setupRegistro (&(recursosGraficos.recursosGraficosRegistro));
-                }
+                liberarInicio (&(recursosGraficos.recursosGraficosInicio));
+                liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
             }
             break;
 
         case INTERFAZ_REGISTRO:
-            accionRegistro (&app, &socket, &(recursosGraficos.recursosGraficosRegistro));
+            accionRegistro (&app, &(recursosGraficos.recursosGraficosRegistro));
             actualizarRegistro (&(recursosGraficos.recursosGraficosRegistro));
             renderizarRegistro (&app, &(recursosGraficos.recursosGraficosRegistro));
-            if (app.interfaz != INTERFAZ_REGISTRO)
+            if (app.interfaz == INTERFAZ_AMIGOS)
             {
-                printf ("entro.\n");
-                if (app.interfaz == INTERFAZ_INICIO)
-                    liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
+                maximizadoAutomaticoVentana (&app);
+                TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
+                tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
+                ioctlsocket (app.sock, FIONBIO, &modoSocket);
+                sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
 
-                if (app.interfaz == INTERFAZ_AMIGOS)
-                {
-                    liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
-                    liberarInicio (&(recursosGraficos.recursosGraficosInicio));
-                }
+                liberarInicio (&(recursosGraficos.recursosGraficosInicio));
+                liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
             }
             break;
 
         case INTERFAZ_AMIGOS:
-            accionAmigos (&app, &socket, &(recursosGraficos.recursosGraficosAmigos));
-            actualizarAmigos (&app, &socket, &(recursosGraficos.recursosGraficosAmigos));
+            accionAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
+            actualizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             renderizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             if (app.interfaz == INTERFAZ_CONFIG)
             {
@@ -98,8 +100,8 @@ int main()
             break;
 
         case INTERFAZ_SALAS:
-            accionSalas (&app, &socket, &(recursosGraficos.recursosGraficosSalas));
-            actualizarSalas (&app, &socket, &(recursosGraficos.recursosGraficosSalas));
+            accionSalas (&app, &(recursosGraficos.recursosGraficosSalas));
+            actualizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             renderizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             if (app.interfaz == INTERFAZ_CONFIG)
             {
@@ -119,13 +121,13 @@ int main()
         }
     }
 
-    liberar (&app, &socket, &recursosGraficos);
+    liberar (&app, &recursosGraficos);
     system ("pause");
 
     return OK;
 }
 
-int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos)
+int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
     printf ("INICIALIZANDO RECURSOS.\n");
 
@@ -140,33 +142,26 @@ int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursos
 
 
     ///INICIALIZAR SOCKET
-    int resultado;
+    struct sockaddr_in dirCliente;
     u_long modoSocket = 0; //Socket modo bloqueante
 
-    resultado = WSAStartup (MAKEWORD (2, 2), &(sock->wsaData));
-    if (resultado != 0)
-    {
-        printf ("ERROR - Inicializar Winsock: %d.\n", resultado);
-        return ERROR_INICIALIZACION;
-    }
-    sock->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sock->sock == INVALID_SOCKET)
+    app->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (app->sock == INVALID_SOCKET)
     {
         printf ("ERROR - Crear el socket: %d.\n", WSAGetLastError ());
         return ERROR_INICIALIZACION;
     }
 
-    ioctlsocket (sock->sock, FIONBIO, &modoSocket);
-    sock->direccionServidor.sin_family = AF_INET;
-    sock->direccionServidor.sin_port = htons (PUERTO);
-    sock->direccionServidor.sin_addr.s_addr = inet_addr ("127.0.0.1");
-    if (connect (sock->sock, (struct sockaddr*)&(sock->direccionServidor), sizeof (sock->direccionServidor)) == SOCKET_ERROR)
+    dirCliente.sin_family = AF_INET;
+    dirCliente.sin_port = htons (PUERTO);
+    dirCliente.sin_addr.s_addr = inet_addr ("127.0.0.1");
+    if (connect (app->sock, (struct sockaddr*)&(dirCliente), sizeof (dirCliente)) == SOCKET_ERROR)
     {
         printf ("ERROR - Conectarse con el servidor: %d.\n", WSAGetLastError ());
         return ERROR_INICIALIZACION;
     }
-    else
-        printf ("CONECTADO CON EL SERVIDOR.\n");
+    printf ("CONECTADO CON EL SERVIDOR.\n");
+    ioctlsocket (app->sock, FIONBIO, &modoSocket);
 
 
     ///INICIALIZAR RECURSOS GRAFICOS
@@ -182,7 +177,7 @@ int inicializar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursos
     return OK;
 }
 
-void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos)
+void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
     printf ("SETUP DE RECURSOS.\n");
 
@@ -200,7 +195,7 @@ void setup (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGrafi
     setupSalas (app, &(recursosGraficos->recursosGraficosSalas));
 }
 
-void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGraficos)
+void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
     ///LIBERAR RECURSOS GRAFICOS
     //Interfaz de amigos
@@ -211,7 +206,7 @@ void liberar (s_aplicacion *app, s_socket *sock, s_recursosGraficos *recursosGra
 
 
     ///LIBERAR SOCKET
-    closesocket (sock->sock);
+    closesocket (app->sock);
     WSACleanup ();
 
 
