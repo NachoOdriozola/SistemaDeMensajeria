@@ -1,0 +1,240 @@
+# depslib dependency file v1.0
+1733601279 source:c:\users\ignac\desktop\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1733600964 c:\users\ignac\desktop\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+
+1733621607 source:c:\users\ignac\desktop\app de mensajes\servidor\main.c
+	"main.h"
+
+1733621622 c:\users\ignac\desktop\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"../ListaSimple/listaSimple.h"
+
+1734324617 D
+
+1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+	"listaSimple.h"
+
+1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<stdlib.h>
+	<string.h>
+
+1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+	"main.h"
+
+1734822349 ntend
+	"main.h"
+
+1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	"../ListaSimple/listaSimple.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
+1735608685 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1735608685 d:\cosas\proyectos\proyectos importantes\app de mensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1733621580 source:c:\users\ignac\desktop\app de mensajes\servidor\funciones.c
+	"funciones.h"
+
+1733621626 c:\users\ignac\desktop\app de mensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"../ListaSimple/listaSimple.h"
+
+1734492613 source:d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+	"funciones.h"
+
+1734492613 d:\recursos\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1734763392 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\main.c
+	"main.h"
+
+1734763392 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
+1735609507 d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1735608685 source:d:\cosas\proyectos\proyectos importantes\app de mensajes\servidor\funciones.c
+	"funciones.h"
+
+1734822266 vidor
+
+1735928643 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1735928648 d:\cosas\proyectos\proyectosimportantes\appdemensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1735973877 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.c
+	"funciones.h"
+
+1735973654 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1735973508 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.c
+	"main.h"
+
+1735973579 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
+1737416424 source:c:\users\ignac\documents\appdemensajes\appdemensajes\listasimple\listasimple.c
+	"listaSimple.h"
+
+1737574767 c:\users\ignac\documents\appdemensajes\appdemensajes\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1737771224 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funciones.c
+	"funciones.h"
+
+1738203569 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funciones.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"../ListaSimple/listaSimple.h"
+
+1737771189 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\main.c
+	"main.h"
+
+1738202567 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	"funciones.h"
+
+1738288050 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\listasimple\listasimple.c
+	"listaSimple.h"
+
+1738259001 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1738297698 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funcionesservidor\funcionesservidor.c
+	"funcionesServidor.h"
+
+1738294191 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../Servidor/estructuras.h"
+	"../ListaSimple/listaSimple.h"
+
+1738295427 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\estructuras.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../ListaSimple/listaSimple.h"
+
+1738296837 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\main.c
+	"main.h"
+
+1738296840 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<ctype.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sqlite3.h>
+	"estructuras.h"
+	"../ListaSimple/listaSimple.h"
+	"../FuncionesServidor/funcionesServidor.h"
+
