@@ -2,49 +2,64 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Release" />
-	<File name="..\Interfaces\interfazInicio.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="21669" topLine="394" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaces\interfazConfig.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3020" topLine="70" />
-		</Cursor>
-	</File>
-	<File name="..\FuncionesEspecificas\especificas.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="293" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="..\ListaCircular\listaCircular.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="798" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="estructuras.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\FuncionesUtiles\utiles.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1189" topLine="31" />
+			<Cursor1 position="627" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="..\Interfaces\interfazSalas.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\Interfaces\interfazRegistro.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="945" topLine="25" />
+			<Cursor1 position="2320" topLine="41" />
 		</Cursor>
 	</File>
-	<File name="main.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\FuncionesUtiles\utiles.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1252" topLine="14" />
+			<Cursor1 position="3349" topLine="83" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazAmigos.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1104" topLine="43" />
 		</Cursor>
 	</File>
 	<File name="..\FuncionesEspecificas\especificas.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="572" topLine="10" />
+			<Cursor1 position="730" topLine="18" />
 		</Cursor>
 	</File>
-	<File name="..\Interfaces\interfazAmigos.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="11874" topLine="348" />
+			<Cursor1 position="1379" topLine="36" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazSalas.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1576" topLine="51" />
+		</Cursor>
+	</File>
+	<File name="estructuras.h" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="385" topLine="52" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazRegistro.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8116" topLine="159" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazSalas.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="12786" topLine="241" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazConfig.c" open="0" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3730" topLine="90" />
 		</Cursor>
 	</File>
 	<File name="..\ListaCircular\listaCircular.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -52,49 +67,34 @@
 			<Cursor1 position="44" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="..\FuncionesUtiles\utiles.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\Interfaces\interfazAmigos.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="888" topLine="6" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaces\interfazRegistro.c" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="14857" topLine="304" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaces\interfazInicio.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2540" topLine="69" />
-		</Cursor>
-	</File>
-	<File name="..\FuncionesUtiles\utiles.c" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1672" topLine="35" />
-		</Cursor>
-	</File>
-	<File name="main.c" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6193" topLine="134" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaces\interfazAmigos.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1975" topLine="59" />
-		</Cursor>
-	</File>
-	<File name="..\Interfaces\interfazSalas.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3174" topLine="53" />
+			<Cursor1 position="4981" topLine="162" />
 		</Cursor>
 	</File>
 	<File name="..\Interfaces\interfazConfig.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="442" topLine="30" />
+			<Cursor1 position="611" topLine="30" />
 		</Cursor>
 	</File>
-	<File name="..\Interfaces\interfazRegistro.h" open="0" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\Interfaces\interfazInicio.c" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2450" topLine="67" />
+			<Cursor1 position="8027" topLine="157" />
+		</Cursor>
+	</File>
+	<File name="..\FuncionesEspecificas\especificas.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2597" topLine="79" />
+		</Cursor>
+	</File>
+	<File name="main.c" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8140" topLine="44" />
+		</Cursor>
+	</File>
+	<File name="..\Interfaces\interfazInicio.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2365" topLine="44" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

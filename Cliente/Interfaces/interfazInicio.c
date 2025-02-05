@@ -7,13 +7,6 @@
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 {
     ///INICIALIZAR TEXTO
-    recursosGraficosInicio->texto.fuente = sfFont_createFromFile ("fuente.ttf");
-    if (!recursosGraficosInicio->texto.fuente)
-    {
-        perror ("ERROR - Crear fuente para recursos graficos de inicio.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosInicio->texto.iniciarSesion = sfText_create ();
     if (!recursosGraficosInicio->texto.iniciarSesion)
     {
@@ -128,18 +121,11 @@ int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar = sfRectangleShape_create ();
-    if (!recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar)
-    {
-        perror ("ERROR - Crear rectangulo invisible para registrar usuario.\n");
-        return ERROR_INICIALIZACION;
-    }
-
 
     return OK;
 }
 
-void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio)
+void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio, s_fuentes fuentes)
 {
     ///SETUP ESCRITURA
     *(recursosGraficosInicio->bufferEscribirNombre) = '\0';
@@ -155,49 +141,49 @@ void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 
     ///SETUP TEXTO
     //Texto iniciar sesion
-    sfText_setFont (recursosGraficosInicio->texto.iniciarSesion, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.iniciarSesion, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.iniciarSesion, "INICIAR SESION");
     sfText_setColor (recursosGraficosInicio->texto.iniciarSesion, sfColor_fromRGB (34, 48, 48));
 
     //Texto ingresar nombre
-    sfText_setFont (recursosGraficosInicio->texto.ingresarNombre, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.ingresarNombre, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.ingresarNombre, "Ingrese su nombre:");
     sfText_setColor (recursosGraficosInicio->texto.ingresarNombre, sfColor_fromRGB (34, 48, 48));
 
     //Texto auxiliar escribir nombre
-    sfText_setFont (recursosGraficosInicio->texto.auxEscribirNombre, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.auxEscribirNombre, fuentes.fuente1);
     sfText_setColor (recursosGraficosInicio->texto.auxEscribirNombre, sfColor_fromRGB (40, 54, 54));
 
     //Texto ingresar contrasenia
-    sfText_setFont (recursosGraficosInicio->texto.ingresarContrasenia, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.ingresarContrasenia, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.ingresarContrasenia, "Ingrese su contraseña:");
     sfText_setColor (recursosGraficosInicio->texto.ingresarContrasenia, sfColor_fromRGB (40, 54, 54));
 
     //Texto auxiliar escribir contrasenia
-    sfText_setFont (recursosGraficosInicio->texto.auxEscribirContrasenia, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.auxEscribirContrasenia, fuentes.fuente1);
     sfText_setColor (recursosGraficosInicio->texto.auxEscribirContrasenia, sfColor_fromRGB (40, 54, 54));
 
     //Texto para guardar inicio de sesion
-    sfText_setFont (recursosGraficosInicio->texto.textoGuardarInicioSesion, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.textoGuardarInicioSesion, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.textoGuardarInicioSesion, "¿Desea guardar sus datos e iniciar sesion\nautomaticamente cuando inicie la aplicacion?");
     sfText_setColor (recursosGraficosInicio->texto.textoGuardarInicioSesion, sfColor_fromRGB (40, 54, 54));
 
     //Texto auxiliar para guardar inicio de sesion
-    sfText_setFont (recursosGraficosInicio->texto.auxGuardarInicioSesion, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.auxGuardarInicioSesion, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.auxGuardarInicioSesion, "X");
     sfText_setColor (recursosGraficosInicio->texto.auxGuardarInicioSesion, sfColor_fromRGB (209, 0, 31));
 
     //Texto boton ingresar usuario
-    sfText_setFont (recursosGraficosInicio->texto.textoBotonIngresar, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.textoBotonIngresar, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.textoBotonIngresar, "INGRESAR");
     sfText_setColor (recursosGraficosInicio->texto.textoBotonIngresar, sfColor_fromRGB (40, 54, 54));
 
     //Texto ingreso incorrecto
-    sfText_setFont (recursosGraficosInicio->texto.textoIngresoIncorrecto, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.textoIngresoIncorrecto, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosInicio->texto.textoIngresoIncorrecto, sfColor_fromRGB (40, 54, 54));
 
     //Texto registrar usuario
-    sfText_setFont (recursosGraficosInicio->texto.textoRegistrarUsuario, recursosGraficosInicio->texto.fuente);
+    sfText_setFont (recursosGraficosInicio->texto.textoRegistrarUsuario, fuentes.fuente1);
     sfText_setString (recursosGraficosInicio->texto.textoRegistrarUsuario, "¿No tenes usuario? Registrate aca.");
     sfText_setColor (recursosGraficosInicio->texto.textoRegistrarUsuario, sfColor_fromRGB (40, 54, 54));
 
@@ -221,9 +207,6 @@ void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 
     //Circulo de ingreso incorrecto
     sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, sfColor_fromRGB (223, 231, 233));
-
-    //Rectangulo invisible para registrar usuario
-    sfRectangleShape_setFillColor (recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar, sfColor_fromRGB (223, 231, 233));
 
 
     ///SETUP POS Y TAM
@@ -300,10 +283,6 @@ void tamYPosPantallaInicio (s_recursosGraficosInicio *recursosGraficosInicio)
     //Circulo de ingreso incorrecto
     sfCircleShape_setPosition (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, (sfVector2f){40, 397});
     sfCircleShape_setRadius (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, 4);
-
-    //Rectangulo invisible para registrar usuario
-    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar, (sfVector2f){127, 492});
-    sfRectangleShape_setSize (recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar, (sfVector2f){285, 30});
 }
 
 void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
@@ -355,7 +334,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
             }
 
 
-            if (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar))
+            if (clickEnTexto (app->renderizado, recursosGraficosInicio->texto.textoRegistrarUsuario))
                 app->interfaz = INTERFAZ_REGISTRO;
 
             if ((recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonIngresar)))
@@ -451,7 +430,6 @@ void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraf
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.cuadradoGuardarInicioSesion, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.botonIngresar, NULL);
     sfRenderWindow_drawCircleShape (app->renderizado, recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, NULL);
-    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar, NULL);
 
 
     ///RENDERIZAR TEXTO
@@ -473,7 +451,6 @@ void renderizarInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraf
 void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 {
     ///LIBERAR TEXTO
-    sfFont_destroy (recursosGraficosInicio->texto.fuente);
     sfText_destroy (recursosGraficosInicio->texto.iniciarSesion);
     sfText_destroy (recursosGraficosInicio->texto.ingresarNombre);
     sfText_destroy (recursosGraficosInicio->texto.auxEscribirNombre);
@@ -493,7 +470,6 @@ void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
     sfRectangleShape_destroy (recursosGraficosInicio->elementos.cuadradoGuardarInicioSesion);
     sfRectangleShape_destroy (recursosGraficosInicio->elementos.botonIngresar);
     sfCircleShape_destroy (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto);
-    sfRectangleShape_destroy (recursosGraficosInicio->elementos.rectanguloInvisibleRegistrar);
 }
 
 

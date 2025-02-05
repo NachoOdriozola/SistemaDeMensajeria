@@ -7,13 +7,6 @@
 int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
 {
     ///INICIALIZAR TEXTO
-    recursosGraficosRegistro->texto.fuente = sfFont_createFromFile ("fuente.ttf");
-    if (!recursosGraficosRegistro->texto.fuente)
-    {
-        perror ("ERROR - Crear fuente.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosRegistro->texto.registrarse = sfText_create ();
     if (!recursosGraficosRegistro->texto.registrarse)
     {
@@ -139,7 +132,7 @@ int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
     return OK;
 }
 
-void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
+void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro, s_fuentes fuentes)
 {
     ///SETUP ESCRITURA
     *(recursosGraficosRegistro->bufferEscribirNombre) = '\0';
@@ -154,45 +147,45 @@ void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
 
     ///SETUP TEXTO
     //Texto registrarse
-    sfText_setFont (recursosGraficosRegistro->texto.registrarse, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.registrarse, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.registrarse, "REGISTRARSE");
     sfText_setFillColor (recursosGraficosRegistro->texto.registrarse, sfColor_fromRGB (34, 48, 48));
 
     //Texto ingresar nombre
-    sfText_setFont (recursosGraficosRegistro->texto.ingresarNombre, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.ingresarNombre, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.ingresarNombre, "Ingrese su nombre");
     sfText_setFillColor (recursosGraficosRegistro->texto.ingresarNombre, sfColor_fromRGB (34, 48, 48));
 
     //Texto informativo nombre
-    sfText_setFont (recursosGraficosRegistro->texto.textoInformativoNombre, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.textoInformativoNombre, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.textoInformativoNombre, "La longitud maxima del nombre es hasta 25 caracteres");
     sfText_setFillColor (recursosGraficosRegistro->texto.textoInformativoNombre, sfColor_fromRGB (34, 48, 48));
 
     //Texto auxiliar escribir nombre
-    sfText_setFont (recursosGraficosRegistro->texto.auxEscribirNombre, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.auxEscribirNombre, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosRegistro->texto.auxEscribirNombre, sfColor_fromRGB (34, 48, 48));
 
     //Texto ingresar contrasenia
-    sfText_setFont (recursosGraficosRegistro->texto.ingresarContrasenia, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.ingresarContrasenia, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.ingresarContrasenia, "Ingrese su contraseña");
     sfText_setFillColor (recursosGraficosRegistro->texto.ingresarContrasenia, sfColor_fromRGB (34, 48, 48));
 
     //Texto informativo contrasenia
-    sfText_setFont (recursosGraficosRegistro->texto.textoInformativoContrasenia, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.textoInformativoContrasenia, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.textoInformativoContrasenia, "La contraseña debe contener al menos 8 caracteres, 1 mayuscula,\n 1 numero y 1 caracter especial");
     sfText_setFillColor (recursosGraficosRegistro->texto.textoInformativoContrasenia, sfColor_fromRGB (34, 48, 48));
 
     //Texto auxiliar escribir contrasenia
-    sfText_setFont (recursosGraficosRegistro->texto.auxEscribirContrasenia, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.auxEscribirContrasenia, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosRegistro->texto.auxEscribirContrasenia, sfColor_fromRGB (34, 48, 48));
 
     //Texto boton registrar
-    sfText_setFont (recursosGraficosRegistro->texto.textoBotonRegistrar, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.textoBotonRegistrar, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.textoBotonRegistrar, "REGISTRAR");
     sfText_setFillColor (recursosGraficosRegistro->texto.textoBotonRegistrar, sfColor_fromRGB (34, 48, 48));
 
     //Texto de error registro
-    sfText_setFont (recursosGraficosRegistro->texto.textoErrorRegistro, recursosGraficosRegistro->texto.fuente);
+    sfText_setFont (recursosGraficosRegistro->texto.textoErrorRegistro, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosRegistro->texto.textoErrorRegistro, sfColor_fromRGB (34, 48, 48));
 
 
@@ -447,7 +440,6 @@ void renderizarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursos
 void liberarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
 {
     ///LIBERAR TEXTO
-    sfFont_destroy (recursosGraficosRegistro->texto.fuente);
     sfText_destroy (recursosGraficosRegistro->texto.registrarse);
     sfText_destroy (recursosGraficosRegistro->texto.ingresarNombre);
     sfText_destroy (recursosGraficosRegistro->texto.textoInformativoNombre);

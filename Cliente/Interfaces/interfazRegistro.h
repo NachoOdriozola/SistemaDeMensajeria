@@ -46,7 +46,6 @@
 
 typedef struct
 {
-    sfFont *fuente;
     sfText *registrarse;
     sfText *ingresarNombre;
     sfText *textoInformativoNombre;
@@ -90,7 +89,7 @@ typedef struct
 ///FUNCIONES ESTRUCTURALES
 
 int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
-void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
+void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro, s_fuentes fuentes);
 void tamYPosPantallaRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
 void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro);
 void actualizarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);

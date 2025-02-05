@@ -17,6 +17,8 @@
 #include "SFML/System.h"
 #include "SFML/Audio.h"
 
+#include "../ListaCircular/listaCircular.h"
+
 
 ///DEFINES
 
@@ -58,13 +60,32 @@ typedef struct
 
 typedef struct
 {
+    sfFont *fuente1;
+} s_fuentes;
+
+typedef struct
+{
+    s_listaCircular listaMensajes;
+    s_nodo *siguienteMensaje;
+    s_fuentes fuentes;
+} s_mensajes;
+
+typedef struct
+{
     sfRenderWindow *renderizado;
     SOCKET sock;
     s_usuario usuario;
     s_ventana ventana;
+    s_mensajes mensajes;
     unsigned short int interfaz;
     bool aplicacionEjecutandose;
 } s_aplicacion;
+
+typedef struct
+{
+    sfText *mensaje;
+    sfVector2f posMensaje;
+} s_mensaje;
 
 typedef struct
 {

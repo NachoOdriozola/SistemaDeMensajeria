@@ -7,13 +7,6 @@
 int inicializarConfig (s_recursosGraficosConfig *recursosGraficosConfig)
 {
     ///INICIALIZAR TEXTO
-    recursosGraficosConfig->texto.fuente = sfFont_createFromFile ("fuente.ttf");
-    if (!recursosGraficosConfig->texto.fuente)
-    {
-        perror ("ERROR - Crear fuente.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosConfig->texto.textoConfig = sfText_create ();
     if (!recursosGraficosConfig->texto.textoConfig)
     {
@@ -38,7 +31,7 @@ void setupConfig (s_aplicacion *app, s_recursosGraficosConfig *recursosGraficosC
 {
     ///SETUP TEXTO
     //Texto config
-    sfText_setFont (recursosGraficosConfig->texto.textoConfig, recursosGraficosConfig->texto.fuente);
+    sfText_setFont (recursosGraficosConfig->texto.textoConfig, app->mensajes.fuentes.fuente1);
     sfText_setString (recursosGraficosConfig->texto.textoConfig, "CONFIGURACIONES");
     sfText_setFillColor (recursosGraficosConfig->texto.textoConfig, sfColor_fromRGB (0, 0, 0));
 
@@ -46,10 +39,6 @@ void setupConfig (s_aplicacion *app, s_recursosGraficosConfig *recursosGraficosC
     ///SETUP ELEMENTOS
     //Rectangulo para volver
     sfRectangleShape_setFillColor (recursosGraficosConfig->elementos.rectanguloVolver, sfColor_fromRGB (0, 0, 0));
-
-
-    ///SETUP TAM Y POS
-    tamYPosPantallaConfig (app, recursosGraficosConfig);
 }
 
 void tamYPosPantallaConfig (s_aplicacion *app, s_recursosGraficosConfig *recursosGraficosConfig)
@@ -121,7 +110,6 @@ void renderizarConfig (s_aplicacion *app, s_recursosGraficosConfig *recursosGraf
 void liberarConfig (s_recursosGraficosConfig *recursosGraficosConfig)
 {
     ///LIBERAR TEXTO
-    sfFont_destroy (recursosGraficosConfig->texto.fuente);
     sfText_destroy (recursosGraficosConfig->texto.textoConfig);
 
 

@@ -50,7 +50,6 @@
 
 typedef struct
 {
-    sfFont *fuente;
     sfText *iniciarSesion;
     sfText *ingresarNombre;
     sfText *auxEscribirNombre;
@@ -71,7 +70,6 @@ typedef struct
     sfRectangleShape *cuadradoGuardarInicioSesion;
     sfRectangleShape *botonIngresar;
     sfCircleShape *circuloTextoIngresoIncorrecto;
-    sfRectangleShape *rectanguloInvisibleRegistrar;
 } s_elementosInicio;
 
 typedef struct
@@ -95,7 +93,7 @@ typedef struct
 ///FUNCIONES ESTRUCTURALES
 
 int inicializarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
-void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio);
+void setupInicio (s_recursosGraficosInicio *recursosGraficosInicio, s_fuentes fuentes);
 void tamYPosPantallaInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 void actualizarInicio (s_recursosGraficosInicio *recursosGraficosInicio);

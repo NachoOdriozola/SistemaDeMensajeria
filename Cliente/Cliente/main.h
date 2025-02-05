@@ -34,6 +34,8 @@
 #define ACTIVO 1
 #define AUSENTE 0
 
+#define MAX_MENSAJES_EN_MEM 5
+
 
 ///ESTRUCTURAS
 
@@ -52,6 +54,11 @@ typedef struct
 int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
 void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
 void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
+
+///FUNCIONES DE INICIO
+
+void inicioMenuAplicacion (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
+int inicioSesionManual (s_aplicacion *app, s_recursosGraficos *recursosGraficos);
 
 
 #endif // MAIN_H_INCLUDED

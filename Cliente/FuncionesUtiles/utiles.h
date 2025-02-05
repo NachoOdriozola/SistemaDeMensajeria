@@ -28,13 +28,44 @@
 
 #define MAX_BUFFER_SOLICITUD_USUARIO  MAX_NOMBRE_USUARIO + MAX_CONTRASENIA_USUARIO + 3
 
+#define MI_USUARIO 1
+#define OTRO_USUARIO 0
+
 
 ///FUNCIONES UTILES
 
+//Manejar vista al redimensionar
 void ajustarVista (s_aplicacion *app, sfVector2f nuevoTamPantalla);
+
+//Manejar eventos de click
 bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangulo);
+bool clickEnTexto (sfRenderWindow *renderizado, sfText *texto);
+
+//Verificar ingreso correcto de texto
 void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento);
+
+//Enviar solicitud al servidor
 char enviarSolicitudUsuario (SOCKET sock, char *nombre, char *contrasenia, char indice);
+
+//Asignar mensaje a la lista circular de mensajes
+void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor);
+
+//Funciones complementarias de la lista circular de mensajes
+void modificarPosListaMensajes (void *mensaje, void *escalaPixeles);
+void renderizarListaMensajes (void *mensaje, void *renderizado);
 
 
 #endif // FUNCIONESGENERALES_H_INCLUDED
+
+
+
+
+
+
+
+
+
+
+
+
+

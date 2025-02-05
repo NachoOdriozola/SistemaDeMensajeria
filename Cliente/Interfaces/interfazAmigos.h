@@ -38,27 +38,27 @@
 #define OTRO_USUARIO 0
 
 #define MAX_BUFFER_MENSAJE 256
-#define MAX_MENSAJES_EN_MEM 5
 
 
 ///ESTRUCTURAS
 
 typedef struct
 {
-    sfFont *fuente;
-    sfText *textoUsuariosActivos;
+    sfText *amigos;
+    sfText *salas;
     sfText *nombreUsuario;
     sfText *auxEscribirMensaje;
+    sfText *interfazConfig;
 } s_textoAmigos;
 
 typedef struct
 {
-    sfRectangleShape *recIzquierda;
+    sfRectangleShape *rectanguloAmigos;
+    sfRectangleShape *rectanguloSalas;
+    sfRectangleShape *cuadradoRelieveRecSalas;
     sfRectangleShape *barraSeparacionUsuarios;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;
-    sfRectangleShape *rectanguloSalas;
-    sfRectangleShape *rectanguloConfig;
 } s_elementosAmigos;
 
 typedef struct
@@ -67,41 +67,18 @@ typedef struct
     s_elementosAmigos elementos;
     bool habilitarEscritura;
     char bufferEscribirMensaje [MAX_BUFFER_MENSAJE];
-    s_nodo *siguienteMensaje;
-    s_listaCircular listaMensajes;
 } s_recursosGraficosAmigos;
-
-typedef struct
-{
-    sfText *mensaje;
-    sfVector2f posicionMensaje;
-} s_mensaje;
 
 
 ///FUNCIONES ESTRUCTURALES
 
 int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
 void setupAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
-void TamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
+void tamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void actualizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
-
-
-///FUNCIONES LOGICAS
-
-void enviarPaqueteMensaje (s_aplicacion *app, SOCKET sock, s_recursosGraficosAmigos *recursosGraficosAmigos);
-void asignarMensaje (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos, const char *bufferMensaje, bool enviadoPor);
-
-
-///FUNCIONES COMPLEMENTARIAS
-
-void setupListaMensajes (void *mensaje, void *recursosGraficosAmigos);
-void tamListaMensajes (void *mensaje, void *escalaPixeles);
-void modificarPosListaMensajes (void *mensaje, void *escalaPixeles);
-void renderizarListaMensajes (void *mensaje, void *renderizado);
-void liberarMensaje (void *mensaje);
 
 
 #endif // INTERFAZAmigos_H_INCLUDED

@@ -21,6 +21,23 @@ int verificarDatosGuardados (s_aplicacion *app)
     return INICIO_SESION_AUTOMATICO;
 }
 
+int inicializarFuentes (s_fuentes *fuentes)
+{
+    fuentes->fuente1 = sfFont_createFromFile ("fuente1.ttf");
+    if (!fuentes->fuente1)
+    {
+        perror ("ERROR - Crear fuente 1.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    return OK;
+}
+
+void liberarFuentes (s_fuentes *fuentes)
+{
+    sfFont_destroy (fuentes->fuente1);
+}
+
 void crearEscalaElementos (s_aplicacion *app)
 {
     app->ventana.escalaElementos.x = app->ventana.tamOriginalPantalla.x / (float)RESOLUCION_BASE_MAXIMIZADO_X;
@@ -63,7 +80,29 @@ void maximizadoAutomaticoVentana (s_aplicacion *app)
     crearEscalaPixeles (app);
 }
 
+void setupListaMensajes (void *mensaje, void *fuente)
+{
+    s_mensaje *x = (s_mensaje*)mensaje;
+    sfFont *y = (sfFont*)fuente;
 
+    sfText_setFont (x->mensaje, y);
+    sfText_setFillColor (x->mensaje, sfColor_fromRGB (34, 48, 48));
+}
+
+void tamListaMensajes (void *mensaje, void *escalaPixeles)
+{
+    s_mensaje *x = (s_mensaje*)mensaje;
+    float y = *(float*)escalaPixeles;
+
+    sfText_setCharacterSize (x->mensaje, 26 * y);
+}
+
+void liberarMensaje (void *mensaje)
+{
+    s_mensaje *x = (s_mensaje*)mensaje;
+
+    sfText_destroy (x->mensaje);
+}
 
 
 

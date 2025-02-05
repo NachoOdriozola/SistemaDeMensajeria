@@ -31,25 +31,54 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
+#define HABILITAR_ESCRITURA 1
+#define DESHABILITAR_ESCRITURA 0
+
+#define HABILITAR_BARRA_ESCRIBIENDO_MENSAJE 1
+#define DESHABILITAR_BARRA_ESCRIBIENDO_MENSAJE 0
+
+#define MI_USUARIO 1
+#define OTRO_USUARIO 0
+
+#define MAX_BUFFER_MENSAJE 256
+#define MAX_MENSAJES_EN_MEM 5
+
 
 ///ESTRUCTURAS
 
 typedef struct
 {
-    sfFont *fuente;
+    sfText *amigos;
     sfText *salas;
+    sfText *nombreUsuario;
+    sfText *interfazConfig;
+    sfText *auxEscribirMensaje;
 } s_textoSalas;
 
 typedef struct
 {
     sfRectangleShape *rectanguloAmigos;
-    sfRectangleShape *rectanguloConfig;
+    sfRectangleShape *cuadradoRelieveRecAmigos;
+    sfRectangleShape *rectanguloSalas;
+    sfRectangleShape *barraSeparacionSalas;
+    sfRectangleShape *barraSeparacionNombre;
+    sfRectangleShape *barraIngresarMensaje;
+    sfRectangleShape *barraEscribiendoMensaje;
 } s_elementosSalas;
+
+typedef struct
+{
+    bool habilitarEscritura;
+    bool habilitarBarraEscribiendoMensaje;
+    unsigned short int tempHabilitarBarra;
+} s_habilitacionesSalas;
 
 typedef struct
 {
     s_textoSalas texto;
     s_elementosSalas elementos;
+    s_habilitacionesSalas habilitaciones;
+    char bufferEscribirMensaje [MAX_BUFFER_MENSAJE];
 } s_recursosGraficosSalas;
 
 

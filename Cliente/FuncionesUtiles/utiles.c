@@ -34,6 +34,17 @@ bool clickEnRectangulo (sfRenderWindow *renderizado, sfRectangleShape *rectangul
     return sfFloatRect_contains (&limiteRectangulo, posMouse.x, posMouse.y);
 }
 
+bool clickEnTexto (sfRenderWindow *renderizado, sfText *texto)
+{
+    sfVector2i posMouse;
+    sfFloatRect limiteTexto;
+
+    posMouse = sfMouse_getPositionRenderWindow (renderizado);
+    limiteTexto = sfText_getGlobalBounds (texto);
+
+    return sfFloatRect_contains (&limiteTexto, posMouse.x, posMouse.y);
+}
+
 void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento)
 {
     int largoBuffer;
@@ -67,15 +78,50 @@ char enviarSolicitudUsuario (SOCKET sock, char *nombre, char *contrasenia, char 
     ptrBufferSolicitud ++;
     strcpy (ptrBufferSolicitud, contrasenia);
 
-    printf ("Envio: %s\n", bufferSolicitud);
     send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD_USUARIO, 0);
     recv (sock, &respuestaSolicitud, sizeof (respuestaSolicitud), 0);
-    printf ("Recibio: %c\n", respuestaSolicitud);
 
     return respuestaSolicitud;
 }
 
+void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor)
+{
+    s_mensaje *mensaje;
+    sfFloatRect bordesMensaje;
 
+    mapListaCircularConComplemento (&(app->mensajes.listaMensajes), &(app->ventana.escalaPixeles), modificarPosListaMensajes);
+    mensaje = app->mensajes.siguienteMensaje->dato;
+    sfText_setString (mensaje->mensaje, bufferMensaje);
+    if (enviadoPor == MI_USUARIO)
+    {
+        bordesMensaje = sfText_getLocalBounds (mensaje->mensaje);
+        mensaje->posMensaje = (sfVector2f){(1780 * app->ventana.escalaElementos.x) - bordesMensaje.width, 827 * app->ventana.escalaElementos.y};
+    }
+    else
+    {
+        mensaje->posMensaje = (sfVector2f){510 * app->ventana.escalaElementos.x, 827 * app->ventana.escalaElementos.y};
+    }
+    sfText_setPosition (mensaje->mensaje, mensaje->posMensaje);
+
+    app->mensajes.siguienteMensaje = app->mensajes.siguienteMensaje->sig;
+}
+
+void modificarPosListaMensajes (void *mensaje, void *escalaPixeles)
+{
+    s_mensaje *x = (s_mensaje*)mensaje;
+    float y = *(float*)escalaPixeles;
+
+    x->posMensaje.y -= 80 * y;
+    sfText_setPosition (x->mensaje, x->posMensaje);
+}
+
+void renderizarListaMensajes (void *mensaje, void *renderizado)
+{
+    s_mensaje *x = (s_mensaje*)mensaje;
+    sfRenderWindow *y = (sfRenderWindow*)renderizado;
+
+    sfRenderWindow_drawText (y, x->mensaje, NULL);
+}
 
 
 

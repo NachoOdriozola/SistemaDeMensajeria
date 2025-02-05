@@ -1,11 +1,13 @@
 #include "main.h"
 
 
+///FUNCIONES ESTRUCTURALES
+
+
 int main()
 {
     s_aplicacion app;
     s_recursosGraficos recursosGraficos;
-    u_long modoSocket = 1; //Socket modo no bloqueante
 
 
     ///INICIALIZAR WINSOCK
@@ -20,6 +22,7 @@ int main()
     }
 
 
+    ///INICIALIZAR Y SETUP APLICACION Y RECURSOS
     if (inicializar (&app, &recursosGraficos) == ERROR_INICIALIZACION)
     {
         perror ("ERROR - Inicializar recursos.\n");
@@ -29,21 +32,15 @@ int main()
     setup (&app, &recursosGraficos);
 
     if (verificarDatosGuardados (&app) == INICIO_SESION_AUTOMATICO)
+        inicioMenuAplicacion (&app, &recursosGraficos);
+    else
     {
-        app.interfaz = INTERFAZ_AMIGOS;
-        maximizadoAutomaticoVentana (&app);
-        TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-        tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-        ioctlsocket (app.sock, FIONBIO, &modoSocket);
-        sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
-    }
-    else //Inicio de sesion manual
-    {
-        app.interfaz = INTERFAZ_INICIO;
-        inicializarInicio (&(recursosGraficos.recursosGraficosInicio));
-        setupInicio (&(recursosGraficos.recursosGraficosInicio));
-        inicializarRegistro (&(recursosGraficos.recursosGraficosRegistro));
-        setupRegistro (&(recursosGraficos.recursosGraficosRegistro));
+        if (inicioSesionManual (&app, &recursosGraficos) == ERROR_INICIALIZACION)
+        {
+            perror ("ERROR - Inicializar recursos para inicio de sesion manual.\n");
+            liberar (&app, &recursosGraficos);
+            return ERROR_INICIALIZACION;
+        }
     }
 
 
@@ -59,12 +56,7 @@ int main()
             renderizarInicio (&app, &(recursosGraficos.recursosGraficosInicio));
             if (app.interfaz == INTERFAZ_AMIGOS)
             {
-                maximizadoAutomaticoVentana (&app);
-                TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-                tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-                ioctlsocket (app.sock, FIONBIO, &modoSocket);
-                sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
-
+                inicioMenuAplicacion (&app, &recursosGraficos);
                 liberarInicio (&(recursosGraficos.recursosGraficosInicio));
                 liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
             }
@@ -76,12 +68,7 @@ int main()
             renderizarRegistro (&app, &(recursosGraficos.recursosGraficosRegistro));
             if (app.interfaz == INTERFAZ_AMIGOS)
             {
-                maximizadoAutomaticoVentana (&app);
-                TamYPosPantallaAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-                tamYPosPantallaSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-                ioctlsocket (app.sock, FIONBIO, &modoSocket);
-                sfText_setString (recursosGraficos.recursosGraficosAmigos.texto.nombreUsuario, app.usuario.nombreUsuario);
-
+                inicioMenuAplicacion (&app, &recursosGraficos);
                 liberarInicio (&(recursosGraficos.recursosGraficosInicio));
                 liberarRegistro (&(recursosGraficos.recursosGraficosRegistro));
             }
@@ -91,32 +78,20 @@ int main()
             accionAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             actualizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             renderizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-            if (app.interfaz == INTERFAZ_CONFIG)
-            {
-                inicializarConfig (&(recursosGraficos.recursosGraficosConfig));
-                setupConfig (&app, &(recursosGraficos.recursosGraficosConfig));
-                app.usuario.ultimaInterfaz = INTERFAZ_AMIGOS;
-            }
+            app.usuario.ultimaInterfaz = INTERFAZ_AMIGOS;
             break;
 
         case INTERFAZ_SALAS:
             accionSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             actualizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             renderizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-            if (app.interfaz == INTERFAZ_CONFIG)
-            {
-                inicializarConfig (&(recursosGraficos.recursosGraficosConfig));
-                setupConfig (&app, &(recursosGraficos.recursosGraficosConfig));
-                app.usuario.ultimaInterfaz = INTERFAZ_SALAS;
-            }
+            app.usuario.ultimaInterfaz = INTERFAZ_SALAS;
             break;
 
         case INTERFAZ_CONFIG:
             accionConfig (&app, &(recursosGraficos.recursosGraficosConfig));
             actualizarConfig (&(recursosGraficos.recursosGraficosConfig));
             renderizarConfig (&app, &(recursosGraficos.recursosGraficosConfig));
-            if (app.interfaz != INTERFAZ_CONFIG)
-                liberarConfig (&(recursosGraficos.recursosGraficosConfig));
             break;
         }
     }
@@ -160,8 +135,8 @@ int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
         printf ("ERROR - Conectarse con el servidor: %d.\n", WSAGetLastError ());
         return ERROR_INICIALIZACION;
     }
-    printf ("CONECTADO CON EL SERVIDOR.\n");
     ioctlsocket (app->sock, FIONBIO, &modoSocket);
+    printf ("CONECTADO CON EL SERVIDOR.\n");
 
 
     ///INICIALIZAR RECURSOS GRAFICOS
@@ -172,6 +147,28 @@ int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
     //Interfaz de salas
     if (inicializarSalas (&(recursosGraficos->recursosGraficosSalas)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
+
+    //Interfaz configuraciones
+    if (inicializarConfig (&(recursosGraficos->recursosGraficosConfig)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+
+    ///INICIALIZAR FUENTES
+    if (inicializarFuentes (&(app->mensajes.fuentes)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+
+    ///INICIALIZAR LISTA DE MENSAJES
+    unsigned short int i;
+    s_mensaje mensajes [MAX_MENSAJES_EN_MEM], *ptrMensaje = mensajes;
+
+    crearListaCircular (&(app->mensajes.listaMensajes));
+    for (i = 0; i < MAX_MENSAJES_EN_MEM; i ++)
+    {
+        ptrMensaje->mensaje = sfText_create ();
+        insertarSegundoCircular (&(app->mensajes.listaMensajes), ptrMensaje, sizeof (s_mensaje));
+        ptrMensaje ++;
+    }
 
 
     return OK;
@@ -193,16 +190,35 @@ void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 
     //Interfaz de salas
     setupSalas (app, &(recursosGraficos->recursosGraficosSalas));
+
+    //Interfaz de configuraciones
+    setupConfig (app, &(recursosGraficos->recursosGraficosConfig));
+
+
+    ///SETUP LISTA DE MENSAJES
+    mapListaCircularConComplemento (&(app->mensajes.listaMensajes), app->mensajes.fuentes.fuente1, setupListaMensajes);
+    app->mensajes.siguienteMensaje = app->mensajes.listaMensajes;
 }
 
 void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
+    ///LIBERAR FUENTES
+    liberarFuentes (&(app->mensajes.fuentes));
+
+
+    ///LIBERAR LISTA DE MENSAJES
+    vaciarListaCircularConAccion (&(app->mensajes.listaMensajes), liberarMensaje);
+
+
     ///LIBERAR RECURSOS GRAFICOS
     //Interfaz de amigos
     liberarAmigos (&(recursosGraficos->recursosGraficosAmigos));
 
     //Interfaz de salas
     liberarSalas (&(recursosGraficos->recursosGraficosSalas));
+
+    //Interfaz de configuraciones
+    liberarConfig (&(recursosGraficos->recursosGraficosConfig));
 
 
     ///LIBERAR SOCKET
@@ -215,6 +231,55 @@ void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 }
 
 
+///FUNCIONES DE INICIO
+
+
+void inicioMenuAplicacion (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
+{
+    u_long modoSocket = 1; //Socket modo no bloqueante
+
+
+    ///SELECCIONAR INTERFAZ
+    app->interfaz = INTERFAZ_AMIGOS;
+
+
+    ///SETUP APLICACION
+    maximizadoAutomaticoVentana (app);
+    ioctlsocket (app->sock, FIONBIO, &modoSocket);
+    sfText_setString (recursosGraficos->recursosGraficosAmigos.texto.nombreUsuario, app->usuario.nombreUsuario);
+    sfText_setString (recursosGraficos->recursosGraficosSalas.texto.nombreUsuario, app->usuario.nombreUsuario);
+
+
+    ///SETUP RECURSOS GRAFICOS
+    tamYPosPantallaAmigos (app, &(recursosGraficos->recursosGraficosAmigos));
+    tamYPosPantallaSalas (app, &(recursosGraficos->recursosGraficosSalas));
+    tamYPosPantallaConfig (app, &(recursosGraficos->recursosGraficosConfig));
+    mapListaCircularConComplemento (&(app->mensajes.listaMensajes), &(app->ventana.escalaPixeles), tamListaMensajes);
+}
+
+int inicioSesionManual (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
+{
+    ///SELECCIONAR INTERFAZ
+    app->interfaz = INTERFAZ_INICIO;
+
+
+    ///INICIALIZAR RECURSOS GRAFICOS
+    //Interfaz de inicio
+    if (inicializarInicio (&(recursosGraficos->recursosGraficosInicio)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+    //Interfaz de registro
+    if (inicializarRegistro (&(recursosGraficos->recursosGraficosRegistro)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+
+    ///SETUP RECURSOS GRAFICOS
+    setupInicio (&(recursosGraficos->recursosGraficosInicio), app->mensajes.fuentes);
+    setupRegistro (&(recursosGraficos->recursosGraficosRegistro), app->mensajes.fuentes);
+
+
+    return OK;
+}
 
 
 

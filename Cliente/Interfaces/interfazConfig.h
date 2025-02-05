@@ -35,7 +35,6 @@
 
 typedef struct
 {
-    sfFont *fuente;
     sfText *textoConfig;
 } s_textoConfig;
 
