@@ -7,17 +7,17 @@
 int inicializarSalas (s_recursosGraficosSalas *recursosGraficosSalas)
 {
     ///INICIALIZAR TEXTO
-    recursosGraficosSalas->texto.amigos = sfText_create ();
-    if (!recursosGraficosSalas->texto.amigos)
-    {
-        perror ("ERROR - Crear texto amigos.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosSalas->texto.salas = sfText_create ();
     if (!recursosGraficosSalas->texto.salas)
     {
         perror ("ERROR - Crear texto salas.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosSalas->texto.amigos = sfText_create ();
+    if (!recursosGraficosSalas->texto.amigos)
+    {
+        perror ("ERROR - Crear texto amigos.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -44,6 +44,13 @@ int inicializarSalas (s_recursosGraficosSalas *recursosGraficosSalas)
 
 
     ///INICIALIZAR ELEMENTOS
+    recursosGraficosSalas->elementos.rectanguloSalas = sfRectangleShape_create ();
+    if (!recursosGraficosSalas->elementos.rectanguloSalas)
+    {
+        perror ("ERROR - Crear rectangulo de salas.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosSalas->elementos.rectanguloAmigos = sfRectangleShape_create ();
     if (!recursosGraficosSalas->elementos.rectanguloAmigos)
     {
@@ -55,13 +62,6 @@ int inicializarSalas (s_recursosGraficosSalas *recursosGraficosSalas)
     if (!recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos)
     {
         perror ("ERROR - Crear cuadrado para relieve de rectangulo de amigos.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    recursosGraficosSalas->elementos.rectanguloSalas = sfRectangleShape_create ();
-    if (!recursosGraficosSalas->elementos.rectanguloSalas)
-    {
-        perror ("ERROR - Crear rectangulo de salas.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -110,16 +110,16 @@ void setupSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSal
 
 
     ///SETUP TEXTO
+    //Texto salas
+    sfText_setFont (recursosGraficosSalas->texto.salas, app->mensajes.fuentes.fuente1);
+    sfText_setString (recursosGraficosSalas->texto.salas, "SALAS");
+    sfText_setFillColor (recursosGraficosSalas->texto.salas, sfColor_fromRGB (34, 48, 48));
+
     //Texto amigos
     sfText_setFont (recursosGraficosSalas->texto.amigos, app->mensajes.fuentes.fuente1);
     sfText_setString (recursosGraficosSalas->texto.amigos, "AMIGOS");
     sfText_setFillColor (recursosGraficosSalas->texto.amigos, sfColor_fromRGB (34, 48, 48));
     sfText_rotate (recursosGraficosSalas->texto.amigos, -90);
-
-    //Texto salas
-    sfText_setFont (recursosGraficosSalas->texto.salas, app->mensajes.fuentes.fuente1);
-    sfText_setString (recursosGraficosSalas->texto.salas, "SALAS");
-    sfText_setFillColor (recursosGraficosSalas->texto.salas, sfColor_fromRGB (34, 48, 48));
 
     //Texto nombre de usuario
     sfText_setFont (recursosGraficosSalas->texto.nombreUsuario, app->mensajes.fuentes.fuente1);
@@ -136,14 +136,14 @@ void setupSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSal
 
 
     ///SETUP ELEMENTOS
+    //Rectangulo de salas
+    sfRectangleShape_setFillColor (recursosGraficosSalas->elementos.rectanguloSalas, sfColor_fromRGB (232, 217, 205));
+
     //Rectangulo de amigos
     sfRectangleShape_setFillColor (recursosGraficosSalas->elementos.rectanguloAmigos, sfColor_fromRGB (255, 229, 127));
 
     //Cuadrado para relieve de rectangulo de amigos
     sfRectangleShape_setFillColor (recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos, sfColor_fromRGB (189, 139, 37));
-
-    //Rectangulo de salas
-    sfRectangleShape_setFillColor (recursosGraficosSalas->elementos.rectanguloSalas, sfColor_fromRGB (232, 217, 205));
 
     //Barra separacion salas
     sfRectangleShape_setFillColor (recursosGraficosSalas->elementos.barraSeparacionSalas, sfColor_fromRGB (82, 61, 53));
@@ -162,21 +162,21 @@ void setupSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSal
 void tamYPosPantallaSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSalas)
 {
     ///SETUP POS Y TAM TEXTO
+    //Texto salas
+    sfText_setPosition (recursosGraficosSalas->texto.salas, (sfVector2f){62 * app->ventana.escalaElementos.x, 45 * app->ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosSalas->texto.salas, 36 * app->ventana.escalaPixeles);
+
     //Texto amigos
-    sfText_setPosition (recursosGraficosSalas->texto.amigos, (sfVector2f){3 * app->ventana.escalaElementos.x, 574 * app->ventana.escalaElementos.y});
+    sfText_setPosition (recursosGraficosSalas->texto.amigos, (sfVector2f){353 * app->ventana.escalaElementos.x, 574 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosSalas->texto.amigos, 46 * app->ventana.escalaPixeles);
     sfText_setLetterSpacing (recursosGraficosSalas->texto.amigos, 10 * app->ventana.escalaPixeles);
 
-    //Texto salas
-    sfText_setPosition (recursosGraficosSalas->texto.salas, (sfVector2f){122 * app->ventana.escalaElementos.x, 45 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosSalas->texto.salas, 36 * app->ventana.escalaPixeles);
-
     //Texto nombre de usuario
-    sfText_setPosition (recursosGraficosSalas->texto.nombreUsuario, (sfVector2f){95 * app->ventana.escalaElementos.x, 925 * app->ventana.escalaElementos.y});
+    sfText_setPosition (recursosGraficosSalas->texto.nombreUsuario, (sfVector2f){35 * app->ventana.escalaElementos.x, 925 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosSalas->texto.nombreUsuario, 36 * app->ventana.escalaPixeles);
 
     //Texto para cambiar a la interfaz de config
-    sfText_setPosition (recursosGraficosSalas->texto.interfazConfig, (sfVector2f){365 * app->ventana.escalaElementos.x, 922 * app->ventana.escalaElementos.y});
+    sfText_setPosition (recursosGraficosSalas->texto.interfazConfig, (sfVector2f){305 * app->ventana.escalaElementos.x, 922 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosSalas->texto.interfazConfig, 46 * app->ventana.escalaPixeles);
 
     //Texto auxiliar para escribir mensaje
@@ -185,24 +185,24 @@ void tamYPosPantallaSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosG
 
 
     ///SETUP POS Y TAM ELEMENTOS
+    //Rectangulo de salas
+    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.rectanguloSalas, (sfVector2f){0, 0});
+    sfRectangleShape_setSize (recursosGraficosSalas->elementos.rectanguloSalas, (sfVector2f){350 * app->ventana.escalaElementos.x, 1009 * app->ventana.escalaElementos.y});
+
     //Rectangulo de amigos
-    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.rectanguloAmigos, (sfVector2f){0, 124 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.rectanguloAmigos, (sfVector2f){350 * app->ventana.escalaElementos.x, 124 * app->ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosSalas->elementos.rectanguloAmigos, (sfVector2f){60 * app->ventana.escalaElementos.x, 759 * app->ventana.escalaElementos.y});
 
     //Cuadrado para relieve de rectangulo de amigos
-    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos, (sfVector2f){0 * app->ventana.escalaElementos.x, 117 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos, (sfVector2f){350 * app->ventana.escalaElementos.x, 117 * app->ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos, (sfVector2f){25 * app->ventana.escalaElementos.x, 20 * app->ventana.escalaElementos.y});
 
-    //Rectangulo de salas
-    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.rectanguloSalas, (sfVector2f){60 * app->ventana.escalaElementos.x, 0});
-    sfRectangleShape_setSize (recursosGraficosSalas->elementos.rectanguloSalas, (sfVector2f){350 * app->ventana.escalaElementos.x, 1009 * app->ventana.escalaElementos.y});
-
     //Barra separacion salas
-    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.barraSeparacionSalas, (sfVector2f){84 * app->ventana.escalaElementos.x, 120 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.barraSeparacionSalas, (sfVector2f){24 * app->ventana.escalaElementos.x, 120 * app->ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosSalas->elementos.barraSeparacionSalas, (sfVector2f){250 * app->ventana.escalaElementos.x, 3 * app->ventana.escalaElementos.y});
 
     //Barra separacion nombre de usuario
-    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.barraSeparacionNombre, (sfVector2f){84 * app->ventana.escalaElementos.x, 888 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (recursosGraficosSalas->elementos.barraSeparacionNombre, (sfVector2f){24 * app->ventana.escalaElementos.x, 888 * app->ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosSalas->elementos.barraSeparacionNombre, (sfVector2f){250 * app->ventana.escalaElementos.x, 3 * app->ventana.escalaElementos.y});
 
     //Barra de ingresar mensaje
@@ -247,7 +247,10 @@ void accionSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGraficosSa
                 app->interfaz = INTERFAZ_AMIGOS;
 
             if (clickEnTexto (app->renderizado, recursosGraficosSalas->texto.interfazConfig))
+            {
                 app->interfaz = INTERFAZ_CONFIG;
+                app->usuario.ultimaInterfaz = INTERFAZ_SALAS;
+            }
         }
         break;
 
@@ -295,8 +298,13 @@ void actualizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGrafic
 
 
     ///TEXTO AUXILIAR ESCRIBIR MENSAJE
-    if ((recursosGraficosSalas->habilitaciones.habilitarEscritura == DESHABILITAR_ESCRITURA) && (largoBufferMensaje == 0))
-        sfText_setString (recursosGraficosSalas->texto.auxEscribirMensaje, "Escribir mensaje...");
+    if (largoBufferMensaje == 0)
+    {
+        if (recursosGraficosSalas->habilitaciones.habilitarEscritura == DESHABILITAR_ESCRITURA)
+            sfText_setString (recursosGraficosSalas->texto.auxEscribirMensaje, "Escribir mensaje...");
+        else
+            sfText_setString (recursosGraficosSalas->texto.auxEscribirMensaje, "");
+    }
 
 
     ///BARRA DE ESCRIBIENDO MENSAJE
@@ -305,10 +313,10 @@ void actualizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGrafic
         if (recursosGraficosSalas->habilitaciones.tempHabilitarBarra == 22)
         {
             recursosGraficosSalas->habilitaciones.tempHabilitarBarra = 0;
-            if (recursosGraficosSalas->habilitaciones.habilitarBarraEscribiendoMensaje == HABILITAR_BARRA_ESCRIBIENDO_MENSAJE)
-                recursosGraficosSalas->habilitaciones.habilitarBarraEscribiendoMensaje = DESHABILITAR_BARRA_ESCRIBIENDO_MENSAJE;
-            else
+            if (recursosGraficosSalas->habilitaciones.habilitarBarraEscribiendoMensaje == DESHABILITAR_BARRA_ESCRIBIENDO_MENSAJE)
                 recursosGraficosSalas->habilitaciones.habilitarBarraEscribiendoMensaje = HABILITAR_BARRA_ESCRIBIENDO_MENSAJE;
+            else
+                recursosGraficosSalas->habilitaciones.habilitarBarraEscribiendoMensaje = DESHABILITAR_BARRA_ESCRIBIENDO_MENSAJE;
         }
         recursosGraficosSalas->habilitaciones.tempHabilitarBarra ++;
     }
@@ -325,17 +333,17 @@ void renderizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGrafic
 
 
     ///RENDERIZAR ELEMENTOS
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.rectanguloSalas, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.rectanguloAmigos, NULL);
-    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.rectanguloSalas, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.barraSeparacionSalas, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.barraSeparacionNombre, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosSalas->elementos.barraIngresarMensaje, NULL);
 
 
     ///RENDERIZAR TEXTO
-    sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.amigos, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.salas, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.amigos, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.nombreUsuario, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.interfazConfig, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosSalas->texto.auxEscribirMensaje, NULL);
@@ -356,17 +364,17 @@ void renderizarSalas (s_aplicacion *app, s_recursosGraficosSalas *recursosGrafic
 void liberarSalas (s_recursosGraficosSalas *recursosGraficosSalas)
 {
     ///LIBERAR TEXTO
-    sfText_destroy (recursosGraficosSalas->texto.amigos);
     sfText_destroy (recursosGraficosSalas->texto.salas);
+    sfText_destroy (recursosGraficosSalas->texto.amigos);
     sfText_destroy (recursosGraficosSalas->texto.nombreUsuario);
     sfText_destroy (recursosGraficosSalas->texto.interfazConfig);
     sfText_destroy (recursosGraficosSalas->texto.auxEscribirMensaje);
 
 
     ///LIBERAR ELEMENTOS
+    sfRectangleShape_destroy (recursosGraficosSalas->elementos.rectanguloSalas);
     sfRectangleShape_destroy (recursosGraficosSalas->elementos.rectanguloAmigos);
     sfRectangleShape_destroy (recursosGraficosSalas->elementos.cuadradoRelieveRecAmigos);
-    sfRectangleShape_destroy (recursosGraficosSalas->elementos.rectanguloSalas);
     sfRectangleShape_destroy (recursosGraficosSalas->elementos.barraSeparacionSalas);
     sfRectangleShape_destroy (recursosGraficosSalas->elementos.barraSeparacionNombre);
     sfRectangleShape_destroy (recursosGraficosSalas->elementos.barraIngresarMensaje);

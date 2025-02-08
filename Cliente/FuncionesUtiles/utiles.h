@@ -26,7 +26,8 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
-#define MAX_BUFFER_SOLICITUD_USUARIO  MAX_NOMBRE_USUARIO + MAX_CONTRASENIA_USUARIO + 3
+#define MAX_BUFFER_SOLICITUD 101
+#define MAX_BUFFER_RESPUESTA 101
 
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
@@ -45,7 +46,7 @@ bool clickEnTexto (sfRenderWindow *renderizado, sfText *texto);
 void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento);
 
 //Enviar solicitud al servidor
-char enviarSolicitudUsuario (SOCKET sock, char *nombre, char *contrasenia, char indice);
+void enviarSolicitudUsuario (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta);
 
 //Asignar mensaje a la lista circular de mensajes
 void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor);

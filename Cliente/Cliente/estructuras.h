@@ -26,8 +26,8 @@
 #define INDICE_REGISTRO '2'
 #define INDICE_MENSAJE '3'
 
-#define SOLICITUD_ACEPTADA '1'
-#define SOLICITUD_RECHAZADA '0'
+#define SOLICITUD_ACEPTADA 1
+#define SOLICITUD_RECHAZADA 0
 
 #define MAX_NOMBRE_USUARIO 26
 #define MAX_CONTRASENIA_USUARIO 46
@@ -46,7 +46,8 @@
 
 typedef struct
 {
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    int id;
+    char nombre [MAX_NOMBRE_USUARIO];
     unsigned short int ultimaInterfaz;
 } s_usuario;
 
@@ -85,7 +86,7 @@ typedef struct
 {
     sfText *mensaje;
     sfVector2f posMensaje;
-} s_mensaje;
+} s_mensaje; //Eliminar esta estructura
 
 typedef struct
 {

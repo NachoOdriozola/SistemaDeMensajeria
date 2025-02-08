@@ -28,17 +28,17 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosAmigos->texto.auxEscribirMensaje = sfText_create ();
-    if (!recursosGraficosAmigos->texto.auxEscribirMensaje)
-    {
-        perror ("ERROR - Crear texto auxiliar para escribir mensaje.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     recursosGraficosAmigos->texto.interfazConfig = sfText_create ();
     if (!recursosGraficosAmigos->texto.interfazConfig)
     {
         perror ("ERROR - Crear texto para cambiar a la interfaz de configuraciones.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosAmigos->texto.auxEscribirMensaje = sfText_create ();
+    if (!recursosGraficosAmigos->texto.auxEscribirMensaje)
+    {
+        perror ("ERROR - Crear texto auxiliar para escribir mensaje.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -65,10 +65,10 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosAmigos->elementos.barraSeparacionUsuarios = sfRectangleShape_create ();
-    if (!recursosGraficosAmigos->elementos.barraSeparacionUsuarios)
+    recursosGraficosAmigos->elementos.barraSeparacionAmigos = sfRectangleShape_create ();
+    if (!recursosGraficosAmigos->elementos.barraSeparacionAmigos)
     {
-        perror ("ERROR - Crear barra de separacion de usuarios activos.\n");
+        perror ("ERROR - Crear barra de separacion de amigos.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -113,14 +113,14 @@ void setupAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosA
     sfText_setFont (recursosGraficosAmigos->texto.nombreUsuario, app->mensajes.fuentes.fuente1);
     sfText_setFillColor (recursosGraficosAmigos->texto.nombreUsuario, sfColor_fromRGB (34, 48, 48));
 
-    //Texto auxiliar escribir mensaje
-    sfText_setFont (recursosGraficosAmigos->texto.auxEscribirMensaje, app->mensajes.fuentes.fuente1);
-    sfText_setFillColor (recursosGraficosAmigos->texto.auxEscribirMensaje, sfColor_fromRGB (40, 54, 54));
-
     //Texto para cambiar a la interfaz de config
     sfText_setFont (recursosGraficosAmigos->texto.interfazConfig, app->mensajes.fuentes.fuente1);
     sfText_setString (recursosGraficosAmigos->texto.interfazConfig, "C");
     sfText_setFillColor (recursosGraficosAmigos->texto.interfazConfig, sfColor_fromRGB (40, 54, 54));
+
+    //Texto auxiliar escribir mensaje
+    sfText_setFont (recursosGraficosAmigos->texto.auxEscribirMensaje, app->mensajes.fuentes.fuente1);
+    sfText_setFillColor (recursosGraficosAmigos->texto.auxEscribirMensaje, sfColor_fromRGB (40, 54, 54));
 
 
     ///SETUP ELEMENTOS
@@ -133,8 +133,8 @@ void setupAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosA
     //Cuadrado para relieve de rectangulo de salas
     sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.cuadradoRelieveRecSalas, sfColor_fromRGB (189, 139, 37));
 
-    //Barra separacion usuarios activos
-    sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.barraSeparacionUsuarios, sfColor_fromRGB (82, 61, 53));
+    //Barra separacion de amigos
+    sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.barraSeparacionAmigos, sfColor_fromRGB (82, 61, 53));
 
     //Barra separacion nombre de usuario
     sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.barraSeparacionNombre, sfColor_fromRGB (82, 61, 53));
@@ -159,13 +159,13 @@ void tamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recurso
     sfText_setPosition (recursosGraficosAmigos->texto.nombreUsuario, (sfVector2f){35 * app->ventana.escalaElementos.x, 925 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.nombreUsuario, 36 * app->ventana.escalaPixeles);
 
-    //Texto auxiliar para escribir mensaje
-    sfText_setPosition (recursosGraficosAmigos->texto.auxEscribirMensaje, (sfVector2f){510 * app->ventana.escalaElementos.x, 912 * app->ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosAmigos->texto.auxEscribirMensaje, 26 * app->ventana.escalaPixeles);
-
     //Texto para cambiar a la interfaz de config
     sfText_setPosition (recursosGraficosAmigos->texto.interfazConfig, (sfVector2f){305 * app->ventana.escalaElementos.x, 922 * app->ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.interfazConfig, 46 * app->ventana.escalaPixeles);
+
+    //Texto auxiliar para escribir mensaje
+    sfText_setPosition (recursosGraficosAmigos->texto.auxEscribirMensaje, (sfVector2f){510 * app->ventana.escalaElementos.x, 912 * app->ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosAmigos->texto.auxEscribirMensaje, 26 * app->ventana.escalaPixeles);
 
 
     ///SETUP POS Y TAM ELEMENTOS
@@ -181,9 +181,9 @@ void tamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recurso
     sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.cuadradoRelieveRecSalas, (sfVector2f){350 * app->ventana.escalaElementos.x, 117 * app->ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosAmigos->elementos.cuadradoRelieveRecSalas, (sfVector2f){25 * app->ventana.escalaElementos.x, 20 * app->ventana.escalaElementos.y});
 
-    //Barra separacion usuarios activos
-    sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.barraSeparacionUsuarios, (sfVector2f){24 * app->ventana.escalaElementos.x, 120 * app->ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosAmigos->elementos.barraSeparacionUsuarios, (sfVector2f){250 * app->ventana.escalaElementos.x, 3 * app->ventana.escalaElementos.y});
+    //Barra separacion de amigos
+    sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.barraSeparacionAmigos, (sfVector2f){24 * app->ventana.escalaElementos.x, 120 * app->ventana.escalaElementos.y});
+    sfRectangleShape_setSize (recursosGraficosAmigos->elementos.barraSeparacionAmigos, (sfVector2f){250 * app->ventana.escalaElementos.x, 3 * app->ventana.escalaElementos.y});
 
     //Barra separacion nombre de usuario
     sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.barraSeparacionNombre, (sfVector2f){24 * app->ventana.escalaElementos.x, 888 * app->ventana.escalaElementos.y});
@@ -227,7 +227,10 @@ void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficos
                 app->interfaz = INTERFAZ_SALAS;
 
             if (clickEnTexto (app->renderizado, recursosGraficosAmigos->texto.interfazConfig))
+            {
                 app->interfaz = INTERFAZ_CONFIG;
+                app->usuario.ultimaInterfaz = INTERFAZ_AMIGOS;
+            }
         }
         break;
 
@@ -281,7 +284,7 @@ void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraf
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.rectanguloAmigos, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.cuadradoRelieveRecSalas, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.rectanguloSalas, NULL);
-    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.barraSeparacionUsuarios, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.barraSeparacionAmigos, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.barraSeparacionNombre, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.barraIngresarMensaje, NULL);
 
@@ -290,8 +293,8 @@ void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraf
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.amigos, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.salas, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.nombreUsuario, NULL);
-    sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.auxEscribirMensaje, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.interfazConfig, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.auxEscribirMensaje, NULL);
 
 
     ///RENDERIZAR LISTA DE MENSAJES
@@ -307,15 +310,15 @@ void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
     sfText_destroy (recursosGraficosAmigos->texto.amigos);
     sfText_destroy (recursosGraficosAmigos->texto.salas);
     sfText_destroy (recursosGraficosAmigos->texto.nombreUsuario);
-    sfText_destroy (recursosGraficosAmigos->texto.auxEscribirMensaje);
     sfText_destroy (recursosGraficosAmigos->texto.interfazConfig);
+    sfText_destroy (recursosGraficosAmigos->texto.auxEscribirMensaje);
 
 
     ///LIBERAR ELEMENTOS
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.rectanguloAmigos);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.rectanguloSalas);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.cuadradoRelieveRecSalas);
-    sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraSeparacionUsuarios);
+    sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraSeparacionAmigos);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraSeparacionNombre);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraIngresarMensaje);
 }

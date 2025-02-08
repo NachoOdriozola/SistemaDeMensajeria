@@ -13,6 +13,7 @@
 #include <ws2tcpip.h>
 
 #include "estructuras.h"
+#include "../ListaCircular/listaCircular.h"
 #include "../FuncionesEspecificas/especificas.h"
 #include "../Interfaces/interfazInicio.h"
 #include "../Interfaces/interfazRegistro.h"
@@ -30,9 +31,6 @@
 
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
-
-#define ACTIVO 1
-#define AUSENTE 0
 
 #define MAX_MENSAJES_EN_MEM 5
 

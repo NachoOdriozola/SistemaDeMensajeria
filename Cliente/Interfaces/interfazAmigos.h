@@ -47,8 +47,8 @@ typedef struct
     sfText *amigos;
     sfText *salas;
     sfText *nombreUsuario;
-    sfText *auxEscribirMensaje;
     sfText *interfazConfig;
+    sfText *auxEscribirMensaje;
 } s_textoAmigos;
 
 typedef struct
@@ -56,7 +56,7 @@ typedef struct
     sfRectangleShape *rectanguloAmigos;
     sfRectangleShape *rectanguloSalas;
     sfRectangleShape *cuadradoRelieveRecSalas;
-    sfRectangleShape *barraSeparacionUsuarios;
+    sfRectangleShape *barraSeparacionAmigos;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;
 } s_elementosAmigos;

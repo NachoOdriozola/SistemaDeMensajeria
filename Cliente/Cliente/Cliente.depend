@@ -774,7 +774,7 @@
 	<unicode/utf16.h>
 	<math.h>
 
-1738633419 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesespecificas\especificas.c
+1738780284 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesespecificas\especificas.c
 	"especificas.h"
 
 1738632593 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesespecificas\especificas.h
@@ -793,7 +793,7 @@
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
 
-1738632703 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\estructuras.h
+1739017506 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -807,7 +807,7 @@
 	"SFML/Audio.h"
 	"../ListaCircular/listaCircular.h"
 
-1738632969 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesutiles\utiles.h
+1739020014 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesutiles\utiles.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -822,13 +822,13 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 
-1738711588 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesutiles\utiles.c
+1739020084 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\funcionesutiles\utiles.c
 	"utiles.h"
 
-1738712923 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazamigos.c
+1738735034 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazamigos.c
 	"interfazAmigos.h"
 
-1738633304 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazamigos.h
+1738734956 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazamigos.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -869,10 +869,10 @@
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
 
-1738632442 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazinicio.c
+1739019741 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazinicio.c
 	"interfazInicio.h"
 
-1738632355 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazinicio.h
+1739019433 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazinicio.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -888,7 +888,7 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 
-1738632513 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazregistro.c
+1738781332 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazregistro.c
 	"interfazRegistro.h"
 
 1738632462 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazregistro.h
@@ -907,10 +907,10 @@
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
 
-1738633277 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazsalas.c
+1738735936 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazsalas.c
 	"interfazSalas.h"
 
-1738718960 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazsalas.h
+1738734701 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\interfaces\interfazsalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -930,10 +930,10 @@
 1738360704 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\listacircular\listacircular.c
 	"listaCircular.h"
 
-1738700061 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\main.c
+1739017117 source:c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\main.c
 	"main.h"
 
-1738699837 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\main.h
+1739016904 c:\users\ignac\documents\appdemensajes\appdemensajes\cliente\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -942,6 +942,7 @@
 	<windows.h>
 	<ws2tcpip.h>
 	"estructuras.h"
+	"../ListaCircular/listaCircular.h"
 	"../FuncionesEspecificas/especificas.h"
 	"../Interfaces/interfazInicio.h"
 	"../Interfaces/interfazRegistro.h"

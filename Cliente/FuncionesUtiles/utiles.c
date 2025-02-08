@@ -63,25 +63,13 @@ void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento)
         buffer [largoBuffer - 1] = '\0';
 }
 
-char enviarSolicitudUsuario (SOCKET sock, char *nombre, char *contrasenia, char indice)
+void enviarSolicitudUsuario (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta)
 {
-    char bufferSolicitud [MAX_BUFFER_SOLICITUD_USUARIO], *ptrBufferSolicitud = bufferSolicitud;
-    char respuestaSolicitud;
+    char bufferSolicitudLocal [MAX_BUFFER_SOLICITUD];
+    char bufferRespuestaLocal [MAX_BUFFER_RESPUESTA];
 
-    *ptrBufferSolicitud = indice;
-    ptrBufferSolicitud ++;
-    *ptrBufferSolicitud = '|';
-    ptrBufferSolicitud ++;
-    strcpy (ptrBufferSolicitud, nombre);
-    ptrBufferSolicitud = strchr (ptrBufferSolicitud, '\0');
-    *ptrBufferSolicitud = '|';
-    ptrBufferSolicitud ++;
-    strcpy (ptrBufferSolicitud, contrasenia);
-
-    send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD_USUARIO, 0);
-    recv (sock, &respuestaSolicitud, sizeof (respuestaSolicitud), 0);
-
-    return respuestaSolicitud;
+    send (sock, bufferSolicitud, sizeof (bufferSolicitudLocal), 0);
+    recv (sock, bufferRespuesta, sizeof (bufferRespuestaLocal), 0);
 }
 
 void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor)

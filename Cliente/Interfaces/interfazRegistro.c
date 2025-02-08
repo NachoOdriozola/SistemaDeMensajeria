@@ -335,16 +335,18 @@ void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraf
 
             if ((recursosGraficosRegistro->habilitaciones.habilitarRegistro == HABILITAR_REGISTRO) && (clickEnRectangulo (app->renderizado, recursosGraficosRegistro->elementos.botonRegistrar)))
             {
+                /*
                 if (enviarSolicitudUsuario (app->sock, recursosGraficosRegistro->bufferEscribirNombre, recursosGraficosRegistro->bufferEscribirContrasenia, INDICE_REGISTRO) == SOLICITUD_ACEPTADA)
                 {
                     app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombreUsuario, recursosGraficosRegistro->bufferEscribirNombre);
+                    strcpy (app->usuario.nombre, recursosGraficosRegistro->bufferEscribirNombre);
                 }
                 else
                 {
                     sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 492});
                     sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 491});
                 }
+                */
             }
         }
         break;
@@ -368,16 +370,18 @@ void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraf
             (recursosGraficosRegistro->habilitaciones.habilitarRegistro == HABILITAR_REGISTRO) &&
             ((recursosGraficosRegistro->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosRegistro->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
+            /*
             if (enviarSolicitudUsuario (app->sock, recursosGraficosRegistro->bufferEscribirNombre, recursosGraficosRegistro->bufferEscribirContrasenia, INDICE_REGISTRO) == SOLICITUD_ACEPTADA)
                 {
                     app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombreUsuario, recursosGraficosRegistro->bufferEscribirNombre);
+                    strcpy (app->usuario.nombre, recursosGraficosRegistro->bufferEscribirNombre);
                 }
                 else
                 {
                     sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 492});
                     sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 491});
                 }
+                */
         }
         break;
 

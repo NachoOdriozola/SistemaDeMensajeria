@@ -289,6 +289,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
+    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
 
     sfRenderWindow_pollEvent (app->renderizado, &evento);
     switch (evento.type)
@@ -339,10 +340,17 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
 
             if ((recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonIngresar)))
             {
-                if (enviarSolicitudUsuario (app->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
+                sprintf (bufferSolicitud, "%c|%s|%s", INDICE_INICIO_SESION, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
+                enviarSolicitudUsuario (app->sock, bufferSolicitud, bufferRespuesta);
+                puts (bufferRespuesta);
+
+                //sscanf (bufferRespuestaSolicitud, "%d|%d", &estadoSolicitud, &id);
+                /*
+                if (estadoSolicitud == SOLICITUD_ACEPTADA)
                 {
                     app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
+                    app->usuario.id = id;
+                    strcpy (app->usuario.nombre, recursosGraficosInicio->bufferEscribirNombre);
                     if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
                         guardarDatosEnArchivo (recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
                 }
@@ -353,6 +361,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
                     sfText_setString (recursosGraficosInicio->texto.textoIngresoIncorrecto, "Usuario o contraseña incorrectos.");
                     sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, sfColor_fromRGB (40, 54, 54));
                 }
+                */
             }
         }
         break;
@@ -376,20 +385,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
             (recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) &&
             ((recursosGraficosInicio->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosInicio->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
-            if (enviarSolicitudUsuario (app->sock, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia, INDICE_INICIO_SESION) == SOLICITUD_ACEPTADA)
-                {
-                    app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombreUsuario, recursosGraficosInicio->bufferEscribirNombre);
-                    if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
-                        guardarDatosEnArchivo (recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
-                }
-                else
-                {
-                    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.botonIngresar, (sfVector2f){195, 437});
-                    sfText_setPosition (recursosGraficosInicio->texto.textoBotonIngresar, (sfVector2f){227, 436});
-                    sfText_setString (recursosGraficosInicio->texto.textoIngresoIncorrecto, "Usuario o contraseña incorrectos.");
-                    sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, sfColor_fromRGB (40, 54, 54));
-                }
+            printf ("Solo boton.\n");
         }
         break;
 

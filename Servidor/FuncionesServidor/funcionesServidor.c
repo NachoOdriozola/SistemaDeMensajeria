@@ -68,10 +68,11 @@ void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolic
 {
     s_cliente *cliente;
     char *nombre = bufferSolicitud, *contrasenia;
+    int id;
     sqlite3_stmt *sentencia;
     char consulta [MAX_BUFFER_CONSULTA] = "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;";
     int resultadoConsulta;
-    char resultadoSolicitud = SOLICITUD_RECHAZADA;
+    char respuestaSolicitud [MAX_BUFFER_RESPUESTA];
 
     contrasenia = strchr (bufferSolicitud, '|');
     *contrasenia = '\0';
@@ -88,12 +89,18 @@ void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolic
     sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
+
     if (resultadoConsulta == SQLITE_ROW)
-        resultadoSolicitud = SOLICITUD_ACEPTADA;
+    {
+        id = sqlite3_column_int (sentencia, 0);
+        sprintf (respuestaSolicitud, "%d|%d", SOLICITUD_ACEPTADA, id);
+    }
+    else
+        sprintf (respuestaSolicitud, "%d|%d", SOLICITUD_RECHAZADA, 0);
 
     sqlite3_finalize (sentencia);
 
-    send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
+    send (cliente->sock, respuestaSolicitud, sizeof (respuestaSolicitud), 0);
 }
 
 void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud)

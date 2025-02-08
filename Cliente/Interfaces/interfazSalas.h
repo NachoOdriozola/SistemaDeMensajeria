@@ -48,8 +48,8 @@
 
 typedef struct
 {
-    sfText *amigos;
     sfText *salas;
+    sfText *amigos;
     sfText *nombreUsuario;
     sfText *interfazConfig;
     sfText *auxEscribirMensaje;
@@ -57,9 +57,9 @@ typedef struct
 
 typedef struct
 {
+    sfRectangleShape *rectanguloSalas;
     sfRectangleShape *rectanguloAmigos;
     sfRectangleShape *cuadradoRelieveRecAmigos;
-    sfRectangleShape *rectanguloSalas;
     sfRectangleShape *barraSeparacionSalas;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;

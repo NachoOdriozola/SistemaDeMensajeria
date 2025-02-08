@@ -196,7 +196,7 @@
 1738297698 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funcionesservidor\funcionesservidor.c
 	"funcionesServidor.h"
 
-1738294191 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
+1738779577 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -209,7 +209,7 @@
 	"../Servidor/estructuras.h"
 	"../ListaSimple/listaSimple.h"
 
-1738295427 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\estructuras.h
+1738779912 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -221,7 +221,7 @@
 	<sqlite3.h>
 	"../ListaSimple/listaSimple.h"
 
-1738296837 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\main.c
+1738412570 source:c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\main.c
 	"main.h"
 
 1738296840 c:\users\ignac\documents\appdemensajes\appdemensajes\servidor\servidor\main.h

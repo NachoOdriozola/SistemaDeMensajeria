@@ -78,14 +78,12 @@ int main()
             accionAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             actualizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
             renderizarAmigos (&app, &(recursosGraficos.recursosGraficosAmigos));
-            app.usuario.ultimaInterfaz = INTERFAZ_AMIGOS;
             break;
 
         case INTERFAZ_SALAS:
             accionSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             actualizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
             renderizarSalas (&app, &(recursosGraficos.recursosGraficosSalas));
-            app.usuario.ultimaInterfaz = INTERFAZ_SALAS;
             break;
 
         case INTERFAZ_CONFIG:
@@ -202,12 +200,12 @@ void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 
 void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
-    ///LIBERAR FUENTES
-    liberarFuentes (&(app->mensajes.fuentes));
-
-
     ///LIBERAR LISTA DE MENSAJES
     vaciarListaCircularConAccion (&(app->mensajes.listaMensajes), liberarMensaje);
+
+
+    ///LIBERAR FUENTES
+    liberarFuentes (&(app->mensajes.fuentes));
 
 
     ///LIBERAR RECURSOS GRAFICOS
@@ -246,8 +244,8 @@ void inicioMenuAplicacion (s_aplicacion *app, s_recursosGraficos *recursosGrafic
     ///SETUP APLICACION
     maximizadoAutomaticoVentana (app);
     ioctlsocket (app->sock, FIONBIO, &modoSocket);
-    sfText_setString (recursosGraficos->recursosGraficosAmigos.texto.nombreUsuario, app->usuario.nombreUsuario);
-    sfText_setString (recursosGraficos->recursosGraficosSalas.texto.nombreUsuario, app->usuario.nombreUsuario);
+    sfText_setString (recursosGraficos->recursosGraficosAmigos.texto.nombreUsuario, app->usuario.nombre);
+    sfText_setString (recursosGraficos->recursosGraficosSalas.texto.nombreUsuario, app->usuario.nombre);
 
 
     ///SETUP RECURSOS GRAFICOS
