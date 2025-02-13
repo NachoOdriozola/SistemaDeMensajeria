@@ -97,6 +97,7 @@ int main()
     liberar (&app, &recursosGraficos);
     system ("pause");
 
+
     return OK;
 }
 
@@ -184,7 +185,7 @@ void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 
     ///SETUP RECURSOS GRAFICOS
     //Interfaz de amigos
-    setupAmigos (app, &(recursosGraficos->recursosGraficosAmigos));
+    setupAmigos (&(recursosGraficos->recursosGraficosAmigos), app->mensajes.fuentes);
 
     //Interfaz de salas
     setupSalas (app, &(recursosGraficos->recursosGraficosSalas));
@@ -249,7 +250,7 @@ void inicioMenuAplicacion (s_aplicacion *app, s_recursosGraficos *recursosGrafic
 
 
     ///SETUP RECURSOS GRAFICOS
-    tamYPosPantallaAmigos (app, &(recursosGraficos->recursosGraficosAmigos));
+    tamYPosPantallaAmigos (&(recursosGraficos->recursosGraficosAmigos), app->ventana);
     tamYPosPantallaSalas (app, &(recursosGraficos->recursosGraficosSalas));
     tamYPosPantallaConfig (app, &(recursosGraficos->recursosGraficosConfig));
     mapListaCircularConComplemento (&(app->mensajes.listaMensajes), &(app->ventana.escalaPixeles), tamListaMensajes);

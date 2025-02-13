@@ -38,6 +38,9 @@
 #define HABILITAR_ESCRITURA_CONTRASENIA 1
 #define DESHABILITAR_ESCRITURA_CONTRASENIA 0
 
+#define HABILITAR_GUARDAR_INICIO_SESION 1
+#define DESHABILITAR_GUARDAR_INICIO_SESION 0
+
 #define HABILITAR_REGISTRO 1
 #define DESHABILITAR_REGISTRO 0
 
@@ -53,6 +56,8 @@ typedef struct
     sfText *ingresarContrasenia;
     sfText *textoInformativoContrasenia;
     sfText *auxEscribirContrasenia;
+    sfText *textoGuardarInicioSesion;
+    sfText *auxGuardarInicioSesion;
     sfText *textoBotonRegistrar;
     sfText *textoErrorRegistro;
 } s_textoRegistro;
@@ -66,6 +71,7 @@ typedef struct
     sfRectangleShape *rectanguloInvisibleVolver;
     sfRectangleShape *barraIngresarNombre;
     sfRectangleShape *barraIngresarContrasenia;
+    sfRectangleShape *cuadradoGuardarInicioSesion;
     sfRectangleShape *botonRegistrar;
 } s_elementosRegistro;
 
@@ -73,6 +79,7 @@ typedef struct
 {
     bool habilitarEscrituraNombre;
     bool habilitarEscrituraContrasenia;
+    bool guardarInicioSesion;
     bool habilitarRegistro;
 } s_habilitacionesRegistro;
 
@@ -95,6 +102,11 @@ void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraf
 void actualizarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
 void renderizarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro);
 void liberarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro);
+
+
+///FUNCIONES LOGICAS
+
+void intentarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro);
 
 
 #endif // INTERFAZREGISTRO_H_INCLUDED

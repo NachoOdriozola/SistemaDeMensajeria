@@ -14,8 +14,8 @@
 #include <stdbool.h>
 #include <sqlite3.h>
 
+#include "../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 #include "../Servidor/estructuras.h"
-#include "../ListaSimple/listaSimple.h"
 
 
 ///DEFINES
@@ -40,9 +40,9 @@
 
 int aceptarCliente (s_servidor *servidor);
 int recibirSolicitud (s_servidor *servidor, char *bufferSolicitud, char *solicitud);
-void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud);
-void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud);
-void enviarMensajes (s_servidor *servidor, char *bufferSolicitud);
+void procesarInicioSesion (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
+void procesarRegistro (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
+void procesarSolicitudAmistad (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
 void liberarCliente (void *cliente);
 
 

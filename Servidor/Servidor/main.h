@@ -15,7 +15,7 @@
 #include <sqlite3.h>
 
 #include "estructuras.h"
-#include "../ListaSimple/listaSimple.h"
+#include "../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 #include "../FuncionesServidor/funcionesServidor.h"
 
 
@@ -26,7 +26,7 @@
 
 #define TECLA_APAGAR_SERVIDOR 'Q'
 
-#define MAX_BUFFER_SOLICITUD 512
+#define MAX_BUFFER_SOLICITUD 256
 
 #define PUERTO 8080
 

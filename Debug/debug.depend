@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1739253681 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\debug\main.c
+	"main.h"
+
+1739253411 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\debug\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+

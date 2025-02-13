@@ -31,14 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="../../EstructurasDeDatos/ListaSimple/listaSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../EstructurasDeDatos/ListaSimple/listaSimple.h" />
 		<Unit filename="../FuncionesServidor/funcionesServidor.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../FuncionesServidor/funcionesServidor.h" />
-		<Unit filename="../ListaSimple/listaSimple.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../ListaSimple/listaSimple.h" />
 		<Unit filename="estructuras.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />

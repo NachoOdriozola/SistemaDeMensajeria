@@ -14,6 +14,7 @@ int verificarDatosGuardados (s_aplicacion *app)
         return INICIO_SESION_MANUAL;
 
     fread (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+    app->usuario.id = datosGuardados.id;
     strcpy (app->usuario.nombre, datosGuardados.nombre);
 
     fclose (archDatos);

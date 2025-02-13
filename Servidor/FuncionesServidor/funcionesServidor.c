@@ -39,7 +39,7 @@ int recibirSolicitud (s_servidor *servidor, char *bufferSolicitud, char *solicit
         bytesRecibidos = recv (cliente->sock, bufferSolicitud, MAX_BUFFER_SOLICITUD, 0);
         if (bytesRecibidos > 0)
         {
-            bufferSolicitud += bytesRecibidos;
+            bufferSolicitud += bytesRecibidos - 1;
             *bufferSolicitud = '\0';
             bufferSolicitud = auxBufferSolicitud;
 
@@ -64,82 +64,142 @@ int recibirSolicitud (s_servidor *servidor, char *bufferSolicitud, char *solicit
     return SOLICITUD_NO_RECIBIDA;
 }
 
-void procesarInicioSesion (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud)
+void procesarInicioSesion (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud)
 {
-    s_cliente *cliente;
-    char *nombre = bufferSolicitud, *contrasenia;
-    int id;
+    char *bufferRespuesta;
+    char *nombre, *contrasenia;
+
     sqlite3_stmt *sentencia;
-    char consulta [MAX_BUFFER_CONSULTA] = "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;";
+    char *consulta;
     int resultadoConsulta;
-    char respuestaSolicitud [MAX_BUFFER_RESPUESTA];
 
-    contrasenia = strchr (bufferSolicitud, '|');
-    *contrasenia = '\0';
-    contrasenia ++;
+    s_cliente *cliente;
+    int id;
 
+
+    consulta = malloc (MAX_BUFFER_CONSULTA);
+    if (!consulta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    nombre = malloc (MAX_BUFFER_NOMBRE);
+    if (!nombre)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    contrasenia = malloc (MAX_BUFFER_CONTRASENIA);
+    if (!contrasenia)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+
+    sscanf (bufferSolicitud, "%[^|]|%s", nombre, contrasenia);
     cliente = servidor->clienteAProcesar->dato;
 
-    if (sqlite3_prepare_v2 (*db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+
+    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (*db));
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
         return;
     }
     sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
     sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
-
     if (resultadoConsulta == SQLITE_ROW)
     {
         id = sqlite3_column_int (sentencia, 0);
-        sprintf (respuestaSolicitud, "%d|%d", SOLICITUD_ACEPTADA, id);
+        sprintf (bufferRespuesta, "%c|%d", SOLICITUD_ACEPTADA, id);
     }
     else
-        sprintf (respuestaSolicitud, "%d|%d", SOLICITUD_RECHAZADA, 0);
-
+        sprintf (bufferRespuesta, "%c|%d", SOLICITUD_RECHAZADA, 0);
     sqlite3_finalize (sentencia);
 
-    send (cliente->sock, respuestaSolicitud, sizeof (respuestaSolicitud), 0);
+    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+
+
+    free (bufferRespuesta);
+    free (consulta);
+    free (nombre);
+    free (contrasenia);
 }
 
-void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud)
+void procesarRegistro (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud)
 {
-    s_cliente *cliente;
-    char *nombre = bufferSolicitud, *contrasenia;
+    char *bufferRespuesta;
+    char *nombre, *contrasenia;
+
     sqlite3_stmt *sentencia;
-    char consultaSelect [MAX_BUFFER_CONSULTA] = "SELECT id FROM usuarios WHERE nombre = ?;";
-    char consultaInsert [MAX_BUFFER_CONSULTA] = "INSERT INTO usuarios (nombre, contrasenia) VALUES (?, ?);";
+    char *consulta;
     int resultadoConsulta;
-    char resultadoSolicitud = SOLICITUD_RECHAZADA;
 
-    contrasenia = strchr (bufferSolicitud, '|');
-    *contrasenia = '\0';
-    contrasenia ++;
+    s_cliente *cliente;
+    int id;
 
+
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    consulta = malloc (MAX_BUFFER_CONSULTA);
+    if (!consulta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    nombre = malloc (MAX_BUFFER_NOMBRE);
+    if (!nombre)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    contrasenia = malloc (MAX_BUFFER_CONTRASENIA);
+    if (!contrasenia)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+
+    sscanf (bufferSolicitud, "%[^|]|%s", nombre, contrasenia);
     cliente = servidor->clienteAProcesar->dato;
 
-    if (sqlite3_prepare_v2 (*db, consultaSelect, -1, &sentencia, NULL) != SQLITE_OK)
+
+    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ?;");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (*db));
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
         return;
     }
     sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
-    sqlite3_finalize (sentencia);
-
     if (resultadoConsulta == SQLITE_ROW) //Encontro un usuario con el mismo nombre
     {
-        send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
+        sprintf (bufferRespuesta, "%c|%d", SOLICITUD_RECHAZADA, 0);
+        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
         return;
     }
-    resultadoSolicitud = SOLICITUD_ACEPTADA;
+    sqlite3_finalize (sentencia);
 
 
-    if (sqlite3_prepare_v2 (*db, consultaInsert, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consulta, "INSERT INTO usuarios (nombre, contrasenia) VALUES (?, ?);");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (*db));
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
         return;
     }
     sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
@@ -152,41 +212,130 @@ void procesarRegistro (s_servidor *servidor, sqlite3 **db, char *bufferSolicitud
         sqlite3_finalize (sentencia);
         return;
     }
-
     sqlite3_finalize (sentencia);
 
-    send (cliente->sock, &resultadoSolicitud, sizeof (resultadoSolicitud), 0);
-}
 
-/*
-void enviarMensajes (s_servidor *servidor, char *buffer)
-{
-    s_cliente *cliente;
-    int resultado, error;
-
-    while (*listaClientes != NULL)
+    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ?;");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        cliente = (*listaClientes)->dato;
-        if (cliente->envioMensaje == ENVIO_MENSAJE)
-            cliente->envioMensaje = NO_ENVIO_MENSAJE;
-        else
-        {
-            resultado = send (cliente->sock, buffer, strlen (buffer), 0);
-            if (resultado == SOCKET_ERROR)
-            {
-                error = WSAGetLastError ();
-                if ((error == WSAECONNRESET) || (error == WSAENOTCONN))
-                {
-                    eliminarNodoConAccion (listaClientes, NULL, 0, liberarCliente);
-                    printf ("Cliente desconectado.\n");
-                }
-            }
-        }
-        if (*listaClientes != NULL)
-            listaClientes = &((*listaClientes)->sig);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return;
     }
+    sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
+
+    resultadoConsulta = sqlite3_step (sentencia);
+    id = sqlite3_column_int (sentencia, 0);
+    sqlite3_finalize (sentencia);
+    sprintf (bufferRespuesta, "%c|%d", SOLICITUD_ACEPTADA, id);
+
+    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+
+
+    free (bufferRespuesta);
+    free (consulta);
+    free (nombre);
+    free (contrasenia);
 }
-*/
+
+void procesarSolicitudAmistad (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud)
+{
+    char *bufferRespuesta;
+
+    sqlite3_stmt *sentencia;
+    char *consulta;
+    int resultadoConsulta;
+
+    s_cliente *cliente;
+    int idEmisor, idReceptor;
+    char *nombreEmisor, *nombreReceptor;
+
+
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    consulta = malloc (MAX_BUFFER_CONSULTA);
+    if (!consulta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    nombreEmisor = malloc (MAX_BUFFER_NOMBRE);
+    if (!nombreEmisor)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    nombreReceptor = malloc (MAX_BUFFER_NOMBRE);
+    if (!nombreReceptor)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+
+    sprintf (bufferRespuesta, "%c", SOLICITUD_RECHAZADA);
+    sscanf (bufferSolicitud, "%d|%[^|]|%s", &idEmisor, nombreEmisor, nombreReceptor);
+    cliente = servidor->clienteAProcesar->dato;
+
+
+    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ?;");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return;
+    }
+    sqlite3_bind_text (sentencia, 1, nombreReceptor, -1, SQLITE_STATIC);
+
+    resultadoConsulta = sqlite3_step (sentencia);
+    if (resultadoConsulta == SQLITE_ROW) //Encontro el nombre del usuario receptor
+        idReceptor = sqlite3_column_int (sentencia, 0);
+    else //No encontro el nombre del usuario receptor
+    {
+        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+        sqlite3_finalize (sentencia);
+        return;
+    }
+    sqlite3_finalize (sentencia);
+
+    if (idEmisor == idReceptor) //Es la misma persona
+    {
+        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+        return;
+    }
+
+
+    strcpy (consulta, "INSERT INTO solicitudes_amistad (id_emisor, nombre_emisor, id_receptor) VALUES (?, ?, ?)");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return;
+    }
+    sqlite3_bind_int (sentencia, 1, idEmisor);
+    sqlite3_bind_text (sentencia, 2, nombreEmisor, -1, SQLITE_STATIC);
+    sqlite3_bind_int (sentencia, 3, idReceptor);
+
+    resultadoConsulta = sqlite3_step (sentencia);
+    if (resultadoConsulta != SQLITE_DONE)
+    {
+        perror ("ERROR - Insertar solicitud de amistad en la base de datos.\n");
+        sqlite3_finalize (sentencia);
+        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+        return;
+    }
+    sqlite3_finalize (sentencia);
+
+    sprintf (bufferRespuesta, "%c", SOLICITUD_ACEPTADA);
+    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+
+
+    free (bufferRespuesta);
+    free (consulta);
+    free (nombreEmisor);
+    free (nombreReceptor);
+}
 
 void liberarCliente (void *cliente)
 {

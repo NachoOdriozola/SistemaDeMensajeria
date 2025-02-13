@@ -47,15 +47,18 @@ int main ()
             switch (solicitud)
             {
             case INDICE_INICIO_SESION:
-                procesarInicioSesion (&servidor, &db, bufferSolicitud);
+                procesarInicioSesion (&servidor, db, bufferSolicitud);
                 break;
 
             case INDICE_REGISTRO:
-                procesarRegistro (&servidor, &db, bufferSolicitud);
+                procesarRegistro (&servidor, db, bufferSolicitud);
                 break;
 
             case INDICE_MENSAJE:
-                //enviarMensajes (&servidor, bufferSolicitud);
+                break;
+
+            case INDICE_SOLICITUD_AMISTAD:
+                procesarSolicitudAmistad (&servidor, db, bufferSolicitud);
                 break;
             }
         }
@@ -67,6 +70,7 @@ int main ()
             if (ingresoTeclaApagar != TECLA_APAGAR_SERVIDOR)
                     printf ("Tecla incorrecta.\nPresione la tecla '%c' para apagar el servidor.\n", TECLA_APAGAR_SERVIDOR);
         }
+
         Sleep (10);
     }
 
@@ -104,9 +108,11 @@ int inicializar (s_servidor *servidor, sqlite3 **db)
 
     resultado = sqlite3_open ("DBappMensajes.db", db);
     if (resultado)
+    {
         printf ("ERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
-    else
-        printf ("BASE DE DATOS ABIERTA CORRECTAMENTE.\n");
+        return ERROR_INICIALIZACION;
+    }
+    printf ("BASE DE DATOS ABIERTA CORRECTAMENTE.\n");
 
 
     return OK;

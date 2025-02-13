@@ -30,9 +30,6 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
-#define MAX_BUFFER_SOLICITUD 101
-#define MAX_BUFFER_RESPUESTA 101
-
 #define MAX_INGRESO_TECLADO_NOMBRE 31
 #define MAX_INGRESO_TECLADO_CONTRASENIA 51
 
@@ -106,7 +103,7 @@ void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio);
 
 ///FUNCIONES LOGICAS
 
-int guardarDatosEnArchivo (const char *bufferNombre, const char *bufferContrasenia);
+void intentarIngreso (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio);
 
 
 #endif // INTERFAZINICIO_H_INCLUDED

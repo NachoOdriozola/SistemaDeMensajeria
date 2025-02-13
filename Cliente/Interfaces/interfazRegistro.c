@@ -56,6 +56,20 @@ int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosRegistro->texto.textoGuardarInicioSesion = sfText_create ();
+    if (!recursosGraficosRegistro->texto.textoGuardarInicioSesion)
+    {
+        perror ("ERROR - Crear texto para guardar inicio de sesion.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosRegistro->texto.auxGuardarInicioSesion = sfText_create ();
+    if (!recursosGraficosRegistro->texto.auxGuardarInicioSesion)
+    {
+        perror ("ERROR - Crear texto auxiliar para guardar inicio de sesion.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosRegistro->texto.textoBotonRegistrar = sfText_create ();
     if (!recursosGraficosRegistro->texto.textoBotonRegistrar)
     {
@@ -121,6 +135,13 @@ int inicializarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion = sfRectangleShape_create ();
+    if (!recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion)
+    {
+        perror ("ERROR - Crear cuadrado para guardar inicio de sesion.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosRegistro->elementos.botonRegistrar = sfRectangleShape_create ();
     if (!recursosGraficosRegistro->elementos.botonRegistrar)
     {
@@ -142,6 +163,7 @@ void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro, s_fuen
     ///SETUP HABILITACIONES
     recursosGraficosRegistro->habilitaciones.habilitarEscrituraNombre = DESHABILITAR_ESCRITURA_NOMBRE;
     recursosGraficosRegistro->habilitaciones.habilitarEscrituraContrasenia = DESHABILITAR_ESCRITURA_CONTRASENIA;
+    recursosGraficosRegistro->habilitaciones.guardarInicioSesion = DESHABILITAR_GUARDAR_INICIO_SESION;
     recursosGraficosRegistro->habilitaciones.habilitarRegistro = DESHABILITAR_REGISTRO;
 
 
@@ -179,6 +201,16 @@ void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro, s_fuen
     sfText_setFont (recursosGraficosRegistro->texto.auxEscribirContrasenia, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosRegistro->texto.auxEscribirContrasenia, sfColor_fromRGB (34, 48, 48));
 
+    //Texto para guardar inicio de sesion
+    sfText_setFont (recursosGraficosRegistro->texto.textoGuardarInicioSesion, fuentes.fuente1);
+    sfText_setString (recursosGraficosRegistro->texto.textoGuardarInicioSesion, "¿Desea guardar sus datos e iniciar sesion\nautomaticamente cuando inicie la aplicacion?");
+    sfText_setFillColor (recursosGraficosRegistro->texto.textoGuardarInicioSesion, sfColor_fromRGB (34, 48, 48));
+
+    //Texto auxiliar para guardar inicio de sesion
+    sfText_setFont (recursosGraficosRegistro->texto.auxGuardarInicioSesion, fuentes.fuente1);
+    sfText_setString (recursosGraficosRegistro->texto.auxGuardarInicioSesion, "X");
+    sfText_setColor (recursosGraficosRegistro->texto.auxGuardarInicioSesion, sfColor_fromRGB (209, 0, 31));
+
     //Texto boton registrar
     sfText_setFont (recursosGraficosRegistro->texto.textoBotonRegistrar, fuentes.fuente1);
     sfText_setString (recursosGraficosRegistro->texto.textoBotonRegistrar, "REGISTRAR");
@@ -213,6 +245,9 @@ void setupRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro, s_fuen
     //Barra para ingresar contrasenia
     sfRectangleShape_setFillColor (recursosGraficosRegistro->elementos.barraIngresarContrasenia, sfColor_fromRGB (208, 208, 208));
 
+    //Cuadrado para guardar inicio de sesion
+    sfRectangleShape_setFillColor (recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion, sfColor_fromRGB (208, 208, 208));
+
     //Boton registrar usuario
     sfRectangleShape_setFillColor (recursosGraficosRegistro->elementos.botonRegistrar, sfColor_fromRGB (208, 208, 208));
     sfRectangleShape_setOutlineColor (recursosGraficosRegistro->elementos.botonRegistrar, sfColor_fromRGB (34, 48, 48));
@@ -230,28 +265,36 @@ void tamYPosPantallaRegistro (s_recursosGraficosRegistro *recursosGraficosRegist
     sfText_setCharacterSize (recursosGraficosRegistro->texto.registrarse, 36);
 
     //Texto ingresar nombre
-    sfText_setPosition (recursosGraficosRegistro->texto.ingresarNombre, (sfVector2f){55, 110});
+    sfText_setPosition (recursosGraficosRegistro->texto.ingresarNombre, (sfVector2f){55, 90});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.ingresarNombre, 28);
 
     //Texto informativo nombre de usuario
-    sfText_setPosition (recursosGraficosRegistro->texto.textoInformativoNombre, (sfVector2f){55, 150});
+    sfText_setPosition (recursosGraficosRegistro->texto.textoInformativoNombre, (sfVector2f){55, 120});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.textoInformativoNombre, 24);
 
     //Texto auxiliar escribir nombre
-    sfText_setPosition (recursosGraficosRegistro->texto.auxEscribirNombre, (sfVector2f){64, 193});
+    sfText_setPosition (recursosGraficosRegistro->texto.auxEscribirNombre, (sfVector2f){64, 173});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.auxEscribirNombre, 24);
 
     //Texto ingresar contrasenia
-    sfText_setPosition (recursosGraficosRegistro->texto.ingresarContrasenia, (sfVector2f){55, 250});
+    sfText_setPosition (recursosGraficosRegistro->texto.ingresarContrasenia, (sfVector2f){55, 215});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.ingresarContrasenia, 28);
 
     //Texto informativo contrasenia
-    sfText_setPosition (recursosGraficosRegistro->texto.textoInformativoContrasenia, (sfVector2f){55, 290});
+    sfText_setPosition (recursosGraficosRegistro->texto.textoInformativoContrasenia, (sfVector2f){55, 255});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.textoInformativoContrasenia, 24);
 
     //Texto auxiliar escribir contrasenia
-    sfText_setPosition (recursosGraficosRegistro->texto.auxEscribirContrasenia, (sfVector2f){64, 364});
+    sfText_setPosition (recursosGraficosRegistro->texto.auxEscribirContrasenia, (sfVector2f){64, 329});
     sfText_setCharacterSize (recursosGraficosRegistro->texto.auxEscribirContrasenia, 24);
+
+    //Texto para guardar inicio de sesion
+    sfText_setPosition (recursosGraficosRegistro->texto.textoGuardarInicioSesion, (sfVector2f){55, 371});
+    sfText_setCharacterSize (recursosGraficosRegistro->texto.textoGuardarInicioSesion, 22);
+
+    //Texto auxiliar guardar inicio de sesion
+    sfText_setPosition (recursosGraficosRegistro->texto.auxGuardarInicioSesion, (sfVector2f){415, 378});
+    sfText_setCharacterSize (recursosGraficosRegistro->texto.auxGuardarInicioSesion, 30);
 
     //Texto boton registrar
     sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 451});
@@ -284,12 +327,16 @@ void tamYPosPantallaRegistro (s_recursosGraficosRegistro *recursosGraficosRegist
     sfRectangleShape_setSize (recursosGraficosRegistro->elementos.rectanguloInvisibleVolver, (sfVector2f){31, 17});
 
     //Barra para ingresar nombre
-    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.barraIngresarNombre, (sfVector2f){55, 195});
+    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.barraIngresarNombre, (sfVector2f){55, 175});
     sfRectangleShape_setSize (recursosGraficosRegistro->elementos.barraIngresarNombre, (sfVector2f){420, 30});
 
     //Barra para ingresar contrasenia
-    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.barraIngresarContrasenia, (sfVector2f){55, 366});
+    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.barraIngresarContrasenia, (sfVector2f){55, 331});
     sfRectangleShape_setSize (recursosGraficosRegistro->elementos.barraIngresarContrasenia, (sfVector2f){420, 30});
+
+    //Cuadrado para guardar inicio de sesion
+    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion, (sfVector2f){406, 382});
+    sfRectangleShape_setSize (recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion, (sfVector2f){30, 30});
 
     //Boton registrar usuario
     sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 452});
@@ -329,25 +376,28 @@ void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraf
             else
                 recursosGraficosRegistro->habilitaciones.habilitarEscrituraContrasenia = DESHABILITAR_ESCRITURA_CONTRASENIA;
 
+            if (clickEnRectangulo (app->renderizado, recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion))
+            {
+                if (recursosGraficosRegistro->habilitaciones.guardarInicioSesion == DESHABILITAR_GUARDAR_INICIO_SESION)
+                {
+                    recursosGraficosRegistro->habilitaciones.guardarInicioSesion = HABILITAR_GUARDAR_INICIO_SESION;
+                    sfText_setString (recursosGraficosRegistro->texto.auxGuardarInicioSesion, "V");
+                    sfText_setColor (recursosGraficosRegistro->texto.auxGuardarInicioSesion, sfColor_fromRGB (76, 175, 80));
+                }
+                else
+                {
+                    recursosGraficosRegistro->habilitaciones.guardarInicioSesion = DESHABILITAR_GUARDAR_INICIO_SESION;
+                    sfText_setString (recursosGraficosRegistro->texto.auxGuardarInicioSesion, "X");
+                    sfText_setColor (recursosGraficosRegistro->texto.auxGuardarInicioSesion, sfColor_fromRGB (209, 0, 31));
+                }
+            }
+
 
             if (clickEnRectangulo (app->renderizado, recursosGraficosRegistro->elementos.rectanguloInvisibleVolver))
                 app->interfaz = INTERFAZ_INICIO;
 
             if ((recursosGraficosRegistro->habilitaciones.habilitarRegistro == HABILITAR_REGISTRO) && (clickEnRectangulo (app->renderizado, recursosGraficosRegistro->elementos.botonRegistrar)))
-            {
-                /*
-                if (enviarSolicitudUsuario (app->sock, recursosGraficosRegistro->bufferEscribirNombre, recursosGraficosRegistro->bufferEscribirContrasenia, INDICE_REGISTRO) == SOLICITUD_ACEPTADA)
-                {
-                    app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombre, recursosGraficosRegistro->bufferEscribirNombre);
-                }
-                else
-                {
-                    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 492});
-                    sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 491});
-                }
-                */
-            }
+                intentarRegistro (app, recursosGraficosRegistro);
         }
         break;
 
@@ -370,18 +420,7 @@ void accionRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraf
             (recursosGraficosRegistro->habilitaciones.habilitarRegistro == HABILITAR_REGISTRO) &&
             ((recursosGraficosRegistro->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosRegistro->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
-            /*
-            if (enviarSolicitudUsuario (app->sock, recursosGraficosRegistro->bufferEscribirNombre, recursosGraficosRegistro->bufferEscribirContrasenia, INDICE_REGISTRO) == SOLICITUD_ACEPTADA)
-                {
-                    app->interfaz = INTERFAZ_AMIGOS;
-                    strcpy (app->usuario.nombre, recursosGraficosRegistro->bufferEscribirNombre);
-                }
-                else
-                {
-                    sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 492});
-                    sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 491});
-                }
-                */
+            intentarRegistro (app, recursosGraficosRegistro);
         }
         break;
 
@@ -404,7 +443,8 @@ void actualizarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
     if ((recursosGraficosRegistro->habilitaciones.habilitarEscrituraNombre == DESHABILITAR_ESCRITURA_CONTRASENIA) && (largoBufferEscribirContrasenia == 0))
         sfText_setString (recursosGraficosRegistro->texto.auxEscribirContrasenia, "Escriba su contraseña...");
 
-    if ((largoBufferEscribirNombre > 0) && (largoBufferEscribirContrasenia > 0))
+    if (((largoBufferEscribirNombre > 0) && largoBufferEscribirNombre < MAX_NOMBRE_USUARIO - 1) &&
+        ((largoBufferEscribirContrasenia > 0) && (largoBufferEscribirContrasenia < MAX_CONTRASENIA_USUARIO - 1)))
         recursosGraficosRegistro->habilitaciones.habilitarRegistro = HABILITAR_REGISTRO;
     else
         recursosGraficosRegistro->habilitaciones.habilitarRegistro = DESHABILITAR_REGISTRO;
@@ -423,6 +463,7 @@ void renderizarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursos
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosRegistro->elementos.flechaVolverTriangulo2, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosRegistro->elementos.barraIngresarNombre, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosRegistro->elementos.barraIngresarContrasenia, NULL);
+    sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion, NULL);
     sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosRegistro->elementos.botonRegistrar, NULL);
 
 
@@ -434,6 +475,8 @@ void renderizarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursos
     sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.ingresarContrasenia, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.textoInformativoContrasenia, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.auxEscribirContrasenia, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.textoGuardarInicioSesion, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.auxGuardarInicioSesion, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.textoBotonRegistrar, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosRegistro->texto.textoErrorRegistro, NULL);
 
@@ -451,6 +494,8 @@ void liberarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
     sfText_destroy (recursosGraficosRegistro->texto.ingresarContrasenia);
     sfText_destroy (recursosGraficosRegistro->texto.textoInformativoContrasenia);
     sfText_destroy (recursosGraficosRegistro->texto.auxEscribirContrasenia);
+    sfText_destroy (recursosGraficosRegistro->texto.textoGuardarInicioSesion);
+    sfText_destroy (recursosGraficosRegistro->texto.auxGuardarInicioSesion);
     sfText_destroy (recursosGraficosRegistro->texto.textoBotonRegistrar);
     sfText_destroy (recursosGraficosRegistro->texto.textoErrorRegistro);
 
@@ -463,11 +508,54 @@ void liberarRegistro (s_recursosGraficosRegistro *recursosGraficosRegistro)
     sfRectangleShape_destroy (recursosGraficosRegistro->elementos.rectanguloInvisibleVolver);
     sfRectangleShape_destroy (recursosGraficosRegistro->elementos.barraIngresarNombre);
     sfRectangleShape_destroy (recursosGraficosRegistro->elementos.barraIngresarContrasenia);
+    sfRectangleShape_destroy (recursosGraficosRegistro->elementos.cuadradoGuardarInicioSesion);
     sfRectangleShape_destroy (recursosGraficosRegistro->elementos.botonRegistrar);
 }
 
 
+///FUNCIONES LOGICAS
 
+
+void intentarRegistro (s_aplicacion *app, s_recursosGraficosRegistro *recursosGraficosRegistro)
+{
+    char *bufferSolicitud, *bufferRespuesta;
+    char estadoSolicitud;
+    int id;
+
+    bufferSolicitud = malloc (MAX_BUFFER_SOLICITUD);
+    if (!bufferSolicitud)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_REGISTRO, recursosGraficosRegistro->bufferEscribirNombre, recursosGraficosRegistro->bufferEscribirContrasenia);
+    enviarYRecibirSolicitud (app->sock, bufferSolicitud, bufferRespuesta);
+    sscanf (bufferRespuesta, "%c|%d", &estadoSolicitud, &id);
+
+    free (bufferSolicitud);
+    free (bufferRespuesta);
+
+    if (estadoSolicitud == SOLICITUD_ACEPTADA)
+    {
+        app->interfaz = INTERFAZ_AMIGOS;
+        app->usuario.id = id;
+        strcpy (app->usuario.nombre, recursosGraficosRegistro->bufferEscribirNombre);
+        if (recursosGraficosRegistro->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
+            guardarDatosEnArchivo (app->usuario.id, recursosGraficosRegistro->bufferEscribirNombre);
+    }
+    else
+    {
+        sfRectangleShape_setPosition (recursosGraficosRegistro->elementos.botonRegistrar, (sfVector2f){200, 492});
+        sfText_setPosition (recursosGraficosRegistro->texto.textoBotonRegistrar, (sfVector2f){226, 491});
+    }
+}
 
 
 

@@ -63,13 +63,35 @@ void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento)
         buffer [largoBuffer - 1] = '\0';
 }
 
-void enviarSolicitudUsuario (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta)
+void enviarYRecibirSolicitud (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta)
 {
-    char bufferSolicitudLocal [MAX_BUFFER_SOLICITUD];
-    char bufferRespuestaLocal [MAX_BUFFER_RESPUESTA];
+    int bytesRecibidos;
 
-    send (sock, bufferSolicitud, sizeof (bufferSolicitudLocal), 0);
-    recv (sock, bufferRespuesta, sizeof (bufferRespuestaLocal), 0);
+    send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD, 0);
+    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+    bufferRespuesta += bytesRecibidos - 1;
+    *bufferRespuesta = '\0';
+}
+
+int guardarDatosEnArchivo (int id, const char *bufferNombre)
+{
+    s_datosGuardados datosGuardados;
+    FILE *archDatos;
+
+    archDatos = fopen ("Datos.dat", "wb");
+    if (!archDatos)
+    {
+        perror ("ERROR - Crear archivo para guardar inicio de sesion.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    datosGuardados.id = id;
+    strcpy (datosGuardados.nombre, bufferNombre);
+    fwrite (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+
+    fclose (archDatos);
+
+    return OK;
 }
 
 void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor)

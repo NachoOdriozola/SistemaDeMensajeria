@@ -23,11 +23,11 @@
 
 ///DEFINES
 
+#define OK 0
+#define ERROR_INICIALIZACION -1
+
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
-
-#define MAX_BUFFER_SOLICITUD 101
-#define MAX_BUFFER_RESPUESTA 101
 
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
@@ -45,8 +45,11 @@ bool clickEnTexto (sfRenderWindow *renderizado, sfText *texto);
 //Verificar ingreso correcto de texto
 void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento);
 
-//Enviar solicitud al servidor
-void enviarSolicitudUsuario (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta);
+//Enviar y recibir solicitud al servidor
+void enviarYRecibirSolicitud (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta);
+
+//Guardar datos para inicio de sesion automatico
+int guardarDatosEnArchivo (int id, const char *bufferContrasenia);
 
 //Asignar mensaje a la lista circular de mensajes
 void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor);

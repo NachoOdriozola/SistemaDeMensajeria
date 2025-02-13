@@ -289,7 +289,6 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
 {
     sfEvent evento;
     sfVector2f nuevoTamPantalla;
-    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
 
     sfRenderWindow_pollEvent (app->renderizado, &evento);
     switch (evento.type)
@@ -339,30 +338,8 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
                 app->interfaz = INTERFAZ_REGISTRO;
 
             if ((recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) && (clickEnRectangulo (app->renderizado, recursosGraficosInicio->elementos.botonIngresar)))
-            {
-                sprintf (bufferSolicitud, "%c|%s|%s", INDICE_INICIO_SESION, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
-                enviarSolicitudUsuario (app->sock, bufferSolicitud, bufferRespuesta);
-                puts (bufferRespuesta);
+                intentarIngreso (app, recursosGraficosInicio);
 
-                //sscanf (bufferRespuestaSolicitud, "%d|%d", &estadoSolicitud, &id);
-                /*
-                if (estadoSolicitud == SOLICITUD_ACEPTADA)
-                {
-                    app->interfaz = INTERFAZ_AMIGOS;
-                    app->usuario.id = id;
-                    strcpy (app->usuario.nombre, recursosGraficosInicio->bufferEscribirNombre);
-                    if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
-                        guardarDatosEnArchivo (recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
-                }
-                else
-                {
-                    sfRectangleShape_setPosition (recursosGraficosInicio->elementos.botonIngresar, (sfVector2f){195, 437});
-                    sfText_setPosition (recursosGraficosInicio->texto.textoBotonIngresar, (sfVector2f){227, 436});
-                    sfText_setString (recursosGraficosInicio->texto.textoIngresoIncorrecto, "Usuario o contraseña incorrectos.");
-                    sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, sfColor_fromRGB (40, 54, 54));
-                }
-                */
-            }
         }
         break;
 
@@ -385,7 +362,7 @@ void accionInicio (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficos
             (recursosGraficosInicio->habilitaciones.habilitarIngreso == HABILITAR_INGRESO) &&
             ((recursosGraficosInicio->habilitaciones.habilitarEscrituraNombre == HABILITAR_ESCRITURA_NOMBRE) || (recursosGraficosInicio->habilitaciones.habilitarEscrituraContrasenia == HABILITAR_ESCRITURA_CONTRASENIA)))
         {
-            printf ("Solo boton.\n");
+            intentarIngreso (app, recursosGraficosInicio);
         }
         break;
 
@@ -472,26 +449,49 @@ void liberarInicio (s_recursosGraficosInicio *recursosGraficosInicio)
 ///FUNCIONES LOGICAS
 
 
-int guardarDatosEnArchivo (const char *bufferNombre, const char *bufferContrasenia)
+void intentarIngreso (s_aplicacion *app, s_recursosGraficosInicio *recursosGraficosInicio)
 {
-    s_datosGuardados datosGuardados;
-    FILE *archDatos;
+    char *bufferSolicitud, *bufferRespuesta;
+    char estadoSolicitud;
+    int id;
 
-    archDatos = fopen ("Datos.dat", "wb");
-    if (!archDatos)
+    bufferSolicitud = malloc (MAX_BUFFER_SOLICITUD);
+    if (!bufferSolicitud)
     {
-        perror ("ERROR - Crear archivo para guardar inicio de sesion.\n");
-        return ERROR_INICIALIZACION;
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
     }
 
-    strcpy (datosGuardados.nombre, bufferNombre);
-    strcpy (datosGuardados.contrasenia, bufferContrasenia);
-    fwrite (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_INICIO_SESION, recursosGraficosInicio->bufferEscribirNombre, recursosGraficosInicio->bufferEscribirContrasenia);
+    enviarYRecibirSolicitud (app->sock, bufferSolicitud, bufferRespuesta);
+    sscanf (bufferRespuesta, "%c|%d", &estadoSolicitud, &id);
 
-    fclose (archDatos);
+    free (bufferSolicitud);
+    free (bufferRespuesta);
 
-    return OK;
+    if (estadoSolicitud == SOLICITUD_ACEPTADA)
+    {
+        app->interfaz = INTERFAZ_AMIGOS;
+        app->usuario.id = id;
+        strcpy (app->usuario.nombre, recursosGraficosInicio->bufferEscribirNombre);
+        if (recursosGraficosInicio->habilitaciones.guardarInicioSesion == HABILITAR_GUARDAR_INICIO_SESION)
+            guardarDatosEnArchivo (app->usuario.id, recursosGraficosInicio->bufferEscribirNombre);
+    }
+    else
+    {
+        sfRectangleShape_setPosition (recursosGraficosInicio->elementos.botonIngresar, (sfVector2f){195, 437});
+        sfText_setPosition (recursosGraficosInicio->texto.textoBotonIngresar, (sfVector2f){227, 436});
+        sfText_setString (recursosGraficosInicio->texto.textoIngresoIncorrecto, "Usuario o contraseña incorrectos.");
+        sfCircleShape_setFillColor (recursosGraficosInicio->elementos.circuloTextoIngresoIncorrecto, sfColor_fromRGB (40, 54, 54));
+    }
 }
+
 
 
 

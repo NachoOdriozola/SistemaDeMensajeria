@@ -13,7 +13,7 @@
 #include <ws2tcpip.h>
 
 #include "estructuras.h"
-#include "../ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
 #include "../FuncionesEspecificas/especificas.h"
 #include "../Interfaces/interfazInicio.h"
 #include "../Interfaces/interfazRegistro.h"

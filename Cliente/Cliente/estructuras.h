@@ -17,7 +17,7 @@
 #include "SFML/System.h"
 #include "SFML/Audio.h"
 
-#include "../ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
 
 
 ///DEFINES
@@ -25,12 +25,16 @@
 #define INDICE_INICIO_SESION '1'
 #define INDICE_REGISTRO '2'
 #define INDICE_MENSAJE '3'
+#define INDICE_SOLICITUD_AMISTAD '4'
 
-#define SOLICITUD_ACEPTADA 1
-#define SOLICITUD_RECHAZADA 0
+#define SOLICITUD_ACEPTADA '1'
+#define SOLICITUD_RECHAZADA '0'
 
 #define MAX_NOMBRE_USUARIO 26
 #define MAX_CONTRASENIA_USUARIO 46
+
+#define MAX_BUFFER_SOLICITUD 256
+#define MAX_BUFFER_RESPUESTA 256
 
 #define RESOLUCION_BASE_MAXIMIZADO_X 1920
 #define RESOLUCION_BASE_MAXIMIZADO_Y 1009
@@ -90,8 +94,8 @@ typedef struct
 
 typedef struct
 {
+    int id;
     char nombre [MAX_NOMBRE_USUARIO];
-    char contrasenia [MAX_CONTRASENIA_USUARIO];
 } s_datosGuardados;
 
 

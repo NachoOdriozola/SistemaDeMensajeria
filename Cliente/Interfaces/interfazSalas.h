@@ -20,7 +20,7 @@
 
 #include "../Cliente/estructuras.h"
 #include "../FuncionesUtiles/utiles.h"
-#include "../ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
 
 
 ///DEFINES

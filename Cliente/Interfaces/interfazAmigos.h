@@ -20,7 +20,7 @@
 
 #include "../Cliente/estructuras.h"
 #include "../FuncionesUtiles/utiles.h"
-#include "../ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
 
 
 ///DEFINES
@@ -31,8 +31,14 @@
 #define CONTINUAR_APLICACION 1
 #define CERRAR_APLICACION 0
 
-#define HABILITAR_ESCRITURA 1
-#define DESHABILITAR_ESCRITURA 0
+#define HABILITAR_AGREGAR_AMIGOS 1
+#define DESHABILITAR_AGREGAR_AMIGOS 0
+
+#define HABILITAR_ESCRITURA_MENSAJES 1
+#define DESHABILITAR_ESCRITURA_MENSAJES 0
+
+#define HABILITAR_ESCRITURA_AGREGAR_AMIGOS 1
+#define DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS 0
 
 #define MI_USUARIO 1
 #define OTRO_USUARIO 0
@@ -45,10 +51,14 @@
 typedef struct
 {
     sfText *amigos;
+    sfText *agregarAmigos;
     sfText *salas;
     sfText *nombreUsuario;
     sfText *interfazConfig;
     sfText *auxEscribirMensaje;
+    sfText *tituloAgregarAmigos;
+    sfText *cerrarAgregarAmigos;
+    sfText *auxAgregarAmigos;
 } s_textoAmigos;
 
 typedef struct
@@ -59,26 +69,41 @@ typedef struct
     sfRectangleShape *barraSeparacionAmigos;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;
+    sfRectangleShape *recBaseAgregarAmigos;
+    sfRectangleShape *barraAgregarAmigos;
 } s_elementosAmigos;
+
+typedef struct
+{
+    bool agregarAmigos;
+    bool habilitarEscrituraMensajes;
+    bool habilitarEscrituraAgregarAmigos;
+} s_habilitacionesAmigos;
 
 typedef struct
 {
     s_textoAmigos texto;
     s_elementosAmigos elementos;
-    bool habilitarEscritura;
+    s_habilitacionesAmigos habilitaciones;
     char bufferEscribirMensaje [MAX_BUFFER_MENSAJE];
+    char bufferAgregarAmigos [MAX_NOMBRE_USUARIO];
 } s_recursosGraficosAmigos;
 
 
 ///FUNCIONES ESTRUCTURALES
 
 int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
-void setupAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
-void tamYPosPantallaAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
+void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fuentes);
+void tamYPosPantallaAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_ventana ventana);
 void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void actualizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
+
+
+///FUNCIONES LOGICAS
+
+void intentarSolicitudAmistad (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 
 
 #endif // INTERFAZAmigos_H_INCLUDED

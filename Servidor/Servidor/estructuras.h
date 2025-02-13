@@ -14,21 +14,21 @@
 #include <stdbool.h>
 #include <sqlite3.h>
 
-#include "../ListaSimple/listaSimple.h"
+#include "../../EstructurasDeDatos/ListaSimple/listaSimple.h"
+
 
 ///DEFINES
 
-#define OK 0
-#define ERROR_INICIALIZACION -1
-
-#define SOLICITUD_ACEPTADA 1
-#define SOLICITUD_RECHAZADA 0
+#define SOLICITUD_ACEPTADA '1'
+#define SOLICITUD_RECHAZADA '0'
 
 #define INDICE_INICIO_SESION '1'
 #define INDICE_REGISTRO '2'
 #define INDICE_MENSAJE '3'
+#define INDICE_SOLICITUD_AMISTAD '4'
 
 #define MAX_BUFFER_NOMBRE 26
+#define MAX_BUFFER_CONTRASENIA 46
 
 
 ///ESTRUCTURAS

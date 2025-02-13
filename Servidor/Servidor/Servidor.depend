@@ -238,10 +238,10 @@
 	"../ListaSimple/listaSimple.h"
 	"../FuncionesServidor/funcionesServidor.h"
 
-1738388011 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.c
+1739379615 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.c
 	"funcionesServidor.h"
 
-1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
+1739373349 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\funcionesservidor\funcionesservidor.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -251,10 +251,10 @@
 	<ws2tcpip.h>
 	<stdbool.h>
 	<sqlite3.h>
+	"../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 	"../Servidor/estructuras.h"
-	"../ListaSimple/listaSimple.h"
 
-1738387216 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\estructuras.h
+1739375560 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -264,7 +264,7 @@
 	<ws2tcpip.h>
 	<stdbool.h>
 	<sqlite3.h>
-	"../ListaSimple/listaSimple.h"
+	"../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 
 1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\listasimple\listasimple.h
 	<stdlib.h>
@@ -273,10 +273,10 @@
 1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\listasimple\listasimple.c
 	"listaSimple.h"
 
-1738387104 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.c
+1739380080 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.c
 	"main.h"
 
-1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.h
+1739368927 d:\cosas\proyectos\proyectosimportantes\appdemensajes\servidor\servidor\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -287,6 +287,20 @@
 	<ws2tcpip.h>
 	<sqlite3.h>
 	"estructuras.h"
-	"../ListaSimple/listaSimple.h"
+	"../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 	"../FuncionesServidor/funcionesServidor.h"
+
+1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructuras de datos\listasimple\listasimple.c
+	"listaSimple.h"
+
+1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructuras de datos\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+
+1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.c
+	"listaSimple.h"
+
+1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
 
