@@ -18,6 +18,7 @@
 #include "SFML/Audio.h"
 
 #include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 
 
 ///DEFINES
@@ -26,6 +27,7 @@
 #define INDICE_REGISTRO '2'
 #define INDICE_MENSAJE '3'
 #define INDICE_SOLICITUD_AMISTAD '4'
+#define INDICE_NOTIFICACIONES '5'
 
 #define SOLICITUD_ACEPTADA '1'
 #define SOLICITUD_RECHAZADA '0'
@@ -82,6 +84,7 @@ typedef struct
     s_usuario usuario;
     s_ventana ventana;
     s_mensajes mensajes;
+    s_lista listaNotificaciones;
     unsigned short int interfaz;
     bool aplicacionEjecutandose;
 } s_aplicacion;

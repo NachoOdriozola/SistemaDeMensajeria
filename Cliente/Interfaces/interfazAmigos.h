@@ -21,6 +21,7 @@
 #include "../Cliente/estructuras.h"
 #include "../FuncionesUtiles/utiles.h"
 #include "../../EstructurasDeDatos/ListaCircular/listaCircular.h"
+#include "../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 
 
 ///DEFINES
@@ -33,6 +34,9 @@
 
 #define HABILITAR_AGREGAR_AMIGOS 1
 #define DESHABILITAR_AGREGAR_AMIGOS 0
+
+#define HABILITAR_NOTIFICACIONES 1
+#define DESHABILITAR_NOTIFICACIONES 0
 
 #define HABILITAR_ESCRITURA_MENSAJES 1
 #define DESHABILITAR_ESCRITURA_MENSAJES 0
@@ -52,13 +56,16 @@ typedef struct
 {
     sfText *amigos;
     sfText *agregarAmigos;
+    sfText *notificaciones;
+    sfText *alertaNotificaciones;
     sfText *salas;
     sfText *nombreUsuario;
     sfText *interfazConfig;
     sfText *auxEscribirMensaje;
+    sfText *cerrarPestania;
     sfText *tituloAgregarAmigos;
-    sfText *cerrarAgregarAmigos;
     sfText *auxAgregarAmigos;
+    sfText *tituloNotificaciones;
 } s_textoAmigos;
 
 typedef struct
@@ -69,15 +76,17 @@ typedef struct
     sfRectangleShape *barraSeparacionAmigos;
     sfRectangleShape *barraSeparacionNombre;
     sfRectangleShape *barraIngresarMensaje;
-    sfRectangleShape *recBaseAgregarAmigos;
+    sfRectangleShape *recBasePestania;
     sfRectangleShape *barraAgregarAmigos;
 } s_elementosAmigos;
 
 typedef struct
 {
     bool agregarAmigos;
-    bool habilitarEscrituraMensajes;
-    bool habilitarEscrituraAgregarAmigos;
+    bool notificaciones;
+    bool escrituraMensajes;
+    bool escrituraAgregarAmigos;
+    unsigned short int contComprobarNotificaciones;
 } s_habilitacionesAmigos;
 
 typedef struct
@@ -104,6 +113,7 @@ void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos);
 ///FUNCIONES LOGICAS
 
 void intentarSolicitudAmistad (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
+void comprobarNotificaciones (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos);
 
 
 #endif // INTERFAZAmigos_H_INCLUDED

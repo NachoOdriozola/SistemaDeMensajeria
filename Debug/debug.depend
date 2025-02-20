@@ -11,3 +11,15 @@
 	<ws2tcpip.h>
 	<stdbool.h>
 
+1740069991 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\debug\main.c
+	"main.h"
+
+1740012707 d:\cosas\proyectos\proyectosimportantes\appdemensajes\debug\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+

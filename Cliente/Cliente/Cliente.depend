@@ -969,7 +969,7 @@
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
 
-1739375673 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\estructuras.h
+1740073083 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\estructuras.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -982,8 +982,9 @@
 	"SFML/System.h"
 	"SFML/Audio.h"
 	"../../EstructurasDeDatos/ListaCircular/listaCircular.h"
+	"../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 
-1739375004 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\funcionesutiles\utiles.h
+1740085264 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\funcionesutiles\utiles.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -998,13 +999,13 @@
 	"SFML/Audio.h"
 	"../Cliente/estructuras.h"
 
-1739326891 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\funcionesutiles\utiles.c
+1740085824 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\funcionesutiles\utiles.c
 	"utiles.h"
 
-1739370994 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\interfaces\interfazamigos.c
+1740085808 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\interfaces\interfazamigos.c
 	"interfazAmigos.h"
 
-1739375109 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\interfaces\interfazamigos.h
+1740072028 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\interfaces\interfazamigos.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1020,6 +1021,7 @@
 	"../Cliente/estructuras.h"
 	"../FuncionesUtiles/utiles.h"
 	"../../EstructurasDeDatos/ListaCircular/listaCircular.h"
+	"../../EstructurasDeDatos/ListaSimple/listaSimple.h"
 
 1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\listacircular\listacircular.h
 	<stdio.h>
@@ -1106,10 +1108,10 @@
 1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\listacircular\listacircular.c
 	"listaCircular.h"
 
-1739369613 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\main.c
+1740085634 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\main.c
 	"main.h"
 
-1739369052 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\main.h
+1740084854 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\cliente\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1129,8 +1131,19 @@
 1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listacircular\listacircular.c
 	"listaCircular.h"
 
-1738379701 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listacircular\listacircular.h
+1740071997 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listacircular\listacircular.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
+	"../Nodo/nodo.h"
+
+1740072014 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+	"../Nodo/nodo.h"
+
+1738379701 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.c
+	"listaSimple.h"
+
+1740071977 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\nodo\nodo.h
 

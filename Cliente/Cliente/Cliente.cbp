@@ -35,6 +35,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../EstructurasDeDatos/ListaCircular/listaCircular.h" />
+		<Unit filename="../../EstructurasDeDatos/ListaSimple/listaSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../EstructurasDeDatos/ListaSimple/listaSimple.h" />
+		<Unit filename="../../EstructurasDeDatos/Nodo/nodo.h" />
 		<Unit filename="../FuncionesEspecificas/especificas.c">
 			<Option compilerVar="CC" />
 		</Unit>

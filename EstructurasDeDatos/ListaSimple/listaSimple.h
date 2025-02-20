@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../Nodo/nodo.h"
+
 
 ///DEFINES
 
@@ -14,16 +16,6 @@
 #define SIN_MEMORIA -1
 
 #define MINIMO(X, Y)    ((X > Y) ? (X) : (Y))
-
-
-///ESTRUCTURAS
-
-typedef struct r_nodo
-{
-    void *dato;
-    unsigned tam;
-    struct r_nodo *sig;
-} s_nodo;
 
 typedef s_nodo *s_lista;
 

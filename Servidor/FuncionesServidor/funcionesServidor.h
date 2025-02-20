@@ -43,6 +43,7 @@ int recibirSolicitud (s_servidor *servidor, char *bufferSolicitud, char *solicit
 void procesarInicioSesion (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
 void procesarRegistro (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
 void procesarSolicitudAmistad (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
+void procesarNotificaciones (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud);
 void liberarCliente (void *cliente);
 
 

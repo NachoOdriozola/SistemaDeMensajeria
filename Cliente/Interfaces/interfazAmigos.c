@@ -7,6 +7,7 @@
 int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
 {
     ///INICIALIZAR TEXTO
+
     recursosGraficosAmigos->texto.amigos = sfText_create ();
     if (!recursosGraficosAmigos->texto.amigos)
     {
@@ -18,6 +19,20 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
     if (!recursosGraficosAmigos->texto.agregarAmigos)
     {
         perror ("ERROR - Crear texto para agregar amigos.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosAmigos->texto.notificaciones = sfText_create ();
+    if (!recursosGraficosAmigos->texto.nombreUsuario)
+    {
+        perror ("ERROR - Crear texto notificaciones.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    recursosGraficosAmigos->texto.alertaNotificaciones = sfText_create ();
+    if (!recursosGraficosAmigos->texto.alertaNotificaciones)
+    {
+        perror ("ERROR - Crear alerta de notificaciones.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -49,17 +64,17 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosAmigos->texto.cerrarPestania = sfText_create ();
+    if (!recursosGraficosAmigos->texto.cerrarPestania)
+    {
+        perror ("ERROR - Crear cerrar pestania.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     recursosGraficosAmigos->texto.tituloAgregarAmigos = sfText_create ();
     if (!recursosGraficosAmigos->texto.tituloAgregarAmigos)
     {
         perror ("ERROR - Crear titulo agregar amigos.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    recursosGraficosAmigos->texto.cerrarAgregarAmigos = sfText_create ();
-    if (!recursosGraficosAmigos->texto.cerrarAgregarAmigos)
-    {
-        perror ("ERROR - Crear cerrar agregar amigos.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -70,8 +85,16 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
         return ERROR_INICIALIZACION;
     }
 
+    recursosGraficosAmigos->texto.tituloNotificaciones = sfText_create ();
+    if (!recursosGraficosAmigos->texto.tituloNotificaciones)
+    {
+        perror ("ERROR - Crear titulo notificaciones.\n");
+        return ERROR_INICIALIZACION;
+    }
+
 
     ///INICIALIZAR ELEMENTOS
+
     recursosGraficosAmigos->elementos.rectanguloAmigos = sfRectangleShape_create ();
     if (!recursosGraficosAmigos->elementos.rectanguloAmigos)
     {
@@ -114,10 +137,10 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
         return ERROR_INICIALIZACION;
     }
 
-    recursosGraficosAmigos->elementos.recBaseAgregarAmigos = sfRectangleShape_create ();
-    if (!recursosGraficosAmigos->elementos.recBaseAgregarAmigos)
+    recursosGraficosAmigos->elementos.recBasePestania = sfRectangleShape_create ();
+    if (!recursosGraficosAmigos->elementos.recBasePestania)
     {
-        perror ("ERROR - Crear rectangulo base para agregar amigos.\n");
+        perror ("ERROR - Crear rectangulo base para pestania.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -129,20 +152,26 @@ int inicializarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
     }
 
 
+
     return OK;
 }
 
 void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fuentes)
 {
-    ///SETUP ESCRITURA
+    ///SETUP HABILITACIONES Y ESCRITURA
+
     recursosGraficosAmigos->habilitaciones.agregarAmigos = DESHABILITAR_AGREGAR_AMIGOS;
-    recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes = DESHABILITAR_ESCRITURA_MENSAJES;
-    recursosGraficosAmigos->habilitaciones.habilitarEscrituraAgregarAmigos = DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS;
+    recursosGraficosAmigos->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    recursosGraficosAmigos->habilitaciones.escrituraMensajes = DESHABILITAR_ESCRITURA_MENSAJES;
+    recursosGraficosAmigos->habilitaciones.escrituraAgregarAmigos = DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS;
+    recursosGraficosAmigos->habilitaciones.contComprobarNotificaciones = 0;
     *(recursosGraficosAmigos->bufferEscribirMensaje) = '\0';
     *(recursosGraficosAmigos->bufferAgregarAmigos) = '\0';
 
 
+
     ///SETUP TEXTO
+
     //Texto amigos
     sfText_setFont (recursosGraficosAmigos->texto.amigos, fuentes.fuente1);
     sfText_setString (recursosGraficosAmigos->texto.amigos, "AMIGOS");
@@ -152,6 +181,16 @@ void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fu
     sfText_setFont (recursosGraficosAmigos->texto.agregarAmigos, fuentes.fuente1);
     sfText_setString (recursosGraficosAmigos->texto.agregarAmigos, "+");
     sfText_setFillColor (recursosGraficosAmigos->texto.agregarAmigos, sfColor_fromRGB (34, 48, 48));
+
+    //Texto notificaciones
+    sfText_setFont (recursosGraficosAmigos->texto.notificaciones, fuentes.fuente1);
+    sfText_setString (recursosGraficosAmigos->texto.notificaciones, "N");
+    sfText_setFillColor (recursosGraficosAmigos->texto.notificaciones, sfColor_fromRGB (34, 48, 48));
+
+    //Alerta de notificaciones
+    sfText_setFont (recursosGraficosAmigos->texto.alertaNotificaciones, fuentes.fuente1);
+    sfText_setString (recursosGraficosAmigos->texto.alertaNotificaciones, "!");
+    sfText_setFillColor (recursosGraficosAmigos->texto.alertaNotificaciones, sfColor_fromRGB (255, 0, 0));
 
     //Texto salas
     sfText_setFont (recursosGraficosAmigos->texto.salas, fuentes.fuente1);
@@ -172,22 +211,29 @@ void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fu
     sfText_setFont (recursosGraficosAmigos->texto.auxEscribirMensaje, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosAmigos->texto.auxEscribirMensaje, sfColor_fromRGB (40, 54, 54));
 
+    //Cerrar pestania
+    sfText_setFont (recursosGraficosAmigos->texto.cerrarPestania, fuentes.fuente1);
+    sfText_setString (recursosGraficosAmigos->texto.cerrarPestania, "X");
+    sfText_setFillColor (recursosGraficosAmigos->texto.cerrarPestania, sfColor_fromRGB (40, 54, 54));
+
     //Titulo agregar amigos
     sfText_setFont (recursosGraficosAmigos->texto.tituloAgregarAmigos, fuentes.fuente1);
     sfText_setString (recursosGraficosAmigos->texto.tituloAgregarAmigos, "AGREGAR AMIGOS");
     sfText_setFillColor (recursosGraficosAmigos->texto.tituloAgregarAmigos, sfColor_fromRGB (40, 54, 54));
 
-    //Cerrar agregar amigos
-    sfText_setFont (recursosGraficosAmigos->texto.cerrarAgregarAmigos, fuentes.fuente1);
-    sfText_setString (recursosGraficosAmigos->texto.cerrarAgregarAmigos, "X");
-    sfText_setFillColor (recursosGraficosAmigos->texto.cerrarAgregarAmigos, sfColor_fromRGB (40, 54, 54));
-
     //Texto auxiliar para agregar amigos
     sfText_setFont (recursosGraficosAmigos->texto.auxAgregarAmigos, fuentes.fuente1);
     sfText_setFillColor (recursosGraficosAmigos->texto.auxAgregarAmigos, sfColor_fromRGB (40, 54, 54));
 
+    //Titulo notificaciones
+    sfText_setFont (recursosGraficosAmigos->texto.tituloNotificaciones, fuentes.fuente1);
+    sfText_setString (recursosGraficosAmigos->texto.tituloNotificaciones, "NOTIFICACIONES");
+    sfText_setFillColor (recursosGraficosAmigos->texto.tituloNotificaciones, sfColor_fromRGB (40, 54, 54));
+
+
 
     ///SETUP ELEMENTOS
+
     //Rectangulo de amigos
     sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.rectanguloAmigos, sfColor_fromRGB (232, 217, 205));
 
@@ -206,8 +252,8 @@ void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fu
     //Barra de ingresar mensaje
     sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.barraIngresarMensaje, sfColor_fromRGB (208, 208, 208));
 
-    //Rectangulo base para agregar amigos
-    sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.recBaseAgregarAmigos, sfColor_fromRGB (255, 229, 127));
+    //Rectangulo base para pestania
+    sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.recBasePestania, sfColor_fromRGB (255, 229, 127));
 
     //Barra para agregar amigos
     sfRectangleShape_setFillColor (recursosGraficosAmigos->elementos.barraAgregarAmigos, sfColor_fromRGB (208, 208, 208));
@@ -216,6 +262,7 @@ void setupAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_fuentes fu
 void tamYPosPantallaAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_ventana ventana)
 {
     ///SETUP POS Y TAM TEXTO
+
     //Texto amigos
     sfText_setPosition (recursosGraficosAmigos->texto.amigos, (sfVector2f){62 * ventana.escalaElementos.x, 45 * ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.amigos, 36 * ventana.escalaPixeles);
@@ -223,6 +270,14 @@ void tamYPosPantallaAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_
     //Texto agregar amigos
     sfText_setPosition (recursosGraficosAmigos->texto.agregarAmigos, (sfVector2f){220 * ventana.escalaElementos.x, 35 * ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.agregarAmigos, 60 * ventana.escalaPixeles);
+
+    //Texto notificaciones
+    sfText_setPosition (recursosGraficosAmigos->texto.notificaciones, (sfVector2f){300 * ventana.escalaElementos.x, 35 * ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosAmigos->texto.notificaciones, 42 * ventana.escalaPixeles);
+
+    //Alerta de notificaciones
+    sfText_setPosition (recursosGraficosAmigos->texto.alertaNotificaciones, (sfVector2f){320 * ventana.escalaElementos.x, 40 * ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosAmigos->texto.alertaNotificaciones, 38 * ventana.escalaPixeles);
 
     //Texto salas
     sfText_setPosition (recursosGraficosAmigos->texto.salas, (sfVector2f){353 * ventana.escalaElementos.x, 574 * ventana.escalaElementos.y});
@@ -241,20 +296,25 @@ void tamYPosPantallaAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_
     sfText_setPosition (recursosGraficosAmigos->texto.auxEscribirMensaje, (sfVector2f){510 * ventana.escalaElementos.x, 912 * ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.auxEscribirMensaje, 26 * ventana.escalaPixeles);
 
+    //Cerrar pestania
+    sfText_setPosition (recursosGraficosAmigos->texto.cerrarPestania, (sfVector2f){1070 * ventana.escalaElementos.x, 390 * ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosAmigos->texto.cerrarPestania, 36 * ventana.escalaPixeles);
+
     //Titulo agregar amigos
     sfText_setPosition (recursosGraficosAmigos->texto.tituloAgregarAmigos, (sfVector2f){840 * ventana.escalaElementos.x, 400 * ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.tituloAgregarAmigos, 32 * ventana.escalaPixeles);
-
-    //Cerrar agregar amigos
-    sfText_setPosition (recursosGraficosAmigos->texto.cerrarAgregarAmigos, (sfVector2f){1070 * ventana.escalaElementos.x, 390 * ventana.escalaElementos.y});
-    sfText_setCharacterSize (recursosGraficosAmigos->texto.cerrarAgregarAmigos, 36 * ventana.escalaPixeles);
 
     //Texto auxiliar para agregar amigos
     sfText_setPosition (recursosGraficosAmigos->texto.auxAgregarAmigos, (sfVector2f){802 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
     sfText_setCharacterSize (recursosGraficosAmigos->texto.auxAgregarAmigos, 26 * ventana.escalaPixeles);
 
+    //Titulo notificaciones
+    sfText_setPosition (recursosGraficosAmigos->texto.tituloNotificaciones, (sfVector2f){840 * ventana.escalaElementos.x, 400 * ventana.escalaElementos.y});
+    sfText_setCharacterSize (recursosGraficosAmigos->texto.tituloNotificaciones, 32 * ventana.escalaPixeles);
+
 
     ///SETUP POS Y TAM ELEMENTOS
+
     //Rectangulo de amigos
     sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.rectanguloAmigos, (sfVector2f){0, 0});
     sfRectangleShape_setSize (recursosGraficosAmigos->elementos.rectanguloAmigos, (sfVector2f){350 * ventana.escalaElementos.x, 1009 * ventana.escalaElementos.y});
@@ -279,9 +339,9 @@ void tamYPosPantallaAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos, s_
     sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.barraIngresarMensaje, (sfVector2f){490 * ventana.escalaElementos.x, 909 * ventana.escalaElementos.y});
     sfRectangleShape_setSize (recursosGraficosAmigos->elementos.barraIngresarMensaje, (sfVector2f){1350 * ventana.escalaElementos.x, 42 * ventana.escalaElementos.y});
 
-    //Rectangulo base para agregar amigos
-    sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.recBaseAgregarAmigos, (sfVector2f){760 * ventana.escalaElementos.x, 380 * ventana.escalaElementos.y});
-    sfRectangleShape_setSize (recursosGraficosAmigos->elementos.recBaseAgregarAmigos, (sfVector2f){400 * ventana.escalaElementos.x, 300 * ventana.escalaElementos.y});
+    //Rectangulo base para pestania
+    sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.recBasePestania, (sfVector2f){760 * ventana.escalaElementos.x, 380 * ventana.escalaElementos.y});
+    sfRectangleShape_setSize (recursosGraficosAmigos->elementos.recBasePestania, (sfVector2f){400 * ventana.escalaElementos.x, 300 * ventana.escalaElementos.y});
 
     //Barra para agregar amigos
     sfRectangleShape_setPosition (recursosGraficosAmigos->elementos.barraAgregarAmigos, (sfVector2f){800 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
@@ -311,21 +371,34 @@ void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficos
     case sfEvtMouseButtonPressed:
         if (evento.mouseButton.button == sfMouseLeft)
         {
-            if (clickEnRectangulo (app->renderizado, recursosGraficosAmigos->elementos.barraIngresarMensaje))
-                recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes = HABILITAR_ESCRITURA_MENSAJES;
-            else
-                recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes = DESHABILITAR_ESCRITURA_MENSAJES;
-
             if (clickEnTexto (app->renderizado, recursosGraficosAmigos->texto.agregarAmigos))
+            {
                 recursosGraficosAmigos->habilitaciones.agregarAmigos = HABILITAR_AGREGAR_AMIGOS;
+                recursosGraficosAmigos->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+            }
 
-            if (clickEnTexto (app->renderizado, recursosGraficosAmigos->texto.cerrarAgregarAmigos))
+            if (clickEnTexto (app->renderizado, recursosGraficosAmigos->texto.notificaciones))
+            {
+                recursosGraficosAmigos->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
                 recursosGraficosAmigos->habilitaciones.agregarAmigos = DESHABILITAR_AGREGAR_AMIGOS;
+            }
+
+            if (clickEnTexto (app->renderizado, recursosGraficosAmigos->texto.cerrarPestania))
+            {
+                recursosGraficosAmigos->habilitaciones.agregarAmigos = DESHABILITAR_AGREGAR_AMIGOS;
+                recursosGraficosAmigos->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+            }
+
+
+            if (clickEnRectangulo (app->renderizado, recursosGraficosAmigos->elementos.barraIngresarMensaje))
+                recursosGraficosAmigos->habilitaciones.escrituraMensajes = HABILITAR_ESCRITURA_MENSAJES;
+            else
+                recursosGraficosAmigos->habilitaciones.escrituraMensajes = DESHABILITAR_ESCRITURA_MENSAJES;
 
             if (clickEnRectangulo (app->renderizado, recursosGraficosAmigos->elementos.barraAgregarAmigos))
-                recursosGraficosAmigos->habilitaciones.habilitarEscrituraAgregarAmigos = HABILITAR_ESCRITURA_AGREGAR_AMIGOS;
+                recursosGraficosAmigos->habilitaciones.escrituraAgregarAmigos = HABILITAR_ESCRITURA_AGREGAR_AMIGOS;
             else
-                recursosGraficosAmigos->habilitaciones.habilitarEscrituraAgregarAmigos = DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS;
+                recursosGraficosAmigos->habilitaciones.escrituraAgregarAmigos = DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS;
 
 
             if (clickEnRectangulo (app->renderizado, recursosGraficosAmigos->elementos.rectanguloSalas))
@@ -342,13 +415,13 @@ void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficos
     case sfEvtTextEntered:
         if (evento.text.unicode < 128)
         {
-            if (recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes == HABILITAR_ESCRITURA_MENSAJES)
+            if (recursosGraficosAmigos->habilitaciones.escrituraMensajes == HABILITAR_ESCRITURA_MENSAJES)
             {
                 ingresoTexto (recursosGraficosAmigos->bufferEscribirMensaje, MAX_BUFFER_MENSAJE - 1, evento);
                 sfText_setString (recursosGraficosAmigos->texto.auxEscribirMensaje, recursosGraficosAmigos->bufferEscribirMensaje);
             }
 
-            if (recursosGraficosAmigos->habilitaciones.habilitarEscrituraAgregarAmigos == HABILITAR_ESCRITURA_AGREGAR_AMIGOS)
+            if (recursosGraficosAmigos->habilitaciones.escrituraAgregarAmigos == HABILITAR_ESCRITURA_AGREGAR_AMIGOS)
             {
                 ingresoTexto (recursosGraficosAmigos->bufferAgregarAmigos, MAX_NOMBRE_USUARIO - 1, evento);
                 sfText_setString (recursosGraficosAmigos->texto.auxAgregarAmigos, recursosGraficosAmigos->bufferAgregarAmigos);
@@ -359,9 +432,9 @@ void accionAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficos
     case sfEvtKeyPressed:
         if (evento.key.code == sfKeyEnter)
         {
-            if ((recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes == HABILITAR_ESCRITURA_MENSAJES) && (strlen (recursosGraficosAmigos->bufferEscribirMensaje) > 0))
+            if ((recursosGraficosAmigos->habilitaciones.escrituraMensajes == HABILITAR_ESCRITURA_MENSAJES) && (strlen (recursosGraficosAmigos->bufferEscribirMensaje) > 0))
             {
-                printf ("si.\n");
+                printf ("enviar paquete.\n");
                 //enviar paquete
             }
 
@@ -391,12 +464,21 @@ void actualizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraf
     }
 
 
+    ///COMPROBAR NOTIFICACIONES
+    if (recursosGraficosAmigos->habilitaciones.contComprobarNotificaciones == 3000)
+    {
+        comprobarNotificaciones (app, recursosGraficosAmigos);
+        recursosGraficosAmigos->habilitaciones.contComprobarNotificaciones = -1;
+    }
+    recursosGraficosAmigos->habilitaciones.contComprobarNotificaciones ++;
+
+
     ///TEXTO AUXILIAR ESCRIBIR MENSAJE
-    if ((recursosGraficosAmigos->habilitaciones.habilitarEscrituraMensajes == DESHABILITAR_ESCRITURA_MENSAJES) && ((strlen (recursosGraficosAmigos->bufferEscribirMensaje) == 0)))
+    if ((recursosGraficosAmigos->habilitaciones.escrituraMensajes == DESHABILITAR_ESCRITURA_MENSAJES) && ((strlen (recursosGraficosAmigos->bufferEscribirMensaje) == 0)))
         sfText_setString (recursosGraficosAmigos->texto.auxEscribirMensaje, "Escribir mensaje...");
 
     ///TEXTO AUXILIAR AGREGAR AMIGOS
-    if ((recursosGraficosAmigos->habilitaciones.habilitarEscrituraAgregarAmigos == DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS) && (strlen (recursosGraficosAmigos->bufferAgregarAmigos) == 0))
+    if ((recursosGraficosAmigos->habilitaciones.escrituraAgregarAmigos == DESHABILITAR_ESCRITURA_AGREGAR_AMIGOS) && (strlen (recursosGraficosAmigos->bufferAgregarAmigos) == 0))
         sfText_setString (recursosGraficosAmigos->texto.auxAgregarAmigos, "Escribir nombre...");
 }
 
@@ -417,6 +499,8 @@ void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraf
     ///RENDERIZAR TEXTO
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.amigos, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.agregarAmigos, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.notificaciones, NULL);
+    sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.alertaNotificaciones, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.salas, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.nombreUsuario, NULL);
     sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.interfazConfig, NULL);
@@ -426,11 +510,22 @@ void renderizarAmigos (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraf
     ///RENDERIZAR AGREGAR AMIGOS
     if (recursosGraficosAmigos->habilitaciones.agregarAmigos == HABILITAR_AGREGAR_AMIGOS)
     {
-        sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.recBaseAgregarAmigos, NULL);
+        sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.recBasePestania, NULL);
         sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.barraAgregarAmigos, NULL);
         sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.tituloAgregarAmigos, NULL);
-        sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.cerrarAgregarAmigos, NULL);
         sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.auxAgregarAmigos, NULL);
+        sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.cerrarPestania, NULL);
+    }
+
+
+    ///RENDERIZAR NOTIFICACIONES
+    if (recursosGraficosAmigos->habilitaciones.notificaciones == HABILITAR_NOTIFICACIONES)
+    {
+        sfRenderWindow_drawRectangleShape (app->renderizado, recursosGraficosAmigos->elementos.recBasePestania, NULL);
+        sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.tituloNotificaciones, NULL);
+        sfRenderWindow_drawText (app->renderizado, recursosGraficosAmigos->texto.cerrarPestania, NULL);
+        mapListaCircularConComplemento (&(app->listaNotificaciones), app->renderizado, renderizarListaMensajes);
+        //NO FUNCIONA PORQUE ES S_MENSAJE NO ES SFTEXT PERO ME TENGO QUE IR
     }
 
 
@@ -446,13 +541,16 @@ void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
     ///LIBERAR TEXTO
     sfText_destroy (recursosGraficosAmigos->texto.amigos);
     sfText_destroy (recursosGraficosAmigos->texto.agregarAmigos);
+    sfText_destroy (recursosGraficosAmigos->texto.notificaciones);
+    sfText_destroy (recursosGraficosAmigos->texto.alertaNotificaciones);
     sfText_destroy (recursosGraficosAmigos->texto.salas);
     sfText_destroy (recursosGraficosAmigos->texto.nombreUsuario);
     sfText_destroy (recursosGraficosAmigos->texto.interfazConfig);
     sfText_destroy (recursosGraficosAmigos->texto.auxEscribirMensaje);
+    sfText_destroy (recursosGraficosAmigos->texto.cerrarPestania);
     sfText_destroy (recursosGraficosAmigos->texto.tituloAgregarAmigos);
-    sfText_destroy (recursosGraficosAmigos->texto.cerrarAgregarAmigos);
     sfText_destroy (recursosGraficosAmigos->texto.auxAgregarAmigos);
+    sfText_destroy (recursosGraficosAmigos->texto.tituloNotificaciones);
 
 
     ///LIBERAR ELEMENTOS
@@ -462,7 +560,7 @@ void liberarAmigos (s_recursosGraficosAmigos *recursosGraficosAmigos)
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraSeparacionAmigos);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraSeparacionNombre);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraIngresarMensaje);
-    sfRectangleShape_destroy (recursosGraficosAmigos->elementos.recBaseAgregarAmigos);
+    sfRectangleShape_destroy (recursosGraficosAmigos->elementos.recBasePestania);
     sfRectangleShape_destroy (recursosGraficosAmigos->elementos.barraAgregarAmigos);
 }
 
@@ -502,7 +600,62 @@ void intentarSolicitudAmistad (s_aplicacion *app, s_recursosGraficosAmigos *recu
         printf ("No se envio la solicitud de amistad.\n");
 }
 
+void comprobarNotificaciones (s_aplicacion *app, s_recursosGraficosAmigos *recursosGraficosAmigos)
+{
+    u_long modoSocket = 0; //Socket modo bloqueante
+    char *bufferSolicitud, *bufferRespuesta, *ptrBufferRespuesta;
+    char estadoSolicitud;
+    char *nombreEmisor;
 
+    bufferSolicitud = malloc (MAX_BUFFER_SOLICITUD);
+    if (!bufferSolicitud)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    nombreEmisor = malloc (50);
+    if (!nombreEmisor)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+
+    ioctlsocket (app->sock, FIONBIO, &modoSocket);
+    ptrBufferRespuesta = bufferRespuesta;
+
+
+    sprintf (bufferSolicitud, "%c|%d", INDICE_NOTIFICACIONES, app->usuario.id);
+    enviarYRecibirSolicitud (app->sock, bufferSolicitud, bufferRespuesta);
+    estadoSolicitud = *ptrBufferRespuesta;
+    if (estadoSolicitud == SOLICITUD_ACEPTADA)
+    {
+        sfText_setString (recursosGraficosAmigos->texto.alertaNotificaciones, "!");
+        while ((ptrBufferRespuesta = strchr (ptrBufferRespuesta, '|')) != NULL)
+        {
+            ptrBufferRespuesta ++;
+            sscanf (ptrBufferRespuesta, "%[^|]", nombreEmisor);
+            strcat (nombreEmisor, " quiere ser tu amigo!");
+            agregarNotificacion (&(app->listaNotificaciones), app->ventana, app->mensajes.fuentes, nombreEmisor);
+        }
+    }
+    else
+        sfText_setString (recursosGraficosAmigos->texto.alertaNotificaciones, "");
+
+
+    modoSocket = 1;
+    ioctlsocket (app->sock, FIONBIO, &modoSocket);
+
+    free (bufferSolicitud);
+    free (bufferRespuesta);
+    free (nombreEmisor);
+}
 
 
 

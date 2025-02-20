@@ -60,6 +60,10 @@ int main ()
             case INDICE_SOLICITUD_AMISTAD:
                 procesarSolicitudAmistad (&servidor, db, bufferSolicitud);
                 break;
+
+            case INDICE_NOTIFICACIONES:
+                procesarNotificaciones (&servidor, db, bufferSolicitud);
+                break;
             }
         }
 

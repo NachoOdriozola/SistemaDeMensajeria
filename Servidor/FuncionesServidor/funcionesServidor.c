@@ -77,14 +77,14 @@ void procesarInicioSesion (s_servidor *servidor, sqlite3 *db, char *bufferSolici
     int id;
 
 
-    consulta = malloc (MAX_BUFFER_CONSULTA);
-    if (!consulta)
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
     {
         perror ("ERROR - Sin memoria.\n");
         return;
     }
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
+    consulta = malloc (MAX_BUFFER_CONSULTA);
+    if (!consulta)
     {
         perror ("ERROR - Sin memoria.\n");
         return;
@@ -335,6 +335,66 @@ void procesarSolicitudAmistad (s_servidor *servidor, sqlite3 *db, char *bufferSo
     free (consulta);
     free (nombreEmisor);
     free (nombreReceptor);
+}
+
+void procesarNotificaciones (s_servidor *servidor, sqlite3 *db, char *bufferSolicitud)
+{
+    char *bufferRespuesta;
+
+    sqlite3_stmt *sentencia;
+    char *consulta;
+
+    s_cliente *cliente;
+    int idReceptor;
+
+
+    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
+    if (!bufferRespuesta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+    consulta = malloc (MAX_BUFFER_CONSULTA);
+    if (!consulta)
+    {
+        perror ("ERROR - Sin memoria.\n");
+        return;
+    }
+
+
+    cliente = servidor->clienteAProcesar->dato;
+    sscanf (bufferSolicitud, "%d", &idReceptor);
+
+
+    strcpy (consulta, "SELECT nombre_emisor FROM solicitudes_amistad WHERE id_receptor = ?;");
+    if (sqlite3_prepare_v2 (db, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return;
+    }
+    sqlite3_bind_int (sentencia, 1, idReceptor);
+
+    if (sqlite3_step (sentencia) == SQLITE_ROW)
+    {
+        sprintf (bufferRespuesta, "%c", SOLICITUD_ACEPTADA);
+        strcat (bufferRespuesta, "|");
+        strcat (bufferRespuesta, (const char*)sqlite3_column_text (sentencia, 0));
+    }
+    else
+        sprintf (bufferRespuesta, "%c", SOLICITUD_RECHAZADA);
+
+    while (sqlite3_step (sentencia) == SQLITE_ROW)
+    {
+        strcat (bufferRespuesta, "|");
+        strcat (bufferRespuesta, (const char*)sqlite3_column_text (sentencia, 0));
+    }
+
+    sqlite3_finalize (sentencia);
+    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+
+
+    free (bufferRespuesta);
+    free (consulta);
 }
 
 void liberarCliente (void *cliente)

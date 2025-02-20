@@ -15,14 +15,23 @@
 #define OK 0
 #define ERROR_INICIALIZACION -1
 
+#define INDICE_INICIO_SESION '1'
+#define INDICE_REGISTRO '2'
+#define INDICE_MENSAJE '3'
+#define INDICE_SOLICITUD_AMISTAD '4'
+#define INDICE_NOTIFICACIONES '5'
+
+#define SOLICITUD_ACEPTADA '1'
+#define SOLICITUD_RECHAZADA '0'
+
 #define MAX_BUFFER_SOLICITUD 256
 #define MAX_BUFFER_RESPUESTA 256
 
 #define MAX_NOMBRE_USUARIO 26
 #define MAX_CONTRASENIA_USUARIO 46
 
-#define INDICE_INICIO_SESION '1'
 
+void enviarYRecibirSolicitud (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta);
 
 
 #endif // MAIN_H_INCLUDED

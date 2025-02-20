@@ -65,12 +65,16 @@ void ingresoTexto (char *buffer, int maxIngreso, sfEvent evento)
 
 void enviarYRecibirSolicitud (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta)
 {
+    u_long modoSocket = 0; //Socket modo bloqueante
     int bytesRecibidos;
 
+    ioctlsocket (sock, FIONBIO, &modoSocket);
     send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD, 0);
     bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
     bufferRespuesta += bytesRecibidos - 1;
     *bufferRespuesta = '\0';
+    modoSocket = 1;
+    ioctlsocket (sock, FIONBIO, &modoSocket);
 }
 
 int guardarDatosEnArchivo (int id, const char *bufferNombre)
@@ -114,6 +118,26 @@ void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoP
     sfText_setPosition (mensaje->mensaje, mensaje->posMensaje);
 
     app->mensajes.siguienteMensaje = app->mensajes.siguienteMensaje->sig;
+}
+
+void agregarNotificacion (s_lista *listaNotificaciones, s_ventana ventana, s_fuentes fuentes, char *bufferNotificacion)
+{
+    sfText *notificacion;
+
+    notificacion = sfText_create ();
+    if (!notificacion)
+    {
+        perror ("ERROR - Crear notificacion.\n");
+        return;
+    }
+
+    sfText_setFont (notificacion, fuentes.fuente1);
+    sfText_setString (notificacion, bufferNotificacion);
+    sfText_setFillColor (notificacion, sfColor_fromRGB (40, 54, 54));
+    sfText_setPosition (notificacion, (sfVector2f){802 * ventana.escalaElementos.x, 900 * ventana.escalaElementos.y});
+    sfText_setCharacterSize (notificacion, 26 * ventana.escalaPixeles);
+
+    insertarAlInicioLista (listaNotificaciones, notificacion, sizeof (notificacion));
 }
 
 void modificarPosListaMensajes (void *mensaje, void *escalaPixeles)

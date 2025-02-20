@@ -42,32 +42,6 @@ int main()
 
     ///VARIABLES PROGRAMA
 
-    char nombre [MAX_NOMBRE_USUARIO], contrasenia [MAX_CONTRASENIA_USUARIO];
-    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
-    unsigned i;
-    int bytesRecibidos;
-
-
-    for (i = 0; i < 5; i ++)
-    {
-        printf ("ingrese nombre: ");
-        gets (nombre);
-        printf ("ingrese contrasenia: ");
-        gets (contrasenia);
-
-        sprintf (bufferSolicitud, "%c|%s|%s", INDICE_INICIO_SESION, nombre, contrasenia);
-        printf ("Enviado: %s\n", bufferSolicitud);
-        send (sock, bufferSolicitud, sizeof (bufferSolicitud), 0);
-        bytesRecibidos = recv (sock, bufferRespuesta, sizeof (bufferRespuesta), 0);
-        if (bytesRecibidos > 0)
-        {
-            bufferRespuesta [bytesRecibidos - 1] = '\0';
-            printf ("Recibido: .%s.\n", bufferRespuesta);
-        }
-        else
-            printf ("nada.\n");
-    }
-
 
     ///LIBERAR RECURSOS
     closesocket (sock);
@@ -77,8 +51,15 @@ int main()
     return 0;
 }
 
+void enviarYRecibirSolicitud (SOCKET sock, char *bufferSolicitud, char *bufferRespuesta)
+{
+    int bytesRecibidos;
 
-
+    send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD, 0);
+    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+    bufferRespuesta += bytesRecibidos - 1;
+    *bufferRespuesta = '\0';
+}
 
 
 

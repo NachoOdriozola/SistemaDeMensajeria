@@ -170,6 +170,10 @@ int inicializar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
     }
 
 
+    ///INICIALIZAR LISTA DE NOTIFICACIONES
+    crearLista (&(app->listaNotificaciones));
+
+
     return OK;
 }
 
@@ -201,6 +205,10 @@ void setup (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 
 void liberar (s_aplicacion *app, s_recursosGraficos *recursosGraficos)
 {
+    ///LIBERAR LISTA DE NOTIFICACIONES
+    vaciarListaConAccion (&(app->listaNotificaciones), liberarMensaje);
+
+
     ///LIBERAR LISTA DE MENSAJES
     vaciarListaCircularConAccion (&(app->mensajes.listaMensajes), liberarMensaje);
 

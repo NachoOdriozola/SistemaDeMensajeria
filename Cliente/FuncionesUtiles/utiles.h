@@ -54,6 +54,9 @@ int guardarDatosEnArchivo (int id, const char *bufferContrasenia);
 //Asignar mensaje a la lista circular de mensajes
 void asignarMensaje (s_aplicacion *app, const char *bufferMensaje, bool enviadoPor);
 
+//Agregar notificacion a la lista
+void agregarNotificacion (s_lista *listaNotificaciones, s_ventana ventana, s_fuentes fuentes, char *bufferNotificacion);
+
 //Funciones complementarias de la lista circular de mensajes
 void modificarPosListaMensajes (void *mensaje, void *escalaPixeles);
 void renderizarListaMensajes (void *mensaje, void *renderizado);
