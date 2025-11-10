@@ -1,0 +1,76 @@
+# depslib dependency file v1.0
+1739253681 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\debug\main.c
+	"main.h"
+
+1739253411 d:\cosas\proyectos\proyectosimportantes\appdemensajes\cliente\debug\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+
+1740069991 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\debug\main.c
+	"main.h"
+
+1740012707 d:\cosas\proyectos\proyectosimportantes\appdemensajes\debug\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+
+1741821855 source:d:\informaticalocal\proyectos\proyectosimportantes\appdemensajes\debug cliente\main.c
+	"main.h"
+
+1741821754 d:\informaticalocal\proyectos\proyectosimportantes\appdemensajes\debug cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+
+1741821855 source:c:\users\ignac\documents\appdemensajes\debug cliente\main.c
+	"main.h"
+
+1741821754 c:\users\ignac\documents\appdemensajes\debug cliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+
+1742267854 source:c:\users\ignac\documents\appdemensajes\debugcliente\main.c
+	"main.h"
+
+1742267582 c:\users\ignac\documents\appdemensajes\debugcliente\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+
+1762738861 source:c:\users\ignac\documents\aplicaciondemensajes\pruebas\debugusuario\main.c
+	"main.h"
+
+1762738785 c:\users\ignac\documents\aplicaciondemensajes\pruebas\debugusuario\main.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Usuario" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Usuario" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Usuario" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../Constantes/constantes.h" />
+		<Unit filename="../../EstructurasDeDatos/include/listaCircular.h" />
+		<Unit filename="../../EstructurasDeDatos/include/listaSimple.h" />
+		<Unit filename="../../EstructurasDeDatos/include/nodo.h" />
+		<Unit filename="../../EstructurasDeDatos/src/listaCircular.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../EstructurasDeDatos/src/listaSimple.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../include/interfaces/interfazAutenticacion.h" />
+		<Unit filename="../include/interfaces/interfazConfig.h" />
+		<Unit filename="../include/interfaces/interfazContactos.h" />
+		<Unit filename="../include/interfaces/interfazRegistro.h" />
+		<Unit filename="../include/interfaces/interfazSalas.h" />
+		<Unit filename="../include/logicaUsuario.h" />
+		<Unit filename="../include/main.h" />
+		<Unit filename="../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h" />
+		<Unit filename="../include/recursosGraficosComunes/recursosComunesContactosSalas.h" />
+		<Unit filename="interfaces/interfazAutenticacion.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfaces/interfazConfig.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfaces/interfazContactos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfaces/interfazRegistro.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="interfaces/interfazSalas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="logicaUsuario.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="recursosGraficosComunes/recursosComunesAutenticacionRegistro.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="recursosGraficosComunes/recursosComunesContactosSalas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

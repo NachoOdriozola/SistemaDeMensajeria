@@ -1,0 +1,18 @@
+var searchData=
+[
+  ['accioninutil_0',['accionInutil',['../_pruebas_2_tabla_hash_2_lista_2_tabla_hash_2tabla_hash_8c.html#a893e980311ae00399e07917e722f4285',1,'accionInutil(void *dato):&#160;TablaHash.c'],['../_pruebas_2_tabla_hash_2_lista_2_tabla_hash_2tabla_hash_8h.html#a893e980311ae00399e07917e722f4285',1,'accionInutil(void *dato):&#160;TablaHash.c']]],
+  ['agendarcontacto_1',['agendarContacto',['../structs__interfaz_contactos_texto.html#a2631c8a708d02f3b3f1a432e9fb58ea4',1,'s_interfazContactosTexto::agendarContacto'],['../structs__interfaz_contactos_habilitaciones.html#a49f3e9341f74227059a6284f203314c5',1,'s_interfazContactosHabilitaciones::agendarContacto']]],
+  ['agregarnotificacion_2',['agregarNotificacion',['../logica_usuario_8h.html#a1d891928c9ac6a9bbbb1ae8dd529f2f4',1,'agregarNotificacion(s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_ventana ventana, s_fuentes fuentes):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#a1d891928c9ac6a9bbbb1ae8dd529f2f4',1,'agregarNotificacion(s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_ventana ventana, s_fuentes fuentes):&#160;logicaUsuario.c']]],
+  ['ajustarvista_3',['ajustarVista',['../logica_usuario_8h.html#af1b2af6a175f5300066a0f1033e6cef3',1,'ajustarVista(sfRenderWindow *renderizado, sfVector2f nuevoTamVentana):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#af1b2af6a175f5300066a0f1033e6cef3',1,'ajustarVista(sfRenderWindow *renderizado, sfVector2f nuevoTamVentana):&#160;logicaUsuario.c']]],
+  ['alertanotificaciones_4',['alertaNotificaciones',['../structs__recursos_comunes_contactos_salas_texto.html#aa551a429ec10be798b52258e9d029e47',1,'s_recursosComunesContactosSalasTexto']]],
+  ['aplicacionejecutandose_5',['aplicacionEjecutandose',['../structs__aplicacion.html#a3b58a26137b986cca8d52927208ed0b2',1,'s_aplicacion']]],
+  ['asignarmensaje_6',['asignarMensaje',['../logica_usuario_8h.html#a77974a8165a934955876bf32bb54b455',1,'asignarMensaje(s_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#a77974a8165a934955876bf32bb54b455',1,'asignarMensaje(s_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor):&#160;logicaUsuario.c']]],
+  ['autenticacion_7',['autenticacion',['../structs__interfaces.html#a6c454f271c33815d07c082c64df40927',1,'s_interfaces']]],
+  ['autenticacion_5fautomatica_8',['AUTENTICACION_AUTOMATICA',['../logica_usuario_8h.html#aedead4d3c3ca2937436afe4eaacc0445',1,'logicaUsuario.h']]],
+  ['autenticacion_5fmanual_9',['AUTENTICACION_MANUAL',['../logica_usuario_8h.html#aa16a218c6a6d1d3cd73cb42588b4ede3',1,'logicaUsuario.h']]],
+  ['auxagendarcontacto_10',['auxAgendarContacto',['../structs__interfaz_contactos_texto.html#abd2322a3093537c5b80bc6fae0620afe',1,'s_interfazContactosTexto']]],
+  ['auxescribircontrasena_11',['auxEscribirContrasena',['../structs__recursos_comunes_autenticacion_registro_texto.html#a5f264cbf1d8f698bb935abe9ec1242ab',1,'s_recursosComunesAutenticacionRegistroTexto']]],
+  ['auxescribirmensaje_12',['auxEscribirMensaje',['../structs__recursos_comunes_contactos_salas_texto.html#ac0e2293656c2d315dbf293bf2dd05d21',1,'s_recursosComunesContactosSalasTexto']]],
+  ['auxescribirnombre_13',['auxEscribirNombre',['../structs__recursos_comunes_autenticacion_registro_texto.html#ab83fb10633f7d7a5ab73d5a63d0be798',1,'s_recursosComunesAutenticacionRegistroTexto']]],
+  ['auxguardarautenticacion_14',['auxGuardarAutenticacion',['../structs__recursos_comunes_autenticacion_registro_texto.html#a96f4c2860c025f173e8775b1eb72d558',1,'s_recursosComunesAutenticacionRegistroTexto']]]
+];

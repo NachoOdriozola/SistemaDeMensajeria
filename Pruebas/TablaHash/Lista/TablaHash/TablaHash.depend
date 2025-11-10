@@ -1,0 +1,49 @@
+# depslib dependency file v1.0
+1741669609 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.c
+	"listaSimple.h"
+
+1741669614 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+	"../Nodo/nodo.h"
+
+1740071977 d:\cosas\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\nodo\nodo.h
+
+1741670734 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\main.c
+	"TablaHash.h"
+
+1741670501 d:\cosas\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\tablahash.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"../../../../EstructurasDeDatos/Nodo/nodo.h"
+	"../../../../EstructurasDeDatos/ListaSimple/listaSimple.h"
+
+1741670706 source:d:\cosas\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\tablahash.c
+	"TablaHash.h"
+
+1741669609 source:d:\informatica\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.c
+	"listaSimple.h"
+
+1741669614 d:\informatica\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\listasimple\listasimple.h
+	<stdlib.h>
+	<string.h>
+	"../Nodo/nodo.h"
+
+1740071977 d:\informatica\proyectos\proyectosimportantes\appdemensajes\estructurasdedatos\nodo\nodo.h
+
+1741734353 source:d:\informatica\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\main.c
+	"TablaHash.h"
+
+1741734300 d:\informatica\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\tablahash.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"../../../../EstructurasDeDatos/Nodo/nodo.h"
+	"../../../../EstructurasDeDatos/ListaSimple/listaSimple.h"
+
+1741733795 source:d:\informatica\proyectos\proyectosimportantes\appdemensajes\pruebas\tablahash\lista\tablahash\tablahash.c
+	"TablaHash.h"
+

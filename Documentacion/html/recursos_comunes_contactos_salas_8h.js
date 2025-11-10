@@ -1,0 +1,26 @@
+var recursos_comunes_contactos_salas_8h =
+[
+    [ "s_recursosComunesContactosSalasTexto", "structs__recursos_comunes_contactos_salas_texto.html", "structs__recursos_comunes_contactos_salas_texto" ],
+    [ "s_recursosComunesContactosSalasElementos", "structs__recursos_comunes_contactos_salas_elementos.html", "structs__recursos_comunes_contactos_salas_elementos" ],
+    [ "s_recursosComunesContactosSalasHabilitaciones", "structs__recursos_comunes_contactos_salas_habilitaciones.html", "structs__recursos_comunes_contactos_salas_habilitaciones" ],
+    [ "s_recursosComunesContactosSalas", "structs__recursos_comunes_contactos_salas.html", "structs__recursos_comunes_contactos_salas" ],
+    [ "DESHABILITAR_ESCRIBIR_MENSAJE", "recursos_comunes_contactos_salas_8h.html#abefbee8d6af0d3a1fbf13f2bb806a4e5", null ],
+    [ "DESHABILITAR_NOTIFICACIONES", "recursos_comunes_contactos_salas_8h.html#ad2bb9c2a100960d2de6acffede212cc7", null ],
+    [ "DESHABILITAR_PUNTO_INSERCION", "recursos_comunes_contactos_salas_8h.html#a77ac3ffbe731cb6742a09b7b0be2dfdf", null ],
+    [ "HABILITAR_ESCRIBIR_MENSAJE", "recursos_comunes_contactos_salas_8h.html#a57954b71b51a9539ee00d6a610b7e5dc", null ],
+    [ "HABILITAR_NOTIFICACIONES", "recursos_comunes_contactos_salas_8h.html#a2c8dc6b7adbca58d6eb53a042cb95eb7", null ],
+    [ "HABILITAR_PUNTO_INSERCION", "recursos_comunes_contactos_salas_8h.html#af66e3e56cbf76bf3ced6c0db62d0f03e", null ],
+    [ "cambiarInterfazAContactos", "recursos_comunes_contactos_salas_8h.html#ae8ec3efeca1b062a2be2679b184bf417", null ],
+    [ "cambiarInterfazASalas", "recursos_comunes_contactos_salas_8h.html#aaedfd762491dccc86d0b3be7ff92b90b", null ],
+    [ "manejarClickCambiarInterfazConfig", "recursos_comunes_contactos_salas_8h.html#aabbf5017f533cb3ef086dbeaf4976a7b", null ],
+    [ "manejarClickEscribirMensaje", "recursos_comunes_contactos_salas_8h.html#aecb41e38e9843c2a3407805c0f556782", null ],
+    [ "manejarClickSolapaCambiarInterfaz", "recursos_comunes_contactos_salas_8h.html#abbf7d41a20dd2f2b73d7857bc0546d46", null ],
+    [ "manejarEnviarMensaje", "recursos_comunes_contactos_salas_8h.html#a8dea3de689703d8537759f82d8b5be2d", null ],
+    [ "manejarEscribirMensaje", "recursos_comunes_contactos_salas_8h.html#ac523093d55654dfa5457344a08f4745e", null ],
+    [ "recursosComunesContactosSalas_configurar", "recursos_comunes_contactos_salas_8h.html#a53808faa261d01b24c61e0ee7d1aff5f", null ],
+    [ "recursosComunesContactosSalas_inicializar", "recursos_comunes_contactos_salas_8h.html#a554444dea1c06fb0aa8e7d41af2dedf6", null ],
+    [ "recursosComunesContactosSalas_liberar", "recursos_comunes_contactos_salas_8h.html#a1a402bb174b0263b45df63aa6735bc78", null ],
+    [ "recursosComunesContactosSalas_renderizarElementos", "recursos_comunes_contactos_salas_8h.html#af049200c69282e13de173f1861d0086b", null ],
+    [ "recursosComunesContactosSalas_renderizarTexto", "recursos_comunes_contactos_salas_8h.html#a19a19846c190342a0c60944b0ff6981d", null ],
+    [ "recursosComunesContactosSalas_tamYPosVentana", "recursos_comunes_contactos_salas_8h.html#a502d0d37dba185e97623659aef3df1d2", null ]
+];
