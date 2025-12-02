@@ -109,14 +109,15 @@ void liberarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
 
 /** \brief Configurar la aplicacion y las interfaces graficas esenciales para iniciar el menu principal.
  *
- * Seleccionar la interfaz de contactos como menu principal, maximizar la ventana y almacenar valores sobre ella en la estructura ventana,
- * configurar el tamanio y la posicion de los mensajes de la lista de mensajes sobre la ventana, y los recursos graficos comunes e interfaces de contactos y salas.
+ * Seleccionar la interfaz de contactos como menu principal, maximizar la ventana y almacenar valores sobre ella en la estructura ventana, establecer un tamanio a las vistas
+ * de los recursos graficos comunes de las interfaces de contactos y salas, y configurar el tamanio y la posicion de los mensajes de la lista de mensajes sobre la ventana,
+ * y los recursos graficos comunes de las interfaces de contactos y salas.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-int iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces);
+void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces);
 
 /** \brief Inicializar y configurar las interfaces graficas de autenticacion.
  *
@@ -124,6 +125,8 @@ int iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces);
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
 int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfaces);

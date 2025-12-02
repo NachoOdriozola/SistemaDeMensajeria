@@ -134,8 +134,7 @@ void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro
 
 
     case sfEvtResized:
-        if (manejarRedimensionamientoVentana (aplicacion, evento) == ERROR_SIN_MEMORIA)
-            aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+        sfRenderWindow_setSize (aplicacion->renderizado, (sfVector2u){560, 660});
         break;
 
 

@@ -12,6 +12,7 @@ var annotated_dup =
     [ "s_interfazAutenticacionTexto", "structs__interfaz_autenticacion_texto.html", "structs__interfaz_autenticacion_texto" ],
     [ "s_interfazConfig", "structs__interfaz_config.html", "structs__interfaz_config" ],
     [ "s_interfazConfigElementos", "structs__interfaz_config_elementos.html", "structs__interfaz_config_elementos" ],
+    [ "s_interfazConfigHabilitaciones", "structs__interfaz_config_habilitaciones.html", null ],
     [ "s_interfazConfigTexto", "structs__interfaz_config_texto.html", "structs__interfaz_config_texto" ],
     [ "s_interfazContactos", "structs__interfaz_contactos.html", "structs__interfaz_contactos" ],
     [ "s_interfazContactosElementos", "structs__interfaz_contactos_elementos.html", "structs__interfaz_contactos_elementos" ],

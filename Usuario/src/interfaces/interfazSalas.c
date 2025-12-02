@@ -27,6 +27,8 @@ static void interfazSalas_configurarElementos (s_interfazSalasElementos *element
 static void interfazSalas_tamYPosVentanaTexto (s_interfazSalasTexto *texto, const s_ventana *ventana);
 static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *elementos, const s_ventana *ventana);
 
+static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 
 
 /* ============================
@@ -39,6 +41,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
 static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas);
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas);
 
 
@@ -130,8 +133,8 @@ void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSa
 
 
     case sfEvtResized:
-        if (manejarRedimensionamientoVentana (aplicacion, evento) == ERROR_SIN_MEMORIA)
-            aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+        manejarRedimensionamientoVentanaContactosSalas (aplicacion, recursosComunesContactosSalas, evento);
+        interfazSalas_tamYPosVentana (interfazSalas, &(aplicacion->ventana));
         break;
 
 
@@ -142,6 +145,7 @@ void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSa
             if (manejarClickNotificaciones (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             if (manejarClickCerrarVentanaEmergente (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             if (manejarClickSolapaCambiarInterfaz (aplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
+            if (manejarClickAreaMensajes (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             if (manejarClickCambiarInterfazConfig (aplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
         }
         break;
@@ -160,6 +164,11 @@ void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSa
         {
             if (manejarEnterEnviarMensaje (recursosComunesContactosSalas, aplicacion) == EVENTO_MANEJADO) break;
         }
+        break;
+
+
+    case sfEvtMouseWheelScrolled:
+        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         break;
 
 
@@ -207,48 +216,14 @@ void interfazSalas_renderizar (s_aplicacion *aplicacion, const s_interfazSalas *
     sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (223, 231, 233));
 
 
-    // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
+    // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
 
-    // ELEMENTOS
-
-    recursosComunesContactosSalas_renderizarElementos (aplicacion->renderizado, &(recursosComunesContactosSalas->elementos));
+    renderizarVistaMensajes (aplicacion, recursosComunesContactosSalas);
 
 
-    // TEXTO
+    // --------------- RENDERIZAR VISTA DE UI ---------------
 
-    recursosComunesContactosSalas_renderizarTexto (aplicacion->renderizado, &(recursosComunesContactosSalas->texto));
-
-
-    // --------------- RENDERIZAR NOTIFICACIONES ---------------
-
-    if (recursosComunesContactosSalas->habilitaciones.notificaciones == HABILITAR_NOTIFICACIONES)
-    {
-        // ELEMENTOS
-
-        sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.ventanaEmergente, NULL);
-
-
-        // TEXTO
-
-        sfRenderWindow_drawText (aplicacion->renderizado, recursosComunesContactosSalas->texto.cerrarVentanaEmergente, NULL);
-        sfRenderWindow_drawText (aplicacion->renderizado, recursosComunesContactosSalas->texto.tituloVentanaEmergente, NULL);
-
-
-        // LISTA DE NOTIFICACIONES
-
-        mapListaSimpleConComplemento (&(aplicacion->listaNotificaciones), aplicacion->renderizado, renderizarListaNotificaciones);
-    }
-
-
-    // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
-
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->renderizado, renderizarListaMensajes);
-
-
-    // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
-
-    if (recursosComunesContactosSalas->habilitaciones.puntoInsercion == HABILITAR_PUNTO_INSERCION)
-        sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
+    interfazSalas_renderizarVistaUI (aplicacion, interfazSalas, recursosComunesContactosSalas);
 
 
     sfRenderWindow_display (aplicacion->renderizado);
@@ -287,6 +262,7 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
     recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -407,6 +383,47 @@ static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *ele
 
 }
 
+/** \brief Renderizar la vista de UI de la interfaz de salas.
+ *
+ * Establecer la vista de UI en el renderizado, y renderizar los elementos y textos graficos de la interfaz de salas y de los recursos comunes (compartidos) entre las
+ * interfaces de contactos y salas. Ademas, si se encuentran habilitados, renderiza la ventana emergente de notificaciones y el punto de insercion.
+ * No se limpia ni muestra la pantalla, solo los renderiza.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ *
+ */
+static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    // --------------- ESTABLECER VISTA DE UI ---------------
+
+    sfRenderWindow_setView (aplicacion->renderizado, recursosComunesContactosSalas->vistas.UI);
+
+
+    // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
+
+    // ELEMENTOS
+
+    recursosComunesContactosSalas_renderizarElementos (aplicacion->renderizado, &(recursosComunesContactosSalas->elementos));
+
+
+    // TEXTO
+
+    recursosComunesContactosSalas_renderizarTexto (aplicacion->renderizado, &(recursosComunesContactosSalas->texto));
+
+
+    // --------------- RENDERIZAR NOTIFICACIONES ---------------
+
+    renderizarNotificaciones (aplicacion, recursosComunesContactosSalas);
+
+
+    // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
+
+    if (recursosComunesContactosSalas->habilitaciones.puntoInsercion == HABILITAR_PUNTO_INSERCION)
+        sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
+}
+
 
 
 /* ============================
@@ -431,6 +448,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.barraEscribirMensaje))
     {
         recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITAR_ESCRIBIR_MENSAJE;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->texto.auxEscribirMensaje);
         sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){(512.5 * (ventana->escalaElementos.x)) + limiteTextoAux.width, 943 * (ventana->escalaElementos.y)});
         return EVENTO_MANEJADO;
@@ -455,6 +473,7 @@ static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recurs
             recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
         else
             recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
         sfText_setString (recursosComunesContactosSalas->texto.tituloVentanaEmergente, "NOTIFICACIONES");
         sfText_setPosition (recursosComunesContactosSalas->texto.tituloVentanaEmergente, (sfVector2f){840 * aplicacion->ventana.escalaElementos.x, 400 * aplicacion->ventana.escalaElementos.y});
         return EVENTO_MANEJADO;
@@ -475,6 +494,7 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
     if (clickEnTexto (renderizado, recursosComunesContactosSalas->texto.cerrarVentanaEmergente))
     {
         recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;
@@ -497,6 +517,17 @@ static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recur
         cambiarInterfazAContactos (recursosComunesContactosSalas, interfazSalas, &(aplicacion->ventana));
         return EVENTO_MANEJADO;
     }
+    return EVENTO_NO_MANEJADO;
+}
+
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
+    {
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = HABILITAR_AREA_MENSAJES;
+        return EVENTO_MANEJADO;
+    }
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
     return EVENTO_NO_MANEJADO;
 }
 

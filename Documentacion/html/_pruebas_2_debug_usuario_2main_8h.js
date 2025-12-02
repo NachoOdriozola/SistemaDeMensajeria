@@ -6,6 +6,7 @@ var _pruebas_2_debug_usuario_2main_8h =
     [ "INDICE_NOTIFICACIONES", "_pruebas_2_debug_usuario_2main_8h.html#a2350d0bc72abe34e07860422b3592455", null ],
     [ "INDICE_REGISTRO", "_pruebas_2_debug_usuario_2main_8h.html#a90b1805d56d4a6e0e3f0553c476927f6", null ],
     [ "INDICE_SOLICITUD_AMISTAD", "_pruebas_2_debug_usuario_2main_8h.html#af66e56f96bbf2f6eaae2ac31ad87c74b", null ],
+    [ "MACRO", "_pruebas_2_debug_usuario_2main_8h.html#a5de1a5f1c0cf262e0ff2e5f03d586abc", null ],
     [ "MAX_BUFFER_RESPUESTA", "_pruebas_2_debug_usuario_2main_8h.html#aa346990dfb71fa61c87cf5d84bfe027e", null ],
     [ "MAX_BUFFER_SOLICITUD", "_pruebas_2_debug_usuario_2main_8h.html#acf0046b21ab0037ccbd9aca6e3e38b45", null ],
     [ "MAX_CONTRASENIA_USUARIO", "_pruebas_2_debug_usuario_2main_8h.html#ad0d98fec654968b720875c667935bf79", null ],

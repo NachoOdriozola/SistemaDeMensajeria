@@ -185,6 +185,17 @@
 
 
 /**
+ * \brief Libera de forma segura un objeto de tipo vista (sfView) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfView_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfView` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_VISTA(x) if(x) {sfView_destroy(x); x = NULL;}
+
+/**
  * \brief Libera de forma segura un objeto de tipo texto (sfText) si existe.
  *
  * Verifica si el puntero es valido (no nulo) antes de llamar a `sfText_destroy()`.
@@ -326,18 +337,6 @@ typedef struct
 
 
 
-/** \brief Ajustar la vista del renderizado en la ventana.
- *
- * Crear una nueva vista, asignarle el nuevo tamanio de la ventana y colocarsela al renderizado.
- *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param nuevoTamVentana Contiene los valores del nuevo tamanio de la ventana en X e Y.
- *
- * \return EXITO si se ejecuto correctamente, ERROR_SIN_MEMORIA si no se pudieron crear los recursos para su ejecucion.
- *
- */
-int ajustarVista (sfRenderWindow *renderizado, sfVector2f nuevoTamVentana);
-
 /** \brief Crear escala en X e Y para elementos graficos.
  *
  * Crear valores escalares en X e Y, por medio de regla de 3, para poder establecer tamanios y posiciones de los elementos graficos en la ventana.
@@ -357,7 +356,7 @@ void crearEscalaElementos (s_ventana *ventana);
  */
 void crearEscalaPixeles (s_ventana *ventana);
 
-/** \brief Procesar evento de maximizado automatico y guardar valores de la ventana.
+/** \brief Procesar el evento de maximizado automatico de la ventana y guardar sus valores.
  *
  * Procesar todos los eventos ocurridos hasta encontrar el de maximizado de la ventana, una vez encontrado, guarda los valores de la ventana en la
  * estructura de la ventana.
@@ -368,31 +367,16 @@ void crearEscalaPixeles (s_ventana *ventana);
  */
 void eventoMaximizadoAutomatico (sfRenderWindow *renderizado, s_ventana *ventana);
 
-/** \brief Maximizar automaticamente la ventana y guardar valores utiles sobre ella.
+/** \brief Maximizar automaticamente la ventana y guardar sus valores.
  *
- * Maximizar la ventana, ajustar la nueva vista y crear las escalas de elementos y pixeles.
+ * Maximizar la ventana y crear las escalas de elementos y pixeles.
  * Utilizar cuando se desee maximizar la ventana automaticamente (sin intervencion del usuario).
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  * \param ventana Puntero a la estructura que contiene los valores de la ventana.
  *
- * \return EXITO si se ejecuto correctamente, ERROR_INICIALIZACION en caso de error.
- *
  */
-int maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana);
-
-/** \brief Manejar el evento de redimensionamiento de la ventana.
- *
- * Leer y guardar los nuevos valores del tamanio de la ventana y ajustar la nueva vista.
- * En caso de error, se detiene la aplicacion.
- *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param eventoVentana Variable de evento que contiene los valores del nuevo tamanio de la ventana.
- *
- * \return EXITO si se ejecuto correctamente, ERROR_SIN_MEMORIA si no se pudieron crear los recursos para su ejecucion.
- *
- */
-int manejarRedimensionamientoVentana (s_aplicacion *aplicacion, sfEvent eventoVentana);
+void maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana);
 
 
 
@@ -569,7 +553,7 @@ void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contador
 
 
 void asignarMensaje (s_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor);
-void modificarPosListaMensajes (void *mensaje, void *escalaPixeles);
+void modificarPosListaMensajes (void *mensaje);
 void renderizarListaMensajes (void *mensaje, void *renderizado);
 void setupListaMensajes (void *mensaje, void *fuente);
 void tamListaMensajes (void *mensaje, void *escalaPixeles);

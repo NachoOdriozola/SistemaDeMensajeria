@@ -8,14 +8,19 @@
 
 
 
+static void recursosComunesContactosSalas_inicializarValoresNulosVistas (s_recursosComunesContactosSalasVistas *vistas);
+
 static int recursosComunesContactosSalas_inicializarTexto (s_recursosComunesContactosSalasTexto *texto);
 static int recursosComunesContactosSalas_inicializarElementos (s_recursosComunesContactosSalasElementos *elementos);
+static int recursosComunesContactosSalas_inicializarVistas (s_recursosComunesContactosSalasVistas *vistas);
 
 static void recursosComunesContactosSalas_configurarTexto (s_recursosComunesContactosSalasTexto *texto, const s_fuentes *fuentes);
 static void recursosComunesContactosSalas_configurarElementos (s_recursosComunesContactosSalasElementos *elementos);
 
 static void recursosComunesContactosSalas_tamYPosVentanaTexto (s_recursosComunesContactosSalasTexto *texto, const s_ventana *ventana);
 static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos, const s_ventana *ventana);
+
+static void recursosComunesContactosSalas_liberarVistas (s_recursosComunesContactosSalasVistas *vistas);
 
 
 
@@ -44,6 +49,7 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
 
     // ELEMENTOS
 
+    recursosComunesContactosSalas->elementos.areaMensajes = NULL;
     recursosComunesContactosSalas->elementos.barraEscribirMensaje = NULL;
     recursosComunesContactosSalas->elementos.barraSeparacionNombre = NULL;
     recursosComunesContactosSalas->elementos.barraSeparacionTitulo = NULL;
@@ -51,6 +57,11 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
     recursosComunesContactosSalas->elementos.puntoInsercion = NULL;
     recursosComunesContactosSalas->elementos.solapaCambiarInterfaz = NULL;
     recursosComunesContactosSalas->elementos.ventanaEmergente = NULL;
+
+
+    // VISTAS
+
+    recursosComunesContactosSalas_inicializarValoresNulosVistas (&(recursosComunesContactosSalas->vistas));
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
@@ -64,6 +75,12 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
     // ELEMENTOS
 
     if (recursosComunesContactosSalas_inicializarElementos (&(recursosComunesContactosSalas->elementos)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+
+    // --------------- INICIALIZAR VISTAS ---------------
+
+    if (recursosComunesContactosSalas_inicializarVistas (&(recursosComunesContactosSalas->vistas)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -99,7 +116,7 @@ void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *
 
 void recursosComunesContactosSalas_tamYPosVentana (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana)
 {
-    // --------------- TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
+    // --------------- TAMANIO Y POSICION EN VENTANA DE LOS RECURSOS GRAFICOS ---------------
 
     // TEXTO
 
@@ -124,8 +141,8 @@ void recursosComunesContactosSalas_renderizarTexto (sfRenderWindow *renderizado,
 
 void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasElementos *recursosComunesContactosSalasElementos)
 {
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->panelInterfaz, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->barraEscribirMensaje, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->panelInterfaz, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->barraSeparacionNombre, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->barraSeparacionTitulo, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalasElementos->solapaCambiarInterfaz, NULL);
@@ -150,6 +167,7 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
 
     // ELEMENTOS
 
+    DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.areaMensajes);
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.barraEscribirMensaje);
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.barraSeparacionNombre);
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.barraSeparacionTitulo);
@@ -157,6 +175,64 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.puntoInsercion);
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.solapaCambiarInterfaz);
     DESTRUCTOR_SEGURO_RECTANGULO (recursosComunesContactosSalas->elementos.ventanaEmergente);
+
+
+    // --------------- LIBERAR VISTAS ---------------
+
+    recursosComunesContactosSalas_liberarVistas (&(recursosComunesContactosSalas->vistas));
+}
+
+
+
+/* ============================
+   FUNCIONES LOGICAS
+   ============================ */
+
+
+
+void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas, const s_ventana *ventana)
+{
+    // UI
+    sfView_setSize (vistas->UI, ventana->tamVentana);
+    sfView_setCenter (vistas->UI, (sfVector2f){ventana->tamVentana.x / 2.0f, ventana->tamVentana.y / 2.0f});
+
+    // mensajes
+    sfView_setSize (vistas->mensajes, (sfVector2f){1470 * ventana->escalaElementos.x, 850 * ventana->escalaElementos.y});   // Vista del tamanio del sfRectangleShape *areaMensajes
+    sfView_setCenter (vistas->mensajes, (sfVector2f){1165 * ventana->escalaElementos.x, 455 * ventana->escalaElementos.y}); // Centro del sfRectangleShape *areaMensajes
+    sfView_setViewport(vistas->mensajes, (sfFloatRect){0.223f, 0.029f, 0.765f, 0.842f});                                    // Proporciones del sfRectangleShape *areaMensajes
+}
+
+void renderizarVistaMensajes (s_aplicacion *aplicacion, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    // --------------- ESTABLECER VISTA DE MENSAJES ---------------
+
+    sfRenderWindow_setView (aplicacion->renderizado, recursosComunesContactosSalas->vistas.mensajes);
+
+
+    // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
+
+    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->renderizado, renderizarListaMensajes);
+}
+
+void renderizarNotificaciones (s_aplicacion *aplicacion, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (recursosComunesContactosSalas->habilitaciones.notificaciones == HABILITAR_NOTIFICACIONES)
+    {
+        // ELEMENTOS
+
+        sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.ventanaEmergente, NULL);
+
+
+        // TEXTO
+
+        sfRenderWindow_drawText (aplicacion->renderizado, recursosComunesContactosSalas->texto.cerrarVentanaEmergente, NULL);
+        sfRenderWindow_drawText (aplicacion->renderizado, recursosComunesContactosSalas->texto.tituloVentanaEmergente, NULL);
+
+
+        // LISTA DE NOTIFICACIONES
+
+        mapListaSimpleConComplemento (&(aplicacion->listaNotificaciones), aplicacion->renderizado, renderizarListaNotificaciones);
+    }
 }
 
 
@@ -166,6 +242,16 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
    ============================ */
 
 
+
+/** \brief Establecer en NULL a todas las vistas comunes (compartidas) entre las interfaces de contactos y salas.
+ *
+ * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
+ */
+static void recursosComunesContactosSalas_inicializarValoresNulosVistas (s_recursosComunesContactosSalasVistas *vistas)
+{
+    vistas->UI = NULL;
+    vistas->mensajes = NULL;
+}
 
 /** \brief Inicializar los recursos graficos de texto comunes (compartidos) entre las interfaces de contactos y salas.
  *
@@ -256,6 +342,13 @@ static int recursosComunesContactosSalas_inicializarTexto (s_recursosComunesCont
  */
 static int recursosComunesContactosSalas_inicializarElementos (s_recursosComunesContactosSalasElementos *elementos)
 {
+    elementos->areaMensajes = sfRectangleShape_create ();
+    if (!elementos->areaMensajes)
+    {
+        printf ("\nERROR - Recursos comunes contactos-salas, crear elemento areaMensajes.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     elementos->barraEscribirMensaje = sfRectangleShape_create ();
     if (!elementos->barraEscribirMensaje)
     {
@@ -302,6 +395,35 @@ static int recursosComunesContactosSalas_inicializarElementos (s_recursosComunes
     if (!elementos->ventanaEmergente)
     {
         perror ("\nERROR - Recursos comunes contactos-salas, crear elemento ventanaEmergente.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
+    return EXITO;
+}
+
+/** \brief Inicializar las vistas comunes (compartidas) entre las interfaces de contactos y salas.
+ *
+ * Crear todas las vistas. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ *
+ * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
+ *
+ */
+static int recursosComunesContactosSalas_inicializarVistas (s_recursosComunesContactosSalasVistas *vistas)
+{
+    vistas->UI = sfView_create ();
+    if (!vistas->UI)
+    {
+        printf ("\nERROR - Recursos comunes contactos-salas, crear vista de UI.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    vistas->mensajes = sfView_create ();
+    if (!vistas->mensajes)
+    {
+        printf ("\nERROR - Recursos comunes contactos-salas, crear vista de mensajes.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -372,6 +494,9 @@ static void recursosComunesContactosSalas_configurarTexto (s_recursosComunesCont
  */
 static void recursosComunesContactosSalas_configurarElementos (s_recursosComunesContactosSalasElementos *elementos)
 {
+    // areaMensajes
+    sfRectangleShape_setFillColor (elementos->areaMensajes, sfColor_fromRGB (223, 231, 233));
+
     // barraEscribirMensaje
     sfRectangleShape_setFillColor (elementos->barraEscribirMensaje, sfColor_fromRGB (208, 208, 208));
 
@@ -453,6 +578,10 @@ static void recursosComunesContactosSalas_tamYPosVentanaTexto (s_recursosComunes
  */
 static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos, const s_ventana *ventana)
 {
+    // areaMensajes
+    sfRectangleShape_setPosition (elementos->areaMensajes, (sfVector2f){430 * ventana->escalaElementos.x, 30 * ventana->escalaElementos.y});
+    sfRectangleShape_setSize (elementos->areaMensajes, (sfVector2f){1470 * ventana->escalaElementos.x, 850 * ventana->escalaElementos.y});
+
     // barraEscribirMensaje
     sfRectangleShape_setPosition (elementos->barraEscribirMensaje, (sfVector2f){490 * ventana->escalaElementos.x, 909 * ventana->escalaElementos.y});
     sfRectangleShape_setSize (elementos->barraEscribirMensaje, (sfVector2f){1350 * ventana->escalaElementos.x, 42 * ventana->escalaElementos.y});
@@ -481,6 +610,18 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosCom
     sfRectangleShape_setSize (elementos->ventanaEmergente, (sfVector2f){400 * ventana->escalaElementos.x, 300 * ventana->escalaElementos.y});
 }
 
+/** \brief Liberar todas las vistas comunes (compartidas) entre las interfaces de contactos y salas.
+ *
+ * Liberar, de manera segura, todas las vistas comunes entre las interfaces de contactos y salas creados.
+ *
+ * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
+ */
+static void recursosComunesContactosSalas_liberarVistas (s_recursosComunesContactosSalasVistas *vistas)
+{
+    DESTRUCTOR_SEGURO_VISTA (vistas->UI);
+    DESTRUCTOR_SEGURO_VISTA (vistas->mensajes);
+}
+
 
 
 /* ============================
@@ -488,6 +629,30 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosCom
    ============================ */
 
 
+
+void manejarRedimensionamientoVentanaContactosSalas (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoRedimensionamiento)
+{
+    if (eventoRedimensionamiento.size.width < ANCHO_MINIMO_VENTANA)
+        aplicacion->ventana.tamVentana.x = ANCHO_MINIMO_VENTANA;
+    else
+        aplicacion->ventana.tamVentana.x = eventoRedimensionamiento.size.width;
+
+    if (eventoRedimensionamiento.size.height < ALTO_MINIMO_VENTANA)
+        aplicacion->ventana.tamVentana.y = ALTO_MINIMO_VENTANA;
+    else
+        aplicacion->ventana.tamVentana.y = eventoRedimensionamiento.size.height;
+
+    sfRenderWindow_setSize (aplicacion->renderizado, (sfVector2u){((unsigned int)(aplicacion->ventana.tamVentana.x)), ((unsigned int)(aplicacion->ventana.tamVentana.y))});
+
+    crearEscalaElementos (&(aplicacion->ventana));
+    crearEscalaPixeles (&(aplicacion->ventana));
+
+    recursosComunesContactosSalas_tamYPosVentana (recursosComunesContactosSalas, &(aplicacion->ventana));
+
+    // Redimensionar UI
+    sfView_setSize (recursosComunesContactosSalas->vistas.UI, aplicacion->ventana.tamVentana);
+    sfView_setCenter (recursosComunesContactosSalas->vistas.UI, (sfVector2f){aplicacion->ventana.tamVentana.x / 2.0f, aplicacion->ventana.tamVentana.y / 2.0f});
+}
 
 bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana, sfEvent eventoChar)
 {
@@ -511,6 +676,16 @@ bool manejarEnterEnviarMensaje (s_recursosComunesContactosSalas *recursosComunes
         asignarMensaje (aplicacion, recursosComunesContactosSalas->bufferMensaje, MI_USUARIO);
         *(recursosComunesContactosSalas->bufferMensaje) = '\0';
         //enviar paquete
+        return EVENTO_MANEJADO;
+    }
+    return EVENTO_NO_MANEJADO;
+}
+
+bool manejarScrollAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll)
+{
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
+    {
+        sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -eventoScroll.mouseWheelScroll.delta * VELOCIDAD_SCROLL});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;

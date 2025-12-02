@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Aplicacion de mensajes: C:/Users/ignac/Documents/AppDeMensajes/Usuario/include/main.h File Reference</title>
+<title>Aplicación de mensajes: C:/Users/ignac/Documents/AplicacionDeMensajes/Usuario/include/main.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Aplicacion de mensajes
+   <div id="projectname">Aplicación de mensajes
    </div>
   </td>
  </tr>
@@ -92,7 +92,7 @@ $(function(){initNavTree('_usuario_2include_2main_8h.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Une las interfaces graficas y contiene las funciones estructurales base.  
+<p>Une las interfaces graficas y contiene las funciones estructurales base de ejecucion principal.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br />
 <code>#include &lt;string.h&gt;</code><br />
@@ -132,7 +132,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a6a226ec7155f6d2ffbdb5bfe0335ecd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializar y configurar las interfaces graficas de autenticacion.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Une las interfaces graficas y contiene las funciones estructurales base. </p>
+<div class="textblock"><p>Une las interfaces graficas y contiene las funciones estructurales base de ejecucion principal. </p>
 
 <p class="definition">Definition in file <a class="el" href="_usuario_2include_2main_8h_source.html">main.h</a>.</p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
@@ -165,7 +165,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00307">307</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00285">285</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -193,13 +193,13 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aplicacion</td><td>Puntero a la estructura base de la aplicacion. </td></tr>
-    <tr><td class="paramname">interfaces</td><td>Puntero a la estructura unificadora de interfaces graficas. </td></tr>
+    <tr><td class="paramname">interfaces</td><td>Puntero a la estructura unificadora de interfaces graficas.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00163">163</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00141">141</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -232,7 +232,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00430">430</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00421">421</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -265,7 +265,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00401">401</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00392">392</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>
@@ -289,7 +289,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Liberar los recursos de la aplicacion. </p>
-<p>Liberar la lista de mensajes y la lista de notificaciones, las fuentes de los textos graficos, las interfaces graficas esenciales, los recursos graficos comunes esenciales (contactos y salas), el socket del usuario junto con la API de Winsock y el renderizado de la ventana. En orden contrario a como se crearon.</p>
+<p>Liberar la lista de mensajes y la lista de notificaciones, las interfaces graficas esenciales y de autenticacion, los recursos graficos comunes esenciales (contactos y salas) y de autenticacion (autenticacion y registro), las fuentes de los textos graficos, el socket del usuario junto con la API de Winsock y el renderizado de la ventana. En orden contrario a como se crearon.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aplicacion</td><td>Puntero a la estructura base de la aplicacion. </td></tr>
@@ -298,7 +298,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00341">341</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_usuario_2src_2main_8c_source.html#l00319">319</a> of file <a class="el" href="_usuario_2src_2main_8c_source.html">main.c</a>.</p>
 
 </div>
 </div>

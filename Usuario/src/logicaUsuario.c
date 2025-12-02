@@ -8,26 +8,6 @@
 
 
 
-int ajustarVista (sfRenderWindow *renderizado, sfVector2f nuevoTamVentana)
-{
-    sfView *nuevaVista;
-
-    nuevaVista = sfView_create ();
-    if (!nuevaVista)
-    {
-        perror ("ERROR - Crear nueva vista para redimensionar la ventana.\n");
-        return ERROR_SIN_MEMORIA;
-    }
-
-    sfView_setSize (nuevaVista, nuevoTamVentana);
-    sfView_setCenter (nuevaVista, (sfVector2f){nuevoTamVentana.x / 2.0f, nuevoTamVentana.y / 2.0f});
-    sfRenderWindow_setView (renderizado, nuevaVista);
-
-    sfView_destroy (nuevaVista);
-
-    return EXITO;
-}
-
 void crearEscalaElementos (s_ventana *ventana)
 {
     ventana->escalaElementos.x = ventana->tamVentana.x / (float)TAMANIO_BASE_MAXIMIZADO_X;
@@ -36,7 +16,7 @@ void crearEscalaElementos (s_ventana *ventana)
 
 void crearEscalaPixeles (s_ventana *ventana)
 {
-    ventana->escalaPixeles = fminf (ventana->tamVentana.x / (float)TAMANIO_BASE_MAXIMIZADO_X, ventana->tamVentana.y / (float)TAMANIO_BASE_MAXIMIZADO_Y);
+    ventana->escalaPixeles = sqrt((ventana->tamVentana.x / (float)TAMANIO_BASE_MAXIMIZADO_X) * (ventana->tamVentana.y / (float)TAMANIO_BASE_MAXIMIZADO_Y));
 }
 
 void eventoMaximizadoAutomatico (sfRenderWindow *renderizado, s_ventana *ventana)
@@ -57,33 +37,16 @@ void eventoMaximizadoAutomatico (sfRenderWindow *renderizado, s_ventana *ventana
     ventana->tamVentana = nuevoTamVentana;
 }
 
-int maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana)
+void maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana)
 {
     HWND hwnd;
 
     hwnd = sfRenderWindow_getSystemHandle (renderizado);
-    ShowWindow (hwnd, SW_MAXIMIZE); // maximizar ventana.
-
+    ShowWindow (hwnd, SW_MAXIMIZE);                         // maximizar ventana.
     eventoMaximizadoAutomatico (renderizado, ventana);
-    if (ajustarVista (renderizado, ventana->tamVentana) == ERROR_SIN_MEMORIA)
-        return ERROR_INICIALIZACION;
 
     crearEscalaElementos (ventana);
     crearEscalaPixeles (ventana);
-
-    return EXITO;
-}
-
-int manejarRedimensionamientoVentana (s_aplicacion *aplicacion, sfEvent eventoVentana)
-{
-    sfVector2f nuevoTamVentana;
-
-    nuevoTamVentana.x = eventoVentana.size.width;
-    nuevoTamVentana.y = eventoVentana.size.height;
-    aplicacion->ventana.tamVentana = nuevoTamVentana;
-    if (ajustarVista (aplicacion->renderizado, nuevoTamVentana) == ERROR_SIN_MEMORIA)
-        return ERROR_SIN_MEMORIA;
-    return EXITO;
 }
 
 
@@ -152,7 +115,7 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud,
     bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
     bufferRespuesta += bytesRecibidos - 1;
     *bufferRespuesta = '\0';
-    modoSocket = 1;
+    modoSocket = 1;     // Socket modo no bloqueante
     ioctlsocket (sock, FIONBIO, &modoSocket);
 }
 
@@ -302,48 +265,49 @@ void asignarMensaje (s_aplicacion *aplicacion, const char *bufferMensaje, bool e
     sfText *mensaje;
     sfFloatRect bordesMensaje;
 
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), &(aplicacion->ventana.escalaPixeles), modificarPosListaMensajes);
-    mensaje = *(sfText**)aplicacion->mensajes.siguienteMensaje->dato;
+    mapListaCircular (&(aplicacion->mensajes.listaMensajes), modificarPosListaMensajes);
+    mensaje = *((sfText**)aplicacion->mensajes.siguienteMensaje->dato);
+
     sfText_setString (mensaje, bufferMensaje);
     if (enviadoPor == MI_USUARIO)
     {
         bordesMensaje = sfText_getLocalBounds (mensaje);
-        sfText_setPosition (mensaje, (sfVector2f){(1780 * aplicacion->ventana.escalaElementos.x) - bordesMensaje.width, 827 * aplicacion->ventana.escalaElementos.y});
+        sfText_setPosition (mensaje, (sfVector2f){1780 - bordesMensaje.width, 827});
     }
     else
-        sfText_setPosition (mensaje, (sfVector2f){510 * aplicacion->ventana.escalaElementos.x, 827 * aplicacion->ventana.escalaElementos.y});
+        sfText_setPosition (mensaje, (sfVector2f){510, 827});
 
     aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.siguienteMensaje->sig;
 }
 
-void modificarPosListaMensajes (void *mensaje, void *escalaPixeles)
+void modificarPosListaMensajes (void *mensaje)
 {
     sfVector2f pos;
 
-    pos = sfText_getPosition (*(sfText**)mensaje);
-    pos.y -= 80 * (*(float*)escalaPixeles);
-    sfText_setPosition (*(sfText**)mensaje, pos);
+    pos = sfText_getPosition (*((sfText**)mensaje));
+    pos.y -= 80;
+    sfText_setPosition (*((sfText**)mensaje), pos);
 }
 
 void renderizarListaMensajes (void *mensaje, void *renderizado)
 {
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *(sfText**)mensaje, NULL);
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
 }
 
 void setupListaMensajes (void *mensaje, void *fuente)
 {
-    sfText_setFont (*(sfText**)mensaje, (sfFont*)fuente);
-    sfText_setFillColor (*(sfText**)mensaje, sfColor_fromRGB (34, 48, 48));
+    sfText_setFont (*((sfText**)mensaje), (sfFont*)fuente);
+    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (34, 48, 48));
 }
 
 void tamListaMensajes (void *mensaje, void *escalaPixeles)
 {
-    sfText_setCharacterSize (*(sfText**)mensaje, 26 * (*(float*)escalaPixeles));
+    sfText_setCharacterSize (*((sfText**)mensaje), 26 * (*(float*)escalaPixeles));
 }
 
 void liberarMensaje (void *mensaje)
 {
-    sfText_destroy (*(sfText**)mensaje);
+    sfText_destroy (*((sfText**)mensaje));
 }
 
 

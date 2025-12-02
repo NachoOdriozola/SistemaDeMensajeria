@@ -96,8 +96,7 @@ void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *in
 
 
     case sfEvtResized:
-        if (manejarRedimensionamientoVentana (aplicacion, evento) == ERROR_SIN_MEMORIA)
-            aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+       // if (manejarRedimensionamientoVentana (aplicacion, evento) == ERROR_SIN_MEMORIA)
         break;
 
 

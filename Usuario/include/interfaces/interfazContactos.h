@@ -182,6 +182,7 @@ void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de contactos sobre la ventana.
  *
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de contactos en la ventana.
+ * Primero renderiza las vistas moviles y luego la vista de UI.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.

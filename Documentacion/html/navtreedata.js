@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "Aplicacion de mensajes", "index.html", [
+  [ "Aplicación de mensajes", "index.html", [
     [ "Data Structures", "annotated.html", [
       [ "Data Structures", "annotated.html", "annotated_dup" ],
       [ "Data Structure Index", "classes.html", null ],
@@ -48,8 +48,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_estructuras_de_datos_2include_2tabla_hash_8h.html",
-"interfaz_registro_8c.html#a10e0da3c42eaa2a880a1d9c86ea552cf",
-"structs__aplicacion.html"
+"interfaz_registro_8c.html",
+"structs__aplicacion.html#a6ca23158386e1e7566832ac9f5f81df0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

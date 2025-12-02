@@ -42,14 +42,47 @@
 
 
 /**
+ * \def VELOCIDAD_SCROLL
+ * \brief Constante que determina que tan rapido se mueve el scroll.
+ */
+#define VELOCIDAD_SCROLL 35.0f
+
+
+/**
+ * \def ANCHO_MINIMO_VENTANA
+ * \brief Ancho (x) minimo que puede tomar la ventana.
+ */
+#define ANCHO_MINIMO_VENTANA 800
+
+/**
+ * \def ALTO_MINIMO_VENTANA
+ * \brief Alto (y) minimo que puede tomar la ventana.
+ */
+#define ALTO_MINIMO_VENTANA 600
+
+
+/**
+ * \def HABILITAR_AREA_MENSAJES
+ * \brief Codigo para indicar que el area de mensajes fue seleccionado (clickeado) por el usuario.
+ */
+#define HABILITAR_AREA_MENSAJES 1
+
+/**
+ * \def DESHABILITAR_AREA_MENSAJES
+ * \brief Codigo para indicar que el area de mensajes fue deseleccionado (no clickeado) por el usuario.
+ */
+#define DESHABILITAR_AREA_MENSAJES 0
+
+
+/**
  * \def HABILITAR_ESCRIBIR_MENSAJE
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir un mensaje esta habilitado.
+ * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir un mensaje se encuentra habilitado.
  */
 #define HABILITAR_ESCRIBIR_MENSAJE 1
 
 /**
  * \def DESHABILITAR_ESCRIBIR_MENSAJE
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir un mensaje esta deshabilitado.
+ * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir un mensaje se encuentra deshabilitado.
  */
 #define DESHABILITAR_ESCRIBIR_MENSAJE 0
 
@@ -95,6 +128,7 @@ typedef struct
  */
 typedef struct
 {
+    sfRectangleShape *areaMensajes;
     sfRectangleShape *barraEscribirMensaje;     /**< Barra donde el usuario escribe el mensaje. */
     sfRectangleShape *barraSeparacionNombre;    /**< Barra decorativa que separa el panel del nombre de usuario. */
     sfRectangleShape *barraSeparacionTitulo;    /**< Barra decorativa que separa el panel del titulo de la interfaz. */
@@ -104,11 +138,21 @@ typedef struct
     sfRectangleShape *ventanaEmergente;         /**< Rectangulo de la ventana emergente. */
 } s_recursosComunesContactosSalasElementos;
 
+/** \struct s_recursosComunesContactosSalasVistas
+ * \brief Contiene todas las vistas comunes (compartidas) entre las interfaces de contactos y salas.
+ */
+typedef struct
+{
+    sfView *UI;                            /**< Vista fija que muestra la interfaz del usuario. */
+    sfView *mensajes;                      /**< Vista movil que navega sobre el historial de mensajes. */
+} s_recursosComunesContactosSalasVistas;
+
 /** \struct s_recursosComunesContactosSalasHabilitaciones
  * \brief Contiene todas las habilitaciones comunes (compartidas) entre las interfaces de contactos y salas.
  */
 typedef struct
 {
+    bool areaMensajes;                          /**< Indicar si el area de mensajes fue seleccionado/deseleccionado por el usuario. */
     bool escribirMensaje;                       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir un mensaje. */
     bool notificaciones;                        /**< Abrir/cerrar la ventana emergente de notificaciones. */
     bool puntoInsercion;                        /**< Activar/desactivar el punto de insercion. */
@@ -123,7 +167,8 @@ typedef struct
     s_recursosComunesContactosSalasTexto texto;
     s_recursosComunesContactosSalasElementos elementos;
     s_recursosComunesContactosSalasHabilitaciones habilitaciones;
-    char bufferMensaje [MAX_BUFFER_MENSAJE];                /**< Buffer donde se guarda el mensaje que escribe el usuario. */
+    s_recursosComunesContactosSalasVistas vistas;
+    char bufferMensaje [MAX_BUFFER_MENSAJE];                         /**< Buffer donde se guarda el mensaje que escribe el usuario. */
 } s_recursosComunesContactosSalas;
 
 
@@ -134,10 +179,9 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+/** \brief Inicializar los recursos graficos y vistas comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * recursosComunesContactosSalas_inicializarTexto e recursosComunesContactosSalas_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas y vistas en NULL y luego crear cada recurso y vista.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
@@ -148,8 +192,7 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego invocar a las funciones recursosComunesContactosSalas_configurarTexto e
- * recursosComunesContactosSalas_configurarElementos para configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -159,8 +202,7 @@ void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *
 
 /** \brief Establecer el tamanio y la posicion sobre la ventana de cada recurso grafico comun (compartido) entre las interfaces de contactos y salas
  *
- * Invocar a las funciones recursosComunesContactosSalas_tamYPosVentanaTexto e recursosComunesContactosSalas_tamYPosVentanaElementos para establecer a todos los recursos
- * graficos un tamanio y posicion sobre la ventana.
+ * Establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos, buffers y habilitaciones graficos comunes entre las interfaces de contactos y salas.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -188,9 +230,9 @@ void recursosComunesContactosSalas_renderizarTexto (sfRenderWindow *renderizado,
  */
 void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasElementos *recursosComunesContactosSalasElementos);
 
-/** \brief Liberar todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+/** \brief Liberar todos los recursos graficos y vistas comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Liberar, de manera segura, todos los recursos graficos comunes entre las interfaces de contactos y salas creados.
+ * Liberar, de manera segura, todos los recursos graficos y vistas comunes entre las interfaces de contactos y salas creados.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
@@ -200,10 +242,63 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
 
 
 /* ============================
+   FUNCIONES LOGICAS
+   ============================ */
+
+
+
+/** \brief Establecer un tamanio a las vistas comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * Establecer un tamanio, centro y viewport, en caso de ser necesario, a las vistas comunes entre las interfaces de contactos y salas.
+ *
+ * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
+ * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
+ *
+ */
+void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas, const s_ventana *ventana);
+
+/** \brief Renderizar la vista de mensajes.
+ *
+ * Establecer la vista de mensajes en el renderizado, y renderizar la lista de mensajes.
+ * No se limpia ni muestra la pantalla, solo los renderiza.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ *
+ */
+void renderizarVistaMensajes (s_aplicacion *aplicacion, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Renderizar los recursos graficos de las notificaciones.
+ *
+ * Si se encuentra habilitada la ventana emergente de notificaciones, renderizar los elementos y textos graficos, y la lista de notificaciones.
+ * No se limpia ni muestra la pantalla, solo los renderiza.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ *
+ */
+void renderizarNotificaciones (s_aplicacion *aplicacion, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+
+
+/* ============================
    FUNCIONES MANEJADORAS DE EVENTOS
    ============================ */
 
 
+
+/** \brief Manejar el evento de redimensionamiento de la ventana.
+ *
+ * Verificar que el nuevo tamanio de la ventana no exceda los valores de ancho y alto minimos, guardar los nuevos valores de la ventana, crear una nueva escala de elementos
+ * y de pixeles, establecer un nuevo tamanio y una nueva posicion a todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas, y ajustar
+ * la vistaUI (de la interfaz) al nuevo tamanio de la ventana.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param eventoRedimensionamiento Variable de evento que contiene los nuevos valores de la ventana redimensionada.
+ *
+ */
+void manejarRedimensionamientoVentanaContactosSalas (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoRedimensionamiento);
 
 /** \brief Manejar el evento de escribir mensaje.
  *
@@ -229,6 +324,18 @@ bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesCon
  *
  */
 bool manejarEnterEnviarMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_aplicacion *aplicacion);
+
+/** \brief Manejar el evento de scroll en el area de mensajes.
+ *
+ * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes segun el scroll realizado y la velocidad del scroll.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param eventoChar Variable de evento que contiene los valores sobre el scroll realizado.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+bool manejarScrollAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll);
 
 
 

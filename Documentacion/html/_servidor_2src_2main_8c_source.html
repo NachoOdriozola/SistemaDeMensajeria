@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Aplicacion de mensajes: C:/Users/ignac/Documents/AppDeMensajes/Servidor/src/main.c Source File</title>
+<title>Aplicación de mensajes: C:/Users/ignac/Documents/AplicacionDeMensajes/Servidor/src/main.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Aplicacion de mensajes
+   <div id="projectname">Aplicación de mensajes
    </div>
   </td>
  </tr>
@@ -119,7 +119,7 @@ $(function(){initNavTree('_servidor_2src_2main_8c_source.html','',''); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// --------------- INICIALIZAR Y CONFIGURAR LOS RECURSOS DEL SERVIDOR ---------------</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="logica_servidor_8h.html#a53b7ef71e18aa2c4c9b03e800f3efdc7">inicializarServidor</a> (&amp;servidor) == <a class="code hl_define" href="constantes_8h.html#a6ad5c3d7285e6180e1b0082faf4abe91">ERROR_INICIALIZACION</a>)</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    {</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <a class="code hl_function" href="logica_servidor_8h.html#a88c25300b2c71ae463b69b83066c8e96">liberarServidor</a> (&amp;servidor);</div>
@@ -147,7 +147,7 @@ $(function(){initNavTree('_servidor_2src_2main_8c_source.html','',''); });
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordflow">if</span> (nuevoCliente.<a class="code hl_variable" href="structs__cliente.html#a6e91849780a994f2adde299b33642829">sock</a> != INVALID_SOCKET)</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <a class="code hl_function" href="logica_servidor_8h.html#a8f1e0358f5959eed233f8c5eeaa9c551">procesarNuevoCliente</a> (&amp;nuevoCliente, &amp;(servidor.<a class="code hl_variable" href="structs__servidor.html#a7e8862c9c21f82346f6de42fa9b6b697">listaSimpleClientesNoAutenticados</a>));</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment">// Si un cliente de la lista simple de no autenticados o de la tabla hash env�a una solicitud, guarda su direccion y la solicitud para procesarla.</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment">// Si un cliente de la lista simple de no autenticados o de la tabla hash envia una solicitud, guarda su direccion y la solicitud para procesarla.</span></div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keywordflow">if</span> ((<a class="code hl_function" href="logica_servidor_8h.html#a4d6ebef2ee3f0284f9a9c87f1ecce279">recibirSolicitudEnListaSimple</a> (&amp;(servidor.<a class="code hl_variable" href="structs__servidor.html#a7e8862c9c21f82346f6de42fa9b6b697">listaSimpleClientesNoAutenticados</a>), &amp;clienteAProcesar, bufferSolicitud) == <a class="code hl_define" href="logica_servidor_8h.html#a1304920e8a8361a952d2bab744ac5039">RECIBIO_SOLICITUD</a>) ||</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>            (<a class="code hl_function" href="logica_servidor_8h.html#a9e87c0b7596ffa4d9c0e238e76a3d15d">recibirSolicitudEnTablaHash</a> (&amp;(servidor.<a class="code hl_variable" href="structs__servidor.html#a248c05e4bf58811a8e1ddadf9eee815d">tablaHashClientes</a>), &amp;clienteAProcesar, bufferSolicitud) == <a class="code hl_define" href="logica_servidor_8h.html#a1304920e8a8361a952d2bab744ac5039">RECIBIO_SOLICITUD</a>))</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        {</div>
