@@ -49,13 +49,13 @@
 
 
 
-/** \struct s_interfazConfigTexto
+/** \struct s_interfazConfigTextos
  * \brief Contiene todos los textos graficos de la interfaz de configuraciones.
  */
 typedef struct
 {
     sfText *textoConfig;
-} s_interfazConfigTexto;
+} s_interfazConfigTextos;
 
 /** \struct s_interfazConfigElementos
  * \brief Contiene todos los elementos graficos de la interfaz de configuraciones.
@@ -78,7 +78,7 @@ typedef struct
  */
 typedef struct
 {
-    s_interfazConfigTexto texto;
+    s_interfazConfigTextos textos;
     s_interfazConfigElementos elementos;
     s_interfazConfigHabilitaciones habilitaciones;
 } s_interfazConfig;
@@ -93,8 +93,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos de la interfaz de configuraciones.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * interfazConfig_inicializarTexto e interfazConfig_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
@@ -105,8 +104,7 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig);
 
 /** \brief Configurar y establecer el tamanio y la posicion sobre la ventana de los recursos graficos de la interfaz de configuraciones.
  *
- * Invocar a las funciones interfazAmigos_configurarTexto e interfazAmigos_configurarElementos para configurar cada recurso y luego invocar a las funciones
- * interfazConfig_tamYPosVentanaTexto e interfazConfig_tamYPosVentanaElementos para establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -146,9 +144,7 @@ void interfazConfig_actualizar (s_interfazConfig *interfazConfig);
  */
 void interfazConfig_renderizar (sfRenderWindow *renderizado, const s_interfazConfig *interfazConfig);
 
-/** \brief Liberar todos los recursos graficos creados de la interfaz de configuraciones.
- *
- * Liberar, de manera segura, todos los recursos graficos creados de la interfaz de configuraciones.
+/** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de configuraciones.
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *

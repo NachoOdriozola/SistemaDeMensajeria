@@ -52,13 +52,13 @@
 
 
 
-/** \struct s_interfazSalasTexto
+/** \struct s_interfazSalasTextos
  * \brief Contiene todos los textos graficos de la interfaz de salas.
  */
 typedef struct
 {
 
-} s_interfazSalasTexto;
+} s_interfazSalasTextos;
 
 /** \struct s_interfazSalasElementos
  * \brief Contiene todos los elementos graficos de la interfaz de salas.
@@ -81,7 +81,7 @@ typedef struct
  */
 typedef struct
 {
-    s_interfazSalasTexto texto;
+    s_interfazSalasTextos textos;
     s_interfazSalasElementos elementos;
     s_interfazSalasHabilitaciones habilitaciones;
 } s_interfazSalas;
@@ -96,8 +96,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos de la interfaz de salas.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * interfazSalas_inicializarTexto e interfazSalas_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
@@ -108,8 +107,7 @@ int interfazSalas_inicializar (s_interfazSalas *interfazSalas);
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego invocar a las funciones interfazSalas_configurarTexto e
- * interfazSalas_configurarElementos para configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -117,10 +115,7 @@ int interfazSalas_inicializar (s_interfazSalas *interfazSalas);
  */
 void interfazSalas_configurar (s_interfazSalas *interfazSalas, const s_fuentes *fuentes);
 
-/** \brief Establecer el tamanio y la posicion sobre la ventana de cada recurso grafico de la interfaz de salas.
- *
- * Invocar a las funciones interfazSalas_tamYPosPantallaTexto e interfazSalas_tamYPosPantallaElementos para establecer a todos los recursos
- * graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de salas.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -155,17 +150,16 @@ void interfazSalas_actualizar (s_aplicacion *app, s_interfazSalas *interfazSalas
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de salas sobre la ventana.
  *
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de salas en la ventana.
+ * Primero renderiza las vistas moviles y luego la vista de UI.
  *
- * \param app Puntero a la estructura base de la aplicacion.
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazSalas_renderizar (s_aplicacion *app, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_renderizar (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Liberar todos los recursos graficos creados de la interfaz de salas.
- *
- * Liberar, de manera segura, todos los recursos graficos creados de la interfaz de salas.
+/** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de salas.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *

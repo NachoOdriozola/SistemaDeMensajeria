@@ -107,7 +107,7 @@
 
 
 
-/** \struct s_recursosComunesContactosSalasTexto
+/** \struct s_recursosComunesContactosSalasTextos
  * \brief Contiene todos los textos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  */
 typedef struct
@@ -121,7 +121,7 @@ typedef struct
     sfText *notificaciones;             /**< Boton para abrir la ventana emergente de notificaciones. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
     sfText *tituloVentanaEmergente;     /**< Titulo de la ventana emergente. */
-} s_recursosComunesContactosSalasTexto;
+} s_recursosComunesContactosSalasTextos;
 
 /** \struct s_recursosComunesContactosSalasElementos
  * \brief Contiene todos los elementos graficos comunes (compartidos) entre las interfaces de contactos y salas.
@@ -164,7 +164,7 @@ typedef struct
  */
 typedef struct
 {
-    s_recursosComunesContactosSalasTexto texto;
+    s_recursosComunesContactosSalasTextos textos;
     s_recursosComunesContactosSalasElementos elementos;
     s_recursosComunesContactosSalasHabilitaciones habilitaciones;
     s_recursosComunesContactosSalasVistas vistas;
@@ -200,9 +200,7 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
  */
 void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_fuentes *fuentes);
 
-/** \brief Establecer el tamanio y la posicion sobre la ventana de cada recurso grafico comun (compartido) entre las interfaces de contactos y salas
- *
- * Establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico comun (compartido) entre las interfaces de contactos y salas
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos, buffers y habilitaciones graficos comunes entre las interfaces de contactos y salas.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -210,29 +208,27 @@ void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *
  */
 void recursosComunesContactosSalas_tamYPosVentana (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana);
 
-/** \brief Renderizar los recursos graficos de texto comunes (compartidos) entre las interfaces de contactos y salas.
+/** \brief Renderizar los recursos graficos de textos comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalasTexto Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
-void recursosComunesContactosSalas_renderizarTexto (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasTexto *recursosComunesContactosSalasTexto);
+void recursosComunesContactosSalas_renderizarTextos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasTextos *textos);
 
 /** \brief Renderizar los recursos graficos de elementos comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalasElementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
-void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasElementos *recursosComunesContactosSalasElementos);
+void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasElementos *elementos);
 
-/** \brief Liberar todos los recursos graficos y vistas comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * Liberar, de manera segura, todos los recursos graficos y vistas comunes entre las interfaces de contactos y salas creados.
+/** \brief Liberar, de manera segura, todos los recursos graficos y vistas comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
@@ -260,7 +256,7 @@ void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVis
 /** \brief Renderizar la vista de mensajes.
  *
  * Establecer la vista de mensajes en el renderizado, y renderizar la lista de mensajes.
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
@@ -271,7 +267,7 @@ void renderizarVistaMensajes (s_aplicacion *aplicacion, const s_recursosComunesC
 /** \brief Renderizar los recursos graficos de las notificaciones.
  *
  * Si se encuentra habilitada la ventana emergente de notificaciones, renderizar los elementos y textos graficos, y la lista de notificaciones.
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.

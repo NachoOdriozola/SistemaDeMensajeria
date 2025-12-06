@@ -8,14 +8,23 @@
 
 
 
-static int interfazConfig_inicializarTexto (s_interfazConfigTexto *texto);
+static void interfazConfig_inicializarValoresNulosTextos (s_interfazConfigTextos *textos);
+static void interfazConfig_inicializarValoresNulosElementos (s_interfazConfigElementos *elementos);
+
+static int interfazConfig_inicializarTextos (s_interfazConfigTextos *textos);
 static int interfazConfig_inicializarElementos (s_interfazConfigElementos *elementos);
 
-static void interfazConfig_configurarTexto (s_interfazConfigTexto *texto, const s_fuentes *fuentes);
+static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, const s_fuentes *fuentes);
 static void interfazConfig_configurarElementos (s_interfazConfigElementos *elementos);
 
-static void interfazConfig_tamYPosVentanaTexto (s_interfazConfigTexto *texto, const s_ventana *ventana);
+static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos, const s_ventana *ventana);
 static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos, const s_ventana *ventana);
+
+static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const s_interfazConfigTextos *textos);
+static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const s_interfazConfigElementos *elementos);
+
+static void interfazConfig_liberarTextos (s_interfazConfigTextos *textos);
+static void interfazConfig_liberarElementos (s_interfazConfigElementos *elementos);
 
 
 
@@ -29,21 +38,21 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazConfig->texto.textoConfig = NULL;
+    interfazConfig_inicializarValoresNulosTextos (&(interfazConfig->textos));
 
 
     // ELEMENTOS
 
-    interfazConfig->elementos.rectanguloVolver = NULL;
+    interfazConfig_inicializarValoresNulosElementos (&(interfazConfig->elementos));
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    if (interfazConfig_inicializarTexto (&(interfazConfig->texto)) == ERROR_INICIALIZACION)
+    if (interfazConfig_inicializarTextos (&(interfazConfig->textos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -60,9 +69,9 @@ void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuente
 {
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazConfig_configurarTexto (&(interfazConfig->texto), fuentes);
+    interfazConfig_configurarTextos (&(interfazConfig->textos), fuentes);
 
 
     // ELEMENTOS
@@ -72,9 +81,9 @@ void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuente
 
     // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazConfig_tamYPosVentanaTexto (&(interfazConfig->texto), ventana);
+    interfazConfig_tamYPosVentanaTextos (&(interfazConfig->textos), ventana);
 
 
     // ELEMENTOS
@@ -91,7 +100,7 @@ void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *in
     {
 
     case sfEvtClosed:
-        aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+        sfRenderWindow_close (aplicacion->renderizado);
         break;
 
 
@@ -127,12 +136,12 @@ void interfazConfig_renderizar (sfRenderWindow *renderizado, const s_interfazCon
 
     // ELEMENTOS
 
-    sfRenderWindow_drawRectangleShape (renderizado, interfazConfig->elementos.rectanguloVolver, NULL);
+    interfazConfig_renderizarElementos (renderizado, &(interfazConfig->elementos));
 
 
-    // TEXTO
+    // TEXTOS
 
-    sfRenderWindow_drawText (renderizado, interfazConfig->texto.textoConfig, NULL);
+    interfazConfig_renderizarTextos (renderizado, &(interfazConfig->textos));
 
 
     sfRenderWindow_display (renderizado);
@@ -142,14 +151,14 @@ void interfazConfig_liberar (s_interfazConfig *interfazConfig)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    DESTRUCTOR_SEGURO_TEXTO (interfazConfig->texto.textoConfig);
+    interfazConfig_liberarTextos (&(interfazConfig->textos));
 
 
     // ELEMENTOS
 
-    DESTRUCTOR_SEGURO_RECTANGULO (interfazConfig->elementos.rectanguloVolver);
+    interfazConfig_liberarElementos (&(interfazConfig->elementos));
 }
 
 
@@ -160,19 +169,37 @@ void interfazConfig_liberar (s_interfazConfig *interfazConfig)
 
 
 
+/** \brief Establecer en NULL a todos los textos graficos de la interfaz de configuraciones.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ */
+static void interfazConfig_inicializarValoresNulosTextos (s_interfazConfigTextos *textos)
+{
+    textos->textoConfig = NULL;
+}
+
+/** \brief Establecer en NULL a todos los elementos graficos de la interfaz de configuraciones.
+ *
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ */
+static void interfazConfig_inicializarValoresNulosElementos (s_interfazConfigElementos *elementos)
+{
+    elementos->rectanguloVolver = NULL;
+}
+
 /** \brief Inicializar los recursos graficos de texto de la interfaz de configuraciones.
  *
  * Crea todos los recursos graficos de texto. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
  *
- * \param texto Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazConfig_inicializarTexto (s_interfazConfigTexto *texto)
+static int interfazConfig_inicializarTextos (s_interfazConfigTextos *textos)
 {
-    texto->textoConfig = sfText_create ();
-    if (!texto->textoConfig)
+    textos->textoConfig = sfText_create ();
+    if (!textos->textoConfig)
     {
         perror ("\nERROR - Interfaz de configuraciones, crear texto textoConfig.\n");
         return ERROR_INICIALIZACION;
@@ -204,25 +231,21 @@ static int interfazConfig_inicializarElementos (s_interfazConfigElementos *eleme
     return EXITO;
 }
 
-/** \brief Configurar los recursos graficos de texto de la interfaz de configuraciones.
+/** \brief Configurar los recursos graficos de textos de la interfaz de configuraciones.
  *
- * Configura todos los recursos graficos de texto.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazConfig_configurarTexto (s_interfazConfigTexto *texto, const s_fuentes *fuentes)
+static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, const s_fuentes *fuentes)
 {
     // textoConfig
-    sfText_setFont (texto->textoConfig, fuentes->fuente1);
-    sfText_setString (texto->textoConfig, "CONFIGURACIONES");
-    sfText_setFillColor (texto->textoConfig, sfColor_fromRGB (0, 0, 0));
+    sfText_setFont (textos->textoConfig, fuentes->fuente1);
+    sfText_setString (textos->textoConfig, "CONFIGURACIONES");
+    sfText_setFillColor (textos->textoConfig, sfColor_fromRGB (0, 0, 0));
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de configuraciones.
- *
- * Configura todos los recursos graficos de elementos.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  *
@@ -233,24 +256,20 @@ static void interfazConfig_configurarElementos (s_interfazConfigElementos *eleme
     sfRectangleShape_setFillColor (elementos->rectanguloVolver, sfColor_fromRGB (0, 0, 0));
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada texto grafico de la interfaz de configuraciones.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de configuraciones.
  *
- * Establecer a todos los textos graficos un tamanio y posicion sobre la ventana.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazConfig_tamYPosVentanaTexto (s_interfazConfigTexto *texto, const s_ventana *ventana)
+static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos, const s_ventana *ventana)
 {
     // textoConfig
-    sfText_setPosition (texto->textoConfig, (sfVector2f){1000 * ventana->escalaElementos.x, 500 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (texto->textoConfig, 36 * ventana->escalaPixeles);
+    sfText_setPosition (textos->textoConfig, (sfVector2f){1000 * ventana->escalaElementos.x, 500 * ventana->escalaElementos.y});
+    sfText_setCharacterSize (textos->textoConfig, 36 * ventana->escalaPixeles);
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada elemento grafico de la interfaz de configuraciones.
- *
- * Establecer a todos los elementos graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de configuraciones.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -263,7 +282,49 @@ static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *e
     sfRectangleShape_setSize (elementos->rectanguloVolver, (sfVector2f){60 * ventana->escalaElementos.x, 60 * ventana->escalaElementos.y});
 }
 
+/** \brief Renderizar los recursos graficos de textos de la interfaz de configuraciones.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ *
+ */
+static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const s_interfazConfigTextos *textos)
+{
+     sfRenderWindow_drawText (renderizado, textos->textoConfig, NULL);
+}
 
+/** \brief Renderizar los recursos graficos de elementos de la interfaz de configuraciones.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ *
+ */
+static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const s_interfazConfigElementos *elementos)
+{
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->rectanguloVolver, NULL);
+}
+
+/** \brief Liberar, de manera segura, todas los textos graficos de la interfaz de configuraciones.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ */
+static void interfazConfig_liberarTextos (s_interfazConfigTextos *textos)
+{
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoConfig);
+}
+
+/** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de configuraciones.
+ *
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ */
+static void interfazConfig_liberarElementos (s_interfazConfigElementos *elementos)
+{
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->rectanguloVolver);
+}
 
 
 

@@ -17,17 +17,24 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
    ============================ */
 
 
+static void interfazSalas_inicializarValoresNulosTextos (s_interfazSalasTextos *textos);
+static void interfazSalas_inicializarValoresNulosElementos (s_interfazSalasElementos *elementos);
 
-static int interfazSalas_inicializarTexto (s_interfazSalasTexto *texto);
+static int interfazSalas_inicializarTextos (s_interfazSalasTextos *textos);
 static int interfazSalas_inicializarElementos (s_interfazSalasElementos *elementos);
 
-static void interfazSalas_configurarTexto (s_interfazSalasTexto *texto, const s_fuentes *fuentes);
+static void interfazSalas_configurarTextos (s_interfazSalasTextos *textos, const s_fuentes *fuentes);
 static void interfazSalas_configurarElementos (s_interfazSalasElementos *elementos);
 
-static void interfazSalas_tamYPosVentanaTexto (s_interfazSalasTexto *texto, const s_ventana *ventana);
+static void interfazSalas_tamYPosVentanaTextos (s_interfazSalasTextos *textos, const s_ventana *ventana);
 static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *elementos, const s_ventana *ventana);
 
 static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const s_interfazSalasTextos *textos);
+static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const s_interfazSalasElementos *elementos);
+
+static void interfazSalas_liberarTextos (s_interfazSalasTextos *textos);
+static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos);
 
 
 
@@ -56,21 +63,21 @@ int interfazSalas_inicializar (s_interfazSalas *interfazSalas)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-
+    interfazSalas_inicializarTextos (&(interfazSalas->textos));
 
 
     // ELEMENTOS
 
-
+    interfazSalas_inicializarElementos (&(interfazSalas->elementos));
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    if (interfazSalas_inicializarTexto (&(interfazSalas->texto)) == ERROR_INICIALIZACION)
+    if (interfazSalas_inicializarTextos (&(interfazSalas->textos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -92,11 +99,12 @@ void interfazSalas_configurar (s_interfazSalas *interfazSalas, const s_fuentes *
     // --------------- CONFIGURAR BUFFERS ---------------
 
 
+
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazSalas_configurarTexto (&(interfazSalas->texto), fuentes);
+    interfazSalas_configurarTextos (&(interfazSalas->textos), fuentes);
 
 
     // ELEMENTOS
@@ -108,9 +116,9 @@ void interfazSalas_tamYPosVentana (s_interfazSalas *interfazSalas, const s_venta
 {
     // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazSalas_tamYPosVentanaTexto (&(interfazSalas->texto), ventana);
+    interfazSalas_tamYPosVentanaTextos (&(interfazSalas->textos), ventana);
 
 
     // ELEMENTOS
@@ -128,7 +136,7 @@ void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSa
     {
 
     case sfEvtClosed:
-        aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+        sfRenderWindow_close (aplicacion->renderizado);
         break;
 
 
@@ -233,10 +241,14 @@ void interfazSalas_liberar (s_interfazSalas *interfazSalas)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
+
+    interfazSalas_liberarTextos (&(interfazSalas->textos));
 
 
     // ELEMENTOS
+
+    interfazSalas_liberarElementos (&(interfazSalas->elementos));
 }
 
 
@@ -275,15 +287,15 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
     // TEXTO
 
     // auxEscribirMensaje
-    sfText_setString (recursosComunesContactosSalas->texto.auxEscribirMensaje, "");
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
 
     // nombreCambiarInterfaz
-    sfText_setString (recursosComunesContactosSalas->texto.nombreCambiarInterfaz, "SALAS");
-    sfText_setPosition (recursosComunesContactosSalas->texto.nombreCambiarInterfaz, (sfVector2f){352 * ventana->escalaElementos.x, 574 * ventana->escalaElementos.y});
+    sfText_setString (recursosComunesContactosSalas->textos.nombreCambiarInterfaz, "SALAS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.nombreCambiarInterfaz, (sfVector2f){352 * ventana->escalaElementos.x, 574 * ventana->escalaElementos.y});
 
     // tituloInterfaz
-    sfText_setString (recursosComunesContactosSalas->texto.tituloInterfaz, "CONTACTOS");
-    sfText_setPosition (recursosComunesContactosSalas->texto.tituloInterfaz, (sfVector2f){62 * ventana->escalaElementos.x, 45 * ventana->escalaElementos.y});
+    sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "CONTACTOS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){62 * ventana->escalaElementos.x, 45 * ventana->escalaElementos.y});
 
 
     // ELEMENTOS
@@ -298,16 +310,34 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
 
 
 
-/** \brief Inicializar los recursos graficos de texto de la interfaz de salas.
+/** \brief Establecer en NULL a todos los textos graficos de la interfaz de salas.
  *
- * Crea todos los recursos graficos de texto. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
+ */
+static void interfazSalas_inicializarValoresNulosTextos (s_interfazSalasTextos *textos)
+{
+
+}
+
+/** \brief Establecer en NULL a todos los elementos graficos de la interfaz de salas.
  *
- * \param texto Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
+ */
+static void interfazSalas_inicializarValoresNulosElementos (s_interfazSalasElementos *elementos)
+{
+
+}
+
+/** \brief Inicializar los recursos graficos de textos de la interfaz de salas.
+ *
+ * Crea todos los recursos graficos de textos. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazSalas_inicializarTexto (s_interfazSalasTexto *texto)
+static int interfazSalas_inicializarTextos (s_interfazSalasTextos *textos)
 {
 
 
@@ -332,22 +362,18 @@ static int interfazSalas_inicializarElementos (s_interfazSalasElementos *element
     return EXITO;
 }
 
-/** \brief Configurar los recursos graficos de texto de la interfaz de salas.
+/** \brief Configurar los recursos graficos de textos de la interfaz de salas.
  *
- * Configura todos los recursos graficos de texto.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazSalas_configurarTexto (s_interfazSalasTexto *texto, const s_fuentes *fuentes)
+static void interfazSalas_configurarTextos (s_interfazSalasTextos *textos, const s_fuentes *fuentes)
 {
 
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de salas.
- *
- * Configura todos los recursos graficos de elementos.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  *
@@ -357,22 +383,18 @@ static void interfazSalas_configurarElementos (s_interfazSalasElementos *element
 
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada texto grafico de la interfaz de salas.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de salas.
  *
- * Establecer a todos los textos graficos un tamanio y posicion sobre la ventana.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazSalas_tamYPosVentanaTexto (s_interfazSalasTexto *texto, const s_ventana *ventana)
+static void interfazSalas_tamYPosVentanaTextos (s_interfazSalasTextos *textos, const s_ventana *ventana)
 {
 
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada elemento grafico de la interfaz de salas.
- *
- * Establecer a todos los elementos graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de salas.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -406,11 +428,13 @@ static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_i
     // ELEMENTOS
 
     recursosComunesContactosSalas_renderizarElementos (aplicacion->renderizado, &(recursosComunesContactosSalas->elementos));
+    interfazSalas_renderizarElementos (aplicacion->renderizado, &(interfazSalas->elementos));
 
 
-    // TEXTO
+    // TEXTOS
 
-    recursosComunesContactosSalas_renderizarTexto (aplicacion->renderizado, &(recursosComunesContactosSalas->texto));
+    recursosComunesContactosSalas_renderizarTextos (aplicacion->renderizado, &(recursosComunesContactosSalas->textos));
+    interfazSalas_renderizarTextos (aplicacion->renderizado, &(interfazSalas->textos));
 
 
     // --------------- RENDERIZAR NOTIFICACIONES ---------------
@@ -422,6 +446,50 @@ static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_i
 
     if (recursosComunesContactosSalas->habilitaciones.puntoInsercion == HABILITAR_PUNTO_INSERCION)
         sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
+}
+
+/** \brief Renderizar los recursos graficos de textos de la interfaz de salas.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
+ *
+ */
+static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const s_interfazSalasTextos *textos)
+{
+
+}
+
+/** \brief Renderizar los recursos graficos de elementos de la interfaz de salas.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
+ *
+ */
+static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const s_interfazSalasElementos *elementos)
+{
+
+}
+
+/** \brief Liberar, de manera segura, todas los textos graficos de la interfaz de salas.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
+ */
+static void interfazSalas_liberarTextos (s_interfazSalasTextos *textos)
+{
+
+}
+
+/** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de salas.
+ *
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
+ */
+static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos)
+{
+
 }
 
 
@@ -449,7 +517,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
     {
         recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITAR_ESCRIBIR_MENSAJE;
         recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->texto.auxEscribirMensaje);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
         sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){(512.5 * (ventana->escalaElementos.x)) + limiteTextoAux.width, 943 * (ventana->escalaElementos.y)});
         return EVENTO_MANEJADO;
     }
@@ -467,15 +535,15 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
  */
 static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->texto.notificaciones))
+    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
     {
         if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
             recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
         else
             recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
         recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        sfText_setString (recursosComunesContactosSalas->texto.tituloVentanaEmergente, "NOTIFICACIONES");
-        sfText_setPosition (recursosComunesContactosSalas->texto.tituloVentanaEmergente, (sfVector2f){840 * aplicacion->ventana.escalaElementos.x, 400 * aplicacion->ventana.escalaElementos.y});
+        sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
+        sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840 * aplicacion->ventana.escalaElementos.x, 400 * aplicacion->ventana.escalaElementos.y});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;
@@ -491,7 +559,7 @@ static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recurs
  */
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (clickEnTexto (renderizado, recursosComunesContactosSalas->texto.cerrarVentanaEmergente))
+    if (clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
     {
         recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
         recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
@@ -542,7 +610,7 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recur
  */
 static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->texto.configuraciones))
+    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
     {
         aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
         aplicacion->usuario.ultimaInterfazUtilizada = INTERFAZ_SALAS;

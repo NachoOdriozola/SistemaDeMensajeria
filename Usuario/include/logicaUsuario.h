@@ -296,7 +296,6 @@ typedef struct
  */
 typedef struct
 {
-    bool aplicacionEjecutandose;        /**< Estado en el que se encuentra la aplicacion. */
     sfRenderWindow *renderizado;        /**< Renderizado de la ventana. */
     SOCKET sock;                        /**< Socket del usuario. */
     s_ventana ventana;

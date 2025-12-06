@@ -49,13 +49,13 @@
 
 
 
-/** \struct s_interfazAutenticacionTexto
+/** \struct s_interfazAutenticacionTextos
  * \brief Contiene todos los textos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
     sfText *textoRegistrarUsuario;  /**< Texto interrogativo para registrar usuario. */
-} s_interfazAutenticacionTexto;
+} s_interfazAutenticacionTextos;
 
 /** \struct s_interfazAutenticacionElementos
  * \brief Contiene todos los elementos graficos de la interfaz de autenticacion.
@@ -78,7 +78,7 @@ typedef struct
  */
 typedef struct
 {
-    s_interfazAutenticacionTexto texto;
+    s_interfazAutenticacionTextos textos;
     s_interfazAutenticacionElementos elementos;
     s_interfazAutenticacionHabilitaciones habilitaciones;
 } s_interfazAutenticacion;
@@ -93,8 +93,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos de la interfaz de autenticacion.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * interfazAutenticacion_inicializarTexto e interfazAutenticacion_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
@@ -103,10 +102,9 @@ typedef struct
  */
 int interfazAutenticacion_inicializar (s_interfazAutenticacion *interfazAutenticacion);
 
-/** \brief Configurar y establecer el tamanio y la posicion sobre la ventana de los recursos graficos de la interfaz de autenticacion.
+/** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de autenticacion.
  *
- * Invocar a las funciones interfazAutenticacion_configurarTexto e interfazAutenticacion_configurarElementos para configurar cada recurso y luego invocar a las funciones
- * interfazAutenticacion_tamYPosVentanaTexto e interfazAutenticacion_tamYPosVentanaElementos para establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -148,9 +146,7 @@ void interfazAutenticacion_actualizar (s_interfazAutenticacion *interfazAutentic
  */
 void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const s_interfazAutenticacion *interfazAutenticacion, const s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
-/** \brief Liberar todos los recursos graficos creados de la interfaz de autenticacion.
- *
- * Liberar, de manera segura, todos los recursos graficos creados de la interfaz de autenticacion.
+/** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de autenticacion.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *

@@ -76,14 +76,14 @@
 
 
 
-/** \struct s_interfazContactosTexto
+/** \struct s_interfazContactosTextos
  * \brief Contiene todos los textos graficos de la interfaz de contactos.
  */
 typedef struct
 {
     sfText *agendarContacto;        /**< Boton para abrir la ventana emergente de agendar contacto. */
     sfText *auxAgendarContacto;     /**< Muestra el nombre del contacto que escribe el usuario. */
-} s_interfazContactosTexto;
+} s_interfazContactosTextos;
 
 /** \struct s_interfazContactosElementos
  * \brief Contiene todos los elementos graficos de la interfaz de contactos.
@@ -107,7 +107,7 @@ typedef struct
  */
 typedef struct
 {
-    s_interfazContactosTexto texto;
+    s_interfazContactosTextos textos;
     s_interfazContactosElementos elementos;
     s_interfazContactosHabilitaciones habilitaciones;
     char bufferAgendarContacto [MAX_NOMBRE_USUARIO];    /**< Buffer donde se guarda el nombre del contacto que escribe el usuario. */
@@ -123,8 +123,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos de la interfaz de contactos.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * interfazContactos_inicializarTexto e interfazContactos_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
@@ -135,8 +134,7 @@ int interfazContactos_inicializar (s_interfazContactos *interfazContactos);
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de contactos.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego invocar a las funciones interfazContactos_configurarTexto e
- * interfazContactos_configurarElementos para configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -144,10 +142,7 @@ int interfazContactos_inicializar (s_interfazContactos *interfazContactos);
  */
 void interfazContactos_configurar (s_interfazContactos *interfazContactos, const s_fuentes *fuentes);
 
-/** \brief Establecer el tamanio y la posicion sobre la ventana de cada recurso grafico de la interfaz de contactos.
- *
- * Invocar a las funciones interfazContactos_tamYPosPantallaTexto e interfazContactos_tamYPosPantallaElementos para establecer a todos los recursos
- * graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de contactos.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
@@ -191,9 +186,7 @@ void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos
  */
 void interfazContactos_renderizar (s_aplicacion *aplicacion, const s_interfazContactos *interfazContactos, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Liberar todos los recursos graficos creados de la interfaz de contactos.
- *
- * Liberar, de manera segura, todos los recursos graficos creados de la interfaz de contactos.
+/** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de contactos.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *

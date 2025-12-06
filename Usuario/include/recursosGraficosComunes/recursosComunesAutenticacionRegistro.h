@@ -112,7 +112,7 @@
 
 
 
-/** \struct s_recursosComunesAutenticacionRegistroTexto
+/** \struct s_recursosComunesAutenticacionRegistroTextos
  * \brief Contiene todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
@@ -126,7 +126,7 @@ typedef struct
     sfText *ingresoIncorrecto;
     sfText *textoBotonIngresar;         /**< Texto encontrado dentro del boton para ingresar usuario. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
-} s_recursosComunesAutenticacionRegistroTexto;
+} s_recursosComunesAutenticacionRegistroTextos;
 
 /** \struct s_recursosComunesAutenticacionRegistroElementos
  * \brief Contiene todos los elementos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
@@ -159,7 +159,7 @@ typedef struct
  */
 typedef struct
 {
-    s_recursosComunesAutenticacionRegistroTexto texto;
+    s_recursosComunesAutenticacionRegistroTextos textos;
     s_recursosComunesAutenticacionRegistroElementos elementos;
     s_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
     char bufferNombre [MAX_INGRESO_NOMBRE];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
@@ -176,8 +176,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * recursosComunesAutenticacionRegistro_inicializarTexto e recursosComunesAutenticacionRegistro_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
@@ -186,10 +185,9 @@ typedef struct
  */
 int recursosComunesAutenticacionRegistro_inicializar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
-/** \brief Configurar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
+/** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico comun (compartido) entre las interfaces de autenticacion y registro.
  *
- * Invocar a las funciones recursosComunesAutenticacionRegistro_configurarTexto e recursosComunesAutenticacionRegistro_configurarElementos para configurar cada recurso y luego invocar a las funciones
- * recursosComunesAutenticacionRegistro_tamYPosVentanaTexto e recursosComunesAutenticacionRegistro_tamYPosVentanaElementos para establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -199,27 +197,25 @@ void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutentica
 
 /** \brief Renderizar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesAutenticacionRegistroTexto Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarTexto (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroTexto *recursosComunesAutenticacionRegistroTexto);
+void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroTextos *textos);
 
 /** \brief Renderizar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro
  *
- * No se limpia ni muestra la pantalla, solo los renderiza.
+ * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesAutenticacionRegistroElementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroElementos *recursosComunesAutenticacionRegistroElementos);
+void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroElementos *elementos);
 
-/** \brief Liberar todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * Liberar, de manera segura, todos los recursos graficos comunes entre las interfaces de autenticacion y registro creados.
+/** \brief Liberar, de manera segura, todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
@@ -237,9 +233,7 @@ void recursosComunesAutenticacionRegistro_liberar (s_recursosComunesAutenticacio
 /** \brief Manejar el evento de click en el boton para guardar los datos de autenticacion.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param botonGuardarAutenticacion Puntero al elemento del boton para guardar los datos de autenticacion.
- * \param auxGuardarAutenticacion Puntero al texto auxiliar para guardar los datos de autenticacion.
- * \param habilitaciones Puntero a la estructura que contiene todos las habilitaciones comunes (compartidas) entre las interfaces de autenticacion y registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *

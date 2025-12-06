@@ -10,20 +10,30 @@
 static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
+
 /* ============================
    DECLARACIONES DE FUNCIONES COMPLEMENTARIAS
    ============================ */
 
 
 
-static int interfazRegistro_inicializarTexto (s_interfazRegistroTexto *texto);
+static void interfazRegistro_inicializarValoresNulosTextos (s_interfazRegistroTextos *textos);
+static void interfazRegistro_inicializarValoresNulosElementos (s_interfazRegistroElementos *elementos);
+
+static int interfazRegistro_inicializarTextos (s_interfazRegistroTextos *textos);
 static int interfazRegistro_inicializarElementos (s_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_configurarTexto (s_interfazRegistroTexto *texto, const s_fuentes *fuentes);
+static void interfazRegistro_configurarTextos (s_interfazRegistroTextos *textos, const s_fuentes *fuentes);
 static void interfazRegistro_configurarElementos (s_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_tamYPosVentanaTexto (s_interfazRegistroTexto *texto);
+static void interfazRegistro_tamYPosVentanaTextos (s_interfazRegistroTextos *textos);
 static void interfazRegistro_tamYPosVentanaElementos (s_interfazRegistroElementos *elementos);
+
+static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_interfazRegistroTextos *textos);
+static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_interfazRegistroElementos *elementos);
+
+static void interfazRegistro_liberarTextos (s_interfazRegistroTextos *textos);
+static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elementos);
 
 
 
@@ -53,24 +63,21 @@ int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazRegistro->texto.textoInformativoContrasenia = NULL;
-    interfazRegistro->texto.textoInformativoNombre = NULL;
+    interfazRegistro_inicializarValoresNulosTextos (&(interfazRegistro->textos));
 
 
     // ELEMENTOS
 
-    interfazRegistro->elementos.flechaVolverBarra = NULL;
-    interfazRegistro->elementos.flechaVolverTriangulo1 = NULL;
-    interfazRegistro->elementos.flechaVolverTriangulo2 = NULL;
+    interfazRegistro_inicializarValoresNulosElementos (&(interfazRegistro->elementos));
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    if (interfazRegistro_inicializarTexto (&(interfazRegistro->texto)) == ERROR_INICIALIZACION)
+    if (interfazRegistro_inicializarTextos (&(interfazRegistro->textos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -97,9 +104,9 @@ void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazRegistro_configurarTexto (&(interfazRegistro->texto), fuentes);
+    interfazRegistro_configurarTextos (&(interfazRegistro->textos), fuentes);
 
 
     // ELEMENTOS
@@ -109,9 +116,9 @@ void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_
 
     // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    interfazRegistro_tamYPosVentanaTexto (&(interfazRegistro->texto));
+    interfazRegistro_tamYPosVentanaTextos (&(interfazRegistro->textos));
 
 
     // ELEMENTOS
@@ -129,7 +136,7 @@ void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro
     {
 
     case sfEvtClosed:
-        aplicacion->aplicacionEjecutandose = DETENER_APLICACION;
+        sfRenderWindow_close (aplicacion->renderizado);
         break;
 
 
@@ -203,16 +210,13 @@ void interfazRegistro_renderizar (sfRenderWindow *renderizado, const s_interfazR
     // ELEMENTOS
 
     recursosComunesAutenticacionRegistro_renderizarElementos (renderizado, &(recursosComunesAutenticacionRegistro->elementos));
-    sfRenderWindow_drawRectangleShape (renderizado, interfazRegistro->elementos.flechaVolverBarra, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, interfazRegistro->elementos.flechaVolverTriangulo1, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, interfazRegistro->elementos.flechaVolverTriangulo2, NULL);
+    interfazRegistro_renderizarElementos (renderizado, &(interfazRegistro->elementos));
 
 
-    // TEXTO
+    // TEXTOS
 
-    recursosComunesAutenticacionRegistro_renderizarTexto (renderizado, &(recursosComunesAutenticacionRegistro->texto));
-    sfRenderWindow_drawText (renderizado, interfazRegistro->texto.textoInformativoContrasenia, NULL);
-    sfRenderWindow_drawText (renderizado, interfazRegistro->texto.textoInformativoNombre, NULL);
+    recursosComunesAutenticacionRegistro_renderizarTextos (renderizado, &(recursosComunesAutenticacionRegistro->textos));
+    interfazRegistro_renderizarTextos (renderizado, &(interfazRegistro->textos));
 
 
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
@@ -228,17 +232,14 @@ void interfazRegistro_liberar (s_interfazRegistro *interfazRegistro)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
-    // TEXTO
+    // TEXTOS
 
-    DESTRUCTOR_SEGURO_TEXTO (interfazRegistro->texto.textoInformativoNombre);
-    DESTRUCTOR_SEGURO_TEXTO (interfazRegistro->texto.textoInformativoContrasenia);
+    interfazRegistro_liberarTextos (&(interfazRegistro->textos));
 
 
     // ELEMENTOS
 
-    DESTRUCTOR_SEGURO_RECTANGULO (interfazRegistro->elementos.flechaVolverBarra);
-    DESTRUCTOR_SEGURO_RECTANGULO (interfazRegistro->elementos.flechaVolverTriangulo1);
-    DESTRUCTOR_SEGURO_RECTANGULO (interfazRegistro->elementos.flechaVolverTriangulo2);
+    interfazRegistro_liberarElementos (&(interfazRegistro->elementos));
 }
 
 
@@ -313,29 +314,29 @@ static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistr
     // TEXTO
 
     // auxEscribirContrasenia
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.auxEscribirContrasenia, (sfVector2f){64, 262});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){64, 262});
 
     // auxEscribirNombre
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.auxEscribirNombre, (sfVector2f){64, 167});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){64, 167});
 
     // auxGuardarAutenticacion
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.auxGuardarAutenticacion, (sfVector2f){415, 318});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, (sfVector2f){415, 318});
 
     // guardarAutenticacion
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.guardarAutenticacion, (sfVector2f){55, 311});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.guardarAutenticacion, (sfVector2f){55, 311});
 
     // ingresarNombre
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.ingresarNombre, (sfVector2f){55, 120});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){55, 120});
 
     // ingresoIncorrecto
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.ingresoIncorrecto, (sfVector2f){55, 384});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, (sfVector2f){55, 384});
 
     // textoBotonIngresar
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.textoBotonIngresar, (sfVector2f){227, 412});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, (sfVector2f){227, 412});
 
     // tituloInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->texto.tituloInterfaz, "AUTENTICAR");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->texto.tituloInterfaz, (sfVector2f){190, 25});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "AUTENTICAR");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){190, 25});
 
 
     // ELEMENTOS
@@ -361,6 +362,27 @@ static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistr
 
 
 
+/** \brief Establecer en NULL a todos los textos graficos de la interfaz de registro.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
+ */
+static void interfazRegistro_inicializarValoresNulosTextos (s_interfazRegistroTextos *textos)
+{
+    textos->textoInformativoContrasenia = NULL;
+    textos->textoInformativoNombre = NULL;
+}
+
+/** \brief Establecer en NULL a todos los elementos graficos de la interfaz de registro.
+ *
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
+ */
+static void interfazRegistro_inicializarValoresNulosElementos (s_interfazRegistroElementos *elementos)
+{
+    elementos->flechaVolverBarra = NULL;
+    elementos->flechaVolverTriangulo1 = NULL;
+    elementos->flechaVolverTriangulo2 = NULL;
+}
+
 /** \brief Inicializar los recursos graficos de texto de la interfaz de registro.
  *
  * Crea todos los recursos graficos de texto. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
@@ -370,17 +392,17 @@ static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistr
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazRegistro_inicializarTexto (s_interfazRegistroTexto *texto)
+static int interfazRegistro_inicializarTextos (s_interfazRegistroTextos *textos)
 {
-    texto->textoInformativoContrasenia = sfText_create ();
-    if (!texto->textoInformativoContrasenia)
+    textos->textoInformativoContrasenia = sfText_create ();
+    if (!textos->textoInformativoContrasenia)
     {
         perror ("\nERROR - Interfaz de registro, crear texto textoInformativoContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    texto->textoInformativoNombre = sfText_create ();
-    if (!texto->textoInformativoNombre)
+    textos->textoInformativoNombre = sfText_create ();
+    if (!textos->textoInformativoNombre)
     {
         perror ("\nERROR - Interfaz de registro, crear texto textoInformativoNombre.\n");
         return ERROR_INICIALIZACION;
@@ -426,30 +448,26 @@ static int interfazRegistro_inicializarElementos (s_interfazRegistroElementos *e
     return EXITO;
 }
 
-/** \brief Configurar los recursos graficos de texto de la interfaz de registro.
+/** \brief Configurar los recursos graficos de textos de la interfaz de registro.
  *
- * Configura todos los recursos graficos de texto.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazRegistro_configurarTexto (s_interfazRegistroTexto *texto, const s_fuentes *fuentes)
+static void interfazRegistro_configurarTextos (s_interfazRegistroTextos *textos, const s_fuentes *fuentes)
 {
     // textoInformativoContrasenia
-    sfText_setFont (texto->textoInformativoContrasenia, fuentes->fuente1);
-    sfText_setString (texto->textoInformativoContrasenia, "La contraseña debe contener al menos 8 caracteres, 1 mayuscula,\n 1 numero y 1 caracter especial");
-    sfText_setFillColor (texto->textoInformativoContrasenia, sfColor_fromRGB (34, 48, 48));
+    sfText_setFont (textos->textoInformativoContrasenia, fuentes->fuente1);
+    sfText_setString (textos->textoInformativoContrasenia, "La contraseña debe contener al menos 8 caracteres, 1 mayuscula,\n 1 numero y 1 caracter especial");
+    sfText_setFillColor (textos->textoInformativoContrasenia, sfColor_fromRGB (34, 48, 48));
 
     // textoInformativoNombre
-    sfText_setFont (texto->textoInformativoNombre, fuentes->fuente1);
-    sfText_setString (texto->textoInformativoNombre, "La longitud maxima del nombre es hasta 25 caracteres");
-    sfText_setFillColor (texto->textoInformativoNombre, sfColor_fromRGB (34, 48, 48));
+    sfText_setFont (textos->textoInformativoNombre, fuentes->fuente1);
+    sfText_setString (textos->textoInformativoNombre, "La longitud maxima del nombre es hasta 25 caracteres");
+    sfText_setFillColor (textos->textoInformativoNombre, sfColor_fromRGB (34, 48, 48));
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de registro.
- *
- * Configura todos los recursos graficos de elementos.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  *
@@ -468,27 +486,23 @@ static void interfazRegistro_configurarElementos (s_interfazRegistroElementos *e
     sfRectangleShape_rotate (elementos->flechaVolverTriangulo2, -45);
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada texto grafico de la interfaz de registro.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de registro.
  *
- * Establecer a todos los textos graficos un tamanio y posicion sobre la ventana.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_tamYPosVentanaTexto (s_interfazRegistroTexto *texto)
+static void interfazRegistro_tamYPosVentanaTextos (s_interfazRegistroTextos *textos)
 {
     // textoInformativoContrasenia
-    sfText_setPosition (texto->textoInformativoContrasenia, (sfVector2f){55, 255});
-    sfText_setCharacterSize (texto->textoInformativoContrasenia, 24);
+    sfText_setPosition (textos->textoInformativoContrasenia, (sfVector2f){55, 255});
+    sfText_setCharacterSize (textos->textoInformativoContrasenia, 24);
 
     // textoInformativoNombre
-    sfText_setPosition (texto->textoInformativoNombre, (sfVector2f){55, 120});
-    sfText_setCharacterSize (texto->textoInformativoNombre, 24);
+    sfText_setPosition (textos->textoInformativoNombre, (sfVector2f){55, 120});
+    sfText_setCharacterSize (textos->textoInformativoNombre, 24);
 }
 
-/** \brief Establecer el tamanio y la posicion en pantalla de cada elemento grafico de la interfaz de registro.
- *
- * Establecer a todos los elementos graficos un tamanio y posicion sobre la ventana.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de registro.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  *
@@ -506,6 +520,56 @@ static void interfazRegistro_tamYPosVentanaElementos (s_interfazRegistroElemento
     // flechaVolverTriangulo2
     sfRectangleShape_setPosition (elementos->flechaVolverTriangulo2, (sfVector2f){23.5, 20.5});
     sfRectangleShape_setSize (elementos->flechaVolverTriangulo2, (sfVector2f){10, 2.1});
+}
+
+/** \brief Renderizar los recursos graficos de textos de la interfaz de registro.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
+ *
+ */
+static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_interfazRegistroTextos *textos)
+{
+    sfRenderWindow_drawText (renderizado, textos->textoInformativoContrasenia, NULL);
+    sfRenderWindow_drawText (renderizado, textos->textoInformativoNombre, NULL);
+}
+
+/** \brief Renderizar los recursos graficos de elementos de la interfaz de registro.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
+ *
+ */
+static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_interfazRegistroElementos *elementos)
+{
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverBarra, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo1, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo2, NULL);
+}
+
+/** \brief Liberar, de manera segura, todas los textos graficos de la interfaz de registro.
+ *
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
+ */
+static void interfazRegistro_liberarTextos (s_interfazRegistroTextos *textos)
+{
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoNombre);
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoContrasenia);
+}
+
+/** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de registro.
+ *
+ * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
+ */
+static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elementos)
+{
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->flechaVolverBarra);
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->flechaVolverTriangulo1);
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->flechaVolverTriangulo2);
 }
 
 
@@ -532,7 +596,7 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, s_rec
     {
         recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = HABILITAR_ESCRIBIR_NOMBRE;
         recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITAR_ESCRIBIR_CONTRASENIA;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->texto.auxEscribirNombre);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
         sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 203.3});
         return EVENTO_MANEJADO;
     }
@@ -555,7 +619,7 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
     if (clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia))
     {
         recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = HABILITAR_ESCRIBIR_CONTRASENIA;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->texto.auxEscribirContrasenia);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
         sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 359});
         return EVENTO_MANEJADO;
     }
@@ -618,8 +682,8 @@ static bool manejarEscribirNombre (s_recursosComunesAutenticacionRegistro *recur
     if (recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE)
     {
         ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_INGRESO_NOMBRE, eventoChar);
-        sfText_setString (recursosComunesAutenticacionRegistro->texto.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre);
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->texto.auxEscribirNombre);
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
         sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 203.3});
         return EVENTO_MANEJADO;
     }
@@ -643,8 +707,8 @@ static bool manejarEscribirContrasenia (s_recursosComunesAutenticacionRegistro *
     if (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)
     {
         ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_INGRESO_NOMBRE, eventoChar);
-        sfText_setString (recursosComunesAutenticacionRegistro->texto.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia);
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->texto.auxEscribirContrasenia);
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
         sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 359});
         return EVENTO_MANEJADO;
     }

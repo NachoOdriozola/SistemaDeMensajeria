@@ -53,14 +53,14 @@
 
 
 
-/** \struct s_interfazRegistroTexto
+/** \struct s_interfazRegistroTextos
  * \brief Contiene todos los textos graficos de la interfaz de registro.
  */
 typedef struct
 {
     sfText *textoInformativoContrasenia;    /**< Texto informativo sobre la contrasenia. */
     sfText *textoInformativoNombre;         /**< Texto informativo sobre el nombre. */
-} s_interfazRegistroTexto;
+} s_interfazRegistroTextos;
 
 /** \struct s_interfazRegistroElementos
  * \brief Contiene todos los elementos graficos de la interfaz de registro.
@@ -85,7 +85,7 @@ typedef struct
  */
 typedef struct
 {
-    s_interfazRegistroTexto texto;
+    s_interfazRegistroTextos textos;
     s_interfazRegistroElementos elementos;
     s_interfazRegistroHabilitaciones habilitaciones;
 } s_interfazRegistro;
@@ -100,8 +100,7 @@ typedef struct
 
 /** \brief Inicializar los recursos graficos de la interfaz de registro.
  *
- * Establecer todas las variables graficas en NULL y luego invocar a las funciones
- * interfazRegistro_inicializarTexto e interfazRegistro_inicializarElementos para crear cada recurso.
+ * Establecer todas las variables graficas en NULL y luego crear cada recursos.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
  *
@@ -110,10 +109,9 @@ typedef struct
  */
 int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro);
 
-/** \brief Configurar y establecer el tamanio y la posicion sobre la ventana de los recursos graficos de la interfaz de registro.
+/** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de registro.
  *
- * Invocar a las funciones interfazRegistro_configurarTexto e interfazRegistro_configurarElementos para configurar cada recurso y luego invocar a las funciones
- * interfazRegistro_tamYPosVentanaTexto e interfazRegistro_tamYPosVentanaElementos para establecer a todos los recursos graficos un tamanio y posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -155,9 +153,7 @@ void interfazRegistro_actualizar (s_interfazRegistro *interfazRegistro, s_recurs
  */
 void interfazRegistro_renderizar (sfRenderWindow *renderizado, const s_interfazRegistro *interfazRegistro, const s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
-/** \brief Liberar todos los recursos graficos creados de la interfaz de registro.
- *
- * Liberar, de manera segura, todos los recursos graficos creados de la interfaz de registro.
+/** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de registro.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
  *

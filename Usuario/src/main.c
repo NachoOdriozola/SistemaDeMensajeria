@@ -43,8 +43,7 @@ int main()
 
     // --------------- EJECUCION DEL BUCLE PRINCIPAL: funciones de las interfaces ---------------
 
-    //sfRenderWindow_close ()
-    while (aplicacion.aplicacionEjecutandose == CONTINUAR_APLICACION)
+    while (sfRenderWindow_isOpen (aplicacion.renderizado))
     {
         switch (aplicacion.usuario.interfazActual)
         {
@@ -280,10 +279,9 @@ void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
     printf ("-CONFIGURANDO LOS RECURSOS DE LA APLICACION-\t");
 
 
-    // --------------- CONFIGURAR APLICACION ---------------
+    // --------------- CONFIGURAR RENDERIZADO ---------------
 
     sfRenderWindow_setFramerateLimit (aplicacion->renderizado, 60);
-    aplicacion->aplicacionEjecutandose = CONTINUAR_APLICACION;
 
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS COMUNES ---------------
@@ -386,7 +384,7 @@ void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces)
     // --------------- CONFIGURAR APLICACION ---------------
 
     aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-    sfText_setString (interfaces->recursosComunesContactosSalas.texto.nombreUsuario, aplicacion->usuario.nombre);
+    sfText_setString (interfaces->recursosComunesContactosSalas.textos.nombreUsuario, aplicacion->usuario.nombre);
 
 
     // --------------- CONFIGURAR VENTANA ---------------
