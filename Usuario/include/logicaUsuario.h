@@ -42,19 +42,6 @@
 
 
 /**
- * \def CONTINUAR_APLICACION
- * \brief Codigo para continuar ejecutando la aplicacion.
- */
-#define CONTINUAR_APLICACION 1
-
-/**
- * \def DETENER_APLICACION
- * \brief Codigo para detener la aplicacion en caso de error o que el usuario la cierre.
- */
-#define DETENER_APLICACION 0
-
-
-/**
  * \def TAMANIO_BASE_MAXIMIZADO_X
  * \brief Tamanio en X de la ventana (QUE UTILIZO YO) maximizada. Utilizado para crear escalas de pixeles.
  */
@@ -168,9 +155,6 @@
  */
 #define REINICIAR_CONTADOR_PUNTO_INSERCION 0
 
-
-//a chekear
-#define MAX_BUFFER_MENSAJE 256
 
 //a chekear
 #define MI_USUARIO 1

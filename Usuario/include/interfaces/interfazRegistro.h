@@ -168,9 +168,6 @@ void interfazRegistro_liberar (s_interfazRegistro *interfazRegistro);
 
 
 
-void intentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-
-
 
 #endif // INTERFAZREGISTRO_H_INCLUDED
 

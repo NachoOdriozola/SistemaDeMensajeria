@@ -46,16 +46,16 @@
 
 
 /**
- * \def TAM_TABLA_HASH
+ * \def CANT_BUCKETS_TABLA_HASH
  * \brief Cantidad de buckets que tendra la tabla hash.
  */
-#define TAM_TABLA_HASH 10
+#define CANT_BUCKETS_TABLA_HASH 1000
 
 /**
  * \def MAX_BUFFER_CONSULTA_SQLITE
  * \brief Tamanio maximo del buffer para almacenar consultas de SQLite.
  */
-#define MAX_BUFFER_CONSULTA_SQLITE 101
+#define MAX_BUFFER_CONSULTA_SQLITE 128
 
 
 /**
@@ -77,6 +77,13 @@
    ============================ */
 
 
+
+typedef struct
+{
+    char solicitud [MAX_BUFFER_SOLICITUD];
+    char respuesta [MAX_BUFFER_RESPUESTA];
+    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];
+} t_buffersComunicacion;
 
 /**
  * \struct s_cliente
@@ -211,7 +218,7 @@ bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelClien
  * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int procesarInicioSesion (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud);
+int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de registro.
  *
@@ -226,7 +233,9 @@ int procesarInicioSesion (s_servidor *servidor, s_nodo **clienteAProcesar, const
  * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int procesarRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud);
+int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+
+int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de solicitud de amistad.
  *
@@ -241,7 +250,7 @@ int procesarRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, const cha
  * \return OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int procesarSolicitudAmistad (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud);
+int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 
 

@@ -253,6 +253,9 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
  */
 void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas, const s_ventana *ventana);
 
+int intentarEnvioMensaje (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void manejarReciboMensaje (s_aplicacion *aplicacion, char *bufferRespuesta);
+
 /** \brief Renderizar la vista de mensajes.
  *
  * Establecer la vista de mensajes en el renderizado, y renderizar la lista de mensajes.
@@ -320,6 +323,9 @@ bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesCon
  *
  */
 bool manejarEnterEnviarMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_aplicacion *aplicacion);
+
+bool manejarDesplazarArribaAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+bool manejarDesplazarAbajoAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de scroll en el area de mensajes.
  *

@@ -187,6 +187,13 @@ void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *in
             if (manejarEnterEnviarMensaje (recursosComunesContactosSalas, aplicacion) == EVENTO_MANEJADO) break;
             if (manejarEnterIntentarAgendarContacto (interfazContactos, aplicacion) == EVENTO_MANEJADO) break;
         }
+
+        if (evento.key.code == sfKeyUp)
+            if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
+        if (evento.key.code == sfKeyDown)
+            if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
         break;
 
 
@@ -202,28 +209,23 @@ void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *in
 
 void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    // RECIBIR MENSAJES DE OTROS USUARIOS
-    char *bufferRespuesta;
+    // --------------- RECIBIR RESPUESTAS DEL SERVIDOR ---------------
 
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return;
-    }
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+
     if (recibirRespuesta (aplicacion->sock, bufferRespuesta) == RECIBIO_RESPUESTA)
     {
         switch (*bufferRespuesta)
         {
-        case INDICE_RESPUESTA_SOLICITUD_AMISTAD:
+        case INDICE_RESPUESTA_AGENDAR_CONTACTO:
             agregarNotificacion (&(aplicacion->listaNotificaciones), bufferRespuesta, aplicacion->ventana, aplicacion->mensajes.fuentes);
             break;
 
         case INDICE_RESPUESTA_MENSAJE:
+            manejarReciboMensaje (aplicacion, bufferRespuesta);
             break;
         }
     }
-    free (bufferRespuesta);
 
 
     // --------------- PUNTO DE INSERCION ---------------
@@ -293,7 +295,7 @@ void intentarSolicitudAmistad (s_aplicacion *aplicacion, s_interfazContactos *in
         return;
     }
 
-    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_AGENDARCONTACTO, aplicacion->usuario.nombre, interfazContactos->bufferAgendarContacto);
+    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_SOLICITUD_AGENDAR_CONTACTO, aplicacion->usuario.nombre, interfazContactos->bufferAgendarContacto);
     printf ("Enviado: %s\n", bufferSolicitud);
     enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
     sscanf (bufferRespuesta, "%c", &estadoSolicitud);
@@ -301,9 +303,9 @@ void intentarSolicitudAmistad (s_aplicacion *aplicacion, s_interfazContactos *in
     free (bufferSolicitud);
     free (bufferRespuesta);
 
-    if (estadoSolicitud == INDICE_RESPUESTA_SOLICITUD_ACEPTADA)
+    if (estadoSolicitud == INDICE_RESPUESTA_EXITO)
         printf ("Le envio la solicitud de amistad.\n");
-    else if (estadoSolicitud == INDICE_RESPUESTA_SOLICITUD_RECHAZADA)
+    else if (estadoSolicitud == INDICE_RESPUESTA_ERROR_SERVIDOR)
         printf ("No se envio la solicitud de amistad.\n");
 }
 

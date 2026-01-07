@@ -176,6 +176,35 @@ void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVis
     sfView_setViewport(vistas->mensajes, (sfFloatRect){0.223f, 0.029f, 0.765f, 0.842f});                                    // Proporciones del sfRectangleShape *areaMensajes
 }
 
+int intentarEnvioMensaje (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    char estadoRespuesta;
+    int idReceptor;
+
+    idReceptor = atoi (&(recursosComunesContactosSalas->bufferMensaje[0]));
+    snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", INDICE_SOLICITUD_MENSAJE, aplicacion->usuario.id, idReceptor, &(recursosComunesContactosSalas->bufferMensaje[1]));
+    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
+    sscanf (bufferRespuesta, "%c", &estadoRespuesta);
+    if (estadoRespuesta != INDICE_RESPUESTA_EXITO)
+    {
+        printf ("Error servidor.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    return EXITO;
+}
+
+void manejarReciboMensaje (s_aplicacion *aplicacion, char *bufferRespuesta)
+{
+    int idEmisor;
+    char texto [MAX_BUFFER_MENSAJE];
+
+    sscanf (&(bufferRespuesta[2]), "%d|%[^\n]", &idEmisor, texto);
+    asignarMensaje (aplicacion, texto, OTRO_USUARIO);
+    printf ("EL: %s\n", texto);
+}
+
 void renderizarVistaMensajes (s_aplicacion *aplicacion, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- ESTABLECER VISTA DE MENSAJES ---------------
@@ -703,9 +732,32 @@ bool manejarEnterEnviarMensaje (s_recursosComunesContactosSalas *recursosComunes
 {
     if ((recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITAR_ESCRIBIR_MENSAJE) && (strlen (recursosComunesContactosSalas->bufferMensaje) > 0))
     {
-        asignarMensaje (aplicacion, recursosComunesContactosSalas->bufferMensaje, MI_USUARIO);
+        if (intentarEnvioMensaje (aplicacion, recursosComunesContactosSalas) == EXITO)
+        {
+            asignarMensaje (aplicacion, recursosComunesContactosSalas->bufferMensaje, MI_USUARIO);
+            printf ("YO: %s\n", &(recursosComunesContactosSalas->bufferMensaje[1]));
+        }
         *(recursosComunesContactosSalas->bufferMensaje) = '\0';
-        //enviar paquete
+        return EVENTO_MANEJADO;
+    }
+    return EVENTO_NO_MANEJADO;
+}
+
+bool manejarDesplazarArribaAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
+    {
+        sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
+        return EVENTO_MANEJADO;
+    }
+    return EVENTO_NO_MANEJADO;
+}
+
+bool manejarDesplazarAbajoAreaMensajes (s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
+    {
+        sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, VELOCIDAD_SCROLL});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;

@@ -7,35 +7,28 @@ int main ()
 
     s_servidor servidor;
     s_nodo **clienteAProcesar;
-    char ingresoCaracter = '\0', *bufferSolicitud, indiceTipoSolicitud;
+    t_buffersComunicacion buffersComunicacion;
+    char ingresoCaracter = '\0';
 
     s_cliente nuevoCliente;
     struct sockaddr_in dirNuevoCliente;
     int tamNuevoCliente;
-
-    bufferSolicitud = malloc (MAX_BUFFER_SOLICITUD);
-    if (!bufferSolicitud)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
-    }
 
     tamNuevoCliente = sizeof (dirNuevoCliente);
 
 
     // --------------- INICIALIZAR Y CONFIGURAR LOS RECURSOS DEL SERVIDOR ---------------
 
-    
+
     if (inicializarServidor (&servidor) == ERROR_INICIALIZACION)
     {
-        liberarServidor (&servidor);
-        free (bufferSolicitud);
+        perror ("ERROR - Inicializacion de servidor.\n");
         return ERROR_INICIALIZACION;
     }
     if (configurarServidor (&servidor) == ERROR_CONFIGURACION)
     {
+        perror ("ERROR - configuracion de servidor.\n");
         liberarServidor (&servidor);
-        free (bufferSolicitud);
         return ERROR_CONFIGURACION;
     }
     printf ("-SERVIDOR INICIADO CORRECTAMENTE-\n\n");
@@ -54,32 +47,28 @@ int main ()
             procesarNuevoCliente (&nuevoCliente, &(servidor.listaSimpleClientesNoAutenticados));
 
         // Si un cliente de la lista simple de no autenticados o de la tabla hash envia una solicitud, guarda su direccion y la solicitud para procesarla.
-        if ((recibirSolicitudEnListaSimple (&(servidor.listaSimpleClientesNoAutenticados), &clienteAProcesar, bufferSolicitud) == RECIBIO_SOLICITUD) ||
-            (recibirSolicitudEnTablaHash (&(servidor.tablaHashClientes), &clienteAProcesar, bufferSolicitud) == RECIBIO_SOLICITUD))
+        if ((recibirSolicitudEnListaSimple (&(servidor.listaSimpleClientesNoAutenticados), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD) ||
+            (recibirSolicitudEnTablaHash (&(servidor.tablaHashClientes), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD))
         {
-            printf ("Solicitud recibida: %s\n", bufferSolicitud);
-            indiceTipoSolicitud = *bufferSolicitud; // Guarda el indice de la solicitud.
-            bufferSolicitud += 2; // Mover el puntero dos lugares para tener la solicitud limpia. Evita tener el indice de la solicitud y el separador '|'.
-
-            switch (indiceTipoSolicitud)
+            printf ("Solicitud recibida: %s\n", buffersComunicacion.solicitud);
+            switch (buffersComunicacion.solicitud[0])
             {
-            case INDICE_AUTENTICACION:
-                procesarInicioSesion (&servidor, clienteAProcesar, bufferSolicitud);
+            case INDICE_SOLICITUD_AUTENTICACION:
+                manejarSolicitudAutenticacion (&servidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_REGISTRO:
-                procesarRegistro (&servidor, clienteAProcesar, bufferSolicitud);
+            case INDICE_SOLICITUD_REGISTRO:
+                manejarSolicitudRegistro (&servidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_MENSAJE:
+            case INDICE_SOLICITUD_MENSAJE:
+                manejarEnvioMensaje (&servidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_AGENDARCONTACTO:
-                procesarSolicitudAmistad (&servidor, clienteAProcesar, bufferSolicitud);
+            case INDICE_SOLICITUD_AGENDAR_CONTACTO:
+                //manejarSolicitudContacto (&servidor, clienteAProcesar, &buffersComunicacion);
                 break;
             }
-
-            bufferSolicitud -= 2; // Retroceder los dos lugares avanzados para volver a la posicion original del puntero (malloc).
         }
 
         if (kbhit ()) // Detecta si el usuario presiono una tecla en consola.
@@ -94,11 +83,10 @@ int main ()
     }
 
 
-    // --------------- LIBERAR LOS RECURSOS DEL SERVIDOR ---------------
+    // --------------- LIBERAR LOS RECURSOS DEL SERVIDOR Y RETORNAR ---------------
 
 
     liberarServidor (&servidor);
-    free (bufferSolicitud);
 
     system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
 

@@ -39,10 +39,10 @@ typedef struct
    ============================ */
 
 
-int crearTablaHash (s_tablaHash *tablaHash, unsigned short int cantBuckets);
-bool insertarEnTablaHash (s_tablaHash *tablaHash, const void *clave, unsigned short int funcionHash (const void*), const void *dato, unsigned tamDato);
-void vincularNodoATablaHash (s_tablaHash *tablaHash, const void *clave, unsigned short int funcionHash (const void*), s_nodo *nodoAVincular);
-bool buscarClaveEnTablaHash (s_tablaHash *tablaHash, const void *clave, unsigned short int funcionHash (const void*), void *dato, unsigned tamDato, int cmp (const void*, const void*));
+int crearTablaHash (s_tablaHash *tablaHash, int cantBuckets);
+bool insertarEnTablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato);
+void vincularNodoATablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), s_nodo *nodoAVincular);
+bool buscarClaveEnTablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*));
 void mapTablaHash (s_tablaHash *tablaHash, void accion (void*));
 void eliminarTablaHashConAccion (s_tablaHash *tablaHash, void accion (void*));
 

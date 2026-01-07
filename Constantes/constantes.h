@@ -42,16 +42,16 @@
 
 
 /**
- * \def ENCONTRO
+ * \def ENCONTRO_CLAVE
  * \brief Codigo de retorno para indicar que se encontro la clave.
  */
-#define ENCONTRO 1
+#define ENCONTRO_CLAVE 1
 
 /**
- * \def NO_ENCONTRO
+ * \def NO_ENCONTRO_CLAVE
  * \brief Codigo de retorno para indicar que no se encontro la clave.
  */
-#define NO_ENCONTRO 0
+#define NO_ENCONTRO_CLAVE 0
 
 
 
@@ -65,13 +65,15 @@
  * \def MAX_BUFFER_SOLICITUD
  * \brief Tamanio maximo del buffer para recibir solicitudes de los clientes.
  */
-#define MAX_BUFFER_SOLICITUD 256
+#define MAX_BUFFER_SOLICITUD 2048
 
 /**
  * \def MAX_BUFFER_RESPUESTA
  * \brief Tamanio maximo del buffer para enviar respuestas a los clientes.
  */
-#define MAX_BUFFER_RESPUESTA 256
+#define MAX_BUFFER_RESPUESTA 2048
+
+#define MAX_BUFFER_MENSAJE 2001
 
 
 /**
@@ -84,7 +86,9 @@
  * \def MAX_CONTRASENIA_USUARIO
  * \brief Longitud maxima para la contrasenia del usuario.
  */
-#define MAX_CONTRASENIA_USUARIO 46
+#define MAX_CONTRASENIA_USUARIO 128
+
+#define MAX_CORREO_ELECTRONICO_USUARIO 256
 
 
 
@@ -102,41 +106,43 @@
 
 
 /**
- * \def INDICE_AUTENTICACION
+ * \def INDICE_SOLICITUD_AUTENTICACION
  * \brief Identificador de solicitud para autenticacion
  */
-#define INDICE_AUTENTICACION '1'
+#define INDICE_SOLICITUD_AUTENTICACION '1'
 
 /**
- * \def INDICE_REGISTRO
+ * \def INDICE_SOLICITUD_REGISTRO
  * \brief Identificador de solicitud para registro de usuario.
  */
-#define INDICE_REGISTRO '2'
+#define INDICE_SOLICITUD_REGISTRO '2'
 
 /**
- * \def INDICE_MENSAJE
+ * \def INDICE_SOLICITUD_MENSAJE
  * \brief Identificador de solicitud para envio de mensaje.
  */
-#define INDICE_MENSAJE '3'
+#define INDICE_SOLICITUD_MENSAJE '3'
 
 /**
- * \def INDICE_AGENDARCONTACTO
+ * \def INDICE_SOLICITUD_AGENDAR_CONTACTO
  * \brief Identificador de solicitud para agendar un nuevo contacto.
  */
-#define INDICE_AGENDARCONTACTO '4'
+#define INDICE_SOLICITUD_AGENDAR_CONTACTO '4'
 
 
 /**
- * \def INDICE_RESPUESTA_SOLICITUD_ACEPTADA
+ * \def INDICE_RESPUESTA_ACEPTADA
  * \brief Indice de respuesta al cliente que la solicitud fue aceptada.
  */
-#define INDICE_RESPUESTA_SOLICITUD_ACEPTADA '1'
+#define INDICE_RESPUESTA_EXITO '0'
 
 /**
  * \def INDICE_RESPUESTA_SOLICITUD_RECHAZADA
  * \brief Indice de respuesta al cliente que la solicitud fue rechazada.
  */
-#define INDICE_RESPUESTA_SOLICITUD_RECHAZADA '0'
+#define INDICE_RESPUESTA_ERROR_SERVIDOR '1'
+
+#define INDICE_RESPUESTA_ERROR_CREDENCIALES '2'
 
 /**
  * \def INDICE_RESPUESTA_MENSAJE
@@ -148,7 +154,7 @@
  * \def INDICE_RESPUESTA_SOLICITUD_AMISTAD
  * \brief Indice de respuesta al cliente que le envias una solicitud de amistad.
  */
-#define INDICE_RESPUESTA_SOLICITUD_AMISTAD 'b'
+#define INDICE_RESPUESTA_AGENDAR_CONTACTO 'b'
 
 
 

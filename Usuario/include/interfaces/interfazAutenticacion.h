@@ -155,16 +155,6 @@ void interfazAutenticacion_liberar (s_interfazAutenticacion *interfazAutenticaci
 
 
 
-/* ============================
-   FUNCIONES LOGICAS
-   ============================ */
-
-
-
-void intentarIngreso (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-
-
-
 #endif // INTERFAZAUTENTICACION_H_INCLUDED
 
 

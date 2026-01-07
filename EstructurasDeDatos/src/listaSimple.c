@@ -56,19 +56,19 @@ void mapListaSimpleConComplemento (s_listaSimple *pl, void *complemento, void ac
     }
 }
 
-int buscarClaveUnicaEnListaSimple (s_listaSimple *pl, const void *key, void *dato, unsigned tamDato, int cmp (const void *a, const void *b))
+int buscarClaveUnicaEnListaSimple (s_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
 {
     while (*pl != NULL)
     {
         if (cmp ((*pl)->dato, key) == 0)
         {
-            memcpy (dato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
-            return ENCONTRO;
+            memcpy (returnDato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
+            return ENCONTRO_CLAVE;
         }
         pl = &((*pl)->sig);
     }
 
-    return NO_ENCONTRO;
+    return NO_ENCONTRO_CLAVE;
 }
 
 s_nodo* desvincularNodoDeListaSimple (s_nodo **nodo)

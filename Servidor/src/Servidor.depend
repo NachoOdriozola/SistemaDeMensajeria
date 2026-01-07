@@ -622,3 +622,48 @@
 
 1761092796 c:\users\ignac\documents\appdemensajes\constantes\constantes.h
 
+1767745460 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
+	"../include/listaSimple.h"
+
+1767502282 c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"nodo.h"
+	"../../Constantes/constantes.h"
+
+1767502282 c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\include\nodo.h
+
+1767802253 c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\constantes\constantes.h
+
+1767753477 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\src\tablahash.c
+	"../include/tablaHash.h"
+
+1767752748 c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"../../Constantes/constantes.h"
+	"listaSimple.h"
+
+1767748712 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\servidor\src\main.c
+	"../include/logicaServidor.h"
+
+1767796296 c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\servidor\include\logicaservidor.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../../Constantes/constantes.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/tablaHash.h"
+
+1767802837 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\servidor\src\logicaservidor.c
+	"../include/logicaServidor.h"
+

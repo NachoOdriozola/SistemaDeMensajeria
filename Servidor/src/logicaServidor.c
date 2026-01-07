@@ -8,9 +8,9 @@
 
 
 
-static unsigned short int funcionHash (const void *clave);
+static int funcionHash (const void *clave);
 static int cmpIdCliente (const void *a, const void *b);
-static void mostrarCliente (const void *cliente);
+//static void mostrarCliente (void *cliente);
 static void liberarCliente (void *cliente);
 
 
@@ -52,7 +52,7 @@ int inicializarServidor (s_servidor *servidor)
 
     // --------------- CREAR TABLA HASH DE CLIENTES ---------------
 
-    crearTablaHash (&(servidor->tablaHashClientes), TAM_TABLA_HASH);
+    crearTablaHash (&(servidor->tablaHashClientes), CANT_BUCKETS_TABLA_HASH);
 
 
     // --------------- CREAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
@@ -62,7 +62,7 @@ int inicializarServidor (s_servidor *servidor)
 
     // --------------- ABRIR BASE DE DATOS ---------------
 
-    resultado = sqlite3_open ("DBappMensajes.db", &(servidor->baseDeDatos));
+    resultado = sqlite3_open ("AplicacionDeMensajes.db", &(servidor->baseDeDatos));
     if (resultado)
     {
         printf ("ERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
@@ -168,10 +168,10 @@ bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDe
         if (bytesRecibidos > 0) // Si se recibio una solicitud.
         {
             // Asegura el caracter nulo al final de la solicitud.
-            bufferSolicitud += bytesRecibidos - 1;
+            bufferSolicitud += bytesRecibidos;
             *bufferSolicitud = '\0';
 
-            *nodoDelCliente = listaSimple; // Guarda la posicion del cliente que envio la solicitud.
+            *nodoDelCliente = listaSimple; // Guarda la direccion del cliente que envio la solicitud.
             return RECIBIO_SOLICITUD;
         }
 
@@ -189,7 +189,7 @@ bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDe
 
 bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelCliente, char *bufferSolicitud)
 {
-    unsigned short int i;
+    int i;
 
     for (i = 0; i < tablaHash->cantBuckets; i++) // Por cada bucket de la tabla hash.
     {
@@ -208,279 +208,202 @@ bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelClien
 
 
 
-int procesarInicioSesion (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud)
+int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    char *bufferRespuesta;
-    char *nombre, *contrasenia;
-
-    sqlite3_stmt *sentencia;
-    char *consulta;
-    int resultadoConsulta;
+    char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO];
 
     s_cliente *cliente;
-    int id;
 
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
-    }
-
-    consulta = malloc (MAX_BUFFER_CONSULTA_SQLITE);
-    if (!consulta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        return ERROR_SIN_MEMORIA;
-    }
-
-    nombre = malloc (MAX_NOMBRE_USUARIO);
-    if (!nombre)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        free (consulta);
-        return ERROR_SIN_MEMORIA;
-    }
-
-    contrasenia = malloc (MAX_CONTRASENIA_USUARIO);
-    if (!contrasenia)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        return ERROR_SIN_MEMORIA;
-    }
+    sqlite3_stmt *sentencia;
+    int resultadoConsulta;
 
 
     // --------------- LOGICA ---------------
 
 
-    cliente = (*(clienteAProcesar))->dato;
-    sscanf (bufferSolicitud, "%[^|]|%s", nombre, contrasenia); // Extraer nombre y contrasenia de la solicitud recibida.
-    sprintf (bufferRespuesta, "%c|%d", INDICE_RESPUESTA_SOLICITUD_RECHAZADA, 0); // Respuesta por defecto: solicitud rechazada hasta validar los datos.
+    cliente = (s_cliente*)((*(clienteAProcesar))->dato);
+    sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%s", nombreUsuario, contraseniaUsuario); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
-    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ? AND contrasena = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
-    sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 1, nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 2, contraseniaUsuario, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
     if (resultadoConsulta == SQLITE_ROW) // Si encontro un usuario en la base de datos con tal nombre y contrasenia.
     {
         // Recupera su ID y la guarda en el cliente correspondiente.
-        id = sqlite3_column_int (sentencia, 0);
-        cliente->id = id;
+        cliente->id = sqlite3_column_int (sentencia, 0);
 
-        vincularNodoATablaHash (&(servidor->tablaHashClientes), &id, funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
-        sprintf (bufferRespuesta, "%c|%d", INDICE_RESPUESTA_SOLICITUD_ACEPTADA, id);
-        printf ("Cliente ID: %d autentificado.\n", cliente->id);
+        vincularNodoATablaHash (&(servidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_EXITO, cliente->id);
     }
+    else
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_CREDENCIALES, -1);
     sqlite3_finalize (sentencia);
 
-
-    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-    printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-
-    // --------------- LIBERAR RECURSOS Y RETORNAR ---------------
-
-
-    free (bufferRespuesta);
-    free (consulta);
-    free (nombre);
-    free (contrasenia);
+    send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+    printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
 
     return EXITO;
 }
 
-int procesarRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud)
+int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    char *bufferRespuesta;
-    char *nombre, *contrasenia;
-
-    sqlite3_stmt *sentencia;
-    char *consulta;
-    int resultadoConsulta;
+    char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO], correoElectronico [MAX_CORREO_ELECTRONICO_USUARIO];
 
     s_cliente *cliente;
-    int id;
 
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
-    }
-
-    consulta = malloc (MAX_BUFFER_CONSULTA_SQLITE);
-    if (!consulta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        return ERROR_SIN_MEMORIA;
-    }
-
-    nombre = malloc (MAX_NOMBRE_USUARIO);
-    if (!nombre)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        free (consulta);
-        return ERROR_SIN_MEMORIA;
-    }
-
-    contrasenia = malloc (MAX_CONTRASENIA_USUARIO);
-    if (!contrasenia)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        return ERROR_SIN_MEMORIA;
-    }
+    sqlite3_stmt *sentencia;
+    int resultadoConsulta;
 
 
     // --------------- LOGICA ---------------
 
 
-    cliente = (*(clienteAProcesar))->dato;
-    sscanf (bufferSolicitud, "%[^|]|%s", nombre, contrasenia); // Extraer nombre y contrasenia de la solicitud recibida.
-    sprintf (bufferRespuesta, "%c|%d", INDICE_RESPUESTA_SOLICITUD_RECHAZADA, 0); // Respuesta por defecto: solicitud rechazada hasta validar los datos.
+    cliente = (s_cliente*)((*(clienteAProcesar))->dato);
+    sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%[^|]|%s", nombreUsuario, contraseniaUsuario, correoElectronico); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
-    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
-    sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 1, nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 2, correoElectronico, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
-    if (resultadoConsulta == SQLITE_ROW) // Si encontro un usuario en la base de datos ya registrado con el mismo nombre.
+    sqlite3_finalize (sentencia);
+    if (resultadoConsulta == SQLITE_ROW) // Si encontro un usuario en la base de datos ya registrado con el mismo nombre o correo electronico.
     {
-        sqlite3_finalize (sentencia);
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_CREDENCIALES, -1);
+        send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+        printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
         return EXITO;
     }
-    sqlite3_finalize (sentencia);
 
 
-    strcpy (consulta, "INSERT INTO usuarios (nombre, contrasena) VALUES (?, ?);");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consulta, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (buffersComunicacion->consultaSQLITE, "INSERT INTO usuarios (nombre, contrasenia, correoElectronico) VALUES (?, ?, ?);");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
-    sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, contrasenia, -1, SQLITE_STATIC);
-
-    resultadoConsulta = sqlite3_step (sentencia);
-    if (resultadoConsulta != SQLITE_DONE)
-    {
-        sqlite3_finalize (sentencia);
-        perror ("ERROR - Insertar usuario a la base de datos.\n");
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
-        return ERROR_INICIALIZACION;
-    }
-    sqlite3_finalize (sentencia);
-
-
-    strcpy (consulta, "SELECT id FROM usuarios WHERE nombre = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consulta, -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-        printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-        free (bufferRespuesta);
-        free (consulta);
-        free (nombre);
-        free (contrasenia);
-        return ERROR_INICIALIZACION;
-    }
-    sqlite3_bind_text (sentencia, 1, nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 1, nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 2, contraseniaUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentencia, 3, correoElectronico, -1, SQLITE_STATIC);
 
     resultadoConsulta = sqlite3_step (sentencia);
     sqlite3_finalize (sentencia);
+
+
+    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+        return ERROR_INICIALIZACION;
+    }
+    sqlite3_bind_text (sentencia, 1, nombreUsuario, -1, SQLITE_STATIC);
+
+    resultadoConsulta = sqlite3_step (sentencia);
 
     // Recupera su ID y la guarda en el cliente correspondiente.
-    id = sqlite3_column_int (sentencia, 0);
-    cliente->id = id;
+    cliente->id = sqlite3_column_int (sentencia, 0);
+    sqlite3_finalize (sentencia);
 
-    vincularNodoATablaHash (&(servidor->tablaHashClientes), &id, funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
-    sprintf (bufferRespuesta, "%c|%d", INDICE_RESPUESTA_SOLICITUD_ACEPTADA, id);
-    printf ("Cliente ID: %d registrado.\n", cliente->id);
-
-
-    send (cliente->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-    printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-
-
-    // --------------- LIBERAR RECURSOS Y RETORNAR ---------------
-
-
-    free (bufferRespuesta);
-    free (consulta);
-    free (nombre);
-    free (contrasenia);
+    vincularNodoATablaHash (&(servidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
+    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_EXITO, cliente->id);
+    send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+    printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
 
     return EXITO;
 }
 
-int procesarSolicitudAmistad (s_servidor *servidor, s_nodo **clienteAProcesar, const char *bufferSolicitud)
+int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    char *bufferRespuesta;
+    int idEmisor, idReceptor, fecha = 0;
+    char texto [MAX_BUFFER_MENSAJE];
+
+    s_cliente cliente;
+
+    sqlite3_stmt *sentencia;
+
+
+    // --------------- LOGICA ---------------
+
+
+    cliente = *((s_cliente*)((*(clienteAProcesar))->dato));
+    sscanf (&(buffersComunicacion->solicitud[2]), "%d|%d|%[^\n]", &idEmisor, &idReceptor, texto);
+
+    if (idEmisor == idReceptor)
+    {
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_ERROR_CREDENCIALES);
+        send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+        printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
+        return ERROR_INICIALIZACION;
+    }
+
+
+    strcpy (buffersComunicacion->consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto, fecha) VALUES (?, ?, ?, ?);");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_ERROR_SERVIDOR);
+        send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+        return ERROR_INICIALIZACION;
+    }
+    sqlite3_bind_int (sentencia, 1, idEmisor);
+    sqlite3_bind_int (sentencia, 2, idReceptor);
+    sqlite3_bind_text (sentencia, 3, texto, -1, SQLITE_STATIC);
+    sqlite3_bind_int (sentencia, 4, fecha);
+
+    sqlite3_step (sentencia);
+    sqlite3_finalize (sentencia);
+
+    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_EXITO);
+    send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+    printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
+
+    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (s_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
+    {
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", INDICE_RESPUESTA_MENSAJE, idEmisor, texto);
+        send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
+        printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
+    }
+    printf ("\n");
+
+    return EXITO;
+}
+
+/*
+int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+{
+    // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
+
 
     sqlite3_stmt *sentencia;
     char *consulta;
@@ -619,6 +542,7 @@ int procesarSolicitudAmistad (s_servidor *servidor, s_nodo **clienteAProcesar, c
 
     return EXITO;
 }
+*/
 
 
 
@@ -634,9 +558,9 @@ int procesarSolicitudAmistad (s_servidor *servidor, s_nodo **clienteAProcesar, c
  * \return Indice correspondiente al ID del cliente.
  *
  */
-static unsigned short int funcionHash (const void *clave)
+static int funcionHash (const void *clave)
 {
-    return *(int*)clave % 10;
+    return *((int*)clave) % CANT_BUCKETS_TABLA_HASH;
 }
 
 /** \brief Comparar el ID de un cliente con una clave ID.
@@ -648,18 +572,19 @@ static unsigned short int funcionHash (const void *clave)
  */
 static int cmpIdCliente (const void *cliente, const void *clave)
 {
-    return (*(s_cliente*)cliente).id - *(int*)clave;
+    return (*((s_cliente*)cliente)).id - *((int*)clave);
 }
 
 /** \brief Mostrar el ID de un cliente en consola. Agrega dos tabulaciones.
  *
  * \param cliente Puntero al cliente cuyo ID se desea mostrar.
  *
- */
-static void mostrarCliente (const void *cliente) //Función temporal
+ *
+static void mostrarCliente (void *cliente) //Función temporal
 {
-    printf ("%d\t\t", (*(s_cliente*)cliente).id);
+    printf ("%d\n", (*((s_cliente*)cliente)).id);
 }
+ */
 
 /** \brief Liberar los recursos asociados a un cliente.
  *

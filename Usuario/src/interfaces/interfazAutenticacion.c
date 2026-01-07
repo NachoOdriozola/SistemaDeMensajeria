@@ -8,6 +8,7 @@
 
 
 
+static void intentarAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static void cambiarInterfazARegistro (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
@@ -44,7 +45,7 @@ static void interfazAutenticacion_liberarElementos (s_interfazAutenticacionEleme
 
 static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static bool manejarClickIntentarAutenticar (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static bool manejarClickIntentarAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static bool manejarClickCambiarInterfazRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const s_interfazAutenticacion *interfazAutenticacion);
 static bool manejarEscribirNombre (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
 static bool manejarEscribirContrasenia (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
@@ -149,7 +150,7 @@ void interfazAutenticacion_accion (s_aplicacion *aplicacion, const s_interfazAut
         {
             if (manejarClickEscribirNombre (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickEscribirContrasenia (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickIntentarAutenticar (aplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+            if (manejarClickIntentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickCambiarInterfazRegistro (aplicacion, recursosComunesAutenticacionRegistro, interfazAutenticacion) == EVENTO_MANEJADO) break;
             if (manejarClickGuardarAutenticacion (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
         }
@@ -251,34 +252,17 @@ void interfazAutenticacion_liberar (s_interfazAutenticacion *interfazAutenticaci
 
 
 
-void intentarIngreso (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static void intentarAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    char *bufferSolicitud, *bufferRespuesta;
-    char estadoSolicitud;
+    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    char estadoRespuesta;
     int id;
 
-    bufferSolicitud = malloc (MAX_BUFFER_SOLICITUD);
-    if (!bufferSolicitud)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return;
-    }
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
-    {
-        free (bufferSolicitud);
-        perror ("ERROR - Sin memoria.\n");
-        return;
-    }
-
-    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_AUTENTICACION, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia);
+    snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s", INDICE_SOLICITUD_AUTENTICACION, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia);
     enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
-    sscanf (bufferRespuesta, "%c|%d", &estadoSolicitud, &id);
+    sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &id);
 
-    free (bufferSolicitud);
-    free (bufferRespuesta);
-
-    if (estadoSolicitud == INDICE_RESPUESTA_SOLICITUD_ACEPTADA)
+    if (estadoRespuesta == INDICE_RESPUESTA_EXITO)
     {
         aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         aplicacion->usuario.id = id;
@@ -286,8 +270,10 @@ void intentarIngreso (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRe
         if (recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion == HABILITAR_GUARDAR_AUTENTICACION)
             guardarDatosEnArchivo (aplicacion->usuario.id, recursosComunesAutenticacionRegistro->bufferNombre);
     }
-    else
-        printf ("Usuario o contrasenia incorrectos.\n");
+    else if (INDICE_RESPUESTA_ERROR_CREDENCIALES)
+            printf ("Usuario o contrasenia incorrectos.\n");
+        else
+            printf ("Error servidor.\n");
 }
 
 /** \brief Modificar las configuraciones de los recursos graficos para adaptarlos a la interfaz de registro.
@@ -574,11 +560,11 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickIntentarAutenticar (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static bool manejarClickIntentarAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) && (clickEnRectangulo (aplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar)))
     {
-        intentarIngreso (aplicacion, recursosComunesAutenticacionRegistro);
+        intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;
@@ -667,7 +653,7 @@ static bool manejarEnterIntentarAutenticacion (s_aplicacion *aplicacion, s_recur
     if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) &&
         ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE) || (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)))
     {
-        intentarIngreso (aplicacion, recursosComunesAutenticacionRegistro);
+        intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;

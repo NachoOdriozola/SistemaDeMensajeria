@@ -200,7 +200,7 @@ void interfazSalas_actualizar (s_aplicacion *aplicacion, s_interfazSalas *interf
     {
         switch (*bufferRespuesta)
         {
-        case INDICE_RESPUESTA_SOLICITUD_AMISTAD:
+        case INDICE_RESPUESTA_AGENDAR_CONTACTO:
             agregarNotificacion (&(aplicacion->listaNotificaciones), bufferRespuesta, aplicacion->ventana, aplicacion->mensajes.fuentes);
             break;
 

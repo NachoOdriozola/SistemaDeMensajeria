@@ -97,7 +97,7 @@ bool recibirRespuesta (SOCKET sock, char *bufferRespuesta)
     bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
     if (bytesRecibidos > 0)
     {
-        bufferRespuesta += bytesRecibidos - 1;
+        bufferRespuesta += bytesRecibidos;
         *bufferRespuesta = '\0';
         return RECIBIO_RESPUESTA;
     }
@@ -111,9 +111,9 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud,
     int bytesRecibidos;
 
     ioctlsocket (sock, FIONBIO, &modoSocket);
-    send (sock, bufferSolicitud, MAX_BUFFER_SOLICITUD, 0);
+    send (sock, bufferSolicitud, strlen (bufferSolicitud), 0);
     bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-    bufferRespuesta += bytesRecibidos - 1;
+    bufferRespuesta += bytesRecibidos;
     *bufferRespuesta = '\0';
     modoSocket = 1;     // Socket modo no bloqueante
     ioctlsocket (sock, FIONBIO, &modoSocket);
