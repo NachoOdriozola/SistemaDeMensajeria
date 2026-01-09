@@ -114,7 +114,7 @@ void interfazAutenticacion_configurar (s_interfazAutenticacion *interfazAutentic
     interfazAutenticacion_configurarElementos (&(interfazAutenticacion->elementos));
 
 
-    // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
+    // --------------- ESTABLECER TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
     // TEXTOS
 

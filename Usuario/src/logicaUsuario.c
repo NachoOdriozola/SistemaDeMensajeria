@@ -3,55 +3,6 @@
 
 
 /* ============================
-   FUNCIONES DE VENTANA
-   ============================ */
-
-
-
-void crearEscalaElementos (s_ventana *ventana)
-{
-    ventana->escalaElementos.x = ventana->tamVentana.x / (float)TAMANIO_BASE_MAXIMIZADO_X;
-    ventana->escalaElementos.y = ventana->tamVentana.y / (float)TAMANIO_BASE_MAXIMIZADO_Y;
-}
-
-void crearEscalaPixeles (s_ventana *ventana)
-{
-    ventana->escalaPixeles = sqrt((ventana->tamVentana.x / (float)TAMANIO_BASE_MAXIMIZADO_X) * (ventana->tamVentana.y / (float)TAMANIO_BASE_MAXIMIZADO_Y));
-}
-
-void eventoMaximizadoAutomatico (sfRenderWindow *renderizado, s_ventana *ventana)
-{
-    sfEvent eventoPrimerMaximizado;
-    sfVector2f nuevoTamVentana;
-
-    // Procesar todos los eventos ocurridos hasta encontrar el de maximizado de la ventana.
-    while (sfRenderWindow_pollEvent (renderizado, &eventoPrimerMaximizado))
-    {
-        if (eventoPrimerMaximizado.type == sfEvtResized)
-        {
-            nuevoTamVentana.x = eventoPrimerMaximizado.size.width;
-            nuevoTamVentana.y = eventoPrimerMaximizado.size.height;
-            break;
-        }
-    }
-    ventana->tamVentana = nuevoTamVentana;
-}
-
-void maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana)
-{
-    HWND hwnd;
-
-    hwnd = sfRenderWindow_getSystemHandle (renderizado);
-    ShowWindow (hwnd, SW_MAXIMIZE);                         // maximizar ventana.
-    eventoMaximizadoAutomatico (renderizado, ventana);
-
-    crearEscalaElementos (ventana);
-    crearEscalaPixeles (ventana);
-}
-
-
-
-/* ============================
    FUNCIONES DE FUENTES
    ============================ */
 
@@ -176,24 +127,28 @@ bool verificarModoAutenticacion (s_usuario *usuario)
 
 bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo)
 {
-    sfVector2i posMouse;
+    sfVector2i mousePixel;
+    sfVector2f mouseMundo;
     sfFloatRect limiteRectangulo;
 
-    posMouse = sfMouse_getPositionRenderWindow (renderizado);
+    mousePixel = sfMouse_getPositionRenderWindow (renderizado);
+    mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
     limiteRectangulo = sfRectangleShape_getGlobalBounds (rectangulo);
 
-    return sfFloatRect_contains (&limiteRectangulo, posMouse.x, posMouse.y);
+    return sfFloatRect_contains (&limiteRectangulo, mouseMundo.x, mouseMundo.y);
 }
 
 bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
 {
-    sfVector2i posMouse;
+    sfVector2i mousePixel;
+    sfVector2f mouseMundo;
     sfFloatRect limiteTexto;
 
-    posMouse = sfMouse_getPositionRenderWindow (renderizado);
+    mousePixel = sfMouse_getPositionRenderWindow (renderizado);
+    mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
     limiteTexto = sfText_getGlobalBounds (texto);
 
-    return sfFloatRect_contains (&limiteTexto, posMouse.x, posMouse.y);
+    return sfFloatRect_contains (&limiteTexto, mouseMundo.x, mouseMundo.y);
 }
 
 
@@ -300,9 +255,9 @@ void setupListaMensajes (void *mensaje, void *fuente)
     sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (34, 48, 48));
 }
 
-void tamListaMensajes (void *mensaje, void *escalaPixeles)
+void tamListaMensajes (void *mensaje)
 {
-    sfText_setCharacterSize (*((sfText**)mensaje), 26 * (*(float*)escalaPixeles));
+    sfText_setCharacterSize (*((sfText**)mensaje), 26);
 }
 
 void liberarMensaje (void *mensaje)
@@ -370,26 +325,26 @@ int crearNotificacion (s_notificacion *notificacion)
     return EXITO;
 }
 
-void setupNotificacion (s_notificacion *notificacion, s_ventana ventana, s_fuentes fuentes)
+void setupNotificacion (s_notificacion *notificacion, s_fuentes fuentes)
 {
     //SETUP ELEMENTOS
 
     //Recuadro
     sfRectangleShape_setFillColor (notificacion->recuadro, sfColor_fromRGB (255, 229, 127));
     sfRectangleShape_setOutlineColor (notificacion->recuadro, sfColor_fromRGB (156, 156, 156));
-    sfRectangleShape_setOutlineThickness (notificacion->recuadro, 3 * ventana.escalaPixeles);
-    sfRectangleShape_setPosition (notificacion->recuadro, (sfVector2f){650 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfRectangleShape_setSize (notificacion->recuadro, (sfVector2f){350 * ventana.escalaElementos.x, 150 * ventana.escalaElementos.y});
+    sfRectangleShape_setOutlineThickness (notificacion->recuadro, 3);
+    sfRectangleShape_setPosition (notificacion->recuadro, (sfVector2f){650, 600});
+    sfRectangleShape_setSize (notificacion->recuadro, (sfVector2f){350, 150});
 
     //Boton aceptar
     sfRectangleShape_setFillColor (notificacion->botonAceptar, sfColor_fromRGB (208, 208, 208));
-    sfRectangleShape_setPosition (notificacion->botonAceptar, (sfVector2f){850 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfRectangleShape_setSize (notificacion->botonAceptar, (sfVector2f){100 * ventana.escalaElementos.x, 35 * ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (notificacion->botonAceptar, (sfVector2f){850, 600});
+    sfRectangleShape_setSize (notificacion->botonAceptar, (sfVector2f){100, 35});
 
     //Boton rechazar
     sfRectangleShape_setFillColor (notificacion->botonRechazar, sfColor_fromRGB (208, 208, 208));
-    sfRectangleShape_setPosition (notificacion->botonRechazar, (sfVector2f){1000 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfRectangleShape_setSize (notificacion->botonRechazar, (sfVector2f){100 * ventana.escalaElementos.x, 35 * ventana.escalaElementos.y});
+    sfRectangleShape_setPosition (notificacion->botonRechazar, (sfVector2f){1000, 600});
+    sfRectangleShape_setSize (notificacion->botonRechazar, (sfVector2f){100, 35});
 
 
     //SETUP TEXTO
@@ -397,31 +352,31 @@ void setupNotificacion (s_notificacion *notificacion, s_ventana ventana, s_fuent
     //Texto notificacion
     sfText_setFont (notificacion->textoNotificacion, fuentes.fuente1);
     sfText_setFillColor (notificacion->textoNotificacion, sfColor_fromRGB (40, 54, 54));
-    sfText_setPosition (notificacion->textoNotificacion, (sfVector2f){680 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfText_setCharacterSize (notificacion->textoNotificacion, 26 * ventana.escalaPixeles);
+    sfText_setPosition (notificacion->textoNotificacion, (sfVector2f){680, 600});
+    sfText_setCharacterSize (notificacion->textoNotificacion, 26);
 
     //Texto boton aceptar
     sfText_setFont (notificacion->textoBotonAceptar, fuentes.fuente1);
     sfText_setFillColor (notificacion->textoBotonAceptar, sfColor_fromRGB (40, 54, 54));
     sfText_setString (notificacion->textoBotonAceptar, "ACEPTAR");
-    sfText_setPosition (notificacion->textoBotonAceptar, (sfVector2f){860 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfText_setCharacterSize (notificacion->textoBotonAceptar, 26 * ventana.escalaPixeles);
+    sfText_setPosition (notificacion->textoBotonAceptar, (sfVector2f){860, 600});
+    sfText_setCharacterSize (notificacion->textoBotonAceptar, 26);
 
     //Texto boton rechazar
     sfText_setFont (notificacion->textoBotonRechazar, fuentes.fuente1);
     sfText_setFillColor (notificacion->textoBotonRechazar, sfColor_fromRGB (40, 54, 54));
     sfText_setString (notificacion->textoBotonRechazar, "RECHAZAR");
-    sfText_setPosition (notificacion->textoBotonRechazar, (sfVector2f){1030 * ventana.escalaElementos.x, 600 * ventana.escalaElementos.y});
-    sfText_setCharacterSize (notificacion->textoBotonRechazar, 26 * ventana.escalaPixeles);
+    sfText_setPosition (notificacion->textoBotonRechazar, (sfVector2f){1030, 600});
+    sfText_setCharacterSize (notificacion->textoBotonRechazar, 26);
 }
 
-int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_ventana ventana, s_fuentes fuentes)
+int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_fuentes fuentes)
 {
     s_notificacion notificacion;
 
     if (crearNotificacion (&notificacion) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
-    setupNotificacion (&notificacion, ventana, fuentes);
+    setupNotificacion (&notificacion, fuentes);
 
     bufferNotificacion += 2;
     sfText_setString (notificacion.textoNotificacion, bufferNotificacion);

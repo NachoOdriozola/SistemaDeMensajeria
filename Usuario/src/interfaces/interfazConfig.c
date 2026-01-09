@@ -17,8 +17,8 @@ static int interfazConfig_inicializarElementos (s_interfazConfigElementos *eleme
 static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, const s_fuentes *fuentes);
 static void interfazConfig_configurarElementos (s_interfazConfigElementos *elementos);
 
-static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos, const s_ventana *ventana);
-static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos, const s_ventana *ventana);
+static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos);
+static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos);
 
 static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const s_interfazConfigTextos *textos);
 static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const s_interfazConfigElementos *elementos);
@@ -65,7 +65,7 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig)
     return EXITO;
 }
 
-void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes, const s_ventana *ventana)
+void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes)
 {
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
@@ -79,16 +79,16 @@ void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuente
     interfazConfig_configurarElementos (&(interfazConfig->elementos));
 
 
-    // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
+    // --------------- ESTABLECER TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
     // TEXTOS
 
-    interfazConfig_tamYPosVentanaTextos (&(interfazConfig->textos), ventana);
+    interfazConfig_tamYPosVentanaTextos (&(interfazConfig->textos));
 
 
     // ELEMENTOS
 
-    interfazConfig_tamYPosVentanaElementos (&(interfazConfig->elementos), ventana);
+    interfazConfig_tamYPosVentanaElementos (&(interfazConfig->elementos));
 }
 
 void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *interfazConfig)
@@ -262,11 +262,11 @@ static void interfazConfig_configurarElementos (s_interfazConfigElementos *eleme
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos, const s_ventana *ventana)
+static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos)
 {
     // textoConfig
-    sfText_setPosition (textos->textoConfig, (sfVector2f){1000 * ventana->escalaElementos.x, 500 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->textoConfig, 36 * ventana->escalaPixeles);
+    sfText_setPosition (textos->textoConfig, (sfVector2f){1000, 500});
+    sfText_setCharacterSize (textos->textoConfig, 36);
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de configuraciones.
@@ -275,11 +275,11 @@ static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos,
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos, const s_ventana *ventana)
+static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos)
 {
     // rectanguloVolver
-    sfRectangleShape_setPosition (elementos->rectanguloVolver, (sfVector2f){1000 * ventana->escalaElementos.x, 650 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->rectanguloVolver, (sfVector2f){60 * ventana->escalaElementos.x, 60 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->rectanguloVolver, (sfVector2f){1000, 650});
+    sfRectangleShape_setSize (elementos->rectanguloVolver, (sfVector2f){60, 60});
 }
 
 /** \brief Renderizar los recursos graficos de textos de la interfaz de configuraciones.

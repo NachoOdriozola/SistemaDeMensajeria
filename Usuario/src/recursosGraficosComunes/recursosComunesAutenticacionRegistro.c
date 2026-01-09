@@ -92,7 +92,7 @@ void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutentica
     recursosComunesAutenticacionRegistro_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));
 
 
-    // --------------- TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
+    // --------------- ESTABLECER TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
 
     // TEXTOS
 

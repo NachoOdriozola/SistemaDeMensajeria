@@ -42,16 +42,16 @@
 
 
 /**
- * \def TAMANIO_BASE_MAXIMIZADO_X
+ * \def ANCHO_LOGICO_VENTANA
  * \brief Tamanio en X de la ventana (QUE UTILIZO YO) maximizada. Utilizado para crear escalas de pixeles.
  */
-#define TAMANIO_BASE_MAXIMIZADO_X 1920
+#define ANCHO_LOGICO_VENTANA 1920
 
 /**
- * \def TAMANIO_BASE_MAXIMIZADO_Y
+ * \def ALTO_LOGICO_VENTANA
  * \brief Tamanio en Y de la ventana (QUE UTILIZO YO) maximizada. Utilizado para crear escalas de pixeles.
  */
-#define TAMANIO_BASE_MAXIMIZADO_Y 1009
+#define ALTO_LOGICO_VENTANA 1009
 
 
 /**
@@ -244,17 +244,6 @@ typedef struct
 } s_usuario;
 
 /**
- * \struct s_ventana
- * \brief  Contiene valores importantes sobre el tamanio de la ventana.
- */
-typedef struct
-{
-    sfVector2f tamVentana;      /**< Tamanio actual de la ventana. */
-    sfVector2f escalaElementos; /**< Valores de escala de elementos en X e Y. */
-    float escalaPixeles;        /**< Valor escala en pixeles. */
-} s_ventana;
-
-/**
  * \struct s_fuentes
  * \brief  Estructura que contiene las fuentes graficas para los textos.
  */
@@ -282,7 +271,6 @@ typedef struct
 {
     sfRenderWindow *renderizado;        /**< Renderizado de la ventana. */
     SOCKET sock;                        /**< Socket del usuario. */
-    s_ventana ventana;
     s_usuario usuario;
     s_mensajes mensajes;
     s_listaSimple listaNotificaciones;  /**< Lista simple de notificaciones. */
@@ -311,55 +299,6 @@ typedef struct
     int id;
     char nombre [MAX_NOMBRE_USUARIO];
 } s_datosGuardados;
-
-
-
-/* ============================
-   FUNCIONES DE VENTANA
-   ============================ */
-
-
-
-/** \brief Crear escala en X e Y para elementos graficos.
- *
- * Crear valores escalares en X e Y, por medio de regla de 3, para poder establecer tamanios y posiciones de los elementos graficos en la ventana.
- *
- * \param ventana Puntero a la estructura que contiene los valores de la ventana.
- *
- */
-void crearEscalaElementos (s_ventana *ventana);
-
-/** \brief Crear escala en pixeles para elementos graficos.
- *
- * Crear valor escalar en pixeles, por medio de regla de 3, para poder establecer tamanios y posiciones de los elementos graficos en la ventana.
- * Selecciona el valor mas pequenio entre X e Y.
- *
- * \param ventana Puntero a la estructura que contiene los valores de la ventana.
- *
- */
-void crearEscalaPixeles (s_ventana *ventana);
-
-/** \brief Procesar el evento de maximizado automatico de la ventana y guardar sus valores.
- *
- * Procesar todos los eventos ocurridos hasta encontrar el de maximizado de la ventana, una vez encontrado, guarda los valores de la ventana en la
- * estructura de la ventana.
- *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param ventana Puntero a la estructura que contiene los valores de la ventana.
- *
- */
-void eventoMaximizadoAutomatico (sfRenderWindow *renderizado, s_ventana *ventana);
-
-/** \brief Maximizar automaticamente la ventana y guardar sus valores.
- *
- * Maximizar la ventana y crear las escalas de elementos y pixeles.
- * Utilizar cuando se desee maximizar la ventana automaticamente (sin intervencion del usuario).
- *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param ventana Puntero a la estructura que contiene los valores de la ventana.
- *
- */
-void maximizadoAutomaticoVentana (sfRenderWindow *renderizado, s_ventana *ventana);
 
 
 
@@ -539,7 +478,7 @@ void asignarMensaje (s_aplicacion *aplicacion, const char *bufferMensaje, bool e
 void modificarPosListaMensajes (void *mensaje);
 void renderizarListaMensajes (void *mensaje, void *renderizado);
 void setupListaMensajes (void *mensaje, void *fuente);
-void tamListaMensajes (void *mensaje, void *escalaPixeles);
+void tamListaMensajes (void *mensaje);
 void liberarMensaje (void *mensaje);
 
 
@@ -551,8 +490,8 @@ void liberarMensaje (void *mensaje);
 
 
 int crearNotificacion (s_notificacion *notificacion);
-void setupNotificacion (s_notificacion *notificacion, s_ventana ventana, s_fuentes fuentes);
-int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_ventana ventana, s_fuentes fuentes);
+void setupNotificacion (s_notificacion *notificacion, s_fuentes fuentes);
+int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_fuentes fuentes);
 void liberarNotificacion (void *notificacion);
 void renderizarListaNotificaciones (void *notificacion, void *renderizado);
 

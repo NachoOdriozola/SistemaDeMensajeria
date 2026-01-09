@@ -115,14 +115,6 @@ int interfazSalas_inicializar (s_interfazSalas *interfazSalas);
  */
 void interfazSalas_configurar (s_interfazSalas *interfazSalas, const s_fuentes *fuentes);
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de salas.
- *
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
- *
- */
-void interfazSalas_tamYPosVentana (s_interfazSalas *interfazSalas, const s_ventana *ventana);
-
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de salas.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y manejar la respuesta correspondientes segun el evento detectado.

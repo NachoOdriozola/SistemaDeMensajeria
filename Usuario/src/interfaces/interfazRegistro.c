@@ -116,7 +116,7 @@ void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_
     interfazRegistro_configurarElementos (&(interfazRegistro->elementos));
 
 
-    // --------------- TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
+    // --------------- ESTABLECER TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
 
     // TEXTOS
 

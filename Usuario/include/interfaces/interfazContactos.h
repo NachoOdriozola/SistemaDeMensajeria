@@ -142,14 +142,6 @@ int interfazContactos_inicializar (s_interfazContactos *interfazContactos);
  */
 void interfazContactos_configurar (s_interfazContactos *interfazContactos, const s_fuentes *fuentes);
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de contactos.
- *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
- *
- */
-void interfazContactos_tamYPosVentana (s_interfazContactos *interfazContactos, const s_ventana *ventana);
-
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de contactos.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y manejar la respuesta correspondientes segun el evento detectado.

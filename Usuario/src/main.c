@@ -83,7 +83,7 @@ int main()
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONFIG)
             {
                 interfazConfig_inicializar (&(interfaces.config));
-                interfazConfig_configurar (&(interfaces.config), &(aplicacion.mensajes.fuentes), &(aplicacion.ventana));
+                interfazConfig_configurar (&(interfaces.config), &(aplicacion.mensajes.fuentes));
             }
             break;
 
@@ -95,7 +95,7 @@ int main()
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONFIG)
             {
                 interfazConfig_inicializar (&(interfaces.config));
-                interfazConfig_configurar (&(interfaces.config), &(aplicacion.mensajes.fuentes), &(aplicacion.ventana));
+                interfazConfig_configurar (&(interfaces.config), &(aplicacion.mensajes.fuentes));
             }
             break;
 
@@ -284,22 +284,25 @@ void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
     sfRenderWindow_setFramerateLimit (aplicacion->renderizado, 60);
 
 
-    // --------------- CONFIGURAR RECURSOS GRAFICOS COMUNES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
 
     recursosComunesContactosSalas_configurar (&(interfaces->recursosComunesContactosSalas), &(aplicacion->mensajes.fuentes));
 
 
-    // --------------- CONFIGURAR INTERFACES GRAFICAS ESENCIALES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS ESENCIALES ---------------
 
     // Interfaz grafica de contactos
+
     interfazContactos_configurar (&(interfaces->contactos), &(aplicacion->mensajes.fuentes));
 
     // Interfaz grafica de salas
+
     interfazSalas_configurar (&(interfaces->salas), &(aplicacion->mensajes.fuentes));
 
 
     // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
     mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.fuente1, setupListaMensajes);
+    mapListaCircular (&(aplicacion->mensajes.listaMensajes), tamListaMensajes);
     aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.listaMensajes;
 
 
@@ -387,26 +390,9 @@ void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces)
     sfText_setString (interfaces->recursosComunesContactosSalas.textos.nombreUsuario, aplicacion->usuario.nombre);
 
 
-    // --------------- CONFIGURAR VENTANA ---------------
+    // --------------- MAXIMIZAR VENTANA ---------------
 
-    maximizadoAutomaticoVentana (aplicacion->renderizado, &(aplicacion->ventana));
-
-
-    // --------------- CONFIGURAR VISTAS DE LOS RECURSOS GRAFICOS COMUNES ESENCIALES ---------------
-
-    recursosComunesContactosSalas_tamVistas (&(interfaces->recursosComunesContactosSalas.vistas), &(aplicacion->ventana));
-
-
-    // --------------- CONFIGURAR TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ESENCIALES ---------------
-
-    recursosComunesContactosSalas_tamYPosVentana (&(interfaces->recursosComunesContactosSalas), &(aplicacion->ventana));
-
-
-    // --------------- CONFIGURAR TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS ESENCIALES ---------------
-
-    interfazContactos_tamYPosVentana (&(interfaces->contactos), &(aplicacion->ventana));
-    interfazSalas_tamYPosVentana (&(interfaces->salas), &(aplicacion->ventana));
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), &(aplicacion->ventana.escalaPixeles), tamListaMensajes);
+    ShowWindow (sfRenderWindow_getSystemHandle (aplicacion->renderizado), SW_MAXIMIZE);
 }
 
 int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfaces)
@@ -424,7 +410,7 @@ int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfac
 
     // --------------- INICIALIZAR INTERFACES GRAFICAS DE AUTENTICACION ---------------
 
-    // Interfaz gráfica de autenticacion
+    // Interfaz grafica de autenticacion
 
     if (interfazAutenticacion_inicializar (&(interfaces->autenticacion)) == ERROR_INICIALIZACION)
     {
@@ -432,7 +418,7 @@ int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfac
         return ERROR_INICIALIZACION;
     }
 
-    // Interfaz gráfica de registro
+    // Interfaz grafica de registro
 
     if (interfazRegistro_inicializar (&(interfaces->registro)) == ERROR_INICIALIZACION)
     {
@@ -442,10 +428,20 @@ int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfac
     }
 
 
-    // --------------- CONFIGURAR INTERFACES GRAFICAS DE AUTENTICACIÓN ---------------
+    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
 
     recursosComunesAutenticacionRegistro_configurar (&(interfaces->recursosComunesAutenticacionRegistro), &(aplicacion->mensajes.fuentes));
+
+
+    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS DE AUTENTICACION ---------------
+
+    // Interfaz grafica de autenticacion
+
     interfazAutenticacion_configurar (&(interfaces->autenticacion), &(aplicacion->mensajes.fuentes));
+
+
+    // Interfaz grafica de registro
+
     interfazRegistro_configurar (&(interfaces->registro), &(aplicacion->mensajes.fuentes));
 
 

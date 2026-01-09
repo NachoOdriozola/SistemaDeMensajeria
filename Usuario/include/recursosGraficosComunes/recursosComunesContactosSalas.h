@@ -200,14 +200,6 @@ int recursosComunesContactosSalas_inicializar (s_recursosComunesContactosSalas *
  */
 void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_fuentes *fuentes);
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada recurso grafico comun (compartido) entre las interfaces de contactos y salas
- *
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos, buffers y habilitaciones graficos comunes entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
- *
- */
-void recursosComunesContactosSalas_tamYPosVentana (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana);
-
 /** \brief Renderizar los recursos graficos de textos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
@@ -242,16 +234,6 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
    ============================ */
 
 
-
-/** \brief Establecer un tamanio a las vistas comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * Establecer un tamanio, centro y viewport, en caso de ser necesario, a las vistas comunes entre las interfaces de contactos y salas.
- *
- * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
- *
- */
-void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas, const s_ventana *ventana);
 
 int intentarEnvioMensaje (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
 void manejarReciboMensaje (s_aplicacion *aplicacion, char *bufferRespuesta);
@@ -310,7 +292,7 @@ void manejarRedimensionamientoVentanaContactosSalas (s_aplicacion *aplicacion, s
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana, sfEvent eventoChar);
+bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoChar);
 
 /** \brief Manejar el evento de enviar mensaje.
  *

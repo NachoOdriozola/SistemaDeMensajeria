@@ -19,8 +19,9 @@ static int recursosComunesContactosSalas_inicializarVistas (s_recursosComunesCon
 static void recursosComunesContactosSalas_configurarTextos (s_recursosComunesContactosSalasTextos *textos, const s_fuentes *fuentes);
 static void recursosComunesContactosSalas_configurarElementos (s_recursosComunesContactosSalasElementos *elementos);
 
-static void recursosComunesContactosSalas_tamYPosVentanaTextos (s_recursosComunesContactosSalasTextos *textos, const s_ventana *ventana);
-static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos, const s_ventana *ventana);
+static void recursosComunesContactosSalas_tamYPosVentanaTextos (s_recursosComunesContactosSalasTextos *textos);
+static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos);
+static void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas);
 
 static void recursosComunesContactosSalas_liberarTextos (s_recursosComunesContactosSalasTextos *textos);
 static void recursosComunesContactosSalas_liberarElementos (s_recursosComunesContactosSalasElementos *elementos);
@@ -101,20 +102,23 @@ void recursosComunesContactosSalas_configurar (s_recursosComunesContactosSalas *
     // ELEMENTOS
 
     recursosComunesContactosSalas_configurarElementos (&(recursosComunesContactosSalas->elementos));
-}
 
-void recursosComunesContactosSalas_tamYPosVentana (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana)
-{
-    // --------------- TAMANIO Y POSICION EN VENTANA DE LOS RECURSOS GRAFICOS ---------------
 
-    // TEXTOS
+    // --------------- ESTABLECER TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
 
-    recursosComunesContactosSalas_tamYPosVentanaTextos (&(recursosComunesContactosSalas->textos), ventana);
+    // TEXTO
+
+    recursosComunesContactosSalas_tamYPosVentanaTextos (&(recursosComunesContactosSalas->textos));
 
 
     // ELEMENTOS
 
-    recursosComunesContactosSalas_tamYPosVentanaElementos (&(recursosComunesContactosSalas->elementos), ventana);
+    recursosComunesContactosSalas_tamYPosVentanaElementos (&(recursosComunesContactosSalas->elementos));
+
+
+    // VISTAS
+
+    recursosComunesContactosSalas_tamVistas (&(recursosComunesContactosSalas->vistas));
 }
 
 void recursosComunesContactosSalas_renderizarTextos (sfRenderWindow *renderizado, const s_recursosComunesContactosSalasTextos *textos)
@@ -163,18 +167,6 @@ void recursosComunesContactosSalas_liberar (s_recursosComunesContactosSalas *rec
    ============================ */
 
 
-
-void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas, const s_ventana *ventana)
-{
-    // UI
-    sfView_setSize (vistas->UI, ventana->tamVentana);
-    sfView_setCenter (vistas->UI, (sfVector2f){ventana->tamVentana.x / 2.0f, ventana->tamVentana.y / 2.0f});
-
-    // mensajes
-    sfView_setSize (vistas->mensajes, (sfVector2f){1470 * ventana->escalaElementos.x, 850 * ventana->escalaElementos.y});   // Vista del tamanio del sfRectangleShape *areaMensajes
-    sfView_setCenter (vistas->mensajes, (sfVector2f){1165 * ventana->escalaElementos.x, 455 * ventana->escalaElementos.y}); // Centro del sfRectangleShape *areaMensajes
-    sfView_setViewport(vistas->mensajes, (sfFloatRect){0.223f, 0.029f, 0.765f, 0.842f});                                    // Proporciones del sfRectangleShape *areaMensajes
-}
 
 int intentarEnvioMensaje (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
@@ -558,44 +550,44 @@ static void recursosComunesContactosSalas_configurarElementos (s_recursosComunes
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void recursosComunesContactosSalas_tamYPosVentanaTextos (s_recursosComunesContactosSalasTextos *textos, const s_ventana *ventana)
+static void recursosComunesContactosSalas_tamYPosVentanaTextos (s_recursosComunesContactosSalasTextos *textos)
 {
     // alertaNotificaciones
-    sfText_setPosition (textos->alertaNotificaciones, (sfVector2f){320 * ventana->escalaElementos.x, 40 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->alertaNotificaciones, 38 * ventana->escalaPixeles);
+    sfText_setPosition (textos->alertaNotificaciones, (sfVector2f){320, 40});
+    sfText_setCharacterSize (textos->alertaNotificaciones, 38);
 
     // auxEscribirMensaje
-    sfText_setPosition (textos->auxEscribirMensaje, (sfVector2f){510 * ventana->escalaElementos.x, 912 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->auxEscribirMensaje, 26 * ventana->escalaPixeles);
+    sfText_setPosition (textos->auxEscribirMensaje, (sfVector2f){510, 912});
+    sfText_setCharacterSize (textos->auxEscribirMensaje, 26);
 
     // cerrarVentanaEmergente
-    sfText_setPosition (textos->cerrarVentanaEmergente, (sfVector2f){1070 * ventana->escalaElementos.x, 390 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->cerrarVentanaEmergente, 36 * ventana->escalaPixeles);
+    sfText_setPosition (textos->cerrarVentanaEmergente, (sfVector2f){1070, 390});
+    sfText_setCharacterSize (textos->cerrarVentanaEmergente, 36);
 
     // configuraciones
-    sfText_setPosition (textos->configuraciones, (sfVector2f){305 * ventana->escalaElementos.x, 922 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->configuraciones, 46 * ventana->escalaPixeles);
+    sfText_setPosition (textos->configuraciones, (sfVector2f){305, 922});
+    sfText_setCharacterSize (textos->configuraciones, 46);
 
     // nombreCambiarInterfaz
-    sfText_setPosition (textos->nombreCambiarInterfaz, (sfVector2f){352 * ventana->escalaElementos.x, 574 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->nombreCambiarInterfaz, 46 * ventana->escalaPixeles);
-    sfText_setLetterSpacing (textos->nombreCambiarInterfaz, 10 * ventana->escalaPixeles);
+    sfText_setPosition (textos->nombreCambiarInterfaz, (sfVector2f){352, 574});
+    sfText_setCharacterSize (textos->nombreCambiarInterfaz, 46);
+    sfText_setLetterSpacing (textos->nombreCambiarInterfaz, 10);
 
     // nombreUsuario
-    sfText_setPosition (textos->nombreUsuario, (sfVector2f){35 * ventana->escalaElementos.x, 925 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->nombreUsuario, 36 * ventana->escalaPixeles);
+    sfText_setPosition (textos->nombreUsuario, (sfVector2f){35, 925});
+    sfText_setCharacterSize (textos->nombreUsuario, 36);
 
     // notificaciones
-    sfText_setPosition (textos->notificaciones, (sfVector2f){300 * ventana->escalaElementos.x, 35 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->notificaciones, 42 * ventana->escalaPixeles);
+    sfText_setPosition (textos->notificaciones, (sfVector2f){300, 35});
+    sfText_setCharacterSize (textos->notificaciones, 42);
 
     // tituloInterfaz
-    sfText_setPosition (textos->tituloInterfaz, (sfVector2f){62 * ventana->escalaElementos.x, 45 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->tituloInterfaz, 36 * ventana->escalaPixeles);
+    sfText_setPosition (textos->tituloInterfaz, (sfVector2f){62, 45});
+    sfText_setCharacterSize (textos->tituloInterfaz, 36);
 
     // tituloVentanaEmergente
-    sfText_setPosition (textos->tituloVentanaEmergente, (sfVector2f){840 * ventana->escalaElementos.x, 400 * ventana->escalaElementos.y});
-    sfText_setCharacterSize (textos->tituloVentanaEmergente, 32 * ventana->escalaPixeles);
+    sfText_setPosition (textos->tituloVentanaEmergente, (sfVector2f){840, 400});
+    sfText_setCharacterSize (textos->tituloVentanaEmergente, 32);
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico común (compartido) entre las interfaces de contactos y salas.
@@ -604,38 +596,50 @@ static void recursosComunesContactosSalas_tamYPosVentanaTextos (s_recursosComune
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos, const s_ventana *ventana)
+static void recursosComunesContactosSalas_tamYPosVentanaElementos (s_recursosComunesContactosSalasElementos *elementos)
 {
     // areaMensajes
-    sfRectangleShape_setPosition (elementos->areaMensajes, (sfVector2f){430 * ventana->escalaElementos.x, 30 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->areaMensajes, (sfVector2f){1470 * ventana->escalaElementos.x, 850 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->areaMensajes, (sfVector2f){430, 30});
+    sfRectangleShape_setSize (elementos->areaMensajes, (sfVector2f){1470, 850});
 
     // barraEscribirMensaje
-    sfRectangleShape_setPosition (elementos->barraEscribirMensaje, (sfVector2f){490 * ventana->escalaElementos.x, 909 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->barraEscribirMensaje, (sfVector2f){1350 * ventana->escalaElementos.x, 42 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->barraEscribirMensaje, (sfVector2f){490, 909});
+    sfRectangleShape_setSize (elementos->barraEscribirMensaje, (sfVector2f){1350, 42});
 
     // barraSeparacionNombre
-    sfRectangleShape_setPosition (elementos->barraSeparacionNombre, (sfVector2f){24 * ventana->escalaElementos.x, 888 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->barraSeparacionNombre, (sfVector2f){250 * ventana->escalaElementos.x, 3 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->barraSeparacionNombre, (sfVector2f){24, 888});
+    sfRectangleShape_setSize (elementos->barraSeparacionNombre, (sfVector2f){250, 3});
 
     // barraSeparacionTitulo
-    sfRectangleShape_setPosition (elementos->barraSeparacionTitulo, (sfVector2f){24 * ventana->escalaElementos.x, 120 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->barraSeparacionTitulo, (sfVector2f){250 * ventana->escalaElementos.x, 3 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->barraSeparacionTitulo, (sfVector2f){24, 120});
+    sfRectangleShape_setSize (elementos->barraSeparacionTitulo, (sfVector2f){250, 3});
 
     // panelInterfaz
     sfRectangleShape_setPosition (elementos->panelInterfaz, (sfVector2f){0, 0});
-    sfRectangleShape_setSize (elementos->panelInterfaz, (sfVector2f){350 * ventana->escalaElementos.x, 1009 * ventana->escalaElementos.y});
+    sfRectangleShape_setSize (elementos->panelInterfaz, (sfVector2f){350, 1009});
 
     // puntoInsercion
-    sfRectangleShape_setSize (elementos->puntoInsercion, (sfVector2f){26 * ventana->escalaElementos.x, 2 * ventana->escalaElementos.y});
+    sfRectangleShape_setSize (elementos->puntoInsercion, (sfVector2f){26, 2});
 
     // solapaCambiarInterfaz
-    sfRectangleShape_setPosition (elementos->solapaCambiarInterfaz, (sfVector2f){350 * ventana->escalaElementos.x, 124 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->solapaCambiarInterfaz, (sfVector2f){60 * ventana->escalaElementos.x, 759 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->solapaCambiarInterfaz, (sfVector2f){350, 124});
+    sfRectangleShape_setSize (elementos->solapaCambiarInterfaz, (sfVector2f){60, 759});
 
     // ventanaEmergente
-    sfRectangleShape_setPosition (elementos->ventanaEmergente, (sfVector2f){760 * ventana->escalaElementos.x, 380 * ventana->escalaElementos.y});
-    sfRectangleShape_setSize (elementos->ventanaEmergente, (sfVector2f){400 * ventana->escalaElementos.x, 300 * ventana->escalaElementos.y});
+    sfRectangleShape_setPosition (elementos->ventanaEmergente, (sfVector2f){760, 380});
+    sfRectangleShape_setSize (elementos->ventanaEmergente, (sfVector2f){400, 300});
+}
+
+static void recursosComunesContactosSalas_tamVistas (s_recursosComunesContactosSalasVistas *vistas)
+{
+    // UI
+    sfView_setSize (vistas->UI, (sfVector2f){ANCHO_LOGICO_VENTANA, ALTO_LOGICO_VENTANA});
+    sfView_setCenter (vistas->UI, (sfVector2f){ANCHO_LOGICO_VENTANA / 2.0f, ALTO_LOGICO_VENTANA / 2.0f});
+
+    // mensajes
+    sfView_setSize (vistas->mensajes, (sfVector2f){1470, 850});                             // Vista del tamanio del sfRectangleShape *areaMensajes
+    sfView_setCenter (vistas->mensajes, (sfVector2f){1165, 455});                           // Centro del sfRectangleShape *areaMensajes
+    sfView_setViewport(vistas->mensajes, (sfFloatRect){0.223f, 0.029f, 0.765f, 0.842f});    // Proporciones del sfRectangleShape *areaMensajes
 }
 
 /** \brief Liberar, de manera segura, todas los textos comunes (compartidas) entre las interfaces de contactos y salas.
@@ -691,29 +695,26 @@ static void recursosComunesContactosSalas_liberarVistas (s_recursosComunesContac
 
 void manejarRedimensionamientoVentanaContactosSalas (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoRedimensionamiento)
 {
+    sfVector2u tamVentana;
+
     if (eventoRedimensionamiento.size.width < ANCHO_MINIMO_VENTANA)
-        aplicacion->ventana.tamVentana.x = ANCHO_MINIMO_VENTANA;
+        tamVentana.x = ANCHO_MINIMO_VENTANA;
     else
-        aplicacion->ventana.tamVentana.x = eventoRedimensionamiento.size.width;
+        tamVentana.x = eventoRedimensionamiento.size.width;
 
     if (eventoRedimensionamiento.size.height < ALTO_MINIMO_VENTANA)
-        aplicacion->ventana.tamVentana.y = ALTO_MINIMO_VENTANA;
+        tamVentana.y = ALTO_MINIMO_VENTANA;
     else
-        aplicacion->ventana.tamVentana.y = eventoRedimensionamiento.size.height;
+        tamVentana.y = eventoRedimensionamiento.size.height;
 
-    sfRenderWindow_setSize (aplicacion->renderizado, (sfVector2u){((unsigned int)(aplicacion->ventana.tamVentana.x)), ((unsigned int)(aplicacion->ventana.tamVentana.y))});
-
-    crearEscalaElementos (&(aplicacion->ventana));
-    crearEscalaPixeles (&(aplicacion->ventana));
-
-    recursosComunesContactosSalas_tamYPosVentana (recursosComunesContactosSalas, &(aplicacion->ventana));
+    sfRenderWindow_setSize (aplicacion->renderizado, tamVentana);
 
     // Redimensionar vista UI
-    sfView_setSize (recursosComunesContactosSalas->vistas.UI, aplicacion->ventana.tamVentana);
-    sfView_setCenter (recursosComunesContactosSalas->vistas.UI, (sfVector2f){aplicacion->ventana.tamVentana.x / 2.0f, aplicacion->ventana.tamVentana.y / 2.0f});
+    sfView_setSize (recursosComunesContactosSalas->vistas.UI, (sfVector2f){ANCHO_LOGICO_VENTANA, ALTO_LOGICO_VENTANA});
+    sfView_setCenter (recursosComunesContactosSalas->vistas.UI, (sfVector2f){ANCHO_LOGICO_VENTANA / 2.0f, ALTO_LOGICO_VENTANA / 2.0f});
 }
 
-bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_ventana *ventana, sfEvent eventoChar)
+bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
@@ -722,7 +723,7 @@ bool manejarEscribirMensaje (s_recursosComunesContactosSalas *recursosComunesCon
         ingresarCaracterABuffer (recursosComunesContactosSalas->bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
         sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->bufferMensaje);
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
-        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){(512.5 * (ventana->escalaElementos.x)) + limiteTextoAux.width, 943 * (ventana->escalaElementos.y)});
+        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){512.5 + limiteTextoAux.width, 943});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;

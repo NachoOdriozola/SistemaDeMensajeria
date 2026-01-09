@@ -111,7 +111,7 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig);
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes, const s_ventana *ventana);
+void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de configuraciones.
  *
