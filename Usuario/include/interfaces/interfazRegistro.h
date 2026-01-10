@@ -53,16 +53,16 @@
 
 
 
-/** \struct s_interfazRegistroTextos
+/** \struct t_interfazRegistroTextos
  * \brief Contiene todos los textos graficos de la interfaz de registro.
  */
 typedef struct
 {
     sfText *textoInformativoContrasenia;    /**< Texto informativo sobre la contrasenia. */
     sfText *textoInformativoNombre;         /**< Texto informativo sobre el nombre. */
-} s_interfazRegistroTextos;
+} t_interfazRegistroTextos;
 
-/** \struct s_interfazRegistroElementos
+/** \struct t_interfazRegistroElementos
  * \brief Contiene todos los elementos graficos de la interfaz de registro.
  */
 typedef struct
@@ -70,25 +70,25 @@ typedef struct
     sfRectangleShape *flechaVolverBarra;
     sfRectangleShape *flechaVolverTriangulo1;
     sfRectangleShape *flechaVolverTriangulo2;
-} s_interfazRegistroElementos;
+} t_interfazRegistroElementos;
 
-/** \struct s_interfazRegistroHabilitaciones
+/** \struct t_interfazRegistroHabilitaciones
  * \brief Contiene todas las habilitaciones de la interfaz de registro.
  */
 typedef struct
 {
 
-} s_interfazRegistroHabilitaciones;
+} t_interfazRegistroHabilitaciones;
 
-/** \struct s_interfazRegistro
+/** \struct t_interfazRegistro
  * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de registro.
  */
 typedef struct
 {
-    s_interfazRegistroTextos textos;
-    s_interfazRegistroElementos elementos;
-    s_interfazRegistroHabilitaciones habilitaciones;
-} s_interfazRegistro;
+    t_interfazRegistroTextos textos;
+    t_interfazRegistroElementos elementos;
+    t_interfazRegistroHabilitaciones habilitaciones;
+} t_interfazRegistro;
 
 
 
@@ -107,7 +107,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro);
+int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro);
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de registro.
  *
@@ -117,7 +117,7 @@ int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro);
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_fuentes *fuentes);
+void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, const t_fuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de registro.
  *
@@ -128,7 +128,7 @@ void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro *interfazRegistro, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazRegistro_accion (t_aplicacion *aplicacion, const t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de registro.
  *
@@ -140,7 +140,7 @@ void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazRegistro_actualizar (s_interfazRegistro *interfazRegistro, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazRegistro_actualizar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de registro sobre la ventana.
  *
@@ -151,14 +151,14 @@ void interfazRegistro_actualizar (s_interfazRegistro *interfazRegistro, s_recurs
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazRegistro_renderizar (sfRenderWindow *renderizado, const s_interfazRegistro *interfazRegistro, const s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazRegistro_renderizar (sfRenderWindow *renderizado, const t_interfazRegistro *interfazRegistro, const t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de registro.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
  *
  */
-void interfazRegistro_liberar (s_interfazRegistro *interfazRegistro);
+void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro);
 
 
 

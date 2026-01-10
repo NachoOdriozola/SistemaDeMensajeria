@@ -21,7 +21,7 @@ static void liberarCliente (void *cliente);
 
 
 
-int inicializarServidor (s_servidor *servidor)
+int inicializarServidor (t_servidor *servidor)
 {
     int resultado;
 
@@ -74,7 +74,7 @@ int inicializarServidor (s_servidor *servidor)
     return EXITO;
 }
 
-int configurarServidor (s_servidor *servidor)
+int configurarServidor (t_servidor *servidor)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DEL SERVIDOR-\t");
 
@@ -104,7 +104,7 @@ int configurarServidor (s_servidor *servidor)
     return EXITO;
 }
 
-void liberarServidor (s_servidor *servidor)
+void liberarServidor (t_servidor *servidor)
 {
     printf ("-LIBERANDO LOS RECURSOS DEL SERVIDOR-\t");
 
@@ -145,7 +145,7 @@ void liberarServidor (s_servidor *servidor)
 
 
 
-void procesarNuevoCliente (s_cliente *nuevoCliente, s_listaSimple *listaSimpleClientesNoAutenticados)
+void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaSimple *listaSimpleClientesNoAutenticados)
 {
     u_long modoSocket = 1; // Establecer socket en modo NO bloqueante.
 
@@ -153,12 +153,12 @@ void procesarNuevoCliente (s_cliente *nuevoCliente, s_listaSimple *listaSimpleCl
     ioctlsocket (nuevoCliente->sock, FIONBIO, &modoSocket);
     nuevoCliente->id = -1; // Le asigna una ID invalida hasta que se autentifique.
 
-    insertarAlInicioListaSimple (listaSimpleClientesNoAutenticados, nuevoCliente, sizeof (s_cliente)); // Insertar el cliente en la lista simple de clientes no autenticados.
+    insertarAlInicioListaSimple (listaSimpleClientesNoAutenticados, nuevoCliente, sizeof (t_cliente)); // Insertar el cliente en la lista simple de clientes no autenticados.
 }
 
-bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDelCliente, char *bufferSolicitud)
+bool recibirSolicitudEnListaSimple (t_listaSimple *listaSimple, t_nodo ***nodoDelCliente, char *bufferSolicitud)
 {
-    s_cliente *cliente;
+    t_cliente *cliente;
     int bytesRecibidos;
 
     while (*listaSimple != NULL) // Mientras haya clientes en la lista simple.
@@ -187,7 +187,7 @@ bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDe
     return NO_RECIBIO_SOLICITUD;
 }
 
-bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelCliente, char *bufferSolicitud)
+bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelCliente, char *bufferSolicitud)
 {
     int i;
 
@@ -208,14 +208,14 @@ bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelClien
 
 
 
-int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
     char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO];
 
-    s_cliente *cliente;
+    t_cliente *cliente;
 
     sqlite3_stmt *sentencia;
     int resultadoConsulta;
@@ -224,7 +224,7 @@ int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProces
     // --------------- LOGICA ---------------
 
 
-    cliente = (s_cliente*)((*(clienteAProcesar))->dato);
+    cliente = (t_cliente*)((*(clienteAProcesar))->dato);
     sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%s", nombreUsuario, contraseniaUsuario); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
@@ -258,14 +258,14 @@ int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProces
     return EXITO;
 }
 
-int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
     char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO], correoElectronico [MAX_CORREO_ELECTRONICO_USUARIO];
 
-    s_cliente *cliente;
+    t_cliente *cliente;
 
     sqlite3_stmt *sentencia;
     int resultadoConsulta;
@@ -274,7 +274,7 @@ int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t
     // --------------- LOGICA ---------------
 
 
-    cliente = (s_cliente*)((*(clienteAProcesar))->dato);
+    cliente = (t_cliente*)((*(clienteAProcesar))->dato);
     sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%[^|]|%s", nombreUsuario, contraseniaUsuario, correoElectronico); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
@@ -340,7 +340,7 @@ int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t
     return EXITO;
 }
 
-int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
@@ -348,7 +348,7 @@ int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buff
     int idEmisor, idReceptor, fecha = 0;
     char texto [MAX_BUFFER_MENSAJE];
 
-    s_cliente cliente;
+    t_cliente cliente;
 
     sqlite3_stmt *sentencia;
 
@@ -356,7 +356,7 @@ int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buff
     // --------------- LOGICA ---------------
 
 
-    cliente = *((s_cliente*)((*(clienteAProcesar))->dato));
+    cliente = *((t_cliente*)((*(clienteAProcesar))->dato));
     sscanf (&(buffersComunicacion->solicitud[2]), "%d|%d|%[^\n]", &idEmisor, &idReceptor, texto);
 
     if (idEmisor == idReceptor)
@@ -388,7 +388,7 @@ int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buff
     send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
     printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
 
-    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (s_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
+    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (t_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
     {
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", INDICE_RESPUESTA_MENSAJE, idEmisor, texto);
         send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
@@ -400,7 +400,7 @@ int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buff
 }
 
 /*
-int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudContacto (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
@@ -409,7 +409,7 @@ int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t
     char *consulta;
     int resultadoConsulta;
 
-    s_cliente *clienteEmisor, clienteReceptor;
+    t_cliente *clienteEmisor, clienteReceptor;
     int idReceptor;
     char *nombreEmisor, *nombreReceptor;
 
@@ -525,7 +525,7 @@ int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t
     sprintf (bufferRespuesta, "%c", INDICE_RESPUESTA_SOLICITUD_ACEPTADA);
     send (clienteEmisor->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
     printf ("Respuesta enviada: %s\n\n", bufferRespuesta);
-    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &clienteReceptor, sizeof (s_cliente), cmpIdCliente) == ENCONTRO) // Si el usuario receptor esta conectado.
+    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &clienteReceptor, sizeof (t_cliente), cmpIdCliente) == ENCONTRO) // Si el usuario receptor esta conectado.
     {
         sprintf (bufferRespuesta, "%c|%s quiere ser tu amigo!", INDICE_RESPUESTA_SOLICITUD_AMISTAD, nombreEmisor);
         send (clienteReceptor.sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
@@ -572,7 +572,7 @@ static int funcionHash (const void *clave)
  */
 static int cmpIdCliente (const void *cliente, const void *clave)
 {
-    return (*((s_cliente*)cliente)).id - *((int*)clave);
+    return (*((t_cliente*)cliente)).id - *((int*)clave);
 }
 
 /** \brief Mostrar el ID de un cliente en consola. Agrega dos tabulaciones.
@@ -582,7 +582,7 @@ static int cmpIdCliente (const void *cliente, const void *clave)
  *
 static void mostrarCliente (void *cliente) //Función temporal
 {
-    printf ("%d\n", (*((s_cliente*)cliente)).id);
+    printf ("%d\n", (*((t_cliente*)cliente)).id);
 }
  */
 
@@ -593,7 +593,7 @@ static void mostrarCliente (void *cliente) //Función temporal
  */
 static void liberarCliente (void *cliente)
 {
-    closesocket (((s_cliente*)cliente)->sock);
+    closesocket (((t_cliente*)cliente)->sock);
 }
 
 

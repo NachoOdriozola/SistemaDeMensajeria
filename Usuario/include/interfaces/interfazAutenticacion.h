@@ -49,39 +49,39 @@
 
 
 
-/** \struct s_interfazAutenticacionTextos
+/** \struct t_interfazAutenticacionTextos
  * \brief Contiene todos los textos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
     sfText *textoRegistrarUsuario;  /**< Texto interrogativo para registrar usuario. */
-} s_interfazAutenticacionTextos;
+} t_interfazAutenticacionTextos;
 
-/** \struct s_interfazAutenticacionElementos
+/** \struct t_interfazAutenticacionElementos
  * \brief Contiene todos los elementos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
 
-} s_interfazAutenticacionElementos;
+} t_interfazAutenticacionElementos;
 
-/** \struct s_interfazAutenticacionHabilitaciones
+/** \struct t_interfazAutenticacionHabilitaciones
  * \brief Contiene todas las habilitaciones de la interfaz de autenticacion.
  */
 typedef struct
 {
 
-} s_interfazAutenticacionHabilitaciones;
+} t_interfazAutenticacionHabilitaciones;
 
-/** \struct s_interfazAutenticacion
+/** \struct t_interfazAutenticacion
  * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
-    s_interfazAutenticacionTextos textos;
-    s_interfazAutenticacionElementos elementos;
-    s_interfazAutenticacionHabilitaciones habilitaciones;
-} s_interfazAutenticacion;
+    t_interfazAutenticacionTextos textos;
+    t_interfazAutenticacionElementos elementos;
+    t_interfazAutenticacionHabilitaciones habilitaciones;
+} t_interfazAutenticacion;
 
 
 
@@ -100,7 +100,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazAutenticacion_inicializar (s_interfazAutenticacion *interfazAutenticacion);
+int interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion);
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de autenticacion.
  *
@@ -110,7 +110,7 @@ int interfazAutenticacion_inicializar (s_interfazAutenticacion *interfazAutentic
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void interfazAutenticacion_configurar (s_interfazAutenticacion *interfazAutenticacion, const s_fuentes *fuentes);
+void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion, const t_fuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de autenticacion.
  *
@@ -121,7 +121,7 @@ void interfazAutenticacion_configurar (s_interfazAutenticacion *interfazAutentic
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazAutenticacion_accion (s_aplicacion *aplicacion, const s_interfazAutenticacion *interfazAutenticacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazAutenticacion_accion (t_aplicacion *aplicacion, const t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de autenticacion.
  *
@@ -133,7 +133,7 @@ void interfazAutenticacion_accion (s_aplicacion *aplicacion, const s_interfazAut
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazAutenticacion_actualizar (s_interfazAutenticacion *interfazAutenticacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazAutenticacion_actualizar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de autenticacion sobre la ventana.
  *
@@ -144,14 +144,14 @@ void interfazAutenticacion_actualizar (s_interfazAutenticacion *interfazAutentic
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const s_interfazAutenticacion *interfazAutenticacion, const s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion, const t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de autenticacion.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_liberar (s_interfazAutenticacion *interfazAutenticacion);
+void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticacion);
 
 
 

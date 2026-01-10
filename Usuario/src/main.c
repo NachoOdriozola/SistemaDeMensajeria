@@ -13,8 +13,8 @@ int main()
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    s_aplicacion aplicacion;
-    s_interfaces interfaces;
+    t_aplicacion aplicacion;
+    t_interfaces interfaces;
 
 
     // --------------- INICIALIZAR Y CONFIGURAR LOS RECURSOS DE LA APLICACION ---------------
@@ -128,7 +128,7 @@ int main()
 
 
 
-int inicializarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
+int inicializarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 {
     printf ("-INICIALIZANDO LOS RECURSOS DE LA APLICACION-\t");
 
@@ -274,7 +274,7 @@ int inicializarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
     return EXITO;
 }
 
-void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
+void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DE LA APLICACION-\t");
 
@@ -309,7 +309,7 @@ void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
     printf ("-CONFIGURACION EXITOSA-\n");
 }
 
-void liberarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
+void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 {
     printf ("-LIBERANDO LOS RECURSOS DE LA APLICACION-\t");
 
@@ -382,7 +382,7 @@ void liberarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces)
 
 
 
-void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces)
+void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_interfaces *interfaces)
 {
     // --------------- CONFIGURAR APLICACION ---------------
 
@@ -395,7 +395,7 @@ void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces)
     ShowWindow (sfRenderWindow_getSystemHandle (aplicacion->renderizado), SW_MAXIMIZE);
 }
 
-int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfaces)
+int iniciarAutenticacionManual (t_aplicacion *aplicacion, t_interfaces *interfaces)
 {
     // --------------- CONFIGURAR APLICACION ---------------
 

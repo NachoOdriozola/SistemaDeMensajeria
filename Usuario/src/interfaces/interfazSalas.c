@@ -8,7 +8,7 @@
 
 
 
-static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas);
+static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 
 
@@ -17,24 +17,24 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
    ============================ */
 
 
-static void interfazSalas_inicializarValoresNulosTextos (s_interfazSalasTextos *textos);
-static void interfazSalas_inicializarValoresNulosElementos (s_interfazSalasElementos *elementos);
+static void interfazSalas_inicializarValoresNulosTextos (t_interfazSalasTextos *textos);
+static void interfazSalas_inicializarValoresNulosElementos (t_interfazSalasElementos *elementos);
 
-static int interfazSalas_inicializarTextos (s_interfazSalasTextos *textos);
-static int interfazSalas_inicializarElementos (s_interfazSalasElementos *elementos);
+static int interfazSalas_inicializarTextos (t_interfazSalasTextos *textos);
+static int interfazSalas_inicializarElementos (t_interfazSalasElementos *elementos);
 
-static void interfazSalas_configurarTextos (s_interfazSalasTextos *textos, const s_fuentes *fuentes);
-static void interfazSalas_configurarElementos (s_interfazSalasElementos *elementos);
+static void interfazSalas_configurarTextos (t_interfazSalasTextos *textos, const t_fuentes *fuentes);
+static void interfazSalas_configurarElementos (t_interfazSalasElementos *elementos);
 
-static void interfazSalas_tamYPosVentanaTextos (s_interfazSalasTextos *textos);
-static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *elementos);
+static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos);
+static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *elementos);
 
-static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const s_interfazSalasTextos *textos);
-static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const s_interfazSalasElementos *elementos);
+static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const t_interfazSalasTextos *textos);
+static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const t_interfazSalasElementos *elementos);
 
-static void interfazSalas_liberarTextos (s_interfazSalasTextos *textos);
-static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos);
+static void interfazSalas_liberarTextos (t_interfazSalasTextos *textos);
+static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos);
 
 
 
@@ -44,12 +44,12 @@ static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos)
 
 
 
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas);
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas);
+static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 
 
@@ -59,7 +59,7 @@ static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recur
 
 
 
-int interfazSalas_inicializar (s_interfazSalas *interfazSalas)
+int interfazSalas_inicializar (t_interfazSalas *interfazSalas)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -90,7 +90,7 @@ int interfazSalas_inicializar (s_interfazSalas *interfazSalas)
     return EXITO;
 }
 
-void interfazSalas_configurar (s_interfazSalas *interfazSalas, const s_fuentes *fuentes)
+void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_fuentes *fuentes)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -124,7 +124,7 @@ void interfazSalas_configurar (s_interfazSalas *interfazSalas, const s_fuentes *
     interfazSalas_tamYPosVentanaElementos (&(interfazSalas->elementos));
 }
 
-void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSalas, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     sfEvent evento;
 
@@ -182,7 +182,7 @@ void interfazSalas_accion (s_aplicacion *aplicacion, s_interfazSalas *interfazSa
     }
 }
 
-void interfazSalas_actualizar (s_aplicacion *aplicacion, s_interfazSalas *interfazSalas, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // RECIBIR MENSAJES DE OTROS USUARIOS
     char *bufferRespuesta;
@@ -216,7 +216,7 @@ void interfazSalas_actualizar (s_aplicacion *aplicacion, s_interfazSalas *interf
         reiniciarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion), &(recursosComunesContactosSalas->habilitaciones.contadorPuntoInsercion));
 }
 
-void interfazSalas_renderizar (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (223, 231, 233));
 
@@ -234,7 +234,7 @@ void interfazSalas_renderizar (s_aplicacion *aplicacion, const s_interfazSalas *
     sfRenderWindow_display (aplicacion->renderizado);
 }
 
-void interfazSalas_liberar (s_interfazSalas *interfazSalas)
+void interfazSalas_liberar (t_interfazSalas *interfazSalas)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
@@ -266,7 +266,7 @@ void interfazSalas_liberar (s_interfazSalas *interfazSalas)
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas)
+static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -311,7 +311,7 @@ static void cambiarInterfazAContactos (s_recursosComunesContactosSalas *recursos
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  */
-static void interfazSalas_inicializarValoresNulosTextos (s_interfazSalasTextos *textos)
+static void interfazSalas_inicializarValoresNulosTextos (t_interfazSalasTextos *textos)
 {
 
 }
@@ -320,7 +320,7 @@ static void interfazSalas_inicializarValoresNulosTextos (s_interfazSalasTextos *
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  */
-static void interfazSalas_inicializarValoresNulosElementos (s_interfazSalasElementos *elementos)
+static void interfazSalas_inicializarValoresNulosElementos (t_interfazSalasElementos *elementos)
 {
 
 }
@@ -334,7 +334,7 @@ static void interfazSalas_inicializarValoresNulosElementos (s_interfazSalasEleme
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazSalas_inicializarTextos (s_interfazSalasTextos *textos)
+static int interfazSalas_inicializarTextos (t_interfazSalasTextos *textos)
 {
 
 
@@ -351,7 +351,7 @@ static int interfazSalas_inicializarTextos (s_interfazSalasTextos *textos)
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazSalas_inicializarElementos (s_interfazSalasElementos *elementos)
+static int interfazSalas_inicializarElementos (t_interfazSalasElementos *elementos)
 {
 
 
@@ -365,7 +365,7 @@ static int interfazSalas_inicializarElementos (s_interfazSalasElementos *element
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazSalas_configurarTextos (s_interfazSalasTextos *textos, const s_fuentes *fuentes)
+static void interfazSalas_configurarTextos (t_interfazSalasTextos *textos, const t_fuentes *fuentes)
 {
 
 }
@@ -375,7 +375,7 @@ static void interfazSalas_configurarTextos (s_interfazSalasTextos *textos, const
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  *
  */
-static void interfazSalas_configurarElementos (s_interfazSalasElementos *elementos)
+static void interfazSalas_configurarElementos (t_interfazSalasElementos *elementos)
 {
 
 }
@@ -386,7 +386,7 @@ static void interfazSalas_configurarElementos (s_interfazSalasElementos *element
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazSalas_tamYPosVentanaTextos (s_interfazSalasTextos *textos)
+static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos)
 {
 
 }
@@ -397,7 +397,7 @@ static void interfazSalas_tamYPosVentanaTextos (s_interfazSalasTextos *textos)
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *elementos)
+static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *elementos)
 {
 
 }
@@ -413,7 +413,7 @@ static void interfazSalas_tamYPosVentanaElementos (s_interfazSalasElementos *ele
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazSalas *interfazSalas, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
 
@@ -453,7 +453,7 @@ static void interfazSalas_renderizarVistaUI (s_aplicacion *aplicacion, const s_i
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  *
  */
-static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const s_interfazSalasTextos *textos)
+static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const t_interfazSalasTextos *textos)
 {
 
 }
@@ -466,7 +466,7 @@ static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const s
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  *
  */
-static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const s_interfazSalasElementos *elementos)
+static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const t_interfazSalasElementos *elementos)
 {
 
 }
@@ -475,7 +475,7 @@ static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, cons
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
  */
-static void interfazSalas_liberarTextos (s_interfazSalasTextos *textos)
+static void interfazSalas_liberarTextos (t_interfazSalasTextos *textos)
 {
 
 }
@@ -484,7 +484,7 @@ static void interfazSalas_liberarTextos (s_interfazSalasTextos *textos)
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
  */
-static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos)
+static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos)
 {
 
 }
@@ -506,7 +506,7 @@ static void interfazSalas_liberarElementos (s_interfazSalasElementos *elementos)
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     sfFloatRect limiteTextoAux;
 
@@ -530,7 +530,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
     {
@@ -554,7 +554,7 @@ static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recurs
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
     {
@@ -574,7 +574,7 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas)
+static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
     if (clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
     {
@@ -585,7 +585,7 @@ static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recur
     return EVENTO_NO_MANEJADO;
 }
 
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
     {
@@ -605,7 +605,7 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazSalas *interfazSalas)
+static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
     if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
     {

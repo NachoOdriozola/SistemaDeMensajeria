@@ -26,7 +26,7 @@
    ============================ */
 
 
-typedef s_nodo *s_listaCircular;
+typedef t_nodo *t_listaCircular;
 
 
 /* ============================
@@ -34,11 +34,11 @@ typedef s_nodo *s_listaCircular;
    ============================ */
 
 
-void crearListaCircular (s_listaCircular *pl);
-int insertarSegundoCircular (s_listaCircular *pl, const void *dato, unsigned tamDato);
-void mapListaCircular (s_listaCircular *pl, void accion (void *dato));
-void mapListaCircularConComplemento (s_listaCircular *pl, void *complemento, void accion (void *dato, void *complemento));
-void vaciarListaCircularConAccion (s_listaCircular *pl, void accion (void *dato));
+void crearListaCircular (t_listaCircular *pl);
+int insertarSegundoCircular (t_listaCircular *pl, const void *dato, unsigned tamDato);
+void mapListaCircular (t_listaCircular *pl, void accion (void *dato));
+void mapListaCircularConComplemento (t_listaCircular *pl, void *complemento, void accion (void *dato, void *complemento));
+void vaciarListaCircularConAccion (t_listaCircular *pl, void accion (void *dato));
 
 
 #endif // LISTACIRCULAR_H_INCLUDED

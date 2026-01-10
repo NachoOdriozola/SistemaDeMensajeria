@@ -8,8 +8,8 @@
 
 
 
-static void intentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static void intentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static void cambiarInterfazAAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 
@@ -19,23 +19,23 @@ static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistr
 
 
 
-static void interfazRegistro_inicializarValoresNulosTextos (s_interfazRegistroTextos *textos);
-static void interfazRegistro_inicializarValoresNulosElementos (s_interfazRegistroElementos *elementos);
+static void interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos);
+static void interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos);
 
-static int interfazRegistro_inicializarTextos (s_interfazRegistroTextos *textos);
-static int interfazRegistro_inicializarElementos (s_interfazRegistroElementos *elementos);
+static int interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos);
+static int interfazRegistro_inicializarElementos (t_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_configurarTextos (s_interfazRegistroTextos *textos, const s_fuentes *fuentes);
-static void interfazRegistro_configurarElementos (s_interfazRegistroElementos *elementos);
+static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const t_fuentes *fuentes);
+static void interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_tamYPosVentanaTextos (s_interfazRegistroTextos *textos);
-static void interfazRegistro_tamYPosVentanaElementos (s_interfazRegistroElementos *elementos);
+static void interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos);
+static void interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_interfazRegistroTextos *textos);
-static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_interfazRegistroElementos *elementos);
+static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_interfazRegistroTextos *textos);
+static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_interfazRegistroElementos *elementos);
 
-static void interfazRegistro_liberarTextos (s_interfazRegistroTextos *textos);
-static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elementos);
+static void interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos);
+static void interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos);
 
 
 
@@ -45,13 +45,13 @@ static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elem
 
 
 
-static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static bool manejarClickIntentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static bool manejarClickCambiarInterfazAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const s_interfazRegistro *interfazRegistro);
-static bool manejarEscribirNombre (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
-static bool manejarEscribirContrasenia (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
-static bool manejarEnterIntentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static bool manejarClickIntentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static bool manejarClickCambiarInterfazAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazRegistro *interfazRegistro);
+static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
+static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
+static bool manejarEnterIntentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 
@@ -61,7 +61,7 @@ static bool manejarEnterIntentarRegistro (s_aplicacion *aplicacion, s_recursosCo
 
 
 
-int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro)
+int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -92,7 +92,7 @@ int interfazRegistro_inicializar (s_interfazRegistro *interfazRegistro)
     return EXITO;
 }
 
-void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_fuentes *fuentes)
+void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, const t_fuentes *fuentes)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -128,7 +128,7 @@ void interfazRegistro_configurar (s_interfazRegistro *interfazRegistro, const s_
     interfazRegistro_tamYPosVentanaElementos (&(interfazRegistro->elementos));
 }
 
-void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro *interfazRegistro, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazRegistro_accion (t_aplicacion *aplicacion, const t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     sfEvent evento;
 
@@ -181,7 +181,7 @@ void interfazRegistro_accion (s_aplicacion *aplicacion, const s_interfazRegistro
     }
 }
 
-void interfazRegistro_actualizar (s_interfazRegistro *interfazRegistro, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazRegistro_actualizar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     int largoBufferEscribirNombre, largoBufferEscribirContrasenia;
 
@@ -202,7 +202,7 @@ void interfazRegistro_actualizar (s_interfazRegistro *interfazRegistro, s_recurs
         reiniciarPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion), &(recursosComunesAutenticacionRegistro->habilitaciones.contadorPuntoInsercion));
 }
 
-void interfazRegistro_renderizar (sfRenderWindow *renderizado, const s_interfazRegistro *interfazRegistro, const s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazRegistro_renderizar (sfRenderWindow *renderizado, const t_interfazRegistro *interfazRegistro, const t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     sfRenderWindow_clear (renderizado, sfColor_fromRGB (223, 231, 233));
 
@@ -230,7 +230,7 @@ void interfazRegistro_renderizar (sfRenderWindow *renderizado, const s_interfazR
     sfRenderWindow_display (renderizado);
 }
 
-void interfazRegistro_liberar (s_interfazRegistro *interfazRegistro)
+void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
@@ -252,7 +252,7 @@ void interfazRegistro_liberar (s_interfazRegistro *interfazRegistro)
 
 
 
-static void intentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static void intentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
     char estadoRespuesta, correoElectronico [MAX_CORREO_ELECTRONICO_USUARIO] = "1";
@@ -283,7 +283,7 @@ static void intentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenti
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static void cambiarInterfazAAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -353,7 +353,7 @@ static void cambiarInterfazAAutenticacion (s_recursosComunesAutenticacionRegistr
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  */
-static void interfazRegistro_inicializarValoresNulosTextos (s_interfazRegistroTextos *textos)
+static void interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos)
 {
     textos->textoInformativoContrasenia = NULL;
     textos->textoInformativoNombre = NULL;
@@ -363,7 +363,7 @@ static void interfazRegistro_inicializarValoresNulosTextos (s_interfazRegistroTe
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  */
-static void interfazRegistro_inicializarValoresNulosElementos (s_interfazRegistroElementos *elementos)
+static void interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos)
 {
     elementos->flechaVolverBarra = NULL;
     elementos->flechaVolverTriangulo1 = NULL;
@@ -379,7 +379,7 @@ static void interfazRegistro_inicializarValoresNulosElementos (s_interfazRegistr
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazRegistro_inicializarTextos (s_interfazRegistroTextos *textos)
+static int interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos)
 {
     textos->textoInformativoContrasenia = sfText_create ();
     if (!textos->textoInformativoContrasenia)
@@ -408,7 +408,7 @@ static int interfazRegistro_inicializarTextos (s_interfazRegistroTextos *textos)
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazRegistro_inicializarElementos (s_interfazRegistroElementos *elementos)
+static int interfazRegistro_inicializarElementos (t_interfazRegistroElementos *elementos)
 {
     elementos->flechaVolverBarra = sfRectangleShape_create ();
     if (!elementos->flechaVolverBarra)
@@ -441,7 +441,7 @@ static int interfazRegistro_inicializarElementos (s_interfazRegistroElementos *e
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazRegistro_configurarTextos (s_interfazRegistroTextos *textos, const s_fuentes *fuentes)
+static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const t_fuentes *fuentes)
 {
     // textoInformativoContrasenia
     sfText_setFont (textos->textoInformativoContrasenia, fuentes->fuente1);
@@ -459,7 +459,7 @@ static void interfazRegistro_configurarTextos (s_interfazRegistroTextos *textos,
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_configurarElementos (s_interfazRegistroElementos *elementos)
+static void interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos)
 {
     // flechaVolverBarra
     sfRectangleShape_setFillColor (elementos->flechaVolverBarra, sfColor_fromRGB (34, 48, 48));
@@ -478,7 +478,7 @@ static void interfazRegistro_configurarElementos (s_interfazRegistroElementos *e
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_tamYPosVentanaTextos (s_interfazRegistroTextos *textos)
+static void interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos)
 {
     // textoInformativoContrasenia
     sfText_setPosition (textos->textoInformativoContrasenia, (sfVector2f){55, 255});
@@ -494,7 +494,7 @@ static void interfazRegistro_tamYPosVentanaTextos (s_interfazRegistroTextos *tex
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_tamYPosVentanaElementos (s_interfazRegistroElementos *elementos)
+static void interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos)
 {
     // flechaVolverBarra
     sfRectangleShape_setPosition (elementos->flechaVolverBarra, (sfVector2f){25, 20});
@@ -517,7 +517,7 @@ static void interfazRegistro_tamYPosVentanaElementos (s_interfazRegistroElemento
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_interfazRegistroTextos *textos)
+static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_interfazRegistroTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->textoInformativoContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->textoInformativoNombre, NULL);
@@ -531,7 +531,7 @@ static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, cons
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  *
  */
-static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_interfazRegistroElementos *elementos)
+static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_interfazRegistroElementos *elementos)
 {
     sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverBarra, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo1, NULL);
@@ -542,7 +542,7 @@ static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, c
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de registro.
  */
-static void interfazRegistro_liberarTextos (s_interfazRegistroTextos *textos)
+static void interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoNombre);
     DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoContrasenia);
@@ -552,7 +552,7 @@ static void interfazRegistro_liberarTextos (s_interfazRegistroTextos *textos)
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de registro.
  */
-static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elementos)
+static void interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->flechaVolverBarra);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->flechaVolverTriangulo1);
@@ -575,7 +575,7 @@ static void interfazRegistro_liberarElementos (s_interfazRegistroElementos *elem
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     sfFloatRect limiteTextoAux;
 
@@ -599,7 +599,7 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, s_rec
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     sfFloatRect limiteTextoAux;
 
@@ -622,7 +622,7 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickIntentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static bool manejarClickIntentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) && (clickEnRectangulo (aplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar)))
     {
@@ -641,7 +641,7 @@ static bool manejarClickIntentarRegistro (s_aplicacion *aplicacion, s_recursosCo
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazAutenticacion (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const s_interfazRegistro *interfazRegistro)
+static bool manejarClickCambiarInterfazAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazRegistro *interfazRegistro)
 {
     if (clickEnRectangulo (aplicacion->renderizado, interfazRegistro->elementos.flechaVolverBarra))
     {
@@ -662,7 +662,7 @@ static bool manejarClickCambiarInterfazAutenticacion (s_aplicacion *aplicacion, 
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEscribirNombre (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
+static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
@@ -687,7 +687,7 @@ static bool manejarEscribirNombre (s_recursosComunesAutenticacionRegistro *recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEscribirContrasenia (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
+static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
@@ -710,7 +710,7 @@ static bool manejarEscribirContrasenia (s_recursosComunesAutenticacionRegistro *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEnterIntentarRegistro (s_aplicacion *aplicacion, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static bool manejarEnterIntentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) &&
         ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE) || (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)))

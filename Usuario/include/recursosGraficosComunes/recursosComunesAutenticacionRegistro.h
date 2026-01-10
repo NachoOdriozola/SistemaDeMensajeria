@@ -112,7 +112,7 @@
 
 
 
-/** \struct s_recursosComunesAutenticacionRegistroTextos
+/** \struct t_recursosComunesAutenticacionRegistroTextos
  * \brief Contiene todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
@@ -126,9 +126,9 @@ typedef struct
     sfText *ingresoIncorrecto;
     sfText *textoBotonIngresar;         /**< Texto encontrado dentro del boton para ingresar usuario. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
-} s_recursosComunesAutenticacionRegistroTextos;
+} t_recursosComunesAutenticacionRegistroTextos;
 
-/** \struct s_recursosComunesAutenticacionRegistroElementos
+/** \struct t_recursosComunesAutenticacionRegistroElementos
  * \brief Contiene todos los elementos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
@@ -139,7 +139,7 @@ typedef struct
     sfRectangleShape *botonIngresar;                    /**< Boton para ingresar usuario. */
     sfRectangleShape *puntoInsercion;                   /**< Punto de insercion para escritura de texto. */
     sfRectangleShape *subrayadoTitulo;                  /**< Barra decorativa para subrayar el titulo de la interfaz. */
-} s_recursosComunesAutenticacionRegistroElementos;
+} t_recursosComunesAutenticacionRegistroElementos;
 
 /** \struct s_recursosComunesAutenticacionRegistroHabilitaciones
  * \brief Contiene todas las habilitaciones comunes (compartidas) entre las interfaces de autenticacion y registro.
@@ -154,17 +154,17 @@ typedef struct
     unsigned short int contadorPuntoInsercion;  /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
 } s_recursosComunesAutenticacionRegistroHabilitaciones;
 
-/** \struct s_recursosComunesAutenticacionRegistro
+/** \struct t_recursosComunesAutenticacionRegistro
  * \brief Estructura base que contiene los buffers, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
 {
-    s_recursosComunesAutenticacionRegistroTextos textos;
-    s_recursosComunesAutenticacionRegistroElementos elementos;
+    t_recursosComunesAutenticacionRegistroTextos textos;
+    t_recursosComunesAutenticacionRegistroElementos elementos;
     s_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
     char bufferNombre [MAX_INGRESO_NOMBRE];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
     char bufferContrasenia [MAX_INGRESO_CONTRASENIA];    /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
-} s_recursosComunesAutenticacionRegistro;
+} t_recursosComunesAutenticacionRegistro;
 
 
 
@@ -183,7 +183,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int recursosComunesAutenticacionRegistro_inicializar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico comun (compartido) entre las interfaces de autenticacion y registro.
  *
@@ -193,7 +193,7 @@ int recursosComunesAutenticacionRegistro_inicializar (s_recursosComunesAutentica
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const s_fuentes *fuentes);
+void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_fuentes *fuentes);
 
 /** \brief Renderizar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
@@ -203,7 +203,7 @@ void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutentica
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroTextos *textos);
+void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos);
 
 /** \brief Renderizar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro
  *
@@ -213,14 +213,14 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroElementos *elementos);
+void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *elementos);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_liberar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 
@@ -238,7 +238,7 @@ void recursosComunesAutenticacionRegistro_liberar (s_recursosComunesAutenticacio
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 

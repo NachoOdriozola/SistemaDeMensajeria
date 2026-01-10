@@ -232,7 +232,7 @@
 
 
 /**
- * \struct s_usuario
+ * \struct t_usuario
  * \brief  Representa un usuario.
  */
 typedef struct
@@ -241,43 +241,43 @@ typedef struct
     char nombre [MAX_NOMBRE_USUARIO];           /**< Nombre correspondiente del usuario. */
     unsigned short int interfazActual;          /**< Interfaz sobre la cual se encuentra ubicado actualmente. */
     unsigned short int ultimaInterfazUtilizada; /**< Ultima interfaz sobre la cual se encontro ubicado el usuario. */
-} s_usuario;
+} t_usuario;
 
 /**
- * \struct s_fuentes
+ * \struct t_fuentes
  * \brief  Estructura que contiene las fuentes graficas para los textos.
  */
 typedef struct
 {
     sfFont *fuente1;
-} s_fuentes;
+} t_fuentes;
 
 /**
- * \struct s_mensajes
+ * \struct t_mensajes
  * \brief
  */
 typedef struct
 {
-    s_listaCircular listaMensajes; /**< Lista circular de mensajes. */
-    s_nodo *siguienteMensaje;      /**< Puntero al nodo que contiene el siguiente mensaje en la lista circular de mensajes. */
-    s_fuentes fuentes;
-} s_mensajes;
+    t_listaCircular listaMensajes; /**< Lista circular de mensajes. */
+    t_nodo *siguienteMensaje;      /**< Puntero al nodo que contiene el siguiente mensaje en la lista circular de mensajes. */
+    t_fuentes fuentes;
+} t_mensajes;
 
 /**
- * \struct s_aplicacion
+ * \struct t_aplicacion
  * \brief  Estructura base de la aplicacion
  */
 typedef struct
 {
     sfRenderWindow *renderizado;        /**< Renderizado de la ventana. */
     SOCKET sock;                        /**< Socket del usuario. */
-    s_usuario usuario;
-    s_mensajes mensajes;
-    s_listaSimple listaNotificaciones;  /**< Lista simple de notificaciones. */
-} s_aplicacion;
+    t_usuario usuario;
+    t_mensajes mensajes;
+    t_listaSimple listaNotificaciones;  /**< Lista simple de notificaciones. */
+} t_aplicacion;
 
 /**
- * \struct s_notificacion
+ * \struct t_notificacion
  * \brief  Estructura que contiene los elementos de una notificacion.
  */
 typedef struct
@@ -288,7 +288,7 @@ typedef struct
     sfText *textoNotificacion;
     sfText *textoBotonAceptar;
     sfText *textoBotonRechazar;
-} s_notificacion;
+} t_notificacion;
 
 /**
  * \struct s_datosGuardados
@@ -317,14 +317,14 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int inicializarFuentes (s_fuentes *fuentes);
+int inicializarFuentes (t_fuentes *fuentes);
 
 /** \brief Liberar todos los recursos graficos de fuentes creados.
  *
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas para los textos.
  *
  */
-void liberarFuentes (s_fuentes *fuentes);
+void liberarFuentes (t_fuentes *fuentes);
 
 
 
@@ -381,7 +381,7 @@ int guardarDatosEnArchivo (int id, const char *bufferContrasenia);
  * \return AUTENTICACION_AUTOMATICA si se guardaron los datos de autenticacion, AUTENTICACION_MANUAL en caso contrario.
  *
  */
-bool verificarModoAutenticacion (s_usuario *usuario);
+bool verificarModoAutenticacion (t_usuario *usuario);
 
 
 
@@ -474,7 +474,7 @@ void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contador
 
 
 
-void asignarMensaje (s_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor);
+void asignarMensaje (t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor);
 void modificarPosListaMensajes (void *mensaje);
 void renderizarListaMensajes (void *mensaje, void *renderizado);
 void setupListaMensajes (void *mensaje, void *fuente);
@@ -489,9 +489,9 @@ void liberarMensaje (void *mensaje);
 
 
 
-int crearNotificacion (s_notificacion *notificacion);
-void setupNotificacion (s_notificacion *notificacion, s_fuentes fuentes);
-int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_fuentes fuentes);
+int crearNotificacion (t_notificacion *notificacion);
+void setupNotificacion (t_notificacion *notificacion, t_fuentes fuentes);
+int agregarNotificacion (t_listaSimple *listaNotificaciones, char *bufferNotificacion, t_fuentes fuentes);
 void liberarNotificacion (void *notificacion);
 void renderizarListaNotificaciones (void *notificacion, void *renderizado);
 

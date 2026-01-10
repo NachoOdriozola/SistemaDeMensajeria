@@ -49,39 +49,39 @@
 
 
 
-/** \struct s_interfazConfigTextos
+/** \struct t_interfazConfigTextos
  * \brief Contiene todos los textos graficos de la interfaz de configuraciones.
  */
 typedef struct
 {
     sfText *textoConfig;
-} s_interfazConfigTextos;
+} t_interfazConfigTextos;
 
-/** \struct s_interfazConfigElementos
+/** \struct t_interfazConfigElementos
  * \brief Contiene todos los elementos graficos de la interfaz de configuraciones.
  */
 typedef struct
 {
     sfRectangleShape *rectanguloVolver;
-} s_interfazConfigElementos;
+} t_interfazConfigElementos;
 
-/** \struct s_interfazConfigHabilitaciones
+/** \struct t_interfazConfigHabilitaciones
  * \brief Contiene todas las habilitaciones de la interfaz de configuraciones.
  */
 typedef struct
 {
 
-} s_interfazConfigHabilitaciones;
+} t_interfazConfigHabilitaciones;
 
-/** \struct s_interfazConfig
+/** \struct t_interfazConfig
  * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de configuraciones.
  */
 typedef struct
 {
-    s_interfazConfigTextos textos;
-    s_interfazConfigElementos elementos;
-    s_interfazConfigHabilitaciones habilitaciones;
-} s_interfazConfig;
+    t_interfazConfigTextos textos;
+    t_interfazConfigElementos elementos;
+    t_interfazConfigHabilitaciones habilitaciones;
+} t_interfazConfig;
 
 
 
@@ -100,7 +100,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazConfig_inicializar (s_interfazConfig *interfazConfig);
+int interfazConfig_inicializar (t_interfazConfig *interfazConfig);
 
 /** \brief Configurar y establecer el tamanio y la posicion sobre la ventana de los recursos graficos de la interfaz de configuraciones.
  *
@@ -111,7 +111,7 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig);
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes);
+void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de configuraciones.
  *
@@ -121,7 +121,7 @@ void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuente
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */
-void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *interfazConfig);
+void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *interfazConfig);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de configuraciones.
  *
@@ -132,7 +132,7 @@ void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *in
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */
-void interfazConfig_actualizar (s_interfazConfig *interfazConfig);
+void interfazConfig_actualizar (t_interfazConfig *interfazConfig);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de configuraciones sobre la ventana.
  *
@@ -142,14 +142,14 @@ void interfazConfig_actualizar (s_interfazConfig *interfazConfig);
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  *
  */
-void interfazConfig_renderizar (sfRenderWindow *renderizado, const s_interfazConfig *interfazConfig);
+void interfazConfig_renderizar (sfRenderWindow *renderizado, const t_interfazConfig *interfazConfig);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de configuraciones.
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */
-void interfazConfig_liberar (s_interfazConfig *interfazConfig);
+void interfazConfig_liberar (t_interfazConfig *interfazConfig);
 
 
 

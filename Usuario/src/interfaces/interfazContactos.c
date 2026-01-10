@@ -8,8 +8,8 @@
 
 
 
-static void cambiarInterfazASalas (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static void renderizarAgendarContacto (sfRenderWindow *renderizado, const s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_interfazContactos *interfazContactos);
+static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
 
 
 
@@ -19,24 +19,24 @@ static void renderizarAgendarContacto (sfRenderWindow *renderizado, const s_recu
 
 
 
-static void interfazContactos_inicializarValoresNulosTextos (s_interfazContactosTextos *textos);
-static void interfazContactos_inicializarValoresNulosElementos (s_interfazContactosElementos *elementos);
+static void interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos *textos);
+static void interfazContactos_inicializarValoresNulosElementos (t_interfazContactosElementos *elementos);
 
-static int interfazContactos_inicializarTextos (s_interfazContactosTextos *textos);
-static int interfazContactos_inicializarElementos (s_interfazContactosElementos *elementos);
+static int interfazContactos_inicializarTextos (t_interfazContactosTextos *textos);
+static int interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos);
 
-static void interfazContactos_configurarTextos (s_interfazContactosTextos *textos, const s_fuentes *fuentes);
-static void interfazContactos_configurarElementos (s_interfazContactosElementos *elementos);
+static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_fuentes *fuentes);
+static void interfazContactos_configurarElementos (t_interfazContactosElementos *elementos);
 
-static void interfazContactos_tamYPosVentanaTextos (s_interfazContactosTextos *textos);
-static void interfazContactos_tamYPosVentanaElementos (s_interfazContactosElementos *elementos);
+static void interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos);
+static void interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos);
 
-static void interfazContactos_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazContactos *interfazContactos, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const s_interfazContactosTextos *textos);
-static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const s_interfazContactosElementos *elementos);
+static void interfazContactos_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos);
+static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos);
 
-static void interfazContactos_liberarTextos (s_interfazContactosTextos *textos);
-static void interfazContactos_liberarElementos (s_interfazContactosElementos *elementos);
+static void interfazContactos_liberarTextos (t_interfazContactosTextos *textos);
+static void interfazContactos_liberarElementos (t_interfazContactosElementos *elementos);
 
 
 
@@ -46,18 +46,18 @@ static void interfazContactos_liberarElementos (s_interfazContactosElementos *el
 
 
 
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickAgendarContacto (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos);
+static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 
-static bool manejarEscribirAgendarContacto (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos, sfEvent eventoChar);
+static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar);
 
-static bool manejarEnterIntentarAgendarContacto (s_interfazContactos *interfazContactos, s_aplicacion *aplicacion);
+static bool manejarEnterIntentarAgendarContacto (t_interfazContactos *interfazContactos, t_aplicacion *aplicacion);
 
 
 
@@ -67,7 +67,7 @@ static bool manejarEnterIntentarAgendarContacto (s_interfazContactos *interfazCo
 
 
 
-int interfazContactos_inicializar (s_interfazContactos *interfazContactos)
+int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -98,7 +98,7 @@ int interfazContactos_inicializar (s_interfazContactos *interfazContactos)
     return EXITO;
 }
 
-void interfazContactos_configurar (s_interfazContactos *interfazContactos, const s_fuentes *fuentes)
+void interfazContactos_configurar (t_interfazContactos *interfazContactos, const t_fuentes *fuentes)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -135,7 +135,7 @@ void interfazContactos_configurar (s_interfazContactos *interfazContactos, const
     interfazContactos_tamYPosVentanaElementos (&(interfazContactos->elementos));
 }
 
-void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazContactos_accion (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     sfEvent evento;
 
@@ -204,7 +204,7 @@ void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *in
     }
 }
 
-void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazContactos_actualizar (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- RECIBIR RESPUESTAS DEL SERVIDOR ---------------
 
@@ -234,7 +234,7 @@ void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos
         reiniciarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion), &(recursosComunesContactosSalas->habilitaciones.contadorPuntoInsercion));
 }
 
-void interfazContactos_renderizar (s_aplicacion *aplicacion, const s_interfazContactos *interfazContactos, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazContactos_renderizar (t_aplicacion *aplicacion, const t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (223, 231, 233));
 
@@ -252,7 +252,7 @@ void interfazContactos_renderizar (s_aplicacion *aplicacion, const s_interfazCon
     sfRenderWindow_display (aplicacion->renderizado);
 }
 
-void interfazContactos_liberar (s_interfazContactos *interfazContactos)
+void interfazContactos_liberar (t_interfazContactos *interfazContactos)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
@@ -274,7 +274,7 @@ void interfazContactos_liberar (s_interfazContactos *interfazContactos)
 
 
 
-void intentarSolicitudAmistad (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos)
+void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos)
 {
     char *bufferSolicitud, *bufferRespuesta;
     char estadoSolicitud;
@@ -316,7 +316,7 @@ void intentarSolicitudAmistad (s_aplicacion *aplicacion, s_interfazContactos *in
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void cambiarInterfazASalas (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -360,7 +360,7 @@ static void cambiarInterfazASalas (s_recursosComunesContactosSalas *recursosComu
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  */
-static void renderizarAgendarContacto (sfRenderWindow *renderizado, const s_recursosComunesContactosSalas *recursosComunesContactosSalas, const s_interfazContactos *interfazContactos)
+static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
 {
     if (interfazContactos->habilitaciones.agendarContacto == HABILITAR_AGENDAR_CONTACTO)
     {
@@ -390,7 +390,7 @@ static void renderizarAgendarContacto (sfRenderWindow *renderizado, const s_recu
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
  */
-static void interfazContactos_inicializarValoresNulosTextos (s_interfazContactosTextos *textos)
+static void interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos *textos)
 {
     textos->agendarContacto = NULL;
     textos->auxAgendarContacto = NULL;
@@ -400,7 +400,7 @@ static void interfazContactos_inicializarValoresNulosTextos (s_interfazContactos
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
  */
-static void interfazContactos_inicializarValoresNulosElementos (s_interfazContactosElementos *elementos)
+static void interfazContactos_inicializarValoresNulosElementos (t_interfazContactosElementos *elementos)
 {
     elementos->barraEscribirAgendarContacto = NULL;
 }
@@ -414,7 +414,7 @@ static void interfazContactos_inicializarValoresNulosElementos (s_interfazContac
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazContactos_inicializarTextos (s_interfazContactosTextos *textos)
+static int interfazContactos_inicializarTextos (t_interfazContactosTextos *textos)
 {
     textos->agendarContacto = sfText_create ();
     if (!textos->agendarContacto)
@@ -443,7 +443,7 @@ static int interfazContactos_inicializarTextos (s_interfazContactosTextos *texto
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazContactos_inicializarElementos (s_interfazContactosElementos *elementos)
+static int interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos)
 {
     elementos->barraEscribirAgendarContacto = sfRectangleShape_create ();
     if (!elementos->barraEscribirAgendarContacto)
@@ -462,7 +462,7 @@ static int interfazContactos_inicializarElementos (s_interfazContactosElementos 
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazContactos_configurarTextos (s_interfazContactosTextos *textos, const s_fuentes *fuentes)
+static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_fuentes *fuentes)
 {
     // agendarContacto
     sfText_setFont (textos->agendarContacto, fuentes->fuente1);
@@ -479,7 +479,7 @@ static void interfazContactos_configurarTextos (s_interfazContactosTextos *texto
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
  *
  */
-static void interfazContactos_configurarElementos (s_interfazContactosElementos *elementos)
+static void interfazContactos_configurarElementos (t_interfazContactosElementos *elementos)
 {
     // barraEscribirAgendarContacto
     sfRectangleShape_setFillColor (elementos->barraEscribirAgendarContacto, sfColor_fromRGB (208, 208, 208));
@@ -491,7 +491,7 @@ static void interfazContactos_configurarElementos (s_interfazContactosElementos 
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazContactos_tamYPosVentanaTextos (s_interfazContactosTextos *textos)
+static void interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
 {
     // agendarContacto
     sfText_setPosition (textos->agendarContacto, (sfVector2f){220, 35});
@@ -508,7 +508,7 @@ static void interfazContactos_tamYPosVentanaTextos (s_interfazContactosTextos *t
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazContactos_tamYPosVentanaElementos (s_interfazContactosElementos *elementos)
+static void interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos)
 {
     // barraEscribirAgendarContacto
     sfRectangleShape_setPosition (elementos->barraEscribirAgendarContacto, (sfVector2f){800, 600});
@@ -526,7 +526,7 @@ static void interfazContactos_tamYPosVentanaElementos (s_interfazContactosElemen
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-static void interfazContactos_renderizarVistaUI (s_aplicacion *aplicacion, const s_interfazContactos *interfazContactos, const s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static void interfazContactos_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
 
@@ -571,7 +571,7 @@ static void interfazContactos_renderizarVistaUI (s_aplicacion *aplicacion, const
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
  *
  */
-static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const s_interfazContactosTextos *textos)
+static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->agendarContacto, NULL);
 }
@@ -584,7 +584,7 @@ static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, con
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
  *
  */
-static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const s_interfazContactosElementos *elementos)
+static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos)
 {
 
 }
@@ -593,7 +593,7 @@ static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, 
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
  */
-static void interfazContactos_liberarTextos (s_interfazContactosTextos *textos)
+static void interfazContactos_liberarTextos (t_interfazContactosTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->agendarContacto);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxAgendarContacto);
@@ -603,7 +603,7 @@ static void interfazContactos_liberarTextos (s_interfazContactosTextos *textos)
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
  */
-static void interfazContactos_liberarElementos (s_interfazContactosElementos *elementos)
+static void interfazContactos_liberarElementos (t_interfazContactosElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirAgendarContacto);
 }
@@ -626,7 +626,7 @@ static void interfazContactos_liberarElementos (s_interfazContactosElementos *el
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     sfFloatRect limiteTextoAux;
 
@@ -653,7 +653,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, s_re
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     sfFloatRect limiteTextoAux;
 
@@ -678,7 +678,7 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
     {
@@ -705,7 +705,7 @@ static bool manejarClickNotificaciones (const s_aplicacion *aplicacion, s_recurs
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickAgendarContacto (const s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (clickEnTexto (aplicacion->renderizado, interfazContactos->textos.agendarContacto))
     {
@@ -731,7 +731,7 @@ static bool manejarClickAgendarContacto (const s_aplicacion *aplicacion, s_recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
     {
@@ -753,7 +753,7 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
     {
@@ -772,7 +772,7 @@ static bool manejarClickSolapaCambiarInterfaz (s_aplicacion *aplicacion, s_recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
     {
@@ -792,7 +792,7 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, s_recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos)
+static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
     {
@@ -821,7 +821,7 @@ static bool manejarClickCambiarInterfazConfig (s_aplicacion *aplicacion, s_recur
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEscribirAgendarContacto (s_recursosComunesContactosSalas *recursosComunesContactosSalas, s_interfazContactos *interfazContactos, sfEvent eventoChar)
+static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
@@ -844,7 +844,7 @@ static bool manejarEscribirAgendarContacto (s_recursosComunesContactosSalas *rec
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEnterIntentarAgendarContacto (s_interfazContactos *interfazContactos, s_aplicacion *aplicacion)
+static bool manejarEnterIntentarAgendarContacto (t_interfazContactos *interfazContactos, t_aplicacion *aplicacion)
 {
     if ((interfazContactos->habilitaciones.agendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO) && (strlen (interfazContactos->bufferAgendarContacto) > 0))
     {

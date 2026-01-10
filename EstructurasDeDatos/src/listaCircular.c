@@ -1,16 +1,16 @@
 #include "../include/listaCircular.h"
 
 
-void crearListaCircular (s_listaCircular *pl)
+void crearListaCircular (t_listaCircular *pl)
 {
     *pl = NULL;
 }
 
-int insertarSegundoCircular (s_listaCircular *pl, const void *dato, unsigned tamDato)
+int insertarSegundoCircular (t_listaCircular *pl, const void *dato, unsigned tamDato)
 {
-    s_nodo *nuevoNodo;
+    t_nodo *nuevoNodo;
 
-    nuevoNodo = malloc (sizeof (s_nodo));
+    nuevoNodo = malloc (sizeof (t_nodo));
     if (!nuevoNodo)
     {
         perror ("ERROR - Sin memoria.\n");
@@ -40,9 +40,9 @@ int insertarSegundoCircular (s_listaCircular *pl, const void *dato, unsigned tam
     return EXITO;
 }
 
-void mapListaCircular (s_listaCircular *pl, void accion (void *dato))
+void mapListaCircular (t_listaCircular *pl, void accion (void *dato))
 {
-    s_nodo *nodoInicio = *pl;
+    t_nodo *nodoInicio = *pl;
 
     if (*pl != NULL)
     {
@@ -56,9 +56,9 @@ void mapListaCircular (s_listaCircular *pl, void accion (void *dato))
     }
 }
 
-void mapListaCircularConComplemento (s_listaCircular *pl, void *complemento, void accion (void *dato, void *complemento))
+void mapListaCircularConComplemento (t_listaCircular *pl, void *complemento, void accion (void *dato, void *complemento))
 {
-    s_nodo *nodoInicio = *pl;
+    t_nodo *nodoInicio = *pl;
 
     if (*pl != NULL)
     {
@@ -72,10 +72,10 @@ void mapListaCircularConComplemento (s_listaCircular *pl, void *complemento, voi
     }
 }
 
-void vaciarListaCircularConAccion (s_listaCircular *pl, void accion (void *dato))
+void vaciarListaCircularConAccion (t_listaCircular *pl, void accion (void *dato))
 {
-    s_listaCircular *ptrMain = pl;
-    s_nodo *nodoElim;
+    t_listaCircular *ptrMain = pl;
+    t_nodo *nodoElim;
 
     if (*pl != NULL)
     {

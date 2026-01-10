@@ -43,19 +43,19 @@
 
 
 
-/** \struct s_interfaces
+/** \struct t_interfaces
  * \brief Une todas las interfaces graficas.
  */
 typedef struct
 {
-    s_interfazAutenticacion autenticacion;
-    s_interfazConfig config;
-    s_interfazContactos contactos;
-    s_interfazRegistro registro;
-    s_interfazSalas salas;
-    s_recursosComunesAutenticacionRegistro recursosComunesAutenticacionRegistro;
-    s_recursosComunesContactosSalas recursosComunesContactosSalas;
-} s_interfaces;
+    t_interfazAutenticacion autenticacion;
+    t_interfazConfig config;
+    t_interfazContactos contactos;
+    t_interfazRegistro registro;
+    t_interfazSalas salas;
+    t_recursosComunesAutenticacionRegistro recursosComunesAutenticacionRegistro;
+    t_recursosComunesContactosSalas recursosComunesContactosSalas;
+} t_interfaces;
 
 
 
@@ -76,7 +76,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int inicializarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
+int inicializarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 /** \brief Configurar los recursos de la aplicacion.
  *
@@ -86,7 +86,7 @@ int inicializarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
+void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 /** \brief Liberar los recursos de la aplicacion.
  *
@@ -97,7 +97,7 @@ void configurarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-void liberarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
+void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 
 
@@ -117,7 +117,7 @@ void liberarAplicacion (s_aplicacion *aplicacion, s_interfaces *interfaces);
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces);
+void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 /** \brief Inicializar y configurar las interfaces graficas de autenticacion.
  *
@@ -129,7 +129,7 @@ void iniciarMenuPrincipal (s_aplicacion *aplicacion, s_interfaces *interfaces);
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int iniciarAutenticacionManual (s_aplicacion *aplicacion, s_interfaces *interfaces);
+int iniciarAutenticacionManual (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 
 

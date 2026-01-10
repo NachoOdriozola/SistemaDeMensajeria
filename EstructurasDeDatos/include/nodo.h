@@ -10,12 +10,12 @@
 
 
 
-typedef struct r_nodo
+typedef struct s_nodo
 {
     void *dato;
     unsigned tam;
-    struct r_nodo *sig;
-} s_nodo;
+    struct s_nodo *sig;
+} t_nodo;
 
 
 

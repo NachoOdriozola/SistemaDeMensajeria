@@ -86,27 +86,27 @@ typedef struct
 } t_buffersComunicacion;
 
 /**
- * \struct s_cliente
+ * \struct t_cliente
  * \brief  Representa un cliente.
  */
 typedef struct
 {
     SOCKET sock; /**< Socket del cliente. */
     int id;      /**< Identificador correspondiente del usuario. */
-} s_cliente;
+} t_cliente;
 
 
 /**
- * \struct s_servidor
+ * \struct t_servidor
  * \brief  Estructura base del servidor.
  */
 typedef struct
 {
     SOCKET sock;                                     /**< Socket del servidor. */
     sqlite3 *baseDeDatos;                            /**< Puntero a la base de datos. */
-    s_listaSimple listaSimpleClientesNoAutenticados; /**< Lista simple de clientes conectados pero no autenticados. */
-    s_tablaHash tablaHashClientes;                   /**< Tabla hash de clientes conectados y autenticados. */
-} s_servidor;
+    t_listaSimple listaSimpleClientesNoAutenticados; /**< Lista simple de clientes conectados pero no autenticados. */
+    t_tablaHash tablaHashClientes;                   /**< Tabla hash de clientes conectados y autenticados. */
+} t_servidor;
 
 
 
@@ -126,7 +126,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int inicializarServidor (s_servidor *servidor);
+int inicializarServidor (t_servidor *servidor);
 
 /** \brief Configurar los recursos del servidor.
  *
@@ -137,7 +137,7 @@ int inicializarServidor (s_servidor *servidor);
  * \return EXITO si se configuro correctamente, ERROR_CONFIGURACION en caso de error.
  *
  */
-int configurarServidor (s_servidor *servidor);
+int configurarServidor (t_servidor *servidor);
 
 /** \brief Liberar los recursos del servidor.
  *
@@ -147,7 +147,7 @@ int configurarServidor (s_servidor *servidor);
  * \param servidor Puntero a la estructura base del servidor.
  *
  */
-void liberarServidor (s_servidor *servidor);
+void liberarServidor (t_servidor *servidor);
 
 
 
@@ -165,7 +165,7 @@ void liberarServidor (s_servidor *servidor);
  * \param listaSimpleClientesNoAutenticados Puntero a la lista simple de clientes no autenticados.
  *
  */
-void procesarNuevoCliente (s_cliente *nuevoCliente, s_listaSimple *listaSimpleClientesNoAutenticados);
+void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaSimple *listaSimpleClientesNoAutenticados);
 
 /** \brief Detectar si se recibio una solicitud de algun cliente en una lista simple.
  *
@@ -180,7 +180,7 @@ void procesarNuevoCliente (s_cliente *nuevoCliente, s_listaSimple *listaSimpleCl
  * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
  *
  */
-bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDelCliente, char *bufferSolicitud);
+bool recibirSolicitudEnListaSimple (t_listaSimple *listaSimple, t_nodo ***nodoDelCliente, char *bufferSolicitud);
 
 /** \brief Detectar si se recibio una solicitud de algun cliente en una tabla hash.
  *
@@ -195,7 +195,7 @@ bool recibirSolicitudEnListaSimple (s_listaSimple *listaSimple, s_nodo ***nodoDe
  * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
  *
  */
-bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelCliente, char *bufferSolicitud);
+bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelCliente, char *bufferSolicitud);
 
 
 
@@ -218,7 +218,7 @@ bool recibirSolicitudEnTablaHash (s_tablaHash *tablaHash, s_nodo ***nodoDelClien
  * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de registro.
  *
@@ -233,9 +233,9 @@ int manejarSolicitudAutenticacion (s_servidor *servidor, s_nodo **clienteAProces
  * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int manejarSolicitudRegistro (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
-int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de solicitud de amistad.
  *
@@ -250,7 +250,7 @@ int manejarEnvioMensaje (s_servidor *servidor, s_nodo **clienteAProcesar, t_buff
  * \return OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int manejarSolicitudContacto (s_servidor *servidor, s_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudContacto (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 
 

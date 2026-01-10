@@ -76,42 +76,42 @@
 
 
 
-/** \struct s_interfazContactosTextos
+/** \struct t_interfazContactosTextos
  * \brief Contiene todos los textos graficos de la interfaz de contactos.
  */
 typedef struct
 {
     sfText *agendarContacto;        /**< Boton para abrir la ventana emergente de agendar contacto. */
     sfText *auxAgendarContacto;     /**< Muestra el nombre del contacto que escribe el usuario. */
-} s_interfazContactosTextos;
+} t_interfazContactosTextos;
 
-/** \struct s_interfazContactosElementos
+/** \struct t_interfazContactosElementos
  * \brief Contiene todos los elementos graficos de la interfaz de contactos.
  */
 typedef struct
 {
     sfRectangleShape *barraEscribirAgendarContacto; /**< Barra donde el usuario escribe el nombre del contacto. */
-} s_interfazContactosElementos;
+} t_interfazContactosElementos;
 
-/** \struct s_interfazContactosHabilitaciones
+/** \struct t_interfazContactosHabilitaciones
  * \brief Contiene todas las habilitaciones de la interfaz de contactos.
  */
 typedef struct
 {
     bool agendarContacto;               /**< Abrir/cerrar la ventana emergente de agendar contacto. */
     bool escribirAgendarContacto;       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir el nombre del contacto */
-} s_interfazContactosHabilitaciones;
+} t_interfazContactosHabilitaciones;
 
-/** \struct s_interfazContactos
+/** \struct t_interfazContactos
  * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de contactos.
  */
 typedef struct
 {
-    s_interfazContactosTextos textos;
-    s_interfazContactosElementos elementos;
-    s_interfazContactosHabilitaciones habilitaciones;
+    t_interfazContactosTextos textos;
+    t_interfazContactosElementos elementos;
+    t_interfazContactosHabilitaciones habilitaciones;
     char bufferAgendarContacto [MAX_NOMBRE_USUARIO];    /**< Buffer donde se guarda el nombre del contacto que escribe el usuario. */
-} s_interfazContactos;
+} t_interfazContactos;
 
 
 
@@ -130,7 +130,7 @@ typedef struct
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazContactos_inicializar (s_interfazContactos *interfazContactos);
+int interfazContactos_inicializar (t_interfazContactos *interfazContactos);
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de contactos.
  *
@@ -140,7 +140,7 @@ int interfazContactos_inicializar (s_interfazContactos *interfazContactos);
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void interfazContactos_configurar (s_interfazContactos *interfazContactos, const s_fuentes *fuentes);
+void interfazContactos_configurar (t_interfazContactos *interfazContactos, const t_fuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de contactos.
  *
@@ -152,7 +152,7 @@ void interfazContactos_configurar (s_interfazContactos *interfazContactos, const
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazContactos_accion (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de contactos.
  *
@@ -164,7 +164,7 @@ void interfazContactos_accion (s_aplicacion *aplicacion, s_interfazContactos *in
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos, s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazContactos_actualizar (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de contactos sobre la ventana.
  *
@@ -176,14 +176,14 @@ void interfazContactos_actualizar (s_aplicacion *aplicacion, s_interfazContactos
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazContactos_renderizar (s_aplicacion *aplicacion, const s_interfazContactos *interfazContactos, const s_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazContactos_renderizar (t_aplicacion *aplicacion, const t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de contactos.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  */
-void interfazContactos_liberar (s_interfazContactos *interfazContactos);
+void interfazContactos_liberar (t_interfazContactos *interfazContactos);
 
 
 
@@ -193,7 +193,7 @@ void interfazContactos_liberar (s_interfazContactos *interfazContactos);
 
 
 
-void intentarSolicitudAmistad (s_aplicacion *aplicacion, s_interfazContactos *interfazContactos);
+void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos);
 
 
 

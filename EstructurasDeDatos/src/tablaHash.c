@@ -1,7 +1,7 @@
 #include "../include/tablaHash.h"
 
 
-int crearTablaHash (s_tablaHash *tablaHash, int cantBuckets)
+int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
 {
     int i;
 
@@ -9,7 +9,7 @@ int crearTablaHash (s_tablaHash *tablaHash, int cantBuckets)
         return EXITO;
 
     tablaHash->cantBuckets = cantBuckets;
-    tablaHash->buckets = (s_listaSimple*) malloc (cantBuckets * sizeof (s_listaSimple));
+    tablaHash->buckets = (t_listaSimple*) malloc (cantBuckets * sizeof (t_listaSimple));
     if (!tablaHash->buckets)
     {
         perror ("ERROR - Sin memoria.\n");
@@ -22,26 +22,26 @@ int crearTablaHash (s_tablaHash *tablaHash, int cantBuckets)
     return EXITO;
 }
 
-bool insertarEnTablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
+bool insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
 {
     if (insertarAlInicioListaSimple (&(tablaHash->buckets[funcionHash(clave)]), dato, tamDato) == ERROR_SIN_MEMORIA)
         return false;
     return true;
 }
 
-void vincularNodoATablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), s_nodo *nodoAVincular)
+void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodo *nodoAVincular)
 {
     vincularNodoAListaSimple (&(tablaHash->buckets[funcionHash(clave)]), nodoAVincular);
 }
 
-bool buscarClaveEnTablaHash (s_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
+bool buscarClaveEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
 {
     if (buscarClaveUnicaEnListaSimple (&(tablaHash->buckets[funcionHash(clave)]), clave, returnDato, tamDato, cmp) == ENCONTRO_CLAVE)
         return ENCONTRO_CLAVE;
     return NO_ENCONTRO_CLAVE;
 }
 
-void mapTablaHash (s_tablaHash *tablaHash, void accion (void*))
+void mapTablaHash (t_tablaHash *tablaHash, void accion (void*))
 {
     int i;
 
@@ -55,7 +55,7 @@ void mapTablaHash (s_tablaHash *tablaHash, void accion (void*))
     }
 }
 
-void eliminarTablaHashConAccion (s_tablaHash *tablaHash, void accion (void*))
+void eliminarTablaHashConAccion (t_tablaHash *tablaHash, void accion (void*))
 {
     int i;
 

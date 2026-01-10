@@ -8,20 +8,20 @@
 
 
 
-static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (s_recursosComunesAutenticacionRegistroTextos *textos);
-static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (s_recursosComunesAutenticacionRegistroElementos *elementos);
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
-static int recursosComunesAutenticacionRegistro_inicializarTextos (s_recursosComunesAutenticacionRegistroTextos *textos);
-static int recursosComunesAutenticacionRegistro_inicializarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos);
+static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
+static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
-static void recursosComunesAutenticacionRegistro_configurarTextos (s_recursosComunesAutenticacionRegistroTextos *textos, const s_fuentes *fuentes);
-static void recursosComunesAutenticacionRegistro_configurarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos);
+static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_fuentes *fuentes);
+static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
-static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (s_recursosComunesAutenticacionRegistroTextos *textos);
-static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (s_recursosComunesAutenticacionRegistroElementos *elementos);
+static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
+static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
-static void recursosComunesAutenticacionRegistro_liberarTextos (s_recursosComunesAutenticacionRegistroTextos *textos);
-static void recursosComunesAutenticacionRegistro_liberarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos);
+static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
+static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
 
 
@@ -31,7 +31,7 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (s_recursosCom
 
 
 
-int recursosComunesAutenticacionRegistro_inicializar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -62,7 +62,7 @@ int recursosComunesAutenticacionRegistro_inicializar (s_recursosComunesAutentica
     return EXITO;
 }
 
-void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const s_fuentes *fuentes)
+void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_fuentes *fuentes)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
@@ -104,7 +104,7 @@ void recursosComunesAutenticacionRegistro_configurar (s_recursosComunesAutentica
     recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (&(recursosComunesAutenticacionRegistro->elementos));
 }
 
-void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroTextos *textos)
+void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
@@ -117,7 +117,7 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const s_recursosComunesAutenticacionRegistroElementos *recursosComunesAutenticacionRegistroElementos)
+void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *recursosComunesAutenticacionRegistroElementos)
 {
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->barraEscribirContrasenia, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->barraEscribirNombre, NULL);
@@ -126,7 +126,7 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
     sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->subrayadoTitulo, NULL);
 }
 
-void recursosComunesAutenticacionRegistro_liberar (s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
@@ -152,7 +152,7 @@ void recursosComunesAutenticacionRegistro_liberar (s_recursosComunesAutenticacio
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  */
-static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (s_recursosComunesAutenticacionRegistroTextos *textos)
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     textos->auxEscribirContrasenia = NULL;
     textos->auxEscribirNombre = NULL;
@@ -169,7 +169,7 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  */
-static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (s_recursosComunesAutenticacionRegistroElementos *elementos)
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     elementos->barraEscribirContrasenia = NULL;
     elementos->barraEscribirNombre = NULL;
@@ -188,7 +188,7 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int recursosComunesAutenticacionRegistro_inicializarTextos (s_recursosComunesAutenticacionRegistroTextos *textos)
+static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     textos->auxEscribirContrasenia = sfText_create ();
     if (!textos->auxEscribirContrasenia)
@@ -266,7 +266,7 @@ static int recursosComunesAutenticacionRegistro_inicializarTextos (s_recursosCom
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int recursosComunesAutenticacionRegistro_inicializarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos)
+static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     elementos->barraEscribirContrasenia = sfRectangleShape_create ();
     if (!elementos->barraEscribirContrasenia)
@@ -320,7 +320,7 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (s_recursos
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void recursosComunesAutenticacionRegistro_configurarTextos (s_recursosComunesAutenticacionRegistroTextos *textos, const s_fuentes *fuentes)
+static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_fuentes *fuentes)
 {
     // auxEscribirContrasenia
     sfText_setFont (textos->auxEscribirContrasenia, fuentes->fuente1);
@@ -370,7 +370,7 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (s_recursosCom
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-static void recursosComunesAutenticacionRegistro_configurarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos)
+static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setFillColor (elementos->barraEscribirContrasenia, sfColor_fromRGB (208, 208, 208));
@@ -398,7 +398,7 @@ static void recursosComunesAutenticacionRegistro_configurarElementos (s_recursos
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (s_recursosComunesAutenticacionRegistroTextos *textos)
+static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     // auxEscribirContrasenia
     sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){64, 262});
@@ -442,7 +442,7 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (s_recurso
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (s_recursosComunesAutenticacionRegistroElementos *elementos)
+static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){55, 263});
@@ -473,7 +473,7 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (s_recu
  *
  * \param elementos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  */
-static void recursosComunesAutenticacionRegistro_liberarTextos (s_recursosComunesAutenticacionRegistroTextos *textos)
+static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirNombre);
@@ -490,7 +490,7 @@ static void recursosComunesAutenticacionRegistro_liberarTextos (s_recursosComune
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  */
-static void recursosComunesAutenticacionRegistro_liberarElementos (s_recursosComunesAutenticacionRegistroElementos *elementos)
+static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirContrasenia);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirNombre);
@@ -508,7 +508,7 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (s_recursosCom
 
 
 
-bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, s_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     if (clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.botonGuardarAutenticacion))
     {

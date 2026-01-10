@@ -8,7 +8,7 @@
 
 
 
-int inicializarFuentes (s_fuentes *fuentes)
+int inicializarFuentes (t_fuentes *fuentes)
 {
     //--------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -28,7 +28,7 @@ int inicializarFuentes (s_fuentes *fuentes)
     return EXITO;
 }
 
-void liberarFuentes (s_fuentes *fuentes)
+void liberarFuentes (t_fuentes *fuentes)
 {
     DESTRUCTOR_SEGURO_FUENTE (fuentes->fuente1);
 }
@@ -99,7 +99,7 @@ int guardarDatosEnArchivo (int id, const char *bufferNombre)
     return EXITO;
 }
 
-bool verificarModoAutenticacion (s_usuario *usuario)
+bool verificarModoAutenticacion (t_usuario *usuario)
 {
     s_datosGuardados datosGuardados;
     FILE *archDatos;
@@ -215,7 +215,7 @@ void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contador
 
 
 
-void asignarMensaje (s_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor)
+void asignarMensaje (t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor)
 {
     sfText *mensaje;
     sfFloatRect bordesMensaje;
@@ -273,7 +273,7 @@ void liberarMensaje (void *mensaje)
 
 
 
-int crearNotificacion (s_notificacion *notificacion)
+int crearNotificacion (t_notificacion *notificacion)
 {
     //CREAR ELEMENTOS
 
@@ -325,7 +325,7 @@ int crearNotificacion (s_notificacion *notificacion)
     return EXITO;
 }
 
-void setupNotificacion (s_notificacion *notificacion, s_fuentes fuentes)
+void setupNotificacion (t_notificacion *notificacion, t_fuentes fuentes)
 {
     //SETUP ELEMENTOS
 
@@ -370,9 +370,9 @@ void setupNotificacion (s_notificacion *notificacion, s_fuentes fuentes)
     sfText_setCharacterSize (notificacion->textoBotonRechazar, 26);
 }
 
-int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotificacion, s_fuentes fuentes)
+int agregarNotificacion (t_listaSimple *listaNotificaciones, char *bufferNotificacion, t_fuentes fuentes)
 {
-    s_notificacion notificacion;
+    t_notificacion notificacion;
 
     if (crearNotificacion (&notificacion) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
@@ -380,7 +380,7 @@ int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotific
 
     bufferNotificacion += 2;
     sfText_setString (notificacion.textoNotificacion, bufferNotificacion);
-    insertarAlInicioListaSimple (listaNotificaciones, &notificacion, sizeof (s_notificacion));
+    insertarAlInicioListaSimple (listaNotificaciones, &notificacion, sizeof (t_notificacion));
     bufferNotificacion -= 2;
 
     return EXITO;
@@ -388,22 +388,22 @@ int agregarNotificacion (s_listaSimple *listaNotificaciones, char *bufferNotific
 
 void liberarNotificacion (void *notificacion)
 {
-    sfRectangleShape_destroy (((s_notificacion*)notificacion)->recuadro);
-    sfRectangleShape_destroy (((s_notificacion*)notificacion)->botonAceptar);
-    sfRectangleShape_destroy (((s_notificacion*)notificacion)->botonRechazar);
-    sfText_destroy (((s_notificacion*)notificacion)->textoNotificacion);
-    sfText_destroy (((s_notificacion*)notificacion)->textoBotonAceptar);
-    sfText_destroy (((s_notificacion*)notificacion)->textoBotonRechazar);
+    sfRectangleShape_destroy (((t_notificacion*)notificacion)->recuadro);
+    sfRectangleShape_destroy (((t_notificacion*)notificacion)->botonAceptar);
+    sfRectangleShape_destroy (((t_notificacion*)notificacion)->botonRechazar);
+    sfText_destroy (((t_notificacion*)notificacion)->textoNotificacion);
+    sfText_destroy (((t_notificacion*)notificacion)->textoBotonAceptar);
+    sfText_destroy (((t_notificacion*)notificacion)->textoBotonRechazar);
 }
 
 void renderizarListaNotificaciones (void *notificacion, void *renderizado)
 {
-    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->recuadro, NULL);
-    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->botonAceptar, NULL);
-    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->botonRechazar, NULL);
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->textoNotificacion, NULL);
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->textoBotonAceptar, NULL);
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((s_notificacion*)notificacion)->textoBotonRechazar, NULL);
+    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->recuadro, NULL);
+    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->botonAceptar, NULL);
+    sfRenderWindow_drawRectangleShape ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->botonRechazar, NULL);
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->textoNotificacion, NULL);
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->textoBotonAceptar, NULL);
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, ((t_notificacion*)notificacion)->textoBotonRechazar, NULL);
 }
 
 

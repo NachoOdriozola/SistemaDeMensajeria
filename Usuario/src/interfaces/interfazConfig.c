@@ -8,23 +8,23 @@
 
 
 
-static void interfazConfig_inicializarValoresNulosTextos (s_interfazConfigTextos *textos);
-static void interfazConfig_inicializarValoresNulosElementos (s_interfazConfigElementos *elementos);
+static void interfazConfig_inicializarValoresNulosTextos (t_interfazConfigTextos *textos);
+static void interfazConfig_inicializarValoresNulosElementos (t_interfazConfigElementos *elementos);
 
-static int interfazConfig_inicializarTextos (s_interfazConfigTextos *textos);
-static int interfazConfig_inicializarElementos (s_interfazConfigElementos *elementos);
+static int interfazConfig_inicializarTextos (t_interfazConfigTextos *textos);
+static int interfazConfig_inicializarElementos (t_interfazConfigElementos *elementos);
 
-static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, const s_fuentes *fuentes);
-static void interfazConfig_configurarElementos (s_interfazConfigElementos *elementos);
+static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_fuentes *fuentes);
+static void interfazConfig_configurarElementos (t_interfazConfigElementos *elementos);
 
-static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos);
-static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos);
+static void interfazConfig_tamYPosVentanaTextos (t_interfazConfigTextos *textos);
+static void interfazConfig_tamYPosVentanaElementos (t_interfazConfigElementos *elementos);
 
-static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const s_interfazConfigTextos *textos);
-static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const s_interfazConfigElementos *elementos);
+static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const t_interfazConfigTextos *textos);
+static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const t_interfazConfigElementos *elementos);
 
-static void interfazConfig_liberarTextos (s_interfazConfigTextos *textos);
-static void interfazConfig_liberarElementos (s_interfazConfigElementos *elementos);
+static void interfazConfig_liberarTextos (t_interfazConfigTextos *textos);
+static void interfazConfig_liberarElementos (t_interfazConfigElementos *elementos);
 
 
 
@@ -34,7 +34,7 @@ static void interfazConfig_liberarElementos (s_interfazConfigElementos *elemento
 
 
 
-int interfazConfig_inicializar (s_interfazConfig *interfazConfig)
+int interfazConfig_inicializar (t_interfazConfig *interfazConfig)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
@@ -65,7 +65,7 @@ int interfazConfig_inicializar (s_interfazConfig *interfazConfig)
     return EXITO;
 }
 
-void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuentes *fuentes)
+void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuentes *fuentes)
 {
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
@@ -91,7 +91,7 @@ void interfazConfig_configurar (s_interfazConfig *interfazConfig, const s_fuente
     interfazConfig_tamYPosVentanaElementos (&(interfazConfig->elementos));
 }
 
-void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *interfazConfig)
+void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *interfazConfig)
 {
     sfEvent evento;
 
@@ -122,12 +122,12 @@ void interfazConfig_accion (s_aplicacion *aplicacion, const s_interfazConfig *in
     }
 }
 
-void interfazConfig_actualizar (s_interfazConfig *interfazConfig)
+void interfazConfig_actualizar (t_interfazConfig *interfazConfig)
 {
 
 }
 
-void interfazConfig_renderizar (sfRenderWindow *renderizado, const s_interfazConfig *interfazConfig)
+void interfazConfig_renderizar (sfRenderWindow *renderizado, const t_interfazConfig *interfazConfig)
 {
     sfRenderWindow_clear (renderizado, sfColor_fromRGB (223, 231, 233));
 
@@ -147,7 +147,7 @@ void interfazConfig_renderizar (sfRenderWindow *renderizado, const s_interfazCon
     sfRenderWindow_display (renderizado);
 }
 
-void interfazConfig_liberar (s_interfazConfig *interfazConfig)
+void interfazConfig_liberar (t_interfazConfig *interfazConfig)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
@@ -173,7 +173,7 @@ void interfazConfig_liberar (s_interfazConfig *interfazConfig)
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  */
-static void interfazConfig_inicializarValoresNulosTextos (s_interfazConfigTextos *textos)
+static void interfazConfig_inicializarValoresNulosTextos (t_interfazConfigTextos *textos)
 {
     textos->textoConfig = NULL;
 }
@@ -182,7 +182,7 @@ static void interfazConfig_inicializarValoresNulosTextos (s_interfazConfigTextos
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  */
-static void interfazConfig_inicializarValoresNulosElementos (s_interfazConfigElementos *elementos)
+static void interfazConfig_inicializarValoresNulosElementos (t_interfazConfigElementos *elementos)
 {
     elementos->rectanguloVolver = NULL;
 }
@@ -196,7 +196,7 @@ static void interfazConfig_inicializarValoresNulosElementos (s_interfazConfigEle
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazConfig_inicializarTextos (s_interfazConfigTextos *textos)
+static int interfazConfig_inicializarTextos (t_interfazConfigTextos *textos)
 {
     textos->textoConfig = sfText_create ();
     if (!textos->textoConfig)
@@ -218,7 +218,7 @@ static int interfazConfig_inicializarTextos (s_interfazConfigTextos *textos)
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int interfazConfig_inicializarElementos (s_interfazConfigElementos *elementos)
+static int interfazConfig_inicializarElementos (t_interfazConfigElementos *elementos)
 {
     elementos->rectanguloVolver = sfRectangleShape_create ();
     if (!elementos->rectanguloVolver)
@@ -237,7 +237,7 @@ static int interfazConfig_inicializarElementos (s_interfazConfigElementos *eleme
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, const s_fuentes *fuentes)
+static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_fuentes *fuentes)
 {
     // textoConfig
     sfText_setFont (textos->textoConfig, fuentes->fuente1);
@@ -250,7 +250,7 @@ static void interfazConfig_configurarTextos (s_interfazConfigTextos *textos, con
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  *
  */
-static void interfazConfig_configurarElementos (s_interfazConfigElementos *elementos)
+static void interfazConfig_configurarElementos (t_interfazConfigElementos *elementos)
 {
     // rectanguloVolver
     sfRectangleShape_setFillColor (elementos->rectanguloVolver, sfColor_fromRGB (0, 0, 0));
@@ -262,7 +262,7 @@ static void interfazConfig_configurarElementos (s_interfazConfigElementos *eleme
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos)
+static void interfazConfig_tamYPosVentanaTextos (t_interfazConfigTextos *textos)
 {
     // textoConfig
     sfText_setPosition (textos->textoConfig, (sfVector2f){1000, 500});
@@ -275,7 +275,7 @@ static void interfazConfig_tamYPosVentanaTextos (s_interfazConfigTextos *textos)
  * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
-static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *elementos)
+static void interfazConfig_tamYPosVentanaElementos (t_interfazConfigElementos *elementos)
 {
     // rectanguloVolver
     sfRectangleShape_setPosition (elementos->rectanguloVolver, (sfVector2f){1000, 650});
@@ -290,7 +290,7 @@ static void interfazConfig_tamYPosVentanaElementos (s_interfazConfigElementos *e
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  *
  */
-static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const s_interfazConfigTextos *textos)
+static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const t_interfazConfigTextos *textos)
 {
      sfRenderWindow_drawText (renderizado, textos->textoConfig, NULL);
 }
@@ -303,7 +303,7 @@ static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const 
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  *
  */
-static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const s_interfazConfigElementos *elementos)
+static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const t_interfazConfigElementos *elementos)
 {
     sfRenderWindow_drawRectangleShape (renderizado, elementos->rectanguloVolver, NULL);
 }
@@ -312,7 +312,7 @@ static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, con
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  */
-static void interfazConfig_liberarTextos (s_interfazConfigTextos *textos)
+static void interfazConfig_liberarTextos (t_interfazConfigTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->textoConfig);
 }
@@ -321,7 +321,7 @@ static void interfazConfig_liberarTextos (s_interfazConfigTextos *textos)
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  */
-static void interfazConfig_liberarElementos (s_interfazConfigElementos *elementos)
+static void interfazConfig_liberarElementos (t_interfazConfigElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->rectanguloVolver);
 }

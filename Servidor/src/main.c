@@ -5,12 +5,12 @@ int main ()
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    s_servidor servidor;
-    s_nodo **clienteAProcesar;
+    t_servidor servidor;
+    t_nodo **clienteAProcesar;
     t_buffersComunicacion buffersComunicacion;
     char ingresoCaracter = '\0';
 
-    s_cliente nuevoCliente;
+    t_cliente nuevoCliente;
     struct sockaddr_in dirNuevoCliente;
     int tamNuevoCliente;
 
