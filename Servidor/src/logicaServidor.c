@@ -575,7 +575,7 @@ static int cmpIdCliente (const void *cliente, const void *clave)
     return (*((t_cliente*)cliente)).id - *((int*)clave);
 }
 
-/** \brief Mostrar el ID de un cliente en consola. Agrega dos tabulaciones.
+/** \brief Mostrar el ID de un cliente en consola. Agrega salto de linea.
  *
  * \param cliente Puntero al cliente cuyo ID se desea mostrar.
  *

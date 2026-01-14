@@ -134,7 +134,7 @@ int interfazContactos_inicializar (t_interfazContactos *interfazContactos);
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de contactos.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.

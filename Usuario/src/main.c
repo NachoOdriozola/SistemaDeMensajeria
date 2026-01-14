@@ -284,12 +284,12 @@ void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
     sfRenderWindow_setFramerateLimit (aplicacion->renderizado, 60);
 
 
-    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
 
     recursosComunesContactosSalas_configurar (&(interfaces->recursosComunesContactosSalas), &(aplicacion->mensajes.fuentes));
 
 
-    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS ESENCIALES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS ESENCIALES ---------------
 
     // Interfaz grafica de contactos
 
@@ -300,7 +300,7 @@ void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
     interfazSalas_configurar (&(interfaces->salas), &(aplicacion->mensajes.fuentes));
 
 
-    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LA LISTA DE MENSAJES ---------------
     mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.fuente1, setupListaMensajes);
     mapListaCircular (&(aplicacion->mensajes.listaMensajes), tamListaMensajes);
     aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.listaMensajes;
@@ -428,12 +428,12 @@ int iniciarAutenticacionManual (t_aplicacion *aplicacion, t_interfaces *interfac
     }
 
 
-    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA DE LOS RECURSOS GRAFICOS COMUNES ---------------
 
     recursosComunesAutenticacionRegistro_configurar (&(interfaces->recursosComunesAutenticacionRegistro), &(aplicacion->mensajes.fuentes));
 
 
-    // --------------- CONFIGURAR Y ESTABLECER TAMANIO Y POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS DE AUTENTICACION ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA DE LAS INTERFACES GRAFICAS DE AUTENTICACION ---------------
 
     // Interfaz grafica de autenticacion
 

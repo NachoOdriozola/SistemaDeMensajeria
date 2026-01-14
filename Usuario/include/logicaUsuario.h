@@ -43,13 +43,13 @@
 
 /**
  * \def ANCHO_LOGICO_VENTANA
- * \brief Tamanio en X de la ventana (QUE UTILIZO YO) maximizada. Utilizado para crear escalas de pixeles.
+ * \brief Ancho/tamanio en x, logico de la ventana.
  */
 #define ANCHO_LOGICO_VENTANA 1920
 
 /**
  * \def ALTO_LOGICO_VENTANA
- * \brief Tamanio en Y de la ventana (QUE UTILIZO YO) maximizada. Utilizado para crear escalas de pixeles.
+ * \brief Alto/tamanio en y, logico de la ventana.
  */
 #define ALTO_LOGICO_VENTANA 1009
 
@@ -113,7 +113,7 @@
 
 /**
  * \def MAX_MENSAJES_MEMORIA
- * \brief Cantidad maxima de mensajes de la lista circular de mensajes que se guardan en memoria.
+ * \brief Cantidad maxima de mensajes que se guardan en memoria en la lista circular de mensajes.
  */
 #define MAX_MENSAJES_MEMORIA 5
 

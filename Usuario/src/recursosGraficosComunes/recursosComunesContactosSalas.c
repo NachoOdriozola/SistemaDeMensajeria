@@ -547,7 +547,6 @@ static void recursosComunesContactosSalas_configurarElementos (t_recursosComunes
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico comun (compartido) entre las interfaces de contactos y salas.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void recursosComunesContactosSalas_tamYPosVentanaTextos (t_recursosComunesContactosSalasTextos *textos)
@@ -590,10 +589,9 @@ static void recursosComunesContactosSalas_tamYPosVentanaTextos (t_recursosComune
     sfText_setCharacterSize (textos->tituloVentanaEmergente, 32);
 }
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico común (compartido) entre las interfaces de contactos y salas.
+/** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico comun (compartido) entre las interfaces de contactos y salas.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void recursosComunesContactosSalas_tamYPosVentanaElementos (t_recursosComunesContactosSalasElementos *elementos)
@@ -630,6 +628,11 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (t_recursosCom
     sfRectangleShape_setSize (elementos->ventanaEmergente, (sfVector2f){400, 300});
 }
 
+/** \brief Establecer un tamanio y una posicion a cada vista comun (compartido) entre las interfaces de contactos y salas.
+ *
+ * \param vistas Puntero a la estructura que contiene las variables de las vistas de los recursos graficos comunes entre las interfaces de contactos y salas.
+ *
+ */
 static void recursosComunesContactosSalas_tamVistas (t_recursosComunesContactosSalasVistas *vistas)
 {
     // UI

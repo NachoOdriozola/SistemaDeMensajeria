@@ -108,7 +108,6 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig);
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuentes *fuentes);
@@ -128,7 +127,6 @@ void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *in
  * Capturar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc.) y realizar o invocar las funciones
  * correspondientes segun el evento detectado.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */

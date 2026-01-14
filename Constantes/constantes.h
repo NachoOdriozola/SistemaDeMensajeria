@@ -63,18 +63,22 @@
 
 /**
  * \def MAX_BUFFER_SOLICITUD
- * \brief Tamanio maximo del buffer para recibir solicitudes de los clientes.
+ * \brief Tamanio maximo del buffer para comunicar solicitudes entre el cliente y el servidor.
  */
 #define MAX_BUFFER_SOLICITUD 2048
 
 /**
  * \def MAX_BUFFER_RESPUESTA
- * \brief Tamanio maximo del buffer para enviar respuestas a los clientes.
+ * \brief Tamanio maximo del buffer para comunicar respuestas entre el cliente y el servidor.
  */
 #define MAX_BUFFER_RESPUESTA 2048
 
-#define MAX_BUFFER_MENSAJE 2001
 
+/**
+ * \def MAX_BUFFER_MENSAJE
+ * \brief Longitud maxima para el mensaje escrito por el usuario.
+ */
+#define MAX_BUFFER_MENSAJE 2001
 
 /**
  * \def MAX_NOMBRE_USUARIO
@@ -88,6 +92,10 @@
  */
 #define MAX_CONTRASENIA_USUARIO 128
 
+/**
+ * \def MAX_CORREO_ELECTRONICO_USUARIO
+ * \brief Longitud maxima para el correo electronico del usuario.
+ */
 #define MAX_CORREO_ELECTRONICO_USUARIO 256
 
 
@@ -107,13 +115,13 @@
 
 /**
  * \def INDICE_SOLICITUD_AUTENTICACION
- * \brief Identificador de solicitud para autenticacion
+ * \brief Identificador de solicitud para autenticacion del usuario.
  */
 #define INDICE_SOLICITUD_AUTENTICACION '1'
 
 /**
  * \def INDICE_SOLICITUD_REGISTRO
- * \brief Identificador de solicitud para registro de usuario.
+ * \brief Identificador de solicitud para registro del usuario.
  */
 #define INDICE_SOLICITUD_REGISTRO '2'
 
@@ -131,28 +139,32 @@
 
 
 /**
- * \def INDICE_RESPUESTA_ACEPTADA
- * \brief Indice de respuesta al cliente que la solicitud fue aceptada.
+ * \def INDICE_RESPUESTA_EXITO
+ * \brief Indice de respuesta al cliente por parte del servidor que la solicitud se proceso con exito.
  */
 #define INDICE_RESPUESTA_EXITO '0'
 
 /**
- * \def INDICE_RESPUESTA_SOLICITUD_RECHAZADA
- * \brief Indice de respuesta al cliente que la solicitud fue rechazada.
+ * \def INDICE_RESPUESTA_ERROR_SERVIDOR
+ * \brief Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error del servidor.
  */
 #define INDICE_RESPUESTA_ERROR_SERVIDOR '1'
 
+/**
+ * \def INDICE_RESPUESTA_ERROR_CREDENCIALES
+ * \brief Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error de credenciales del usuario.
+ */
 #define INDICE_RESPUESTA_ERROR_CREDENCIALES '2'
 
 /**
  * \def INDICE_RESPUESTA_MENSAJE
- * \brief Indice de respuesta al cliente que le envias un mensaje.
+ * \brief Indice de respuesta al cliente por parte del servidor que le envia un mensaje.
  */
 #define INDICE_RESPUESTA_MENSAJE 'a'
 
 /**
- * \def INDICE_RESPUESTA_SOLICITUD_AMISTAD
- * \brief Indice de respuesta al cliente que le envias una solicitud de amistad.
+ * \def INDICE_RESPUESTA_AGENDAR_CONTACTO
+ * \brief Indice de respuesta al cliente por parte del servidor que le envia una solicitud de contacto.
  */
 #define INDICE_RESPUESTA_AGENDAR_CONTACTO 'b'
 

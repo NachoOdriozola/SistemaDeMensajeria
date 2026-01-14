@@ -259,7 +259,6 @@ static void interfazConfig_configurarElementos (t_interfazConfigElementos *eleme
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de configuraciones.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazConfig_tamYPosVentanaTextos (t_interfazConfigTextos *textos)
@@ -272,7 +271,6 @@ static void interfazConfig_tamYPosVentanaTextos (t_interfazConfigTextos *textos)
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de configuraciones.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazConfig_tamYPosVentanaElementos (t_interfazConfigElementos *elementos)

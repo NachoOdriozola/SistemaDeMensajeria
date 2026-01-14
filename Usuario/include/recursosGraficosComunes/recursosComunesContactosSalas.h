@@ -50,13 +50,13 @@
 
 /**
  * \def ANCHO_MINIMO_VENTANA
- * \brief Ancho (x) minimo que puede tomar la ventana.
+ * \brief Ancho/tamanio en x, minimo que puede tomar la ventana.
  */
 #define ANCHO_MINIMO_VENTANA 800
 
 /**
  * \def ALTO_MINIMO_VENTANA
- * \brief Alto (y) minimo que puede tomar la ventana.
+ * \brief Alto/tamanio en y, minimo que puede tomar la ventana.
  */
 #define ALTO_MINIMO_VENTANA 600
 
@@ -168,7 +168,7 @@ typedef struct
     t_recursosComunesContactosSalasElementos elementos;
     t_recursosComunesContactosSalasHabilitaciones habilitaciones;
     t_recursosComunesContactosSalasVistas vistas;
-    char bufferMensaje [MAX_BUFFER_MENSAJE];                         /**< Buffer donde se guarda el mensaje que escribe el usuario. */
+    char bufferMensaje [MAX_BUFFER_MENSAJE];                         /**< Buffer donde se guarda el mensaje escrito por el usuario. */
 } t_recursosComunesContactosSalas;
 
 
@@ -192,7 +192,7 @@ int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -235,7 +235,27 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
 
 
 
+/** \brief Intentar enviar un mensaje a otro usuario.
+ *
+ * Genera una cadena de solicitud valida que incluye el indice de la solicitud, el ID del emisor, el ID del receptor y el texto del mensaje.
+ * Envia la solicitud al servidor y espera su respuesta para saber su estado.
+ * Se comunican a traves del socket de la aplicacion.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ *
+ * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
+ */
 int intentarEnvioMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Manejar el recibo de un mensaje por parte de otro usuario.
+ *
+ * Parsea la cadena de respuesta para obtener el ID del emisor y el texto de mensaje, luego asigna el mensaje a la lista circular de mensajes.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param bufferRespuesta Buffer donde se recibio la respuesta del servidor.
+ *
+ */
 void manejarReciboMensaje (t_aplicacion *aplicacion, char *bufferRespuesta);
 
 /** \brief Renderizar la vista de mensajes.
@@ -270,9 +290,8 @@ void renderizarNotificaciones (t_aplicacion *aplicacion, const t_recursosComunes
 
 /** \brief Manejar el evento de redimensionamiento de la ventana.
  *
- * Verificar que el nuevo tamanio de la ventana no exceda los valores de ancho y alto minimos, guardar los nuevos valores de la ventana, crear una nueva escala de elementos
- * y de pixeles, establecer un nuevo tamanio y una nueva posicion a todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas, y ajustar
- * la vistaUI (de la interfaz) al nuevo tamanio de la ventana.
+ * Verificar que el nuevo tamanio de la ventana no exceda los valores de ancho y alto minimos, establecer los valores que correspondan a la ventana de renderizado,
+ * y fijar los valores logicos de la vista UI.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
@@ -286,7 +305,6 @@ void manejarRedimensionamientoVentanaContactosSalas (t_aplicacion *aplicacion, t
  * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -306,7 +324,26 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
  */
 bool manejarEnterEnviarMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_aplicacion *aplicacion);
 
+/** \brief Manejar el evento de desplazar arriba el area de mensajes.
+ *
+ * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes hacia arriba por la velocidad del scroll.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
 bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Manejar el evento de desplazar abajo el area de mensajes.
+ *
+ * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes hacia abajo por la velocidad del scroll.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
 bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de scroll en el area de mensajes.
@@ -314,7 +351,6 @@ bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recurso
  * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes segun el scroll realizado y la velocidad del scroll.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param eventoChar Variable de evento que contiene los valores sobre el scroll realizado.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *

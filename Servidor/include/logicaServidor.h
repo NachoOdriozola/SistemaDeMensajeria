@@ -40,7 +40,7 @@
 
 /**
  * \def CARACTER_APAGAR_SERVIDOR
- * \brief Caracter que el usuario debera escribir en consola para apagar el servidor.
+ * \brief Caracter que el usuario debe escribir en consola para apagar el servidor.
  */
 #define CARACTER_APAGAR_SERVIDOR 'S'
 
@@ -53,7 +53,7 @@
 
 /**
  * \def MAX_BUFFER_CONSULTA_SQLITE
- * \brief Tamanio maximo del buffer para almacenar consultas de SQLite.
+ * \brief Tamanio maximo del buffer para almacenar consultas SQLite.
  */
 #define MAX_BUFFER_CONSULTA_SQLITE 128
 
@@ -78,11 +78,15 @@
 
 
 
+/**
+ * \struct t_buffersComunicacion
+ * \brief  Contiene los buffers necesarios para establecer la comunicacion entre el cliente y el servidor.
+ */
 typedef struct
 {
-    char solicitud [MAX_BUFFER_SOLICITUD];
-    char respuesta [MAX_BUFFER_RESPUESTA];
-    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];
+    char solicitud [MAX_BUFFER_SOLICITUD];              /**< Buffer que almacena una solicitud un clientes. */
+    char respuesta [MAX_BUFFER_RESPUESTA];              /**< Buffer que almacena una respuestas del servidor para enviar al cliente. */
+    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];   /**< Buffer que almacena una consulta SQLite. */
 } t_buffersComunicacion;
 
 /**
@@ -174,7 +178,7 @@ void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaSimple *listaSimpleCl
  * Si un cliente perdio la conexion, lo desconectara automaticamente.
  *
  * \param listaSimple Puntero a la lista simple.
- * \param nodoDelCliente Triple puntero donde se guardara el nodo del cliente que envio la solicitud.
+ * \param nodoDelCliente Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud.
  * \param bufferSolicitud Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.
  *
  * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
@@ -189,7 +193,7 @@ bool recibirSolicitudEnListaSimple (t_listaSimple *listaSimple, t_nodo ***nodoDe
  * Si un cliente perdio la conexión, lo desconectara automaticamente.
  *
  * \param tablaHash Puntero a la tabla hash.
- * \param nodoDelCliente Triple puntero donde se guardara el nodo del cliente que envio la solicitud.
+ * \param nodoDelCliente Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud.
  * \param bufferSolicitud Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.
  *
  * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
@@ -205,39 +209,60 @@ bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelClien
 
 
 
-/** \brief Verifica y procesa la solicitud de inicio de sesion.
+/** \brief Verifica y procesa la solicitud de autenticacion.
  *
- * Consulta en la base de datos si el nombre y la contrasenia del usuario son validos.
- * Si lo son, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de no autenticados a la tabla hash.
- * Le responde al cliente el resultado del proceso.
+ * Parsea la cadena del buffer de solicitud.
+ * Consulta en la base de datos si las credenciales que envio el usuario existen y son validas.
+ * Si lo son, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes no autenticados a la tabla hash, y
+ * le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID.
+ * Si no lo son, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES".
+ * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
  * \param servidor Puntero a la estructura base del servidor.
  * \param clienteAProcesar Referencia al nodo del cliente que envio la solicitud y se debe procesar.
- * \param bufferSolicitud Buffer que almacena la cadena de la solicitud enviada por el cliente.
+ * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
- * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
+ * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
  *
  */
 int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de registro.
  *
- * Consulta en la base de datos si el nombre de usuario ya existe.
- * Si no existe, lo inserta en la base de datos, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de no autenticados a la tabla hash.
- * Le responde al cliente el resultado del proceso.
+ * Parsea la cadena del buffer de solicitud.
+ * Consulta en la base de datos si el nombre de usuario y/o el correo electronico ya existen.
+ * Si ya existen, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES".
+ * Si no existen, lo inserta en la base de datos, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes
+ * no autenticados a la tabla hash, y le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID.
+ * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
  * \param servidor Puntero a la estructura base del servidor.
  * \param clienteAProcesar Referencia al cliente que envió la solicitud y se debe procesar.
- * \param bufferSolicitud Buffer que contiene la cadena de la solicitud enviada por el cliente.
+ * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
- * \return EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
+ * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
  *
  */
 int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
+/** \brief Verifica y procesa la solicitud de envio de mensaje.
+ *
+ * Parsea la cadena del buffer de solicitud.
+ * Verifica si el ID del emisor es igual al ID del receptor, en tal caso no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES".
+ * Inserta el mensaje a la base de datos y le responde al cliente "INDICE_RESPUESTA_EXITO".
+ * Busca el ID del receptor en la tabla hash, si se encuentra conectado, le envia el mensaje en tiempo real.
+ * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
+ *
+ * \param servidor Puntero a la estructura base del servidor.
+ * \param clienteAProcesar Referencia al cliente que envió la solicitud y se debe procesar.
+ * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
+ *
+ * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
+ *
+ */
 int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
-/** \brief Verifica y procesa la solicitud de solicitud de amistad.
+/** \brief Verifica y procesa la solicitud de solicitud de contacto
  *
  * Consulta en la base de datos si existe el usuario receptor.
  * Si existe, inserta en la base de datos la solicitud de amistad.
@@ -245,7 +270,7 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
  *
  * \param servidor Puntero a la estructura base del servidor.
  * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
- * \param bufferSolicitud Buffer que contiene la cadena de la solicitud enviada por el cliente.
+ * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *

@@ -8,7 +8,7 @@
 
 
 
-static void intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static int intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static void cambiarInterfazARegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
@@ -16,6 +16,7 @@ static void cambiarInterfazARegistro (t_recursosComunesAutenticacionRegistro *re
 /* ============================
    DECLARACIONES DE FUNCIONES COMPLEMENTARIAS
    ============================ */
+
 
 
 static void interfazAutenticacion_inicializarValoresNulosTextos (t_interfazAutenticacionTextos *textos);
@@ -35,6 +36,7 @@ static void interfazAutenticacion_renderizarElementos (sfRenderWindow *renderiza
 
 static void interfazAutenticacion_liberarTextos (t_interfazAutenticacionTextos *textos);
 static void interfazAutenticacion_liberarElementos (t_interfazAutenticacionElementos *elementos);
+
 
 
 /* ============================
@@ -252,7 +254,19 @@ void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticaci
 
 
 
-static void intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+/** \brief Intentar autenticar usuario.
+ *
+ * Genera una cadena de solicitud valida que incluye el indice de la solicitud, el nombre y la contrasenia del usuario.
+ * Envia la solicitud y espera la respuesta para saber su estado.
+ * Si se ejecuto con exito, guarda el ID del usuario y selecciona la interfaz de contactos como menu principal.
+ * Se comunican a traves del socket de la aplicacion.
+ *
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ *
+ * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
+ */
+static int intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
     char estadoRespuesta;
@@ -264,16 +278,19 @@ static void intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAu
 
     if (estadoRespuesta == INDICE_RESPUESTA_EXITO)
     {
-        aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         aplicacion->usuario.id = id;
+        aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         strcpy (aplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
         if (recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion == HABILITAR_GUARDAR_AUTENTICACION)
             guardarDatosEnArchivo (aplicacion->usuario.id, recursosComunesAutenticacionRegistro->bufferNombre);
+        return EXITO;
     }
     else if (INDICE_RESPUESTA_ERROR_CREDENCIALES)
             printf ("Usuario o contrasenia incorrectos.\n");
         else
             printf ("Error servidor.\n");
+
+    return ERROR_INICIALIZACION;
 }
 
 /** \brief Modificar las configuraciones de los recursos graficos para adaptarlos a la interfaz de registro.

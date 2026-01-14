@@ -107,7 +107,7 @@ int interfazSalas_inicializar (t_interfazSalas *interfazSalas);
 
 /** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar cada recurso.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
@@ -120,24 +120,24 @@ void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_fuentes *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y manejar la respuesta correspondientes segun el evento detectado.
  * Cada evento se desarrolla en una funcion particular manejadora de eventos, y se encuentran ordenados descendentemente (arbitrario) a la concurrencia que los utiliza el usuario.
  *
- * \param app Puntero a la estructura base de la aplicacion.
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazSalas_accion (t_aplicacion *app, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de salas.
  *
  * Capturar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc.) y realizar o invocar las funciones
  * correspondientes segun el evento detectado.
  *
- * \param app Puntero a la estructura base de la aplicacion.
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazSalas_actualizar (t_aplicacion *app, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de salas sobre la ventana.
  *

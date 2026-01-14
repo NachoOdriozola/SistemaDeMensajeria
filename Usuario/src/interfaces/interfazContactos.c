@@ -313,7 +313,6 @@ void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *in
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
@@ -488,7 +487,6 @@ static void interfazContactos_configurarElementos (t_interfazContactosElementos 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de contactos.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
@@ -505,7 +503,6 @@ static void interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *t
 /** \brief Establecer un tamanio y una posicion sobre la ventana cada elemento grafico de la interfaz de contactos.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos)
@@ -621,7 +618,6 @@ static void interfazContactos_liberarElementos (t_interfazContactosElementos *el
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -648,7 +644,6 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_re
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -815,7 +810,6 @@ static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recur
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.

@@ -44,7 +44,7 @@
 
 
 /** \struct t_interfaces
- * \brief Une todas las interfaces graficas.
+ * \brief Une todas las interfaces graficas y los recursos graficos comunes.
  */
 typedef struct
 {
@@ -80,7 +80,8 @@ int inicializarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 /** \brief Configurar los recursos de la aplicacion.
  *
- * Configurar el renderizado, los recursos graficos comunes esenciales (contactos y salas), las interfaces graficas esenciales, el renderizado y la lista de mensajes.
+ * Configurar el renderizado, los recursos graficos comunes esenciales (contactos y salas), las interfaces graficas esenciales,
+ * la lista de mensajes, y ademas establecerles un tamanio y una posicion sobre la ventana.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
@@ -107,11 +108,9 @@ void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 
 
-/** \brief Configurar la aplicacion y las interfaces graficas esenciales para iniciar el menu principal.
+/** \brief Preparar la aplicacion para iniciar el menu principal.
  *
- * Seleccionar la interfaz de contactos como menu principal, maximizar la ventana y almacenar valores sobre ella en la estructura ventana, establecer un tamanio a las vistas
- * de los recursos graficos comunes de las interfaces de contactos y salas, y configurar el tamanio y la posicion de los mensajes de la lista de mensajes sobre la ventana,
- * y los recursos graficos comunes de las interfaces de contactos y salas.
+ * Maximizar la ventana y seleccionar la interfaz de contactos como interfaz de menu principal.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
@@ -121,7 +120,8 @@ void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_interfaces *interfaces);
 
 /** \brief Inicializar y configurar las interfaces graficas de autenticacion.
  *
- * Seleccionar la interfaz de autenticacion como principal e inicializar y configurar los recursos graficos comunes e interfaces de autenticacion y registro.
+ * Seleccionar la interfaz de autenticacion como interfaz principal e inicializar, configurar y establecer un tamanio y una posicion sobre la ventana
+ * a los recursos graficos comunes de autenticacion (autenticacion y registro) y las interfaces de autenticacion y registro.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.

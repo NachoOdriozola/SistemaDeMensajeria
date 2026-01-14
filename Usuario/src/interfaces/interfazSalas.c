@@ -17,6 +17,7 @@ static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursos
    ============================ */
 
 
+
 static void interfazSalas_inicializarValoresNulosTextos (t_interfazSalasTextos *textos);
 static void interfazSalas_inicializarValoresNulosElementos (t_interfazSalasElementos *elementos);
 
@@ -263,7 +264,6 @@ void interfazSalas_liberar (t_interfazSalas *interfazSalas)
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
@@ -383,7 +383,6 @@ static void interfazSalas_configurarElementos (t_interfazSalasElementos *element
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de salas.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos)
@@ -394,7 +393,6 @@ static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos)
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de salas.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  */
 static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *elementos)
@@ -501,7 +499,6 @@ static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos)
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
- * \param ventana Puntero a la estructura que contiene los valores del tamanio de la ventana sobre la que se esta ejecutando la aplicacion.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -585,6 +582,14 @@ static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recur
     return EVENTO_NO_MANEJADO;
 }
 
+/** \brief Manejar el evento de click en el area de mensajes.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
 static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))

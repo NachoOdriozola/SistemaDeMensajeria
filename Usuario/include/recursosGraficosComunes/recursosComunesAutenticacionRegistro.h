@@ -187,7 +187,7 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico comun (compartido) entre las interfaces de autenticacion y registro.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
