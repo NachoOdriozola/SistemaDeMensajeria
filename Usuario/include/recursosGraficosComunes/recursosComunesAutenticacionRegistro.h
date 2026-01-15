@@ -141,7 +141,7 @@ typedef struct
     sfRectangleShape *subrayadoTitulo;                  /**< Barra decorativa para subrayar el titulo de la interfaz. */
 } t_recursosComunesAutenticacionRegistroElementos;
 
-/** \struct s_recursosComunesAutenticacionRegistroHabilitaciones
+/** \struct t_recursosComunesAutenticacionRegistroHabilitaciones
  * \brief Contiene todas las habilitaciones comunes (compartidas) entre las interfaces de autenticacion y registro.
  */
 typedef struct
@@ -152,7 +152,7 @@ typedef struct
     bool ingresar;                              /**< Habilitar/deshabilitar el ingreso de usuario. */
     bool puntoInsercion;                        /**< Activar/desactivar el punto de insercion. */
     unsigned short int contadorPuntoInsercion;  /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
-} s_recursosComunesAutenticacionRegistroHabilitaciones;
+} t_recursosComunesAutenticacionRegistroHabilitaciones;
 
 /** \struct t_recursosComunesAutenticacionRegistro
  * \brief Estructura base que contiene los buffers, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
@@ -161,7 +161,7 @@ typedef struct
 {
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
-    s_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
+    t_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
     char bufferNombre [MAX_INGRESO_NOMBRE];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
     char bufferContrasenia [MAX_INGRESO_CONTRASENIA];    /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
 } t_recursosComunesAutenticacionRegistro;

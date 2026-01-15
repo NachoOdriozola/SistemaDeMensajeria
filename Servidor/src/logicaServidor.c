@@ -388,7 +388,7 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
     send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
     printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
 
-    if (buscarClaveEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (t_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
+    if (buscarClaveUnicaEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (t_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
     {
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", INDICE_RESPUESTA_MENSAJE, idEmisor, texto);
         send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);

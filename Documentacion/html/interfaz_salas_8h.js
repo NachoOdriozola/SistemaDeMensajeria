@@ -1,14 +1,13 @@
 var interfaz_salas_8h =
 [
-    [ "s_interfazSalasTexto", "structs__interfaz_salas_texto.html", null ],
-    [ "s_interfazSalasElementos", "structs__interfaz_salas_elementos.html", null ],
-    [ "s_interfazSalasHabilitaciones", "structs__interfaz_salas_habilitaciones.html", null ],
-    [ "s_interfazSalas", "structs__interfaz_salas.html", "structs__interfaz_salas" ],
-    [ "interfazSalas_accion", "interfaz_salas_8h.html#a2b820024bde4c5d5608b6417bab41a65", null ],
-    [ "interfazSalas_actualizar", "interfaz_salas_8h.html#af9af7650ccf49f349dc5a0c61f3f36d5", null ],
-    [ "interfazSalas_configurar", "interfaz_salas_8h.html#a3f49e7bbb74a6d1ebf08b091bfc77209", null ],
-    [ "interfazSalas_inicializar", "interfaz_salas_8h.html#aae53796e6d76fdae0369bc612de9ad9c", null ],
-    [ "interfazSalas_liberar", "interfaz_salas_8h.html#af6ffefe1b30efbe17a821fbe10ae3f6a", null ],
-    [ "interfazSalas_renderizar", "interfaz_salas_8h.html#a308fed192621c5a3ecca0da63655f266", null ],
-    [ "interfazSalas_tamYPosVentana", "interfaz_salas_8h.html#a0e0e04d7091666c3805bdfdfd30cf17e", null ]
+    [ "t_interfazSalasTextos", "structt__interfaz_salas_textos.html", null ],
+    [ "t_interfazSalasElementos", "structt__interfaz_salas_elementos.html", null ],
+    [ "t_interfazSalasHabilitaciones", "structt__interfaz_salas_habilitaciones.html", null ],
+    [ "t_interfazSalas", "structt__interfaz_salas.html", "structt__interfaz_salas" ],
+    [ "interfazSalas_accion", "interfaz_salas_8h.html#a9d2bd6a67307d4ed0184ddcb82c21541", null ],
+    [ "interfazSalas_actualizar", "interfaz_salas_8h.html#a4f04bb4a80b1d1a6587dccb33efddf86", null ],
+    [ "interfazSalas_configurar", "interfaz_salas_8h.html#a3f16f16533516af27341c7b8fd5b7288", null ],
+    [ "interfazSalas_inicializar", "interfaz_salas_8h.html#ac35ad31fa364f2f9ac869615ea6499bf", null ],
+    [ "interfazSalas_liberar", "interfaz_salas_8h.html#a8ed4f9ad1aa52d5a21d87e9d65702f14", null ],
+    [ "interfazSalas_renderizar", "interfaz_salas_8h.html#a2de144e9803575fdc8a0ebed0abfba65", null ]
 ];

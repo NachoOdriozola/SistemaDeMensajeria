@@ -1,10 +1,9 @@
 var interfaz_autenticacion_8c =
 [
-    [ "intentarIngreso", "interfaz_autenticacion_8c.html#aab512f288a5b2e0d1c3115caf535d644", null ],
-    [ "interfazAutenticacion_accion", "interfaz_autenticacion_8c.html#ae93d2d795c42477c72e6425598f54299", null ],
-    [ "interfazAutenticacion_actualizar", "interfaz_autenticacion_8c.html#a2edc78c19c64eefe395cec335f621b60", null ],
-    [ "interfazAutenticacion_configurar", "interfaz_autenticacion_8c.html#a68961740830c79a140531418de2ad08c", null ],
-    [ "interfazAutenticacion_inicializar", "interfaz_autenticacion_8c.html#a97034c0db47a2fc9cb0e255f198cacce", null ],
-    [ "interfazAutenticacion_liberar", "interfaz_autenticacion_8c.html#a5e2f4df24d5e871a25334573ab105e43", null ],
-    [ "interfazAutenticacion_renderizar", "interfaz_autenticacion_8c.html#a9f459e266e2b48a8efa54a8562beeefc", null ]
+    [ "interfazAutenticacion_accion", "interfaz_autenticacion_8c.html#abba843eaac92b68d8069524ef1b263f6", null ],
+    [ "interfazAutenticacion_actualizar", "interfaz_autenticacion_8c.html#a81066434de71b86d9c605378623e67e9", null ],
+    [ "interfazAutenticacion_configurar", "interfaz_autenticacion_8c.html#aaca9dfac65d3aab303765d970d060d08", null ],
+    [ "interfazAutenticacion_inicializar", "interfaz_autenticacion_8c.html#afbc51928e14264c3d3b8525ee5090806", null ],
+    [ "interfazAutenticacion_liberar", "interfaz_autenticacion_8c.html#a2030ecd2efd7f05d926960ee11d887e4", null ],
+    [ "interfazAutenticacion_renderizar", "interfaz_autenticacion_8c.html#a2b53c1f4fd880c5e85eaecd56e4fc055", null ]
 ];

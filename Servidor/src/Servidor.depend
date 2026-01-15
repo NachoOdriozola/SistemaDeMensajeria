@@ -667,3 +667,45 @@
 1768011896 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\servidor\src\logicaservidor.c
 	"../include/logicaServidor.h"
 
+1768413915 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\logicaservidor.c
+	"../include/logicaServidor.h"
+
+1768446364 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\logicaservidor.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	<sqlite3.h>
+	"../../Constantes/constantes.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/tablaHash.h"
+
+1768413915 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+
+1768454491 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"nodo.h"
+	"../../Constantes/constantes.h"
+
+1768451876 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
+
+1768456154 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+	"../../Constantes/constantes.h"
+	"listaSimple.h"
+
+1768413915 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\main.c
+	"../include/logicaServidor.h"
+
+1768454380 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
+	"../include/listaSimple.h"
+

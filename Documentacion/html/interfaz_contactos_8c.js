@@ -1,11 +1,10 @@
 var interfaz_contactos_8c =
 [
-    [ "intentarSolicitudAmistad", "interfaz_contactos_8c.html#aea8087cdf991af050e5e0c3090b1a74b", null ],
-    [ "interfazContactos_accion", "interfaz_contactos_8c.html#aea8c96eebfc8e7c4f53a37e0a6ad9d1b", null ],
-    [ "interfazContactos_actualizar", "interfaz_contactos_8c.html#a53adad99e60129e1b4d67a7f097cacae", null ],
-    [ "interfazContactos_configurar", "interfaz_contactos_8c.html#a58269f8912506583fdb45cb7a7501bd9", null ],
-    [ "interfazContactos_inicializar", "interfaz_contactos_8c.html#aabfbcc46c0d55dbaeee9e562ecc5cae9", null ],
-    [ "interfazContactos_liberar", "interfaz_contactos_8c.html#a18355e07ad14a413a530992055cf6c21", null ],
-    [ "interfazContactos_renderizar", "interfaz_contactos_8c.html#a3330a7f61c7cc61bdbadf69ce47c957e", null ],
-    [ "interfazContactos_tamYPosVentana", "interfaz_contactos_8c.html#afe88dbfa813e9b88cc731cf40b7d140d", null ]
+    [ "intentarSolicitudAmistad", "interfaz_contactos_8c.html#a2babd9857a99a1dfce67501299ca5653", null ],
+    [ "interfazContactos_accion", "interfaz_contactos_8c.html#a7c0476bf25fe11805baf34ca207d6426", null ],
+    [ "interfazContactos_actualizar", "interfaz_contactos_8c.html#a9dccc7281e0551161463c7ecae12f8c6", null ],
+    [ "interfazContactos_configurar", "interfaz_contactos_8c.html#a24ab581a31c9fd5bc819cecd2978b768", null ],
+    [ "interfazContactos_inicializar", "interfaz_contactos_8c.html#a9244d1b8ae2127893bb62c44b5084672", null ],
+    [ "interfazContactos_liberar", "interfaz_contactos_8c.html#ad974c44c0ad3b5d06b1a7d3f7420bdb8", null ],
+    [ "interfazContactos_renderizar", "interfaz_contactos_8c.html#a6d9a4edcfdb8265897e9c33811a23241", null ]
 ];

@@ -104,7 +104,7 @@ int interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutentic
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de autenticacion.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecerle un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.

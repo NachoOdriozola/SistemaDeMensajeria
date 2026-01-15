@@ -1,5 +1,5 @@
 var nodo_8h =
 [
-    [ "r_nodo", "structr__nodo.html", "structr__nodo" ],
-    [ "s_nodo", "nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd", null ]
+    [ "s_nodo", "structs__nodo.html", "structs__nodo" ],
+    [ "t_nodo", "nodo_8h.html#aedf39cb2e91c5df76aefb160c963a3e2", null ]
 ];

@@ -47,7 +47,7 @@
 
 /**
  * \def CANT_BUCKETS_TABLA_HASH
- * \brief Cantidad de buckets que tendra la tabla hash.
+ * \brief Cantidad de buckets que tiene la tabla hash.
  */
 #define CANT_BUCKETS_TABLA_HASH 1000
 
@@ -237,7 +237,7 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
  * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
  * \param servidor Puntero a la estructura base del servidor.
- * \param clienteAProcesar Referencia al cliente que envió la solicitud y se debe procesar.
+ * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
@@ -254,7 +254,7 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
  * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
  * \param servidor Puntero a la estructura base del servidor.
- * \param clienteAProcesar Referencia al cliente que envió la solicitud y se debe procesar.
+ * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['listamensajes_0',['listaMensajes',['../structs__mensajes.html#adb9fac61597d668b19bf2d2de651a329',1,'s_mensajes']]],
-  ['listanotificaciones_1',['listaNotificaciones',['../structs__aplicacion.html#adac6007cd909ea50517cb786dbc871ba',1,'s_aplicacion']]],
-  ['listasimpleclientesnoautenticados_2',['listaSimpleClientesNoAutenticados',['../structs__servidor.html#a7e8862c9c21f82346f6de42fa9b6b697',1,'s_servidor']]]
+  ['listamensajes_0',['listaMensajes',['../structt__mensajes.html#afe80fef3d07e7b0b297d3c3a29272a79',1,'t_mensajes']]],
+  ['listanotificaciones_1',['listaNotificaciones',['../structt__aplicacion.html#a12f7e62079ac5c8e3baa20fbea422baa',1,'t_aplicacion']]],
+  ['listasimpleclientesnoautenticados_2',['listaSimpleClientesNoAutenticados',['../structt__servidor.html#a9fc799ce568073517b77eafb082c7e66',1,'t_servidor']]]
 ];

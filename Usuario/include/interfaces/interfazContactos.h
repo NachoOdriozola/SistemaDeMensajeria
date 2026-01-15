@@ -145,7 +145,7 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos, const
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de contactos.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y manejar la respuesta correspondientes segun el evento detectado.
- * Cada evento se desarrolla en una funcion particular manejadora de eventos, y se encuentran ordenados descendentemente (arbitrario) a la concurrencia en la que los utiliza el usuario.
+ * Cada evento se desarrolla en una funcion particular manejadora de eventos.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.

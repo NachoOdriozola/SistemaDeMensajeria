@@ -32,7 +32,7 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
     return EXITO;
 }
 
-void vincularNodoAListaSimple (t_listaSimple *pl, t_nodo *nodoAVincular)
+void vincularNodoAlInicioListaSimple (t_listaSimple *pl, t_nodo *nodoAVincular)
 {
     nodoAVincular->sig = *pl;
     *pl = nodoAVincular;
@@ -71,22 +71,22 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
     return NO_ENCONTRO_CLAVE;
 }
 
-t_nodo* desvincularNodoDeListaSimple (t_nodo **nodo)
+t_nodo* desvincularNodoDeListaSimple (t_nodo **nodoADesvincular)
 {
-    t_nodo *nodoADesvincular = *nodo;
+    t_nodo *nodo = *nodoADesvincular;
 
-    *nodo = nodoADesvincular->sig;
+    *nodoADesvincular = nodo->sig;
 
-    return nodoADesvincular;
+    return nodo;
 }
 
-void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *dato, unsigned tamDato, void accion (void *dato))
+void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
 {
     t_nodo *nodoElim = *pl;
 
     *pl = nodoElim->sig;
-    if (dato != NULL)
-        memcpy (dato, nodoElim->dato, MINIMO (nodoElim->tam, tamDato));
+    if (returnDato != NULL)
+        memcpy (returnDato, nodoElim->dato, MINIMO (nodoElim->tam, tamDato));
     accion (nodoElim->dato);
     free (nodoElim->dato);
     free (nodoElim);

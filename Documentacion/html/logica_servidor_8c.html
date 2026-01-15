@@ -97,28 +97,28 @@ $(function(){initNavTree('logica_servidor_8c.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a53b7ef71e18aa2c4c9b03e800f3efdc7" id="r_a53b7ef71e18aa2c4c9b03e800f3efdc7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53b7ef71e18aa2c4c9b03e800f3efdc7">inicializarServidor</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor)</td></tr>
-<tr class="memdesc:a53b7ef71e18aa2c4c9b03e800f3efdc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializar los recursos del servidor.  <br /></td></tr>
-<tr class="memitem:a332dde5e851054396d1653689aebceba" id="r_a332dde5e851054396d1653689aebceba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a332dde5e851054396d1653689aebceba">configurarServidor</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor)</td></tr>
-<tr class="memdesc:a332dde5e851054396d1653689aebceba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configurar los recursos del servidor.  <br /></td></tr>
-<tr class="memitem:a88c25300b2c71ae463b69b83066c8e96" id="r_a88c25300b2c71ae463b69b83066c8e96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88c25300b2c71ae463b69b83066c8e96">liberarServidor</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor)</td></tr>
-<tr class="memdesc:a88c25300b2c71ae463b69b83066c8e96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Liberar los recursos del servidor.  <br /></td></tr>
-<tr class="memitem:a8f1e0358f5959eed233f8c5eeaa9c551" id="r_a8f1e0358f5959eed233f8c5eeaa9c551"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f1e0358f5959eed233f8c5eeaa9c551">procesarNuevoCliente</a> (<a class="el" href="structs__cliente.html">s_cliente</a> *nuevoCliente, <a class="el" href="lista_simple_8h.html#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *listaSimpleClientesNoAutenticados)</td></tr>
-<tr class="memdesc:a8f1e0358f5959eed233f8c5eeaa9c551"><td class="mdescLeft">&#160;</td><td class="mdescRight">Procesar a un nuevo cliente conectado e insertarlo en la lista simple de clientes conectados pero no autenticados.  <br /></td></tr>
-<tr class="memitem:a4d6ebef2ee3f0284f9a9c87f1ecce279" id="r_a4d6ebef2ee3f0284f9a9c87f1ecce279"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d6ebef2ee3f0284f9a9c87f1ecce279">recibirSolicitudEnListaSimple</a> (<a class="el" href="lista_simple_8h.html#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *listaSimple, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> ***nodoDelCliente, char *bufferSolicitud)</td></tr>
-<tr class="memdesc:a4d6ebef2ee3f0284f9a9c87f1ecce279"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detectar si se recibio una solicitud de algun cliente en una lista simple.  <br /></td></tr>
-<tr class="memitem:a9e87c0b7596ffa4d9c0e238e76a3d15d" id="r_a9e87c0b7596ffa4d9c0e238e76a3d15d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e87c0b7596ffa4d9c0e238e76a3d15d">recibirSolicitudEnTablaHash</a> (<a class="el" href="structs__tabla_hash.html">s_tablaHash</a> *tablaHash, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> ***nodoDelCliente, char *bufferSolicitud)</td></tr>
-<tr class="memdesc:a9e87c0b7596ffa4d9c0e238e76a3d15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detectar si se recibio una solicitud de algun cliente en una tabla hash.  <br /></td></tr>
-<tr class="memitem:af8132e5da0af38f6aa5ad1f881cf1f4e" id="r_af8132e5da0af38f6aa5ad1f881cf1f4e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8132e5da0af38f6aa5ad1f881cf1f4e">procesarInicioSesion</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **clienteAProcesar, const char *bufferSolicitud)</td></tr>
-<tr class="memdesc:af8132e5da0af38f6aa5ad1f881cf1f4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de inicio de sesion.  <br /></td></tr>
-<tr class="memitem:a88e045d25dcc91053c829db3bb1970c8" id="r_a88e045d25dcc91053c829db3bb1970c8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88e045d25dcc91053c829db3bb1970c8">procesarRegistro</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **clienteAProcesar, const char *bufferSolicitud)</td></tr>
-<tr class="memdesc:a88e045d25dcc91053c829db3bb1970c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de registro.  <br /></td></tr>
-<tr class="memitem:a776b98b34bac2112d00374e6e7eae68b" id="r_a776b98b34bac2112d00374e6e7eae68b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a776b98b34bac2112d00374e6e7eae68b">procesarSolicitudAmistad</a> (<a class="el" href="structs__servidor.html">s_servidor</a> *servidor, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **clienteAProcesar, const char *bufferSolicitud)</td></tr>
-<tr class="memdesc:a776b98b34bac2112d00374e6e7eae68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de solicitud de amistad.  <br /></td></tr>
+<tr class="memitem:a58e73d0e72557e587a67bb5fc0e57df2" id="r_a58e73d0e72557e587a67bb5fc0e57df2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58e73d0e72557e587a67bb5fc0e57df2">inicializarServidor</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor)</td></tr>
+<tr class="memdesc:a58e73d0e72557e587a67bb5fc0e57df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Inicializar los recursos del servidor.  <br /></td></tr>
+<tr class="memitem:a96af0c17d7bc3e3480f021e42517057f" id="r_a96af0c17d7bc3e3480f021e42517057f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96af0c17d7bc3e3480f021e42517057f">configurarServidor</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor)</td></tr>
+<tr class="memdesc:a96af0c17d7bc3e3480f021e42517057f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configurar los recursos del servidor.  <br /></td></tr>
+<tr class="memitem:a5d6da104225208892ec49d362fba6da5" id="r_a5d6da104225208892ec49d362fba6da5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5d6da104225208892ec49d362fba6da5">liberarServidor</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor)</td></tr>
+<tr class="memdesc:a5d6da104225208892ec49d362fba6da5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Liberar los recursos del servidor.  <br /></td></tr>
+<tr class="memitem:afd36a704991578aeae5cbc17ee9838af" id="r_afd36a704991578aeae5cbc17ee9838af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd36a704991578aeae5cbc17ee9838af">procesarNuevoCliente</a> (<a class="el" href="structt__cliente.html">t_cliente</a> *nuevoCliente, <a class="el" href="lista_simple_8h.html#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *listaSimpleClientesNoAutenticados)</td></tr>
+<tr class="memdesc:afd36a704991578aeae5cbc17ee9838af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Procesar a un nuevo cliente conectado e insertarlo en la lista simple de clientes conectados pero no autenticados.  <br /></td></tr>
+<tr class="memitem:a7fe9c3b755bbb7c1bfa37350473fc2c5" id="r_a7fe9c3b755bbb7c1bfa37350473fc2c5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fe9c3b755bbb7c1bfa37350473fc2c5">recibirSolicitudEnListaSimple</a> (<a class="el" href="lista_simple_8h.html#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *listaSimple, <a class="el" href="structt__nodo.html">t_nodo</a> ***nodoDelCliente, char *bufferSolicitud)</td></tr>
+<tr class="memdesc:a7fe9c3b755bbb7c1bfa37350473fc2c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detectar si se recibio una solicitud de algun cliente en una lista simple.  <br /></td></tr>
+<tr class="memitem:a326ffb8f4ee3169f885ea692dbbc15e4" id="r_a326ffb8f4ee3169f885ea692dbbc15e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a326ffb8f4ee3169f885ea692dbbc15e4">recibirSolicitudEnTablaHash</a> (<a class="el" href="structt__tabla_hash.html">t_tablaHash</a> *tablaHash, <a class="el" href="structt__nodo.html">t_nodo</a> ***nodoDelCliente, char *bufferSolicitud)</td></tr>
+<tr class="memdesc:a326ffb8f4ee3169f885ea692dbbc15e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detectar si se recibio una solicitud de algun cliente en una tabla hash.  <br /></td></tr>
+<tr class="memitem:ac3d0f7029c21434687d99214ebadf612" id="r_ac3d0f7029c21434687d99214ebadf612"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3d0f7029c21434687d99214ebadf612">manejarSolicitudAutenticacion</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor, <a class="el" href="structt__nodo.html">t_nodo</a> **clienteAProcesar, <a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *buffersComunicacion)</td></tr>
+<tr class="memdesc:ac3d0f7029c21434687d99214ebadf612"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de autenticacion.  <br /></td></tr>
+<tr class="memitem:a65630dde827f9aece74828041d17ba1e" id="r_a65630dde827f9aece74828041d17ba1e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65630dde827f9aece74828041d17ba1e">manejarSolicitudRegistro</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor, <a class="el" href="structt__nodo.html">t_nodo</a> **clienteAProcesar, <a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *buffersComunicacion)</td></tr>
+<tr class="memdesc:a65630dde827f9aece74828041d17ba1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de registro.  <br /></td></tr>
+<tr class="memitem:ad087735d5c6d74ea93f5309205d31cb1" id="r_ad087735d5c6d74ea93f5309205d31cb1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad087735d5c6d74ea93f5309205d31cb1">manejarEnvioMensaje</a> (<a class="el" href="structt__servidor.html">t_servidor</a> *servidor, <a class="el" href="structt__nodo.html">t_nodo</a> **clienteAProcesar, <a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *buffersComunicacion)</td></tr>
+<tr class="memdesc:ad087735d5c6d74ea93f5309205d31cb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifica y procesa la solicitud de envio de mensaje.  <br /></td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a332dde5e851054396d1653689aebceba" name="a332dde5e851054396d1653689aebceba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a332dde5e851054396d1653689aebceba">&#9670;&#160;</a></span>configurarServidor()</h2>
+<a id="a96af0c17d7bc3e3480f021e42517057f" name="a96af0c17d7bc3e3480f021e42517057f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96af0c17d7bc3e3480f021e42517057f">&#9670;&#160;</a></span>configurarServidor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -126,7 +126,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int configurarServidor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -146,8 +146,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a53b7ef71e18aa2c4c9b03e800f3efdc7" name="a53b7ef71e18aa2c4c9b03e800f3efdc7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53b7ef71e18aa2c4c9b03e800f3efdc7">&#9670;&#160;</a></span>inicializarServidor()</h2>
+<a id="a58e73d0e72557e587a67bb5fc0e57df2" name="a58e73d0e72557e587a67bb5fc0e57df2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58e73d0e72557e587a67bb5fc0e57df2">&#9670;&#160;</a></span>inicializarServidor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +155,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int inicializarServidor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -175,8 +175,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a88c25300b2c71ae463b69b83066c8e96" name="a88c25300b2c71ae463b69b83066c8e96"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88c25300b2c71ae463b69b83066c8e96">&#9670;&#160;</a></span>liberarServidor()</h2>
+<a id="a5d6da104225208892ec49d362fba6da5" name="a5d6da104225208892ec49d362fba6da5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d6da104225208892ec49d362fba6da5">&#9670;&#160;</a></span>liberarServidor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,7 +184,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void liberarServidor </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -203,48 +203,128 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="af8132e5da0af38f6aa5ad1f881cf1f4e" name="af8132e5da0af38f6aa5ad1f881cf1f4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8132e5da0af38f6aa5ad1f881cf1f4e">&#9670;&#160;</a></span>procesarInicioSesion()</h2>
+<a id="ad087735d5c6d74ea93f5309205d31cb1" name="ad087735d5c6d74ea93f5309205d31cb1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad087735d5c6d74ea93f5309205d31cb1">&#9670;&#160;</a></span>manejarEnvioMensaje()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int procesarInicioSesion </td>
+          <td class="memname">int manejarEnvioMensaje </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>bufferSolicitud</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *</td>          <td class="paramname"><span class="paramname"><em>buffersComunicacion</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Verifica y procesa la solicitud de inicio de sesion. </p>
-<p>Consulta en la base de datos si el nombre y la contrasenia del usuario son validos. Si lo son, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de no autenticados a la tabla hash. Le responde al cliente el resultado del proceso.</p>
+<p>Verifica y procesa la solicitud de envio de mensaje. </p>
+<p>Parsea la cadena del buffer de solicitud. Verifica si el ID del emisor es igual al ID del receptor, en tal caso no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES". Inserta el mensaje a la base de datos y le responde al cliente "INDICE_RESPUESTA_EXITO". Busca el ID del receptor en la tabla hash, si se encuentra conectado, le envia el mensaje en tiempo real. En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">servidor</td><td>Puntero a la estructura base del servidor. </td></tr>
+    <tr><td class="paramname">clienteAProcesar</td><td>Referencia al cliente que envio la solicitud y se debe procesar. </td></tr>
+    <tr><td class="paramname">buffersComunicacion</td><td>Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="logica_servidor_8c_source.html#l00343">343</a> of file <a class="el" href="logica_servidor_8c_source.html">logicaServidor.c</a>.</p>
+
+</div>
+</div>
+<a id="ac3d0f7029c21434687d99214ebadf612" name="ac3d0f7029c21434687d99214ebadf612"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3d0f7029c21434687d99214ebadf612">&#9670;&#160;</a></span>manejarSolicitudAutenticacion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int manejarSolicitudAutenticacion </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *</td>          <td class="paramname"><span class="paramname"><em>buffersComunicacion</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifica y procesa la solicitud de autenticacion. </p>
+<p>Parsea la cadena del buffer de solicitud. Consulta en la base de datos si las credenciales que envio el usuario existen y son validas. Si lo son, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes no autenticados a la tabla hash, y le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID. Si no lo son, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES". En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">servidor</td><td>Puntero a la estructura base del servidor. </td></tr>
     <tr><td class="paramname">clienteAProcesar</td><td>Referencia al nodo del cliente que envio la solicitud y se debe procesar. </td></tr>
-    <tr><td class="paramname">bufferSolicitud</td><td>Buffer que almacena la cadena de la solicitud enviada por el cliente.</td></tr>
+    <tr><td class="paramname">buffersComunicacion</td><td>Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="logica_servidor_8c_source.html#l00211">211</a> of file <a class="el" href="logica_servidor_8c_source.html">logicaServidor.c</a>.</p>
 
 </div>
 </div>
-<a id="a8f1e0358f5959eed233f8c5eeaa9c551" name="a8f1e0358f5959eed233f8c5eeaa9c551"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f1e0358f5959eed233f8c5eeaa9c551">&#9670;&#160;</a></span>procesarNuevoCliente()</h2>
+<a id="a65630dde827f9aece74828041d17ba1e" name="a65630dde827f9aece74828041d17ba1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65630dde827f9aece74828041d17ba1e">&#9670;&#160;</a></span>manejarSolicitudRegistro()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int manejarSolicitudRegistro </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structt__servidor.html">t_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structt__buffers_comunicacion.html">t_buffersComunicacion</a> *</td>          <td class="paramname"><span class="paramname"><em>buffersComunicacion</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Verifica y procesa la solicitud de registro. </p>
+<p>Parsea la cadena del buffer de solicitud. Consulta en la base de datos si el nombre de usuario y/o el correo electronico ya existen. Si ya existen, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES". Si no existen, lo inserta en la base de datos, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes no autenticados a la tabla hash, y le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID. En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">servidor</td><td>Puntero a la estructura base del servidor. </td></tr>
+    <tr><td class="paramname">clienteAProcesar</td><td>Referencia al cliente que envio la solicitud y se debe procesar. </td></tr>
+    <tr><td class="paramname">buffersComunicacion</td><td>Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="logica_servidor_8c_source.html#l00261">261</a> of file <a class="el" href="logica_servidor_8c_source.html">logicaServidor.c</a>.</p>
+
+</div>
+</div>
+<a id="afd36a704991578aeae5cbc17ee9838af" name="afd36a704991578aeae5cbc17ee9838af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd36a704991578aeae5cbc17ee9838af">&#9670;&#160;</a></span>procesarNuevoCliente()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,12 +332,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void procesarNuevoCliente </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__cliente.html">s_cliente</a> *</td>          <td class="paramname"><span class="paramname"><em>nuevoCliente</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__cliente.html">t_cliente</a> *</td>          <td class="paramname"><span class="paramname"><em>nuevoCliente</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="lista_simple_8h.html#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>listaSimpleClientesNoAutenticados</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="lista_simple_8h.html#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>listaSimpleClientesNoAutenticados</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -276,88 +356,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a88e045d25dcc91053c829db3bb1970c8" name="a88e045d25dcc91053c829db3bb1970c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88e045d25dcc91053c829db3bb1970c8">&#9670;&#160;</a></span>procesarRegistro()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int procesarRegistro </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>bufferSolicitud</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Verifica y procesa la solicitud de registro. </p>
-<p>Consulta en la base de datos si el nombre de usuario ya existe. Si no existe, lo inserta en la base de datos, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de no autenticados a la tabla hash. Le responde al cliente el resultado del proceso.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">servidor</td><td>Puntero a la estructura base del servidor. </td></tr>
-    <tr><td class="paramname">clienteAProcesar</td><td>Referencia al cliente que envió la solicitud y se debe procesar. </td></tr>
-    <tr><td class="paramname">bufferSolicitud</td><td>Buffer que contiene la cadena de la solicitud enviada por el cliente.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>EXITO si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="logica_servidor_8c_source.html#l00314">314</a> of file <a class="el" href="logica_servidor_8c_source.html">logicaServidor.c</a>.</p>
-
-</div>
-</div>
-<a id="a776b98b34bac2112d00374e6e7eae68b" name="a776b98b34bac2112d00374e6e7eae68b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a776b98b34bac2112d00374e6e7eae68b">&#9670;&#160;</a></span>procesarSolicitudAmistad()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int procesarSolicitudAmistad </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__servidor.html">s_servidor</a> *</td>          <td class="paramname"><span class="paramname"><em>servidor</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>clienteAProcesar</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>bufferSolicitud</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Verifica y procesa la solicitud de solicitud de amistad. </p>
-<p>Consulta en la base de datos si existe el usuario receptor. Si existe, inserta en la base de datos la solicitud de amistad. Le responde al cliente el resultado del proceso y, si el usuario receptor esta conectado, le envia la solicitud de amistad.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">servidor</td><td>Puntero a la estructura base del servidor. </td></tr>
-    <tr><td class="paramname">clienteAProcesar</td><td>Referencia al cliente que envio la solicitud y se debe procesar. </td></tr>
-    <tr><td class="paramname">bufferSolicitud</td><td>Buffer que contiene la cadena de la solicitud enviada por el cliente.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="logica_servidor_8c_source.html#l00478">478</a> of file <a class="el" href="logica_servidor_8c_source.html">logicaServidor.c</a>.</p>
-
-</div>
-</div>
-<a id="a4d6ebef2ee3f0284f9a9c87f1ecce279" name="a4d6ebef2ee3f0284f9a9c87f1ecce279"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d6ebef2ee3f0284f9a9c87f1ecce279">&#9670;&#160;</a></span>recibirSolicitudEnListaSimple()</h2>
+<a id="a7fe9c3b755bbb7c1bfa37350473fc2c5" name="a7fe9c3b755bbb7c1bfa37350473fc2c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7fe9c3b755bbb7c1bfa37350473fc2c5">&#9670;&#160;</a></span>recibirSolicitudEnListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -365,12 +365,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool recibirSolicitudEnListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="lista_simple_8h.html#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>listaSimple</em></span>, </td>
+          <td class="paramtype"><a class="el" href="lista_simple_8h.html#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>listaSimple</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> ***</td>          <td class="paramname"><span class="paramname"><em>nodoDelCliente</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> ***</td>          <td class="paramname"><span class="paramname"><em>nodoDelCliente</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -385,7 +385,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">listaSimple</td><td>Puntero a la lista simple. </td></tr>
-    <tr><td class="paramname">nodoDelCliente</td><td>Triple puntero donde se guardara el nodo del cliente que envio la solicitud. </td></tr>
+    <tr><td class="paramname">nodoDelCliente</td><td>Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud. </td></tr>
     <tr><td class="paramname">bufferSolicitud</td><td>Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.</td></tr>
   </table>
   </dd>
@@ -396,8 +396,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9e87c0b7596ffa4d9c0e238e76a3d15d" name="a9e87c0b7596ffa4d9c0e238e76a3d15d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e87c0b7596ffa4d9c0e238e76a3d15d">&#9670;&#160;</a></span>recibirSolicitudEnTablaHash()</h2>
+<a id="a326ffb8f4ee3169f885ea692dbbc15e4" name="a326ffb8f4ee3169f885ea692dbbc15e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a326ffb8f4ee3169f885ea692dbbc15e4">&#9670;&#160;</a></span>recibirSolicitudEnTablaHash()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -405,12 +405,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">bool recibirSolicitudEnTablaHash </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structs__tabla_hash.html">s_tablaHash</a> *</td>          <td class="paramname"><span class="paramname"><em>tablaHash</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__tabla_hash.html">t_tablaHash</a> *</td>          <td class="paramname"><span class="paramname"><em>tablaHash</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> ***</td>          <td class="paramname"><span class="paramname"><em>nodoDelCliente</em></span>, </td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> ***</td>          <td class="paramname"><span class="paramname"><em>nodoDelCliente</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -425,7 +425,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">tablaHash</td><td>Puntero a la tabla hash. </td></tr>
-    <tr><td class="paramname">nodoDelCliente</td><td>Triple puntero donde se guardara el nodo del cliente que envio la solicitud. </td></tr>
+    <tr><td class="paramname">nodoDelCliente</td><td>Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud. </td></tr>
     <tr><td class="paramname">bufferSolicitud</td><td>Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.</td></tr>
   </table>
   </dd>

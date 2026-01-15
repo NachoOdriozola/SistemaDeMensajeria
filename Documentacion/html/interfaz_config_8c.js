@@ -1,9 +1,9 @@
 var interfaz_config_8c =
 [
-    [ "interfazConfig_accion", "interfaz_config_8c.html#abbf847473d983e118cc6892e970d8e71", null ],
-    [ "interfazConfig_actualizar", "interfaz_config_8c.html#a488d7cb11cb06f21244992b5250a7150", null ],
-    [ "interfazConfig_configurar", "interfaz_config_8c.html#ac3ecf521f4b3d6873282b8c0f601bc4d", null ],
-    [ "interfazConfig_inicializar", "interfaz_config_8c.html#ad061d665814f613a97dbe42f3858ee68", null ],
-    [ "interfazConfig_liberar", "interfaz_config_8c.html#a6fbad1954dfc1267e002327fd97c59f7", null ],
-    [ "interfazConfig_renderizar", "interfaz_config_8c.html#aff6deb7f1b786e961792e07c33958890", null ]
+    [ "interfazConfig_accion", "interfaz_config_8c.html#a7367bc3fab0412324bd5eae5ef3af10b", null ],
+    [ "interfazConfig_actualizar", "interfaz_config_8c.html#a14bd3bf8363f82e961308760859ea1b3", null ],
+    [ "interfazConfig_configurar", "interfaz_config_8c.html#a49819bbb1e32eea8ccf3367a1fb2a496", null ],
+    [ "interfazConfig_inicializar", "interfaz_config_8c.html#ace0cc5bcf4d84478b4ec95b9a8da658a", null ],
+    [ "interfazConfig_liberar", "interfaz_config_8c.html#a1b72261e1072812f9caf072b0b4492a2", null ],
+    [ "interfazConfig_renderizar", "interfaz_config_8c.html#a3f82b3409ae6a342c16be000da8403b1", null ]
 ];

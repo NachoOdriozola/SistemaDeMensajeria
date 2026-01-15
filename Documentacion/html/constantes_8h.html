@@ -107,50 +107,56 @@ Macros</h2></td></tr>
 <tr class="memdesc:ad40fe3249130051341fc8cbddb3a0ab8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para fallos en la asignacion de memoria.  <br /></td></tr>
 <tr class="memitem:add15a4d3f791ee2250e623ad8c417c60" id="r_add15a4d3f791ee2250e623ad8c417c60"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add15a4d3f791ee2250e623ad8c417c60">ERROR_CONFIGURACION</a>&#160;&#160;&#160;-102</td></tr>
 <tr class="memdesc:add15a4d3f791ee2250e623ad8c417c60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para fallos en la configuracion.  <br /></td></tr>
-<tr class="memitem:a7ea60683093ed34459be9f14e7502ceb" id="r_a7ea60683093ed34459be9f14e7502ceb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ea60683093ed34459be9f14e7502ceb">ENCONTRO</a>&#160;&#160;&#160;1</td></tr>
-<tr class="memdesc:a7ea60683093ed34459be9f14e7502ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para indicar que se encontro la clave.  <br /></td></tr>
-<tr class="memitem:a35567684abe25f00ccaa673d0cdac653" id="r_a35567684abe25f00ccaa673d0cdac653"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35567684abe25f00ccaa673d0cdac653">NO_ENCONTRO</a>&#160;&#160;&#160;0</td></tr>
-<tr class="memdesc:a35567684abe25f00ccaa673d0cdac653"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para indicar que no se encontro la clave.  <br /></td></tr>
-<tr class="memitem:acf0046b21ab0037ccbd9aca6e3e38b45" id="r_acf0046b21ab0037ccbd9aca6e3e38b45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf0046b21ab0037ccbd9aca6e3e38b45">MAX_BUFFER_SOLICITUD</a>&#160;&#160;&#160;256</td></tr>
-<tr class="memdesc:acf0046b21ab0037ccbd9aca6e3e38b45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamanio maximo del buffer para recibir solicitudes de los clientes.  <br /></td></tr>
-<tr class="memitem:aa346990dfb71fa61c87cf5d84bfe027e" id="r_aa346990dfb71fa61c87cf5d84bfe027e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa346990dfb71fa61c87cf5d84bfe027e">MAX_BUFFER_RESPUESTA</a>&#160;&#160;&#160;256</td></tr>
-<tr class="memdesc:aa346990dfb71fa61c87cf5d84bfe027e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamanio maximo del buffer para enviar respuestas a los clientes.  <br /></td></tr>
+<tr class="memitem:a0032590333d408c3abce84f9b2ef971b" id="r_a0032590333d408c3abce84f9b2ef971b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0032590333d408c3abce84f9b2ef971b">ENCONTRO_CLAVE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:a0032590333d408c3abce84f9b2ef971b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para indicar que se encontro la clave.  <br /></td></tr>
+<tr class="memitem:aa30ca0c730f0777fcb17850b9f56a675" id="r_aa30ca0c730f0777fcb17850b9f56a675"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa30ca0c730f0777fcb17850b9f56a675">NO_ENCONTRO_CLAVE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:aa30ca0c730f0777fcb17850b9f56a675"><td class="mdescLeft">&#160;</td><td class="mdescRight">Codigo de retorno para indicar que no se encontro la clave.  <br /></td></tr>
+<tr class="memitem:acf0046b21ab0037ccbd9aca6e3e38b45" id="r_acf0046b21ab0037ccbd9aca6e3e38b45"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf0046b21ab0037ccbd9aca6e3e38b45">MAX_BUFFER_SOLICITUD</a>&#160;&#160;&#160;2048</td></tr>
+<tr class="memdesc:acf0046b21ab0037ccbd9aca6e3e38b45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamanio maximo del buffer para comunicar solicitudes entre el cliente y el servidor.  <br /></td></tr>
+<tr class="memitem:aa346990dfb71fa61c87cf5d84bfe027e" id="r_aa346990dfb71fa61c87cf5d84bfe027e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa346990dfb71fa61c87cf5d84bfe027e">MAX_BUFFER_RESPUESTA</a>&#160;&#160;&#160;2048</td></tr>
+<tr class="memdesc:aa346990dfb71fa61c87cf5d84bfe027e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tamanio maximo del buffer para comunicar respuestas entre el cliente y el servidor.  <br /></td></tr>
+<tr class="memitem:a0e9e0e8d6ba594d20612772efe4a7265" id="r_a0e9e0e8d6ba594d20612772efe4a7265"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e9e0e8d6ba594d20612772efe4a7265">MAX_BUFFER_MENSAJE</a>&#160;&#160;&#160;2001</td></tr>
+<tr class="memdesc:a0e9e0e8d6ba594d20612772efe4a7265"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longitud maxima para el mensaje escrito por el usuario.  <br /></td></tr>
 <tr class="memitem:a12517c8eb8795ca72a421f21042db1f4" id="r_a12517c8eb8795ca72a421f21042db1f4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12517c8eb8795ca72a421f21042db1f4">MAX_NOMBRE_USUARIO</a>&#160;&#160;&#160;26</td></tr>
 <tr class="memdesc:a12517c8eb8795ca72a421f21042db1f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longitud maxima para el nombre del usuario.  <br /></td></tr>
-<tr class="memitem:ad0d98fec654968b720875c667935bf79" id="r_ad0d98fec654968b720875c667935bf79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0d98fec654968b720875c667935bf79">MAX_CONTRASENIA_USUARIO</a>&#160;&#160;&#160;46</td></tr>
+<tr class="memitem:ad0d98fec654968b720875c667935bf79" id="r_ad0d98fec654968b720875c667935bf79"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0d98fec654968b720875c667935bf79">MAX_CONTRASENIA_USUARIO</a>&#160;&#160;&#160;128</td></tr>
 <tr class="memdesc:ad0d98fec654968b720875c667935bf79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longitud maxima para la contrasenia del usuario.  <br /></td></tr>
+<tr class="memitem:aee9f931a78279cfd97db5ef69eb6b52f" id="r_aee9f931a78279cfd97db5ef69eb6b52f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee9f931a78279cfd97db5ef69eb6b52f">MAX_CORREO_ELECTRONICO_USUARIO</a>&#160;&#160;&#160;256</td></tr>
+<tr class="memdesc:aee9f931a78279cfd97db5ef69eb6b52f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Longitud maxima para el correo electronico del usuario.  <br /></td></tr>
 <tr class="memitem:a97356b3264ca885a4face395b4231fd3" id="r_a97356b3264ca885a4face395b4231fd3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a97356b3264ca885a4face395b4231fd3">PUERTO</a>&#160;&#160;&#160;8080</td></tr>
 <tr class="memdesc:a97356b3264ca885a4face395b4231fd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puerto en el que se comunicaran los sockets.  <br /></td></tr>
-<tr class="memitem:ae165701783266c171f831d8c2b1bc3b1" id="r_ae165701783266c171f831d8c2b1bc3b1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae165701783266c171f831d8c2b1bc3b1">INDICE_AUTENTICACION</a>&#160;&#160;&#160;'1'</td></tr>
-<tr class="memdesc:ae165701783266c171f831d8c2b1bc3b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para autenticacion.  <br /></td></tr>
-<tr class="memitem:a90b1805d56d4a6e0e3f0553c476927f6" id="r_a90b1805d56d4a6e0e3f0553c476927f6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90b1805d56d4a6e0e3f0553c476927f6">INDICE_REGISTRO</a>&#160;&#160;&#160;'2'</td></tr>
-<tr class="memdesc:a90b1805d56d4a6e0e3f0553c476927f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para registro de usuario.  <br /></td></tr>
-<tr class="memitem:ac3379505ced159cf6ff45ba78d9f0d26" id="r_ac3379505ced159cf6ff45ba78d9f0d26"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3379505ced159cf6ff45ba78d9f0d26">INDICE_MENSAJE</a>&#160;&#160;&#160;'3'</td></tr>
-<tr class="memdesc:ac3379505ced159cf6ff45ba78d9f0d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para envio de mensaje.  <br /></td></tr>
-<tr class="memitem:aa06b8aab894bfca6579c9f668d3f719a" id="r_aa06b8aab894bfca6579c9f668d3f719a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa06b8aab894bfca6579c9f668d3f719a">INDICE_AGENDARCONTACTO</a>&#160;&#160;&#160;'4'</td></tr>
-<tr class="memdesc:aa06b8aab894bfca6579c9f668d3f719a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para agendar un nuevo contacto.  <br /></td></tr>
-<tr class="memitem:a9b9e1bc9bb7c5e991e0250cc58aa9319" id="r_a9b9e1bc9bb7c5e991e0250cc58aa9319"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b9e1bc9bb7c5e991e0250cc58aa9319">INDICE_RESPUESTA_SOLICITUD_ACEPTADA</a>&#160;&#160;&#160;'1'</td></tr>
-<tr class="memdesc:a9b9e1bc9bb7c5e991e0250cc58aa9319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente que la solicitud fue aceptada.  <br /></td></tr>
-<tr class="memitem:a2773a9ff06031d94673b0b524dd286d0" id="r_a2773a9ff06031d94673b0b524dd286d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2773a9ff06031d94673b0b524dd286d0">INDICE_RESPUESTA_SOLICITUD_RECHAZADA</a>&#160;&#160;&#160;'0'</td></tr>
-<tr class="memdesc:a2773a9ff06031d94673b0b524dd286d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente que la solicitud fue rechazada.  <br /></td></tr>
+<tr class="memitem:a88b79d32069b4b5f54130e647932cd27" id="r_a88b79d32069b4b5f54130e647932cd27"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88b79d32069b4b5f54130e647932cd27">INDICE_SOLICITUD_AUTENTICACION</a>&#160;&#160;&#160;'1'</td></tr>
+<tr class="memdesc:a88b79d32069b4b5f54130e647932cd27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para autenticacion del usuario.  <br /></td></tr>
+<tr class="memitem:ae2d571482beb51df3bc20de7215ff359" id="r_ae2d571482beb51df3bc20de7215ff359"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2d571482beb51df3bc20de7215ff359">INDICE_SOLICITUD_REGISTRO</a>&#160;&#160;&#160;'2'</td></tr>
+<tr class="memdesc:ae2d571482beb51df3bc20de7215ff359"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para registro del usuario.  <br /></td></tr>
+<tr class="memitem:ac3e9b0d1caa2615f1c432ac94c20abd1" id="r_ac3e9b0d1caa2615f1c432ac94c20abd1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3e9b0d1caa2615f1c432ac94c20abd1">INDICE_SOLICITUD_MENSAJE</a>&#160;&#160;&#160;'3'</td></tr>
+<tr class="memdesc:ac3e9b0d1caa2615f1c432ac94c20abd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para envio de mensaje.  <br /></td></tr>
+<tr class="memitem:a674e234d14ba148aadd168da5a6369fd" id="r_a674e234d14ba148aadd168da5a6369fd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a674e234d14ba148aadd168da5a6369fd">INDICE_SOLICITUD_AGENDAR_CONTACTO</a>&#160;&#160;&#160;'4'</td></tr>
+<tr class="memdesc:a674e234d14ba148aadd168da5a6369fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identificador de solicitud para agendar un nuevo contacto.  <br /></td></tr>
+<tr class="memitem:ae215fcf2be8d76d826fab8749b783af0" id="r_ae215fcf2be8d76d826fab8749b783af0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae215fcf2be8d76d826fab8749b783af0">INDICE_RESPUESTA_EXITO</a>&#160;&#160;&#160;'0'</td></tr>
+<tr class="memdesc:ae215fcf2be8d76d826fab8749b783af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente por parte del servidor que la solicitud se proceso con exito.  <br /></td></tr>
+<tr class="memitem:a73a6fe86ebb37b77551a8bc496a0c62d" id="r_a73a6fe86ebb37b77551a8bc496a0c62d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73a6fe86ebb37b77551a8bc496a0c62d">INDICE_RESPUESTA_ERROR_SERVIDOR</a>&#160;&#160;&#160;'1'</td></tr>
+<tr class="memdesc:a73a6fe86ebb37b77551a8bc496a0c62d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error del servidor.  <br /></td></tr>
+<tr class="memitem:a8a69fc3ea081fa546e819d915d73e274" id="r_a8a69fc3ea081fa546e819d915d73e274"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a69fc3ea081fa546e819d915d73e274">INDICE_RESPUESTA_ERROR_CREDENCIALES</a>&#160;&#160;&#160;'2'</td></tr>
+<tr class="memdesc:a8a69fc3ea081fa546e819d915d73e274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error de credenciales del usuario.  <br /></td></tr>
 <tr class="memitem:a4efc13b35d64ffa355c8d3e366f79f5e" id="r_a4efc13b35d64ffa355c8d3e366f79f5e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4efc13b35d64ffa355c8d3e366f79f5e">INDICE_RESPUESTA_MENSAJE</a>&#160;&#160;&#160;'a'</td></tr>
-<tr class="memdesc:a4efc13b35d64ffa355c8d3e366f79f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente que le envias un mensaje.  <br /></td></tr>
-<tr class="memitem:a951d234fd08f66cf7fdc646cd8341d9b" id="r_a951d234fd08f66cf7fdc646cd8341d9b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a951d234fd08f66cf7fdc646cd8341d9b">INDICE_RESPUESTA_SOLICITUD_AMISTAD</a>&#160;&#160;&#160;'b'</td></tr>
-<tr class="memdesc:a951d234fd08f66cf7fdc646cd8341d9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente que le envias una solicitud de amistad.  <br /></td></tr>
+<tr class="memdesc:a4efc13b35d64ffa355c8d3e366f79f5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente por parte del servidor que le envia un mensaje.  <br /></td></tr>
+<tr class="memitem:a94179bcedda0ebd3090b9041f5703a11" id="r_a94179bcedda0ebd3090b9041f5703a11"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94179bcedda0ebd3090b9041f5703a11">INDICE_RESPUESTA_AGENDAR_CONTACTO</a>&#160;&#160;&#160;'b'</td></tr>
+<tr class="memdesc:a94179bcedda0ebd3090b9041f5703a11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indice de respuesta al cliente por parte del servidor que le envia una solicitud de contacto.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contiene los valores constantes globales de codigos de retorno, tamanios de buffers e identificadores. </p>
 
 <p class="definition">Definition in file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="a7ea60683093ed34459be9f14e7502ceb" name="a7ea60683093ed34459be9f14e7502ceb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ea60683093ed34459be9f14e7502ceb">&#9670;&#160;</a></span>ENCONTRO</h2>
+<a id="a0032590333d408c3abce84f9b2ef971b" name="a0032590333d408c3abce84f9b2ef971b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0032590333d408c3abce84f9b2ef971b">&#9670;&#160;</a></span>ENCONTRO_CLAVE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ENCONTRO&#160;&#160;&#160;1</td>
+          <td class="memname">#define ENCONTRO_CLAVE&#160;&#160;&#160;1</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -233,75 +239,75 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="aa06b8aab894bfca6579c9f668d3f719a" name="aa06b8aab894bfca6579c9f668d3f719a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa06b8aab894bfca6579c9f668d3f719a">&#9670;&#160;</a></span>INDICE_AGENDARCONTACTO</h2>
+<a id="a94179bcedda0ebd3090b9041f5703a11" name="a94179bcedda0ebd3090b9041f5703a11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94179bcedda0ebd3090b9041f5703a11">&#9670;&#160;</a></span>INDICE_RESPUESTA_AGENDAR_CONTACTO</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_AGENDARCONTACTO&#160;&#160;&#160;'4'</td>
+          <td class="memname">#define INDICE_RESPUESTA_AGENDAR_CONTACTO&#160;&#160;&#160;'b'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Identificador de solicitud para agendar un nuevo contacto. </p>
+<p>Indice de respuesta al cliente por parte del servidor que le envia una solicitud de contacto. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00126">126</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00169">169</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="ae165701783266c171f831d8c2b1bc3b1" name="ae165701783266c171f831d8c2b1bc3b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae165701783266c171f831d8c2b1bc3b1">&#9670;&#160;</a></span>INDICE_AUTENTICACION</h2>
+<a id="a8a69fc3ea081fa546e819d915d73e274" name="a8a69fc3ea081fa546e819d915d73e274"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a69fc3ea081fa546e819d915d73e274">&#9670;&#160;</a></span>INDICE_RESPUESTA_ERROR_CREDENCIALES</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_AUTENTICACION&#160;&#160;&#160;'1'</td>
+          <td class="memname">#define INDICE_RESPUESTA_ERROR_CREDENCIALES&#160;&#160;&#160;'2'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Identificador de solicitud para autenticacion. </p>
+<p>Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error de credenciales del usuario. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00108">108</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00157">157</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="ac3379505ced159cf6ff45ba78d9f0d26" name="ac3379505ced159cf6ff45ba78d9f0d26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3379505ced159cf6ff45ba78d9f0d26">&#9670;&#160;</a></span>INDICE_MENSAJE</h2>
+<a id="a73a6fe86ebb37b77551a8bc496a0c62d" name="a73a6fe86ebb37b77551a8bc496a0c62d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73a6fe86ebb37b77551a8bc496a0c62d">&#9670;&#160;</a></span>INDICE_RESPUESTA_ERROR_SERVIDOR</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_MENSAJE&#160;&#160;&#160;'3'</td>
+          <td class="memname">#define INDICE_RESPUESTA_ERROR_SERVIDOR&#160;&#160;&#160;'1'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Identificador de solicitud para envio de mensaje. </p>
+<p>Indice de respuesta al cliente por parte del servidor que la solicitud fallo por un error del servidor. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00120">120</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00151">151</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="a90b1805d56d4a6e0e3f0553c476927f6" name="a90b1805d56d4a6e0e3f0553c476927f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90b1805d56d4a6e0e3f0553c476927f6">&#9670;&#160;</a></span>INDICE_REGISTRO</h2>
+<a id="ae215fcf2be8d76d826fab8749b783af0" name="ae215fcf2be8d76d826fab8749b783af0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae215fcf2be8d76d826fab8749b783af0">&#9670;&#160;</a></span>INDICE_RESPUESTA_EXITO</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_REGISTRO&#160;&#160;&#160;'2'</td>
+          <td class="memname">#define INDICE_RESPUESTA_EXITO&#160;&#160;&#160;'0'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Identificador de solicitud para registro de usuario. </p>
+<p>Indice de respuesta al cliente por parte del servidor que la solicitud se proceso con exito. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00114">114</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00145">145</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
@@ -317,63 +323,99 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indice de respuesta al cliente que le envias un mensaje. </p>
+<p>Indice de respuesta al cliente por parte del servidor que le envia un mensaje. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00145">145</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00163">163</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="a9b9e1bc9bb7c5e991e0250cc58aa9319" name="a9b9e1bc9bb7c5e991e0250cc58aa9319"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b9e1bc9bb7c5e991e0250cc58aa9319">&#9670;&#160;</a></span>INDICE_RESPUESTA_SOLICITUD_ACEPTADA</h2>
+<a id="a674e234d14ba148aadd168da5a6369fd" name="a674e234d14ba148aadd168da5a6369fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a674e234d14ba148aadd168da5a6369fd">&#9670;&#160;</a></span>INDICE_SOLICITUD_AGENDAR_CONTACTO</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_RESPUESTA_SOLICITUD_ACEPTADA&#160;&#160;&#160;'1'</td>
+          <td class="memname">#define INDICE_SOLICITUD_AGENDAR_CONTACTO&#160;&#160;&#160;'4'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indice de respuesta al cliente que la solicitud fue aceptada. </p>
+<p>Identificador de solicitud para agendar un nuevo contacto. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00133">133</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00138">138</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="a951d234fd08f66cf7fdc646cd8341d9b" name="a951d234fd08f66cf7fdc646cd8341d9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a951d234fd08f66cf7fdc646cd8341d9b">&#9670;&#160;</a></span>INDICE_RESPUESTA_SOLICITUD_AMISTAD</h2>
+<a id="a88b79d32069b4b5f54130e647932cd27" name="a88b79d32069b4b5f54130e647932cd27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88b79d32069b4b5f54130e647932cd27">&#9670;&#160;</a></span>INDICE_SOLICITUD_AUTENTICACION</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_RESPUESTA_SOLICITUD_AMISTAD&#160;&#160;&#160;'b'</td>
+          <td class="memname">#define INDICE_SOLICITUD_AUTENTICACION&#160;&#160;&#160;'1'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indice de respuesta al cliente que le envias una solicitud de amistad. </p>
+<p>Identificador de solicitud para autenticacion del usuario. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00151">151</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00120">120</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="a2773a9ff06031d94673b0b524dd286d0" name="a2773a9ff06031d94673b0b524dd286d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2773a9ff06031d94673b0b524dd286d0">&#9670;&#160;</a></span>INDICE_RESPUESTA_SOLICITUD_RECHAZADA</h2>
+<a id="ac3e9b0d1caa2615f1c432ac94c20abd1" name="ac3e9b0d1caa2615f1c432ac94c20abd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3e9b0d1caa2615f1c432ac94c20abd1">&#9670;&#160;</a></span>INDICE_SOLICITUD_MENSAJE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define INDICE_RESPUESTA_SOLICITUD_RECHAZADA&#160;&#160;&#160;'0'</td>
+          <td class="memname">#define INDICE_SOLICITUD_MENSAJE&#160;&#160;&#160;'3'</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Indice de respuesta al cliente que la solicitud fue rechazada. </p>
+<p>Identificador de solicitud para envio de mensaje. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00139">139</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00132">132</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+
+</div>
+</div>
+<a id="ae2d571482beb51df3bc20de7215ff359" name="ae2d571482beb51df3bc20de7215ff359"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2d571482beb51df3bc20de7215ff359">&#9670;&#160;</a></span>INDICE_SOLICITUD_REGISTRO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define INDICE_SOLICITUD_REGISTRO&#160;&#160;&#160;'2'</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Identificador de solicitud para registro del usuario. </p>
+
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00126">126</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+
+</div>
+</div>
+<a id="a0e9e0e8d6ba594d20612772efe4a7265" name="a0e9e0e8d6ba594d20612772efe4a7265"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e9e0e8d6ba594d20612772efe4a7265">&#9670;&#160;</a></span>MAX_BUFFER_MENSAJE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_BUFFER_MENSAJE&#160;&#160;&#160;2001</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Longitud maxima para el mensaje escrito por el usuario. </p>
+
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00081">81</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
@@ -384,12 +426,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_BUFFER_RESPUESTA&#160;&#160;&#160;256</td>
+          <td class="memname">#define MAX_BUFFER_RESPUESTA&#160;&#160;&#160;2048</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Tamanio maximo del buffer para enviar respuestas a los clientes. </p>
+<p>Tamanio maximo del buffer para comunicar respuestas entre el cliente y el servidor. </p>
 
 <p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00074">74</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
@@ -402,12 +444,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_BUFFER_SOLICITUD&#160;&#160;&#160;256</td>
+          <td class="memname">#define MAX_BUFFER_SOLICITUD&#160;&#160;&#160;2048</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Tamanio maximo del buffer para recibir solicitudes de los clientes. </p>
+<p>Tamanio maximo del buffer para comunicar solicitudes entre el cliente y el servidor. </p>
 
 <p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00068">68</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
@@ -420,14 +462,32 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_CONTRASENIA_USUARIO&#160;&#160;&#160;46</td>
+          <td class="memname">#define MAX_CONTRASENIA_USUARIO&#160;&#160;&#160;128</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Longitud maxima para la contrasenia del usuario. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00087">87</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00093">93</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+
+</div>
+</div>
+<a id="aee9f931a78279cfd97db5ef69eb6b52f" name="aee9f931a78279cfd97db5ef69eb6b52f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee9f931a78279cfd97db5ef69eb6b52f">&#9670;&#160;</a></span>MAX_CORREO_ELECTRONICO_USUARIO</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAX_CORREO_ELECTRONICO_USUARIO&#160;&#160;&#160;256</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Longitud maxima para el correo electronico del usuario. </p>
+
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00099">99</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
@@ -445,18 +505,18 @@ Macros</h2></td></tr>
 
 <p>Longitud maxima para el nombre del usuario. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00081">81</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00087">87</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>
-<a id="a35567684abe25f00ccaa673d0cdac653" name="a35567684abe25f00ccaa673d0cdac653"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35567684abe25f00ccaa673d0cdac653">&#9670;&#160;</a></span>NO_ENCONTRO</h2>
+<a id="aa30ca0c730f0777fcb17850b9f56a675" name="aa30ca0c730f0777fcb17850b9f56a675"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa30ca0c730f0777fcb17850b9f56a675">&#9670;&#160;</a></span>NO_ENCONTRO_CLAVE</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define NO_ENCONTRO&#160;&#160;&#160;0</td>
+          <td class="memname">#define NO_ENCONTRO_CLAVE&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -481,7 +541,7 @@ Macros</h2></td></tr>
 
 <p>Puerto en el que se comunicaran los sockets. </p>
 
-<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00101">101</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="constantes_8h_source.html#l00113">113</a> of file <a class="el" href="constantes_8h_source.html">constantes.h</a>.</p>
 
 </div>
 </div>

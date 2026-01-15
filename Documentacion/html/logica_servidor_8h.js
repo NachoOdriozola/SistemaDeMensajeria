@@ -1,19 +1,21 @@
 var logica_servidor_8h =
 [
-    [ "s_cliente", "structs__cliente.html", "structs__cliente" ],
-    [ "s_servidor", "structs__servidor.html", "structs__servidor" ],
+    [ "t_buffersComunicacion", "structt__buffers_comunicacion.html", "structt__buffers_comunicacion" ],
+    [ "t_cliente", "structt__cliente.html", "structt__cliente" ],
+    [ "t_servidor", "structt__servidor.html", "structt__servidor" ],
+    [ "CANT_BUCKETS_TABLA_HASH", "logica_servidor_8h.html#a5c2ac5044bcb2e8f8f7fd9b70d9a5454", null ],
     [ "CARACTER_APAGAR_SERVIDOR", "logica_servidor_8h.html#a33b2321923e9f96b98b0936649a926a0", null ],
     [ "MAX_BUFFER_CONSULTA_SQLITE", "logica_servidor_8h.html#a9768886f761c2ea4dc3ec9875abeee3c", null ],
     [ "NO_RECIBIO_SOLICITUD", "logica_servidor_8h.html#ab925b457ad8960b16fb244b62dd80df7", null ],
     [ "RECIBIO_SOLICITUD", "logica_servidor_8h.html#a1304920e8a8361a952d2bab744ac5039", null ],
-    [ "TAM_TABLA_HASH", "logica_servidor_8h.html#a9407f7bd9f52c40f4f63a8c2e506d9c3", null ],
-    [ "configurarServidor", "logica_servidor_8h.html#a332dde5e851054396d1653689aebceba", null ],
-    [ "inicializarServidor", "logica_servidor_8h.html#a53b7ef71e18aa2c4c9b03e800f3efdc7", null ],
-    [ "liberarServidor", "logica_servidor_8h.html#a88c25300b2c71ae463b69b83066c8e96", null ],
-    [ "procesarInicioSesion", "logica_servidor_8h.html#af8132e5da0af38f6aa5ad1f881cf1f4e", null ],
-    [ "procesarNuevoCliente", "logica_servidor_8h.html#a8f1e0358f5959eed233f8c5eeaa9c551", null ],
-    [ "procesarRegistro", "logica_servidor_8h.html#a88e045d25dcc91053c829db3bb1970c8", null ],
-    [ "procesarSolicitudAmistad", "logica_servidor_8h.html#a776b98b34bac2112d00374e6e7eae68b", null ],
-    [ "recibirSolicitudEnListaSimple", "logica_servidor_8h.html#a4d6ebef2ee3f0284f9a9c87f1ecce279", null ],
-    [ "recibirSolicitudEnTablaHash", "logica_servidor_8h.html#a9e87c0b7596ffa4d9c0e238e76a3d15d", null ]
+    [ "configurarServidor", "logica_servidor_8h.html#a96af0c17d7bc3e3480f021e42517057f", null ],
+    [ "inicializarServidor", "logica_servidor_8h.html#a58e73d0e72557e587a67bb5fc0e57df2", null ],
+    [ "liberarServidor", "logica_servidor_8h.html#a5d6da104225208892ec49d362fba6da5", null ],
+    [ "manejarEnvioMensaje", "logica_servidor_8h.html#ad087735d5c6d74ea93f5309205d31cb1", null ],
+    [ "manejarSolicitudAutenticacion", "logica_servidor_8h.html#ac3d0f7029c21434687d99214ebadf612", null ],
+    [ "manejarSolicitudContacto", "logica_servidor_8h.html#a842f85904a25322f91bd0deecea48591", null ],
+    [ "manejarSolicitudRegistro", "logica_servidor_8h.html#a65630dde827f9aece74828041d17ba1e", null ],
+    [ "procesarNuevoCliente", "logica_servidor_8h.html#afd36a704991578aeae5cbc17ee9838af", null ],
+    [ "recibirSolicitudEnListaSimple", "logica_servidor_8h.html#a7fe9c3b755bbb7c1bfa37350473fc2c5", null ],
+    [ "recibirSolicitudEnTablaHash", "logica_servidor_8h.html#a326ffb8f4ee3169f885ea692dbbc15e4", null ]
 ];

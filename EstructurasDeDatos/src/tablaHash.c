@@ -22,19 +22,19 @@ int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
     return EXITO;
 }
 
-bool insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
+int insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
 {
     if (insertarAlInicioListaSimple (&(tablaHash->buckets[funcionHash(clave)]), dato, tamDato) == ERROR_SIN_MEMORIA)
-        return false;
-    return true;
+        return ERROR_SIN_MEMORIA;
+    return EXITO;
 }
 
 void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodo *nodoAVincular)
 {
-    vincularNodoAListaSimple (&(tablaHash->buckets[funcionHash(clave)]), nodoAVincular);
+    vincularNodoAlInicioListaSimple (&(tablaHash->buckets[funcionHash(clave)]), nodoAVincular);
 }
 
-bool buscarClaveEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
+int buscarClaveUnicaEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
 {
     if (buscarClaveUnicaEnListaSimple (&(tablaHash->buckets[funcionHash(clave)]), clave, returnDato, tamDato, cmp) == ENCONTRO_CLAVE)
         return ENCONTRO_CLAVE;
@@ -49,10 +49,7 @@ void mapTablaHash (t_tablaHash *tablaHash, void accion (void*))
         return;
 
     for (i = 0; i < tablaHash->cantBuckets; i ++)
-    {
-        printf ("Bucket %d:\n", i);
         mapListaSimple (&(tablaHash->buckets[i]), accion);
-    }
 }
 
 void eliminarTablaHashConAccion (t_tablaHash *tablaHash, void accion (void*))

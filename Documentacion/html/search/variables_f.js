@@ -1,17 +1,16 @@
 var searchData=
 [
-  ['tablahashclientes_0',['tablaHashClientes',['../structs__servidor.html#a248c05e4bf58811a8e1ddadf9eee815d',1,'s_servidor']]],
-  ['tam_1',['tam',['../structr__nodo.html#ac17384f2d5d4aa0b2c446547f8c69f13',1,'r_nodo']]],
-  ['tamventana_2',['tamVentana',['../structs__ventana.html#ab002053eddd5ef49f9eb3ef1f1250721',1,'s_ventana']]],
-  ['texto_3',['texto',['../structs__interfaz_autenticacion.html#a6172a4c13e1277e2e8d3aef2537b224d',1,'s_interfazAutenticacion::texto'],['../structs__interfaz_config.html#a8a33996cf6aaf8cb39a51c26e3bea16d',1,'s_interfazConfig::texto'],['../structs__interfaz_contactos.html#a0a2bb82c7924969eb8ad650ec7209d41',1,'s_interfazContactos::texto'],['../structs__interfaz_registro.html#a922de416c9c8dffe8e766ef130d437af',1,'s_interfazRegistro::texto'],['../structs__interfaz_salas.html#a50742ad6f34e4d3ba969b27408d84e43',1,'s_interfazSalas::texto'],['../structs__recursos_comunes_autenticacion_registro.html#a6372d6a9db880dc0922e1ce5ed32d3f4',1,'s_recursosComunesAutenticacionRegistro::texto'],['../structs__recursos_comunes_contactos_salas.html#a7d9931981d60d26c7aa4148c0d23162c',1,'s_recursosComunesContactosSalas::texto']]],
-  ['textobotonaceptar_4',['textoBotonAceptar',['../structs__notificacion.html#ae2bd72e2708c58b0f66eeeb7f8d6d014',1,'s_notificacion']]],
-  ['textobotoningresar_5',['textoBotonIngresar',['../structs__recursos_comunes_autenticacion_registro_texto.html#a68169859adc9fc1575c75d7b63279ff1',1,'s_recursosComunesAutenticacionRegistroTexto']]],
-  ['textobotonrechazar_6',['textoBotonRechazar',['../structs__notificacion.html#a09075d5183c87d63e8b14db2bbb765e8',1,'s_notificacion']]],
-  ['textoconfig_7',['textoConfig',['../structs__interfaz_config_texto.html#aaf73f8fe59d81fde6b151b87808940de',1,'s_interfazConfigTexto']]],
-  ['textoinformativocontrasenia_8',['textoInformativoContrasenia',['../structs__interfaz_registro_texto.html#ae45b0ea14316209972e388950e8740b4',1,'s_interfazRegistroTexto']]],
-  ['textoinformativonombre_9',['textoInformativoNombre',['../structs__interfaz_registro_texto.html#aacd6ad0068ddb1821a8f7be73bebc604',1,'s_interfazRegistroTexto']]],
-  ['textonotificacion_10',['textoNotificacion',['../structs__notificacion.html#ac2c3404d33b2e6edea12cf788bae6d9e',1,'s_notificacion']]],
-  ['textoregistrarusuario_11',['textoRegistrarUsuario',['../structs__interfaz_autenticacion_texto.html#ad71b4597130aa2d569afb2e0bb3caf3c',1,'s_interfazAutenticacionTexto']]],
-  ['titulointerfaz_12',['tituloInterfaz',['../structs__recursos_comunes_autenticacion_registro_texto.html#aba2c566b62d01486ece6041de7291b22',1,'s_recursosComunesAutenticacionRegistroTexto::tituloInterfaz'],['../structs__recursos_comunes_contactos_salas_texto.html#aba2c566b62d01486ece6041de7291b22',1,'s_recursosComunesContactosSalasTexto::tituloInterfaz']]],
-  ['tituloventanaemergente_13',['tituloVentanaEmergente',['../structs__recursos_comunes_contactos_salas_texto.html#a8da8b8f62053393e46e5cdfc450430a2',1,'s_recursosComunesContactosSalasTexto']]]
+  ['tablahashclientes_0',['tablaHashClientes',['../structt__servidor.html#a1e784b626e3b689335c1e2b867dfe77d',1,'t_servidor']]],
+  ['tam_1',['tam',['../structs__nodo.html#ac17384f2d5d4aa0b2c446547f8c69f13',1,'s_nodo']]],
+  ['textobotonaceptar_2',['textoBotonAceptar',['../structt__notificacion.html#ae2bd72e2708c58b0f66eeeb7f8d6d014',1,'t_notificacion']]],
+  ['textobotoningresar_3',['textoBotonIngresar',['../structt__recursos_comunes_autenticacion_registro_textos.html#a68169859adc9fc1575c75d7b63279ff1',1,'t_recursosComunesAutenticacionRegistroTextos']]],
+  ['textobotonrechazar_4',['textoBotonRechazar',['../structt__notificacion.html#a09075d5183c87d63e8b14db2bbb765e8',1,'t_notificacion']]],
+  ['textoconfig_5',['textoConfig',['../structt__interfaz_config_textos.html#aaf73f8fe59d81fde6b151b87808940de',1,'t_interfazConfigTextos']]],
+  ['textoinformativocontrasenia_6',['textoInformativoContrasenia',['../structt__interfaz_registro_textos.html#ae45b0ea14316209972e388950e8740b4',1,'t_interfazRegistroTextos']]],
+  ['textoinformativonombre_7',['textoInformativoNombre',['../structt__interfaz_registro_textos.html#aacd6ad0068ddb1821a8f7be73bebc604',1,'t_interfazRegistroTextos']]],
+  ['textonotificacion_8',['textoNotificacion',['../structt__notificacion.html#ac2c3404d33b2e6edea12cf788bae6d9e',1,'t_notificacion']]],
+  ['textoregistrarusuario_9',['textoRegistrarUsuario',['../structt__interfaz_autenticacion_textos.html#ad71b4597130aa2d569afb2e0bb3caf3c',1,'t_interfazAutenticacionTextos']]],
+  ['textos_10',['textos',['../structt__interfaz_autenticacion.html#ad7846f67efa9b62acdb1e412ef5697fb',1,'t_interfazAutenticacion::textos'],['../structt__interfaz_config.html#ae9b0acf12f5694a7d6f567f0a08b6551',1,'t_interfazConfig::textos'],['../structt__interfaz_contactos.html#a125fab603e778e8067cbf787a7acad7b',1,'t_interfazContactos::textos'],['../structt__interfaz_registro.html#a38bcf1744c39f68b8fd8601822d79794',1,'t_interfazRegistro::textos'],['../structt__interfaz_salas.html#ad9fb122b914b17b62c271cf6c1be7eb9',1,'t_interfazSalas::textos'],['../structt__recursos_comunes_autenticacion_registro.html#abe04495911422cc9ba226bd9abd8171a',1,'t_recursosComunesAutenticacionRegistro::textos'],['../structt__recursos_comunes_contactos_salas.html#a8788a7f7627098341b8990e629d3f52a',1,'t_recursosComunesContactosSalas::textos']]],
+  ['titulointerfaz_11',['tituloInterfaz',['../structt__recursos_comunes_autenticacion_registro_textos.html#aba2c566b62d01486ece6041de7291b22',1,'t_recursosComunesAutenticacionRegistroTextos::tituloInterfaz'],['../structt__recursos_comunes_contactos_salas_textos.html#aba2c566b62d01486ece6041de7291b22',1,'t_recursosComunesContactosSalasTextos::tituloInterfaz']]],
+  ['tituloventanaemergente_12',['tituloVentanaEmergente',['../structt__recursos_comunes_contactos_salas_textos.html#a8da8b8f62053393e46e5cdfc450430a2',1,'t_recursosComunesContactosSalasTextos']]]
 ];

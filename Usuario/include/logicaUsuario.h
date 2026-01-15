@@ -291,14 +291,14 @@ typedef struct
 } t_notificacion;
 
 /**
- * \struct s_datosGuardados
+ * \struct t_datosGuardados
  * \brief  Estructura que guarda los datos de autenticacion del usuario.
  */
 typedef struct
 {
     int id;
     char nombre [MAX_NOMBRE_USUARIO];
-} s_datosGuardados;
+} t_datosGuardados;
 
 
 

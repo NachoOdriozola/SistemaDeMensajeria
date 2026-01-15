@@ -104,7 +104,7 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig);
 
 /** \brief Configurar y establecer el tamanio y la posicion sobre la ventana de los recursos graficos de la interfaz de configuraciones.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL, configurar cada recurso y establecerle un tamanio y una posicion sobre la ventana.
+ * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecerle un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.

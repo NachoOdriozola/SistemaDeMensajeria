@@ -105,22 +105,32 @@ $(function(){initNavTree('lista_simple_8h.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a1af2c348d5302877587674206c47f252" id="r_a1af2c348d5302877587674206c47f252"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1af2c348d5302877587674206c47f252">MINIMO</a>(X,  Y)</td></tr>
+<tr class="memdesc:a1af2c348d5302877587674206c47f252"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calcula el minimo entre dos valores. Util para verificaciones.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:af3992425f8b9d9a0e72c7f4e24090503" id="r_af3992425f8b9d9a0e72c7f4e24090503"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a></td></tr>
+<tr class="memitem:a92d86fa36e9a176491f7121b425287cc" id="r_a92d86fa36e9a176491f7121b425287cc"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="structt__nodo.html">t_nodo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1be91211793d46522258c385679e8693" id="r_a1be91211793d46522258c385679e8693"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1be91211793d46522258c385679e8693">crearListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl)</td></tr>
-<tr class="memitem:af72c169e3e6aa26a902aa1a8fc7ca85a" id="r_af72c169e3e6aa26a902aa1a8fc7ca85a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af72c169e3e6aa26a902aa1a8fc7ca85a">insertarAlInicioListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, const void *dato, unsigned tamDato)</td></tr>
-<tr class="memitem:a10f7a4f813d7e2b8d1086689b74f60c4" id="r_a10f7a4f813d7e2b8d1086689b74f60c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10f7a4f813d7e2b8d1086689b74f60c4">vincularNodoAListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> *nodoAVincular)</td></tr>
-<tr class="memitem:ad3019ea9c0b6a0f889f75eeebb9df166" id="r_ad3019ea9c0b6a0f889f75eeebb9df166"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad3019ea9c0b6a0f889f75eeebb9df166">mapListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, void accion(void *dato))</td></tr>
-<tr class="memitem:a756433399474d73d491c8e7960dc3a2d" id="r_a756433399474d73d491c8e7960dc3a2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a756433399474d73d491c8e7960dc3a2d">mapListaSimpleConComplemento</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, void *complemento, void accion(void *dato, void *complemento))</td></tr>
-<tr class="memitem:ada81eb3e6bd05ed3eda042cc1723c7a6" id="r_ada81eb3e6bd05ed3eda042cc1723c7a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada81eb3e6bd05ed3eda042cc1723c7a6">buscarClaveUnicaEnListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, const void *key, void *dato, unsigned tamDato, int cmp(const void *a, const void *b))</td></tr>
-<tr class="memitem:a2385d5c7884c566395d33bd28c1fe435" id="r_a2385d5c7884c566395d33bd28c1fe435"><td class="memItemLeft" align="right" valign="top"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2385d5c7884c566395d33bd28c1fe435">desvincularNodoDeListaSimple</a> (<a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **nodo)</td></tr>
-<tr class="memitem:add7b05bc9110c4d2c2f6068fa5e95688" id="r_add7b05bc9110c4d2c2f6068fa5e95688"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add7b05bc9110c4d2c2f6068fa5e95688">eliminarNodoConAccionListaSimple</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, void *dato, unsigned tamDato, void accion(void *dato))</td></tr>
-<tr class="memitem:a0a830024d0a740bf5431673adb862e25" id="r_a0a830024d0a740bf5431673adb862e25"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a830024d0a740bf5431673adb862e25">vaciarListaSimpleConAccion</a> (<a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *pl, void accion(void *dato))</td></tr>
+<tr class="memitem:a5522b2a5ad28f82d99cc5733d9e81c01" id="r_a5522b2a5ad28f82d99cc5733d9e81c01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5522b2a5ad28f82d99cc5733d9e81c01">crearListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl)</td></tr>
+<tr class="memdesc:a5522b2a5ad28f82d99cc5733d9e81c01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crear la lista simple apuntandola a NULL.  <br /></td></tr>
+<tr class="memitem:a0df51368ade78d8544249c368dcd3859" id="r_a0df51368ade78d8544249c368dcd3859"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0df51368ade78d8544249c368dcd3859">insertarAlInicioListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, const void *dato, unsigned tamDato)</td></tr>
+<tr class="memdesc:a0df51368ade78d8544249c368dcd3859"><td class="mdescLeft">&#160;</td><td class="mdescRight">Insertar al inicio de la lista simple.  <br /></td></tr>
+<tr class="memitem:a05ae4d849d8ae065462674cc728976b2" id="r_a05ae4d849d8ae065462674cc728976b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05ae4d849d8ae065462674cc728976b2">vincularNodoAlInicioListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, <a class="el" href="structt__nodo.html">t_nodo</a> *nodoAVincular)</td></tr>
+<tr class="memdesc:a05ae4d849d8ae065462674cc728976b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vincula un nodo ya creado al inicio de la lista simple.  <br /></td></tr>
+<tr class="memitem:a2a4b0cff657331fb6091ac3dde533a92" id="r_a2a4b0cff657331fb6091ac3dde533a92"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a4b0cff657331fb6091ac3dde533a92">mapListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, void accion(void *dato))</td></tr>
+<tr class="memdesc:a2a4b0cff657331fb6091ac3dde533a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funcion map sobre la lista simple.  <br /></td></tr>
+<tr class="memitem:a6581391fce07daf069bef3204f5c59cc" id="r_a6581391fce07daf069bef3204f5c59cc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6581391fce07daf069bef3204f5c59cc">mapListaSimpleConComplemento</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, void *complemento, void accion(void *dato, void *complemento))</td></tr>
+<tr class="memdesc:a6581391fce07daf069bef3204f5c59cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Funcion map utilizando un complemento sobre la lista simple.  <br /></td></tr>
+<tr class="memitem:aa31b0594395da9ee16a4201dd6b4ff41" id="r_aa31b0594395da9ee16a4201dd6b4ff41"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa31b0594395da9ee16a4201dd6b4ff41">buscarClaveUnicaEnListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, const void *key, void *returnDato, unsigned tamDato, int cmp(const void *a, const void *b))</td></tr>
+<tr class="memdesc:aa31b0594395da9ee16a4201dd6b4ff41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buscar una clave unica en la lista simple.  <br /></td></tr>
+<tr class="memitem:ad46d0f51e9c708381b6982934b45bf50" id="r_ad46d0f51e9c708381b6982934b45bf50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structt__nodo.html">t_nodo</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad46d0f51e9c708381b6982934b45bf50">desvincularNodoDeListaSimple</a> (<a class="el" href="structt__nodo.html">t_nodo</a> **nodoADesvincular)</td></tr>
+<tr class="memdesc:ad46d0f51e9c708381b6982934b45bf50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Desvincular un nodo de la lista simple.  <br /></td></tr>
+<tr class="memitem:aa8594f5df0f0f40a66ee352c3197d75b" id="r_aa8594f5df0f0f40a66ee352c3197d75b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8594f5df0f0f40a66ee352c3197d75b">eliminarNodoConAccionListaSimple</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, void *returnDato, unsigned tamDato, void accion(void *dato))</td></tr>
+<tr class="memdesc:aa8594f5df0f0f40a66ee352c3197d75b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista simple.  <br /></td></tr>
+<tr class="memitem:a02126c2733aaa727b7b5f668850aad5a" id="r_a02126c2733aaa727b7b5f668850aad5a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02126c2733aaa727b7b5f668850aad5a">vaciarListaSimpleConAccion</a> (<a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *pl, void accion(void *dato))</td></tr>
+<tr class="memdesc:a02126c2733aaa727b7b5f668850aad5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vaciar la lista simple, realizando una accion sobre los datos previamente.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contiene las funciones primitivas de lista circular. </p>
@@ -148,30 +158,32 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">((X &gt; Y) ? (X) : (Y))</div>
 </div><!-- fragment -->
-<p class="definition">Definition at line <a class="el" href="lista_simple_8h_source.html#l00029">29</a> of file <a class="el" href="lista_simple_8h_source.html">listaSimple.h</a>.</p>
+<p>Calcula el minimo entre dos valores. Util para verificaciones. </p>
+
+<p class="definition">Definition at line <a class="el" href="lista_simple_8h_source.html#l00032">32</a> of file <a class="el" href="lista_simple_8h_source.html">listaSimple.h</a>.</p>
 
 </div>
 </div>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
-<a id="af3992425f8b9d9a0e72c7f4e24090503" name="af3992425f8b9d9a0e72c7f4e24090503"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3992425f8b9d9a0e72c7f4e24090503">&#9670;&#160;</a></span>s_listaSimple</h2>
+<a id="a92d86fa36e9a176491f7121b425287cc" name="a92d86fa36e9a176491f7121b425287cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92d86fa36e9a176491f7121b425287cc">&#9670;&#160;</a></span>t_listaSimple</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a>* <a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a></td>
+          <td class="memname">typedef <a class="el" href="structt__nodo.html">t_nodo</a>* <a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="lista_simple_8h_source.html#l00031">31</a> of file <a class="el" href="lista_simple_8h_source.html">listaSimple.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="lista_simple_8h_source.html#l00034">34</a> of file <a class="el" href="lista_simple_8h_source.html">listaSimple.h</a>.</p>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ada81eb3e6bd05ed3eda042cc1723c7a6" name="ada81eb3e6bd05ed3eda042cc1723c7a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ada81eb3e6bd05ed3eda042cc1723c7a6">&#9670;&#160;</a></span>buscarClaveUnicaEnListaSimple()</h2>
+<a id="aa31b0594395da9ee16a4201dd6b4ff41" name="aa31b0594395da9ee16a4201dd6b4ff41"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa31b0594395da9ee16a4201dd6b4ff41">&#9670;&#160;</a></span>buscarClaveUnicaEnListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -179,7 +191,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int buscarClaveUnicaEnListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -189,7 +201,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>dato</em></span>, </td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>returnDato</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -204,12 +216,26 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Buscar una clave unica en la lista simple. </p>
+<p>Verifica devolver en returnDato el tamanio minimo entre el parametro enviado y el tamanio almacenado en el nodo.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">key</td><td>Puntero a la clave a buscar. </td></tr>
+    <tr><td class="paramname">returnDato</td><td>Puntero donde se guardara el dato del nodo encontrado por la clave. </td></tr>
+    <tr><td class="paramname">tamDato</td><td>tamanio en bytes del dato a guardar. </td></tr>
+    <tr><td class="paramname">cmp</td><td>Funcion de comparacion que se debe realizar para encontrar el nodo con la clave.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ENCONTRO_CLAVE si encontro la clave, NO_ENCONTRO_CLAVE en caso contrario. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00059">59</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="a1be91211793d46522258c385679e8693" name="a1be91211793d46522258c385679e8693"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1be91211793d46522258c385679e8693">&#9670;&#160;</a></span>crearListaSimple()</h2>
+<a id="a5522b2a5ad28f82d99cc5733d9e81c01" name="a5522b2a5ad28f82d99cc5733d9e81c01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5522b2a5ad28f82d99cc5733d9e81c01">&#9670;&#160;</a></span>crearListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,37 +243,55 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void crearListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Crear la lista simple apuntandola a NULL. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00004">4</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="a2385d5c7884c566395d33bd28c1fe435" name="a2385d5c7884c566395d33bd28c1fe435"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2385d5c7884c566395d33bd28c1fe435">&#9670;&#160;</a></span>desvincularNodoDeListaSimple()</h2>
+<a id="ad46d0f51e9c708381b6982934b45bf50" name="ad46d0f51e9c708381b6982934b45bf50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad46d0f51e9c708381b6982934b45bf50">&#9670;&#160;</a></span>desvincularNodoDeListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> * desvincularNodoDeListaSimple </td>
+          <td class="memname"><a class="el" href="structt__nodo.html">t_nodo</a> * desvincularNodoDeListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>nodo</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> **</td>          <td class="paramname"><span class="paramname"><em>nodoADesvincular</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Desvincular un nodo de la lista simple. </p>
+<p>No borra su dato ni el nodo, solo lo desliga de la lista simple. Asegura mantener el orden de la lista simple.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">nodoADesvincular</td><td>Doble puntero al nodo a desvincular.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Puntero al nodo desvinculado. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00074">74</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="add7b05bc9110c4d2c2f6068fa5e95688" name="add7b05bc9110c4d2c2f6068fa5e95688"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add7b05bc9110c4d2c2f6068fa5e95688">&#9670;&#160;</a></span>eliminarNodoConAccionListaSimple()</h2>
+<a id="aa8594f5df0f0f40a66ee352c3197d75b" name="aa8594f5df0f0f40a66ee352c3197d75b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8594f5df0f0f40a66ee352c3197d75b">&#9670;&#160;</a></span>eliminarNodoConAccionListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -255,12 +299,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void eliminarNodoConAccionListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>dato</em></span>, </td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>returnDato</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -275,12 +319,24 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista simple. </p>
+<p>Verifica que returnDato sea distinto de NULL, sino no copiara el dato.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">returnDato</td><td>Puntero donde se guardara el dato antes de eliminarse. </td></tr>
+    <tr><td class="paramname">tamDato</td><td>tamanio en bytes del dato. </td></tr>
+    <tr><td class="paramname">accion</td><td>Funcion de accion a realizar sobre el dato del nodo antes de eliminarlo. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00083">83</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="af72c169e3e6aa26a902aa1a8fc7ca85a" name="af72c169e3e6aa26a902aa1a8fc7ca85a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af72c169e3e6aa26a902aa1a8fc7ca85a">&#9670;&#160;</a></span>insertarAlInicioListaSimple()</h2>
+<a id="a0df51368ade78d8544249c368dcd3859" name="a0df51368ade78d8544249c368dcd3859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0df51368ade78d8544249c368dcd3859">&#9670;&#160;</a></span>insertarAlInicioListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -288,7 +344,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">int insertarAlInicioListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -303,12 +359,24 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Insertar al inicio de la lista simple. </p>
+<p>Crea un nuevo nodo y le asigna espacio en el dato del tamanio del dato con memoria dinamica, le copia el dato al nodo y lo ubica al inicio de la lista simple.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">dato</td><td>Puntero al dato que se quiere guardar. </td></tr>
+    <tr><td class="paramname">tamDato</td><td>tamanio en bytes del dato.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>EXITO si se ejecuto correctamente, ERROR_SIN_MEMORIA en caso de no poder asignar memoria. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00009">9</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="ad3019ea9c0b6a0f889f75eeebb9df166" name="ad3019ea9c0b6a0f889f75eeebb9df166"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad3019ea9c0b6a0f889f75eeebb9df166">&#9670;&#160;</a></span>mapListaSimple()</h2>
+<a id="a2a4b0cff657331fb6091ac3dde533a92" name="a2a4b0cff657331fb6091ac3dde533a92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a4b0cff657331fb6091ac3dde533a92">&#9670;&#160;</a></span>mapListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,7 +384,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void mapListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -326,12 +394,21 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Funcion map sobre la lista simple. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">accion</td><td>Funcion de accion a realizar sobre la lista simple. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00041">41</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="a756433399474d73d491c8e7960dc3a2d" name="a756433399474d73d491c8e7960dc3a2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a756433399474d73d491c8e7960dc3a2d">&#9670;&#160;</a></span>mapListaSimpleConComplemento()</h2>
+<a id="a6581391fce07daf069bef3204f5c59cc" name="a6581391fce07daf069bef3204f5c59cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6581391fce07daf069bef3204f5c59cc">&#9670;&#160;</a></span>mapListaSimpleConComplemento()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,7 +416,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void mapListaSimpleConComplemento </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -354,12 +431,22 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Funcion map utilizando un complemento sobre la lista simple. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">complemento</td><td>Puntero al complemento a utilizar en la funcion de accion. </td></tr>
+    <tr><td class="paramname">accion</td><td>Funcion de accion a realizar sobre la lista simple utilizando el complemento. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00050">50</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="a0a830024d0a740bf5431673adb862e25" name="a0a830024d0a740bf5431673adb862e25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a830024d0a740bf5431673adb862e25">&#9670;&#160;</a></span>vaciarListaSimpleConAccion()</h2>
+<a id="a02126c2733aaa727b7b5f668850aad5a" name="a02126c2733aaa727b7b5f668850aad5a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02126c2733aaa727b7b5f668850aad5a">&#9670;&#160;</a></span>vaciarListaSimpleConAccion()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -367,7 +454,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void vaciarListaSimpleConAccion </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -377,28 +464,47 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Vaciar la lista simple, realizando una accion sobre los datos previamente. </p>
+<p>Libera la memoria dinamica creada para el dato y para el nodo.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">accion</td><td>Funcion de accion a realizar sobre los datos de los nodos antes de eliminarlos. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00095">95</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 
 </div>
 </div>
-<a id="a10f7a4f813d7e2b8d1086689b74f60c4" name="a10f7a4f813d7e2b8d1086689b74f60c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10f7a4f813d7e2b8d1086689b74f60c4">&#9670;&#160;</a></span>vincularNodoAListaSimple()</h2>
+<a id="a05ae4d849d8ae065462674cc728976b2" name="a05ae4d849d8ae065462674cc728976b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05ae4d849d8ae065462674cc728976b2">&#9670;&#160;</a></span>vincularNodoAlInicioListaSimple()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void vincularNodoAListaSimple </td>
+          <td class="memname">void vincularNodoAlInicioListaSimple </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#af3992425f8b9d9a0e72c7f4e24090503">s_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a92d86fa36e9a176491f7121b425287cc">t_listaSimple</a> *</td>          <td class="paramname"><span class="paramname"><em>pl</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="nodo_8h.html#a1f1b86958c33770c35abba5313cfdabd">s_nodo</a> *</td>          <td class="paramname"><span class="paramname"><em>nodoAVincular</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="structt__nodo.html">t_nodo</a> *</td>          <td class="paramname"><span class="paramname"><em>nodoAVincular</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Vincula un nodo ya creado al inicio de la lista simple. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pl</td><td>Direccion de la lista simple. </td></tr>
+    <tr><td class="paramname">nodoAVincular</td><td>Puntero al nodo a vincular. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="lista_simple_8c_source.html#l00035">35</a> of file <a class="el" href="lista_simple_8c_source.html">listaSimple.c</a>.</p>
 

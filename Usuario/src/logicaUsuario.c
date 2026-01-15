@@ -80,7 +80,7 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud,
 
 int guardarDatosEnArchivo (int id, const char *bufferNombre)
 {
-    s_datosGuardados datosGuardados;
+    t_datosGuardados datosGuardados;
     FILE *archDatos;
 
     archDatos = fopen ("Datos.dat", "wb");
@@ -92,7 +92,7 @@ int guardarDatosEnArchivo (int id, const char *bufferNombre)
 
     datosGuardados.id = id;
     strcpy (datosGuardados.nombre, bufferNombre);
-    fwrite (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+    fwrite (&datosGuardados, sizeof (t_datosGuardados), 1, archDatos);
 
     fclose (archDatos);
 
@@ -101,14 +101,14 @@ int guardarDatosEnArchivo (int id, const char *bufferNombre)
 
 bool verificarModoAutenticacion (t_usuario *usuario)
 {
-    s_datosGuardados datosGuardados;
+    t_datosGuardados datosGuardados;
     FILE *archDatos;
 
     archDatos = fopen ("Datos.dat", "rb");
     if (!archDatos)
         return AUTENTICACION_MANUAL;
 
-    fread (&datosGuardados, sizeof (s_datosGuardados), 1, archDatos);
+    fread (&datosGuardados, sizeof (t_datosGuardados), 1, archDatos);
     usuario->id = datosGuardados.id;
     strcpy (usuario->nombre, datosGuardados.nombre);
 
