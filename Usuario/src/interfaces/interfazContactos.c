@@ -158,13 +158,13 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_interfazContactos *in
         if (evento.mouseButton.button == sfMouseLeft)
         {
             if (manejarClickEscribirMensaje (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickEscribirAgendarContacto (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickNotificaciones (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickAgendarContacto (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickCerrarVentanaEmergente (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickEscribirAgendarContacto (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickNotificaciones (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickAgendarContacto (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickCerrarVentanaEmergente (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
             if (manejarClickSolapaCambiarInterfaz (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
             if (manejarClickAreaMensajes (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazConfig (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickCambiarInterfazConfig (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -173,7 +173,7 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_interfazContactos *in
         if (evento.text.unicode < 128)
         {
             if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-            if (manejarEscribirAgendarContacto (recursosComunesContactosSalas, interfazContactos, evento) == EVENTO_MANEJADO) break;
+            //if (manejarEscribirAgendarContacto (recursosComunesContactosSalas, interfazContactos, evento) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -182,7 +182,7 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_interfazContactos *in
         if (evento.key.code == sfKeyEnter)
         {
             if (manejarEnterEnviarMensaje (recursosComunesContactosSalas, aplicacion) == EVENTO_MANEJADO) break;
-            if (manejarEnterIntentarAgendarContacto (interfazContactos, aplicacion) == EVENTO_MANEJADO) break;
+            //if (manejarEnterIntentarAgendarContacto (interfazContactos, aplicacion) == EVENTO_MANEJADO) break;
         }
 
         if (evento.key.code == sfKeyUp)
@@ -570,7 +570,7 @@ static void interfazContactos_renderizarVistaUI (t_aplicacion *aplicacion, const
  */
 static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos)
 {
-    sfRenderWindow_drawText (renderizado, textos->agendarContacto, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->agendarContacto, NULL);
 }
 
 /** \brief Renderizar los recursos graficos de elementos de la interfaz de contactos.

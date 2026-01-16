@@ -153,8 +153,8 @@ void interfazRegistro_accion (t_aplicacion *aplicacion, const t_interfazRegistro
             if (manejarClickEscribirNombre (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickEscribirContrasenia (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickIntentarRegistro (aplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazAutenticacion (aplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickGuardarAutenticacion (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+            //if (manejarClickCambiarInterfazAutenticacion (aplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+            //if (manejarClickGuardarAutenticacion (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -533,9 +533,9 @@ static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, cons
  */
 static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_interfazRegistroElementos *elementos)
 {
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverBarra, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo1, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo2, NULL);
+    //sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverBarra, NULL);
+    //sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo1, NULL);
+    //sfRenderWindow_drawRectangleShape (renderizado, elementos->flechaVolverTriangulo2, NULL);
 }
 
 /** \brief Liberar, de manera segura, todas los textos graficos de la interfaz de registro.

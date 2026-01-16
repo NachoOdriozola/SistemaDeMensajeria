@@ -108,8 +108,8 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
 {
     sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
-    sfRenderWindow_drawText (renderizado, textos->auxGuardarAutenticacion, NULL);
-    sfRenderWindow_drawText (renderizado, textos->guardarAutenticacion, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->auxGuardarAutenticacion, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->guardarAutenticacion, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarNombre, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresoIncorrecto, NULL);
@@ -117,13 +117,13 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *recursosComunesAutenticacionRegistroElementos)
+void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->barraEscribirContrasenia, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->barraEscribirNombre, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->botonGuardarAutenticacion, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->botonIngresar, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistroElementos->subrayadoTitulo, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirContrasenia, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirNombre, NULL);
+    //sfRenderWindow_drawRectangleShape (renderizado, elementos->botonGuardarAutenticacion, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->botonIngresar, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->subrayadoTitulo, NULL);
 }
 
 void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)

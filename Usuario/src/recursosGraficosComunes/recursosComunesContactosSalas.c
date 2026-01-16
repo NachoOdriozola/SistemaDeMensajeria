@@ -123,12 +123,12 @@ void recursosComunesContactosSalas_configurar (t_recursosComunesContactosSalas *
 
 void recursosComunesContactosSalas_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesContactosSalasTextos *textos)
 {
-    sfRenderWindow_drawText (renderizado, textos->alertaNotificaciones, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->alertaNotificaciones, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirMensaje, NULL);
-    sfRenderWindow_drawText (renderizado, textos->configuraciones, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->configuraciones, NULL);
     sfRenderWindow_drawText (renderizado, textos->nombreCambiarInterfaz, NULL);
     sfRenderWindow_drawText (renderizado, textos->nombreUsuario, NULL);
-    sfRenderWindow_drawText (renderizado, textos->notificaciones, NULL);
+    //sfRenderWindow_drawText (renderizado, textos->notificaciones, NULL);
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 
