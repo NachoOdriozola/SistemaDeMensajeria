@@ -1664,7 +1664,7 @@
 
 1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
 
-1768413915 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+1768718324 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
 
 1768456487 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
 	"../include/listaSimple.h"
@@ -1676,10 +1676,10 @@
 	"nodo.h"
 	"../../Constantes/constantes.h"
 
-1768529622 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
+1769191539 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
 	"../../include/interfaces/interfazAutenticacion.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
+1769189307 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1696,7 +1696,7 @@
 	"../logicaUsuario.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\logicausuario.h
+1769188350 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\logicausuario.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1712,7 +1712,7 @@
 	"../../EstructurasDeDatos/include/listaCircular.h"
 	"../../EstructurasDeDatos/include/listaSimple.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
+1769178062 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1728,7 +1728,7 @@
 	"../../../Constantes/constantes.h"
 	"../logicaUsuario.h"
 
-1768413915 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
+1769188404 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
 	"../../include/interfaces/interfazConfig.h"
 
 1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
@@ -1747,10 +1747,10 @@
 	"../../../Constantes/constantes.h"
 	"../logicaUsuario.h"
 
-1768529637 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
+1769189216 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
 	"../../include/interfaces/interfazRegistro.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
+1769190125 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1767,10 +1767,10 @@
 	"../logicaUsuario.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1768529714 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
+1769193212 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
 	"../../include/interfaces/interfazSalas.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
+1769192969 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1788,7 +1788,7 @@
 	"../logicaUsuario.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1768413915 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
+1769188991 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1804,10 +1804,10 @@
 	"../../../Constantes/constantes.h"
 	"../logicaUsuario.h"
 
-1768413915 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
+1769189523 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
 	"../include/main.h"
 
-1768413915 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
+1769189549 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1825,7 +1825,7 @@
 	"interfaces/interfazRegistro.h"
 	"interfaces/interfazSalas.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
+1769189244 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1843,16 +1843,16 @@
 	"../logicaUsuario.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1768529049 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
+1769179972 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
 	"../../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1768529353 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
+1769189010 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1768529698 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
+1769191698 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
 	"../../include/interfaces/interfazContactos.h"
 
-1768456487 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicausuario.c
+1769188075 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicausuario.c
 	"../include/logicaUsuario.h"
 
 1768070088 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\estructurasdedatos\src\listacircular.c

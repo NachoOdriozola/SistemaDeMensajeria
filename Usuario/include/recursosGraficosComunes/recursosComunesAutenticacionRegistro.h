@@ -42,19 +42,6 @@
 
 
 /**
- * \def MAX_INGRESO_NOMBRE
- * \brief Cantidad maxima de caracteres que puede ingresar el usuario para escribir su nombre.
- */
-#define MAX_INGRESO_NOMBRE 31
-
-/**
- * \def MAX_INGRESO_CONTRASENIA
- * \brief Cantidad maxima de caracteres que puede ingresar el usuario para escribir su contrasenia.
- */
-#define MAX_INGRESO_CONTRASENIA 36
-
-
-/**
  * \def HABILITAR_ESCRIBIR_NOMBRE
  * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su nombre esta habilitado.
  */
@@ -77,19 +64,6 @@
  * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su contrasenia esta deshabilitado.
  */
 #define DESHABILITAR_ESCRIBIR_CONTRASENIA 0
-
-
-/**
- * \def HABILITAR_GUARDAR_AUTENTICACION
- * \brief Codigo para indicar que el guardado de datos del usuario para la autenticacion automatica esta habilitado.
- */
-#define HABILITAR_GUARDAR_AUTENTICACION 1
-
-/**
- * \def DESHABILITAR_GUARDAR_AUTENTICACION
- * \brief Codigo para indicar que el guardado de datos del usuario para la autenticacion automatica esta deshabilitado.
- */
-#define DESHABILITAR_GUARDAR_AUTENTICACION 0
 
 
 /**
@@ -119,12 +93,11 @@ typedef struct
 {
     sfText *auxEscribirContrasenia;     /**< Muestra la contrasenia que escribe el usuario. */
     sfText *auxEscribirNombre;          /**< Muestra el nombre que escribe el usuario. */
-    sfText *auxGuardarAutenticacion;    /**< Salida (tilde/cruz) que muestra el estado del guardado de datos del usuario para la autenticacion automatica. */
-    sfText *guardarAutenticacion;       /**< Texto interrogativo para guardar los datos del usuario para la autenticacion automatica. */
     sfText *ingresarContrasenia;        /**< Indica al usuario donde escribir su contrasenia. */
     sfText *ingresarNombre;             /**< Indica al usuario donde escribir su nombre. */
-    sfText *ingresoIncorrecto;
+    sfText *ingresoIncorrecto;          /**< Mensaje de error al ingresar incorrectamente el usuario. */
     sfText *textoBotonIngresar;         /**< Texto encontrado dentro del boton para ingresar usuario. */
+    sfText *textoCambiarInterfaz;       /**< Texto interrogativo para cambiar de interfaz. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
 } t_recursosComunesAutenticacionRegistroTextos;
 
@@ -135,7 +108,6 @@ typedef struct
 {
     sfRectangleShape *barraEscribirContrasenia;         /**< Barra donde el usuario escribe su contrasenia. */
     sfRectangleShape *barraEscribirNombre;              /**< Barra donde el usuario escribe su nombre. */
-    sfRectangleShape *botonGuardarAutenticacion;        /**< Boton para modificar el estado del guardado de datos del usuario para la autenticacion automatica. */
     sfRectangleShape *botonIngresar;                    /**< Boton para ingresar usuario. */
     sfRectangleShape *puntoInsercion;                   /**< Punto de insercion para escritura de texto. */
     sfRectangleShape *subrayadoTitulo;                  /**< Barra decorativa para subrayar el titulo de la interfaz. */
@@ -148,7 +120,6 @@ typedef struct
 {
     bool escribirContrasenia;                   /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su contrasenia. */
     bool escribirNombre;                        /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su nombre. */
-    bool guardarAutenticacion;                  /**< Habilitar/deshabilitar el guardado de datos del usuario para la autenticacion automatica. */
     bool ingresar;                              /**< Habilitar/deshabilitar el ingreso de usuario. */
     bool puntoInsercion;                        /**< Activar/desactivar el punto de insercion. */
     unsigned short int contadorPuntoInsercion;  /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
@@ -162,8 +133,8 @@ typedef struct
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
     t_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
-    char bufferNombre [MAX_INGRESO_NOMBRE];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
-    char bufferContrasenia [MAX_INGRESO_CONTRASENIA];    /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
+    char bufferNombre [MAX_NOMBRE_USUARIO];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
+    char bufferContrasenia [MAX_CONTRASENIA_USUARIO];    /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
 } t_recursosComunesAutenticacionRegistro;
 
 
@@ -221,24 +192,6 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
  *
  */
 void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-
-
-
-/* ============================
-   FUNCIONES MANEJADORAS DE EVENTOS
-   ============================ */
-
-
-
-/** \brief Manejar el evento de click en el boton para guardar los datos de autenticacion.
- *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
- *
- * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
- *
- */
-bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 

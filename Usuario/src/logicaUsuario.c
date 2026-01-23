@@ -12,15 +12,23 @@ int inicializarFuentes (t_fuentes *fuentes)
 {
     //--------------- INICIALIZAR VALORES NULOS ---------------
 
-    fuentes->fuente1 = NULL;
+    fuentes->ui = NULL;
+    fuentes->cuerpo = NULL;
 
 
-    //--------------- INICIALIZAR TEXTO ---------------
+    //--------------- INICIALIZAR FUENTES ---------------
 
-    fuentes->fuente1 = sfFont_createFromFile ("fuente1.ttf");
-    if (!fuentes->fuente1)
+    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    if (!fuentes->ui)
     {
-        perror ("ERROR - Crear fuente 1.\n");
+        perror ("ERROR - Crear fuente UI.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    fuentes->cuerpo = sfFont_createFromFile ("fuenteMensajes.ttf");
+    if (!fuentes->cuerpo)
+    {
+        perror ("ERROR - Crear fuente cuerpo.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -30,7 +38,8 @@ int inicializarFuentes (t_fuentes *fuentes)
 
 void liberarFuentes (t_fuentes *fuentes)
 {
-    DESTRUCTOR_SEGURO_FUENTE (fuentes->fuente1);
+    DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
+    DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);
 }
 
 
@@ -73,53 +82,6 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud,
 
 
 /* ============================
-   FUNCIONES DE GUARDADO DE AUTENTICACION
-   ============================ */
-
-
-
-int guardarDatosEnArchivo (int id, const char *bufferNombre)
-{
-    t_datosGuardados datosGuardados;
-    FILE *archDatos;
-
-    archDatos = fopen ("Datos.dat", "wb");
-    if (!archDatos)
-    {
-        perror ("ERROR - Crear archivo para guardar inicio de sesion.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    datosGuardados.id = id;
-    strcpy (datosGuardados.nombre, bufferNombre);
-    fwrite (&datosGuardados, sizeof (t_datosGuardados), 1, archDatos);
-
-    fclose (archDatos);
-
-    return EXITO;
-}
-
-bool verificarModoAutenticacion (t_usuario *usuario)
-{
-    t_datosGuardados datosGuardados;
-    FILE *archDatos;
-
-    archDatos = fopen ("Datos.dat", "rb");
-    if (!archDatos)
-        return AUTENTICACION_MANUAL;
-
-    fread (&datosGuardados, sizeof (t_datosGuardados), 1, archDatos);
-    usuario->id = datosGuardados.id;
-    strcpy (usuario->nombre, datosGuardados.nombre);
-
-    fclose (archDatos);
-
-    return AUTENTICACION_AUTOMATICA;
-}
-
-
-
-/* ============================
    FUNCIONES LOGICAS DE GRAFICOS
    ============================ */
 
@@ -149,6 +111,57 @@ bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
     limiteTexto = sfText_getGlobalBounds (texto);
 
     return sfFloatRect_contains (&limiteTexto, mouseMundo.x, mouseMundo.y);
+}
+
+void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea)
+{
+    sfFloatRect limites;
+
+    limites = sfText_getLocalBounds(texto);
+
+    sfText_setPosition (texto, (sfVector2f)
+                        {
+                            round (posXInicial + anchoArea / 2.f - limites.width / 2.f - limites.left),
+                            round (posYInicial + altoArea / 2.f - limites.height /2.f - limites.top)
+                        });
+}
+
+void posicionarNombreUsuario (sfText *nombre)
+{
+    sfFloatRect limites;
+    unsigned short int i = 30;
+
+    sfText_setCharacterSize (nombre, 32);
+    centrarTextoEnArea (nombre, 44, 888, 254, 120);
+
+    limites = sfText_getLocalBounds (nombre);
+    while ((limites.width > 254) && (i > 10))
+    {
+        sfText_setCharacterSize (nombre, i);
+        centrarTextoEnArea (nombre, 44, 888, 254, 120);
+        limites = sfText_getLocalBounds (nombre);
+        i -= 2;
+    }
+}
+
+void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra)
+{
+    unsigned short int i;
+    sfFloatRect limites;
+
+    sfText_setString(texto, bufferTexto);
+    limites = sfText_getLocalBounds(texto);
+
+    if (limites.width <= anchoBarra)
+        return;
+
+    for (i = 0; i < (strlen(bufferTexto)); i++)
+    {
+        sfText_setString(texto, bufferTexto + i);
+        limites = sfText_getLocalBounds(texto);
+        if (limites.width <= anchoBarra)
+            break;
+    }
 }
 
 
@@ -227,10 +240,10 @@ void asignarMensaje (t_aplicacion *aplicacion, const char *bufferMensaje, bool e
     if (enviadoPor == MI_USUARIO)
     {
         bordesMensaje = sfText_getLocalBounds (mensaje);
-        sfText_setPosition (mensaje, (sfVector2f){1780 - bordesMensaje.width, 827});
+        sfText_setPosition (mensaje, (sfVector2f){1819 - bordesMensaje.width, 815});
     }
     else
-        sfText_setPosition (mensaje, (sfVector2f){510, 827});
+        sfText_setPosition (mensaje, (sfVector2f){485, 815});
 
     aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.siguienteMensaje->sig;
 }
@@ -240,7 +253,7 @@ void modificarPosListaMensajes (void *mensaje)
     sfVector2f pos;
 
     pos = sfText_getPosition (*((sfText**)mensaje));
-    pos.y -= 80;
+    pos.y -= 60;
     sfText_setPosition (*((sfText**)mensaje), pos);
 }
 
@@ -252,7 +265,7 @@ void renderizarListaMensajes (void *mensaje, void *renderizado)
 void setupListaMensajes (void *mensaje, void *fuente)
 {
     sfText_setFont (*((sfText**)mensaje), (sfFont*)fuente);
-    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (34, 48, 48));
+    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (94, 91, 87));
 }
 
 void tamListaMensajes (void *mensaje)
@@ -350,20 +363,20 @@ void setupNotificacion (t_notificacion *notificacion, t_fuentes fuentes)
     //SETUP TEXTO
 
     //Texto notificacion
-    sfText_setFont (notificacion->textoNotificacion, fuentes.fuente1);
+    sfText_setFont (notificacion->textoNotificacion, fuentes.ui);
     sfText_setFillColor (notificacion->textoNotificacion, sfColor_fromRGB (40, 54, 54));
     sfText_setPosition (notificacion->textoNotificacion, (sfVector2f){680, 600});
     sfText_setCharacterSize (notificacion->textoNotificacion, 26);
 
     //Texto boton aceptar
-    sfText_setFont (notificacion->textoBotonAceptar, fuentes.fuente1);
+    sfText_setFont (notificacion->textoBotonAceptar, fuentes.ui);
     sfText_setFillColor (notificacion->textoBotonAceptar, sfColor_fromRGB (40, 54, 54));
     sfText_setString (notificacion->textoBotonAceptar, "ACEPTAR");
     sfText_setPosition (notificacion->textoBotonAceptar, (sfVector2f){860, 600});
     sfText_setCharacterSize (notificacion->textoBotonAceptar, 26);
 
     //Texto boton rechazar
-    sfText_setFont (notificacion->textoBotonRechazar, fuentes.fuente1);
+    sfText_setFont (notificacion->textoBotonRechazar, fuentes.ui);
     sfText_setFillColor (notificacion->textoBotonRechazar, sfColor_fromRGB (40, 54, 54));
     sfText_setString (notificacion->textoBotonRechazar, "RECHAZAR");
     sfText_setPosition (notificacion->textoBotonRechazar, (sfVector2f){1030, 600});

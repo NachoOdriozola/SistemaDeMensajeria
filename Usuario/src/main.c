@@ -27,17 +27,11 @@ int main()
     }
     configurarAplicacion (&aplicacion, &interfaces);
 
-
-    if (verificarModoAutenticacion (&(aplicacion.usuario)) == AUTENTICACION_AUTOMATICA)
-        iniciarMenuPrincipal (&aplicacion, &interfaces);
-    else
+    if (iniciarAutenticacionManual (&aplicacion, &interfaces) == ERROR_INICIALIZACION)
     {
-        if (iniciarAutenticacionManual (&aplicacion, &interfaces) == ERROR_INICIALIZACION)
-        {
-            perror ("\nERROR - Inicializar recursos para autenticacion manual.\n");
-            liberarAplicacion (&aplicacion, &interfaces);
-            return ERROR_INICIALIZACION;
-        }
+        perror ("\nERROR - Inicializar recursos para autenticacion manual.\n");
+        liberarAplicacion (&aplicacion, &interfaces);
+        return ERROR_INICIALIZACION;
     }
 
 
@@ -49,12 +43,12 @@ int main()
         {
 
         case INTERFAZ_AUTENTICACION:
-            interfazAutenticacion_accion (&aplicacion, &(interfaces.autenticacion), &(interfaces.recursosComunesAutenticacionRegistro));
-            interfazAutenticacion_actualizar (&(interfaces.autenticacion), &(interfaces.recursosComunesAutenticacionRegistro));
-            interfazAutenticacion_renderizar (aplicacion.renderizado, &(interfaces.autenticacion), &(interfaces.recursosComunesAutenticacionRegistro));
+            interfazAutenticacion_accion (&aplicacion, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.autenticacion));
+            interfazAutenticacion_actualizar (&(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.autenticacion));
+            interfazAutenticacion_renderizar (aplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.autenticacion));
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarMenuPrincipal (&aplicacion, &interfaces);
+                iniciarMenuPrincipal (&aplicacion, &(interfaces.recursosComunesContactosSalas));
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -63,12 +57,12 @@ int main()
 
 
         case INTERFAZ_REGISTRO:
-            interfazRegistro_accion (&aplicacion, &(interfaces.registro), &(interfaces.recursosComunesAutenticacionRegistro));
-            interfazRegistro_actualizar (&(interfaces.registro), &(interfaces.recursosComunesAutenticacionRegistro));
-            interfazRegistro_renderizar (aplicacion.renderizado, &(interfaces.registro), &(interfaces.recursosComunesAutenticacionRegistro));
+            interfazRegistro_accion (&aplicacion, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.registro));
+            interfazRegistro_actualizar (&(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.registro));
+            interfazRegistro_renderizar (aplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.registro));
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarMenuPrincipal (&aplicacion, &interfaces);
+                iniciarMenuPrincipal (&aplicacion, &(interfaces.recursosComunesContactosSalas));
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -77,9 +71,9 @@ int main()
 
 
         case INTERFAZ_CONTACTOS:
-            interfazContactos_accion (&aplicacion, &(interfaces.contactos), &(interfaces.recursosComunesContactosSalas));
-            interfazContactos_actualizar (&aplicacion, &(interfaces.contactos), &(interfaces.recursosComunesContactosSalas));
-            interfazContactos_renderizar (&aplicacion, &(interfaces.contactos), &(interfaces.recursosComunesContactosSalas));
+            interfazContactos_accion (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.contactos));
+            interfazContactos_actualizar (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.contactos));
+            interfazContactos_renderizar (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.contactos));
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONFIG)
             {
                 interfazConfig_inicializar (&(interfaces.config));
@@ -89,9 +83,9 @@ int main()
 
 
         case INTERFAZ_SALAS:
-            interfazSalas_accion (&aplicacion, &(interfaces.salas), &(interfaces.recursosComunesContactosSalas));
-            interfazSalas_actualizar (&aplicacion, &(interfaces.salas), &(interfaces.recursosComunesContactosSalas));
-            interfazSalas_renderizar (&aplicacion, &(interfaces.salas), &(interfaces.recursosComunesContactosSalas));
+            interfazSalas_accion (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.salas));
+            interfazSalas_actualizar (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.salas));
+            interfazSalas_renderizar (&aplicacion, &(interfaces.recursosComunesContactosSalas), &(interfaces.salas));
             if (aplicacion.usuario.interfazActual == INTERFAZ_CONFIG)
             {
                 interfazConfig_inicializar (&(interfaces.config));
@@ -115,7 +109,7 @@ int main()
 
 
     liberarAplicacion (&aplicacion, &interfaces);
-    system ("pause");
+    //system ("pause");
 
     return EXITO;
 }
@@ -148,7 +142,7 @@ int inicializarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 
     // --------------- INICIALIZAR RENDERIZADO ---------------
 
-    aplicacion->renderizado = sfRenderWindow_create ((sfVideoMode){560, 660}, "Aplicacion", sfDefaultStyle, NULL);
+    aplicacion->renderizado = sfRenderWindow_create ((sfVideoMode){500, 620}, "Aplicacion", sfDefaultStyle, NULL);
     if (!aplicacion->renderizado)
     {
         perror ("\nERROR - Crear renderizado.\n");
@@ -301,7 +295,7 @@ void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 
 
     // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LA LISTA DE MENSAJES ---------------
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.fuente1, setupListaMensajes);
+    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.cuerpo, setupListaMensajes);
     mapListaCircular (&(aplicacion->mensajes.listaMensajes), tamListaMensajes);
     aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.listaMensajes;
 
@@ -382,12 +376,13 @@ void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 
 
 
-void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_interfaces *interfaces)
+void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- CONFIGURAR APLICACION ---------------
 
     aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-    sfText_setString (interfaces->recursosComunesContactosSalas.textos.nombreUsuario, aplicacion->usuario.nombre);
+    sfText_setString (recursosComunesContactosSalas->textos.nombreUsuario, aplicacion->usuario.nombre);
+    posicionarNombreUsuario (recursosComunesContactosSalas->textos.nombreUsuario);
 
 
     // --------------- MAXIMIZAR VENTANA ---------------

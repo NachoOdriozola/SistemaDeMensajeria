@@ -116,9 +116,10 @@ typedef struct
     sfText *auxEscribirMensaje;         /**< Muestra el mensaje que escribe el usuario. */
     sfText *cerrarVentanaEmergente;     /**< Cruz para cerrar la ventana emergente. */
     sfText *configuraciones;            /**< Boton para dirigirse a la interfaz de configuraciones. */
-    sfText *nombreCambiarInterfaz;      /**< Muestra el nombre de la interfaz disponible para cambiar, esta ubicado sobre la solapaCambiarInterfaz. */
+    sfText *proximaInterfaz;            /**< Muestra el nombre de la interfaz disponible para cambiar, esta ubicado sobre la solapaCambiarInterfaz. */
     sfText *nombreUsuario;              /**< Muestra el nombre del usuario. */
     sfText *notificaciones;             /**< Boton para abrir la ventana emergente de notificaciones. */
+    sfText *textoBotonEnviar;           /**< Texto encontrado dentro del boton para enviar mensaje. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
     sfText *tituloVentanaEmergente;     /**< Titulo de la ventana emergente. */
 } t_recursosComunesContactosSalasTextos;
@@ -128,10 +129,13 @@ typedef struct
  */
 typedef struct
 {
-    sfRectangleShape *areaMensajes;
+    sfRectangleShape *areaMensajes;             /**< Area donde se muestran los mensajes enviados y recibidos. */
     sfRectangleShape *barraEscribirMensaje;     /**< Barra donde el usuario escribe el mensaje. */
-    sfRectangleShape *barraSeparacionNombre;    /**< Barra decorativa que separa el panel del nombre de usuario. */
-    sfRectangleShape *barraSeparacionTitulo;    /**< Barra decorativa que separa el panel del titulo de la interfaz. */
+    sfRectangleShape *botonEnviar;              /**< Boton para enviar mensaje. */
+    sfCircleShape *ojalilloArriba;              /**< Ojalillo decorativo superior. */
+    sfCircleShape *ojalilloAbajo;               /**< Ojalillo decorativo inferior. */
+    sfRectangleShape *separacionNombre;         /**< Barra decorativa que separa el panel del nombre de usuario. */
+    sfRectangleShape *separacionTitulo;         /**< Barra decorativa que separa el panel del titulo de la interfaz. */
     sfRectangleShape *panelInterfaz;            /**< Panel principal de la interfaz ubicado a la izquierda de la ventana. */
     sfRectangleShape *puntoInsercion;           /**< Punto de insercion para escritura de texto. */
     sfRectangleShape *solapaCambiarInterfaz;    /**< Solapa para cambiar de interfaz encontrada en el panel. */
@@ -300,6 +304,20 @@ void renderizarNotificaciones (t_aplicacion *aplicacion, const t_recursosComunes
  */
 void manejarRedimensionamientoVentanaContactosSalas (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoRedimensionamiento);
 
+/** \brief Manejar el evento de click en el boton para enviar mensaje.
+ *
+ * Intentar enviar el mensaje al destinatario.
+ * Si resulto en exito, asigna el mensaje a la lista circular de mensajes y lo muestra por pantalla.
+ * Reestablecer el buffer de escribir mensaje.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param aplicacion Puntero a la estructura base de la aplicacion.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+bool manejarClickEnviarMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 /** \brief Manejar el evento de escribir mensaje.
  *
  * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
@@ -314,15 +332,17 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
 
 /** \brief Manejar el evento de enviar mensaje.
  *
- * Asignar el mensaje a la lista circular de mensajes, reestablecer el buffer de escribir mensaje al inicio y se envia el mensaje al destinatario.
+ * Intentar enviar el mensaje al destinatario.
+ * Si resulto en exito, asigna el mensaje a la lista circular de mensajes y lo muestra por pantalla.
+ * Reestablecer el buffer de escribir mensaje.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-bool manejarEnterEnviarMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_aplicacion *aplicacion);
+bool manejarEnterEnviarMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de desplazar arriba el area de mensajes.
  *

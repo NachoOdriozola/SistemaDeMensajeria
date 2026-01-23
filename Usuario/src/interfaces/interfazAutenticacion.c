@@ -48,9 +48,11 @@ static void interfazAutenticacion_liberarElementos (t_interfazAutenticacionEleme
 static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static bool manejarClickIntentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-static bool manejarClickCambiarInterfazRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazAutenticacion *interfazAutenticacion);
+static bool manejarClickCambiarInterfazARegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
 static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
 static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
+
 static bool manejarEnterIntentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
@@ -128,7 +130,7 @@ void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutentic
     interfazAutenticacion_tamYPosVentanaElementos (&(interfazAutenticacion->elementos));
 }
 
-void interfazAutenticacion_accion (t_aplicacion *aplicacion, const t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazAutenticacion_accion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazAutenticacion *interfazAutenticacion)
 {
     sfEvent evento;
 
@@ -143,7 +145,7 @@ void interfazAutenticacion_accion (t_aplicacion *aplicacion, const t_interfazAut
 
 
     case sfEvtResized:
-        sfRenderWindow_setSize (aplicacion->renderizado, (sfVector2u){560, 660});
+        sfRenderWindow_setSize (aplicacion->renderizado, (sfVector2u){500, 620});
         break;
 
 
@@ -153,8 +155,7 @@ void interfazAutenticacion_accion (t_aplicacion *aplicacion, const t_interfazAut
             if (manejarClickEscribirNombre (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickEscribirContrasenia (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickIntentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazRegistro (aplicacion, recursosComunesAutenticacionRegistro, interfazAutenticacion) == EVENTO_MANEJADO) break;
-            //if (manejarClickGuardarAutenticacion (aplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+            if (manejarClickCambiarInterfazARegistro (aplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -181,7 +182,7 @@ void interfazAutenticacion_accion (t_aplicacion *aplicacion, const t_interfazAut
     }
 }
 
-void interfazAutenticacion_actualizar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazAutenticacion_actualizar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazAutenticacion *interfazAutenticacion)
 {
     int largoBufferEscribirNombre, largoBufferEscribirContrasenia;
 
@@ -204,9 +205,9 @@ void interfazAutenticacion_actualizar (t_interfazAutenticacion *interfazAutentic
         reiniciarPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion), &(recursosComunesAutenticacionRegistro->habilitaciones.contadorPuntoInsercion));
 }
 
-void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion, const t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazAutenticacion *interfazAutenticacion)
 {
-    sfRenderWindow_clear (renderizado, sfColor_fromRGB (223, 231, 233));
+    sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
 
     // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
@@ -256,7 +257,8 @@ void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticaci
 
 /** \brief Intentar autenticar usuario.
  *
- * Genera una cadena de solicitud valida que incluye el indice de la solicitud, el nombre y la contrasenia del usuario.
+ * Genera una cadena de solicitud valida compuesta de la siguiente manera:
+ * INDICE_SOLICITUD_AUTENTICACION|nombre|contrasenia
  * Envia la solicitud y espera la respuesta para saber su estado.
  * Si se ejecuto con exito, guarda el ID del usuario y selecciona la interfaz de contactos como menu principal.
  * Se comunican a traves del socket de la aplicacion.
@@ -281,14 +283,19 @@ static int intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAut
         aplicacion->usuario.id = id;
         aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         strcpy (aplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
-        if (recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion == HABILITAR_GUARDAR_AUTENTICACION)
-            guardarDatosEnArchivo (aplicacion->usuario.id, recursosComunesAutenticacionRegistro->bufferNombre);
         return EXITO;
     }
-    else if (INDICE_RESPUESTA_ERROR_CREDENCIALES)
-            printf ("Usuario o contrasenia incorrectos.\n");
+    else
+    {
+        if (estadoRespuesta == INDICE_RESPUESTA_ERROR_CREDENCIALES)
+        {
+            printf ("Nombre o contrasenia incorrectos.\n");
+            sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
+            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+        }
         else
             printf ("Error servidor.\n");
+    }
 
     return ERROR_INICIALIZACION;
 }
@@ -318,44 +325,49 @@ static void cambiarInterfazARegistro (t_recursosComunesAutenticacionRegistro *re
     // TEXTO
 
     // auxEscribirContrasenia
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){64, 329});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 295});
 
     // auxEscribirNombre
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){64, 173});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 170});
 
-    // auxGuardarAutenticacion
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, (sfVector2f){415, 378});
+    // ingresarContrasenia
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 225});
 
     // ingresarNombre
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){55, 90});
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){35, 100});
 
     // ingresoIncorrecto
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, (sfVector2f){55, 400});
-
-    // guardarAutenticacion
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.guardarAutenticacion, (sfVector2f){55, 371});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "");
 
     // textoBotonIngresar
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, (sfVector2f){226, 451});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, "REGISTRAR");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 452, 140, 35);
+
+    // textoCambiarInterfaz
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿Ya tenés cuenta? Iniciá sesión acá");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "REGISTRAR");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){196, 25});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "CREAR CUENTA");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){130, 25});
 
 
     // ELEMENTOS
 
     // barraEscribirContrasenia
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia, (sfVector2f){55, 331});
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia, (sfVector2f){35, 295});
 
     // barraEscribirNombre
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre, (sfVector2f){55, 175});
-
-    // botonGuardarAutenticacion
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonGuardarAutenticacion, (sfVector2f){406, 382});
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre, (sfVector2f){35, 170});
 
     // botonIngresar
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonIngresar, (sfVector2f){200, 452});
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonIngresar, (sfVector2f){180, 452});
+
+    // subrayadoTitulo
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){130, 75});
+    sfRectangleShape_setSize (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){240, 2.5});
 }
 
 
@@ -372,7 +384,7 @@ static void cambiarInterfazARegistro (t_recursosComunesAutenticacionRegistro *re
  */
 static void interfazAutenticacion_inicializarValoresNulosTextos (t_interfazAutenticacionTextos *textos)
 {
-    textos->textoRegistrarUsuario = NULL;
+
 }
 
 /** \brief Establecer en NULL a todos los elementos graficos de la interfaz de autenticacion.
@@ -395,12 +407,6 @@ static void interfazAutenticacion_inicializarValoresNulosElementos (t_interfazAu
  */
 static int interfazAutenticacion_inicializarTextos (t_interfazAutenticacionTextos *textos)
 {
-    textos->textoRegistrarUsuario = sfText_create ();
-    if (!textos->textoRegistrarUsuario)
-    {
-        perror ("\nERROR - Interfaz de autenticacion, crear texto textoRegistrarUsuario.\n");
-        return ERROR_INICIALIZACION;
-    }
 
 
     return EXITO;
@@ -419,7 +425,6 @@ static int interfazAutenticacion_inicializarElementos (t_interfazAutenticacionEl
 {
 
 
-
     return EXITO;
 }
 
@@ -431,10 +436,7 @@ static int interfazAutenticacion_inicializarElementos (t_interfazAutenticacionEl
  */
 static void interfazAutenticacion_configurarTextos (t_interfazAutenticacionTextos *textos, const t_fuentes *fuentes)
 {
-    // textoRegistrarUsuario
-    sfText_setFont (textos->textoRegistrarUsuario, fuentes->fuente1);
-    sfText_setString (textos->textoRegistrarUsuario, "¿No tenes usuario? Registrate aca.");
-    sfText_setColor (textos->textoRegistrarUsuario, sfColor_fromRGB (40, 54, 54));
+
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de autenticacion.
@@ -454,10 +456,7 @@ static void interfazAutenticacion_configurarElementos (t_interfazAutenticacionEl
  */
 static void interfazAutenticacion_tamYPosVentanaTextos (t_interfazAutenticacionTextos *textos)
 {
-    // textoRegistrarUsuario
-    sfText_setPosition (textos->textoRegistrarUsuario, (sfVector2f){126, 490});
-    sfText_setCharacterSize (textos->textoRegistrarUsuario, 26);
-    sfText_setLetterSpacing (textos->textoRegistrarUsuario, 1.3);
+
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de autenticacion.
@@ -480,7 +479,7 @@ static void interfazAutenticacion_tamYPosVentanaElementos (t_interfazAutenticaci
  */
 static void interfazAutenticacion_renderizarTextos (sfRenderWindow *renderizado, const t_interfazAutenticacionTextos *textos)
 {
-    sfRenderWindow_drawText (renderizado, textos->textoRegistrarUsuario, NULL);
+
 }
 
 /** \brief Renderizar los recursos graficos de elementos de la interfaz de autenticacion.
@@ -502,7 +501,7 @@ static void interfazAutenticacion_renderizarElementos (sfRenderWindow *renderiza
  */
 static void interfazAutenticacion_liberarTextos (t_interfazAutenticacionTextos *textos)
 {
-    DESTRUCTOR_SEGURO_TEXTO (textos->textoRegistrarUsuario);
+
 }
 
 /** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de autenticacion.
@@ -539,14 +538,14 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_rec
         recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = HABILITAR_ESCRIBIR_NOMBRE;
         recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITAR_ESCRIBIR_CONTRASENIA;
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 196.5});
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 208});
         return EVENTO_MANEJADO;
     }
     recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITAR_ESCRIBIR_NOMBRE;
     return EVENTO_NO_MANEJADO;
 }
 
-/** \brief Manejar el evento de click en la barra para escribir la contrasenia de usuario.
+/** \brief Manejar el evento de click en la barra para escribir la contrasenia del usuario.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
@@ -562,7 +561,7 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
     {
         recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = HABILITAR_ESCRIBIR_CONTRASENIA;
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 291.5});
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 343});
         return EVENTO_MANEJADO;
     }
     recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITAR_ESCRIBIR_CONTRASENIA;
@@ -591,14 +590,13 @@ static bool manejarClickIntentarAutenticacion (t_aplicacion *aplicacion, t_recur
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazRegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazAutenticacion *interfazAutenticacion)
+static bool manejarClickCambiarInterfazARegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if (clickEnTexto (aplicacion->renderizado, interfazAutenticacion->textos.textoRegistrarUsuario))
+    if (clickEnTexto (aplicacion->renderizado, recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
     {
         aplicacion->usuario.interfazActual = INTERFAZ_REGISTRO;
         cambiarInterfazARegistro (recursosComunesAutenticacionRegistro);
@@ -623,16 +621,16 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
 
     if (recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE)
     {
-        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_INGRESO_NOMBRE, eventoChar);
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre);
+        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar);
+        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 196.5});
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 208});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;
 }
 
-/** \brief Manejar el evento de escribir la contrasenia de usuario.
+/** \brief Manejar el evento de escribir la contrasenia del usuario.
  *
  * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
@@ -648,10 +646,10 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
 
     if (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)
     {
-        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_INGRESO_NOMBRE, eventoChar);
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia);
+        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar);
+        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){65.7 + limiteTextoAux.width, 291.5});
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 343});
         return EVENTO_MANEJADO;
     }
     return EVENTO_NO_MANEJADO;

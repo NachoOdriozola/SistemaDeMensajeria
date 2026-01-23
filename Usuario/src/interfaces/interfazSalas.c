@@ -30,7 +30,7 @@ static void interfazSalas_configurarElementos (t_interfazSalasElementos *element
 static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos);
 static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *elementos);
 
-static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas);
 static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const t_interfazSalasTextos *textos);
 static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, const t_interfazSalasElementos *elementos);
 
@@ -125,7 +125,7 @@ void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_fuentes *
     interfazSalas_tamYPosVentanaElementos (&(interfazSalas->elementos));
 }
 
-void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_accion (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
     sfEvent evento;
 
@@ -147,12 +147,13 @@ void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSa
     case sfEvtMouseButtonPressed:
         if (evento.mouseButton.button == sfMouseLeft)
         {
-            if (manejarClickEscribirMensaje (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            //if (manejarClickEscribirMensaje (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             //if (manejarClickNotificaciones (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             //if (manejarClickCerrarVentanaEmergente (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             if (manejarClickSolapaCambiarInterfaz (aplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickAreaMensajes (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            //if (manejarClickAreaMensajes (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             //if (manejarClickCambiarInterfazConfig (aplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
+            //if (manejarClickEnviarMensaje (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -160,7 +161,7 @@ void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSa
     case sfEvtTextEntered:
         if (evento.text.unicode < 128)
         {
-            if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+            //if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -168,13 +169,13 @@ void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSa
     case sfEvtKeyPressed:
         if (evento.key.code == sfKeyEnter)
         {
-            if (manejarEnterEnviarMensaje (recursosComunesContactosSalas, aplicacion) == EVENTO_MANEJADO) break;
+            //if (manejarEnterEnviarMensaje (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
         }
         break;
 
 
     case sfEvtMouseWheelScrolled:
-        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+        //if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         break;
 
 
@@ -183,7 +184,7 @@ void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSa
     }
 }
 
-void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_actualizar (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
     // RECIBIR MENSAJES DE OTROS USUARIOS
     char *bufferRespuesta;
@@ -217,9 +218,9 @@ void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interf
         reiniciarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion), &(recursosComunesContactosSalas->habilitaciones.contadorPuntoInsercion));
 }
 
-void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas)
 {
-    sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (223, 231, 233));
+    sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (244, 241, 236));
 
 
     // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
@@ -229,7 +230,7 @@ void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_interfazSalas *
 
     // --------------- RENDERIZAR VISTA DE UI ---------------
 
-    interfazSalas_renderizarVistaUI (aplicacion, interfazSalas, recursosComunesContactosSalas);
+    interfazSalas_renderizarVistaUI (aplicacion, recursosComunesContactosSalas, interfazSalas);
 
 
     sfRenderWindow_display (aplicacion->renderizado);
@@ -270,8 +271,9 @@ static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursos
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
     recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITAR_ESCRIBIR_MENSAJE;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -286,13 +288,13 @@ static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursos
     // auxEscribirMensaje
     sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
 
-    // nombreCambiarInterfaz
-    sfText_setString (recursosComunesContactosSalas->textos.nombreCambiarInterfaz, "SALAS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.nombreCambiarInterfaz, (sfVector2f){352, 574});
+    // proximaInterfaz
+    sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "SALAS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){345, 476});
 
     // tituloInterfaz
     sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "CONTACTOS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){62, 45});
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){79, 37});
 
 
     // ELEMENTOS
@@ -313,7 +315,7 @@ static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursos
  */
 static void interfazSalas_inicializarValoresNulosTextos (t_interfazSalasTextos *textos)
 {
-
+    textos->textoEnDesarrollo = NULL;
 }
 
 /** \brief Establecer en NULL a todos los elementos graficos de la interfaz de salas.
@@ -322,7 +324,7 @@ static void interfazSalas_inicializarValoresNulosTextos (t_interfazSalasTextos *
  */
 static void interfazSalas_inicializarValoresNulosElementos (t_interfazSalasElementos *elementos)
 {
-
+    elementos->taparBarraEscribirMensaje = NULL;
 }
 
 /** \brief Inicializar los recursos graficos de textos de la interfaz de salas.
@@ -336,7 +338,12 @@ static void interfazSalas_inicializarValoresNulosElementos (t_interfazSalasEleme
  */
 static int interfazSalas_inicializarTextos (t_interfazSalasTextos *textos)
 {
-
+    textos->textoEnDesarrollo = sfText_create ();
+    if (!textos->textoEnDesarrollo)
+    {
+        perror ("\nERROR - Interfaz de salas, crear texto textoEnDesarrollo.\n");
+        return ERROR_INICIALIZACION;
+    }
 
 
     return EXITO;
@@ -353,8 +360,12 @@ static int interfazSalas_inicializarTextos (t_interfazSalasTextos *textos)
  */
 static int interfazSalas_inicializarElementos (t_interfazSalasElementos *elementos)
 {
-
-
+    elementos->taparBarraEscribirMensaje = sfRectangleShape_create ();
+    if (!elementos->taparBarraEscribirMensaje)
+    {
+        perror ("\nERROR - Interfaz de salas, crear elemento taparBarraEscribirMensaje.\n");
+        return ERROR_INICIALIZACION;
+    }
 
     return EXITO;
 }
@@ -367,7 +378,10 @@ static int interfazSalas_inicializarElementos (t_interfazSalasElementos *element
  */
 static void interfazSalas_configurarTextos (t_interfazSalasTextos *textos, const t_fuentes *fuentes)
 {
-
+    // textoEnDesarrollo
+    sfText_setFont (textos->textoEnDesarrollo, fuentes->ui);
+    sfText_setString (textos->textoEnDesarrollo, "Salas públicas . Próximamente");
+    sfText_setFillColor (textos->textoEnDesarrollo, sfColor_fromRGBA (94, 91, 87, 191));
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de salas.
@@ -377,7 +391,8 @@ static void interfazSalas_configurarTextos (t_interfazSalasTextos *textos, const
  */
 static void interfazSalas_configurarElementos (t_interfazSalasElementos *elementos)
 {
-
+    // taparBarraEscribirMensaje
+    sfRectangleShape_setFillColor (elementos->taparBarraEscribirMensaje, sfColor_fromRGB (244, 241, 236));
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico de la interfaz de salas.
@@ -387,7 +402,9 @@ static void interfazSalas_configurarElementos (t_interfazSalasElementos *element
  */
 static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos)
 {
-
+    // textoEnDesarrollo
+    sfText_setCharacterSize (textos->textoEnDesarrollo, 30);
+    centrarTextoEnArea (textos->textoEnDesarrollo, 442, 90, 1420, 780);
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada elemento grafico de la interfaz de salas.
@@ -397,7 +414,9 @@ static void interfazSalas_tamYPosVentanaTextos (t_interfazSalasTextos *textos)
  */
 static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *elementos)
 {
-
+    // taparBarraEscribirMensaje
+    sfRectangleShape_setPosition (elementos->taparBarraEscribirMensaje, (sfVector2f){440, 905});
+    sfRectangleShape_setSize (elementos->taparBarraEscribirMensaje, (sfVector2f){1920, 45});
 }
 
 /** \brief Renderizar la vista de UI de la interfaz de salas.
@@ -407,11 +426,11 @@ static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *ele
  * No se limpia ni muestra la pantalla, solo los renderiza.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
 
@@ -430,6 +449,9 @@ static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_i
 
     recursosComunesContactosSalas_renderizarTextos (aplicacion->renderizado, &(recursosComunesContactosSalas->textos));
     interfazSalas_renderizarTextos (aplicacion->renderizado, &(interfazSalas->textos));
+
+
+    sfRenderWindow_drawRectangleShape (aplicacion->renderizado, interfazSalas->elementos.taparBarraEscribirMensaje, NULL); // TAPAR LOS ELEMENTOS GRAFICOS QUE NO SE ENCUENTREN ACTIVOS EN EL INCREMENTO 1.
 
 
     // --------------- RENDERIZAR NOTIFICACIONES ---------------
@@ -453,7 +475,7 @@ static void interfazSalas_renderizarVistaUI (t_aplicacion *aplicacion, const t_i
  */
 static void interfazSalas_renderizarTextos (sfRenderWindow *renderizado, const t_interfazSalasTextos *textos)
 {
-
+    sfRenderWindow_drawText (renderizado, textos->textoEnDesarrollo, NULL);
 }
 
 /** \brief Renderizar los recursos graficos de elementos de la interfaz de salas.
@@ -475,7 +497,7 @@ static void interfazSalas_renderizarElementos (sfRenderWindow *renderizado, cons
  */
 static void interfazSalas_liberarTextos (t_interfazSalasTextos *textos)
 {
-
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoEnDesarrollo);
 }
 
 /** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de salas.
@@ -484,7 +506,7 @@ static void interfazSalas_liberarTextos (t_interfazSalasTextos *textos)
  */
 static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos)
 {
-
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->taparBarraEscribirMensaje);
 }
 
 
@@ -512,7 +534,7 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_re
         recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITAR_ESCRIBIR_MENSAJE;
         recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
-        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){512.5 + limiteTextoAux.width, 943});
+        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
         return EVENTO_MANEJADO;
     }
     recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITAR_ESCRIBIR_MENSAJE;
@@ -615,7 +637,6 @@ static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recur
     if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
     {
         aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
-        aplicacion->usuario.ultimaInterfazUtilizada = INTERFAZ_SALAS;
 
         recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
 

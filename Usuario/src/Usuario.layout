@@ -2,82 +2,214 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
-	<File name="interfaces\interfazSalas.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="19494" topLine="487" />
+			<Cursor1 position="1801" topLine="31" />
 		</Cursor>
 		<Folding>
-			<Collapse line="454" />
-			<Collapse line="467" />
+			<Collapse line="125" />
+			<Collapse line="271" />
+			<Collapse line="307" />
+			<Collapse line="394" />
+		</Folding>
+	</File>
+	<File name="..\include\interfaces\interfazConfig.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3539" topLine="98" />
+		</Cursor>
+		<Folding>
+			<Collapse line="55" />
+			<Collapse line="63" />
+			<Collapse line="71" />
+			<Collapse line="79" />
+		</Folding>
+	</File>
+	<File name="..\include\logicaUsuario.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="14455" topLine="434" />
+		</Cursor>
+		<Folding>
+			<Collapse line="238" />
+			<Collapse line="249" />
+			<Collapse line="259" />
+			<Collapse line="270" />
+		</Folding>
+	</File>
+	<File name="..\include\interfaces\interfazAutenticacion.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2108" topLine="70" />
+		</Cursor>
+		<Folding>
+			<Collapse line="55" />
+		</Folding>
+	</File>
+	<File name="recursosGraficosComunes\recursosComunesContactosSalas.c" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="27681" topLine="633" />
+		</Cursor>
+	</File>
+	<File name="recursosGraficosComunes\recursosComunesAutenticacionRegistro.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="13027" topLine="72" />
+		</Cursor>
+		<Folding>
+			<Collapse line="34" />
+			<Collapse line="65" />
+			<Collapse line="106" />
+			<Collapse line="118" />
+			<Collapse line="126" />
+			<Collapse line="152" />
+			<Collapse line="168" />
+			<Collapse line="186" />
+			<Collapse line="257" />
+			<Collapse line="304" />
+			<Collapse line="349" />
+			<Collapse line="376" />
+			<Collapse line="415" />
+			<Collapse line="444" />
+			<Collapse line="460" />
+		</Folding>
+	</File>
+	<File name="interfaces\interfazSalas.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="14387" topLine="259" />
+		</Cursor>
+		<Folding>
+			<Collapse line="187" />
+			<Collapse line="221" />
+			<Collapse line="239" />
+			<Collapse line="270" />
+			<Collapse line="339" />
 		</Folding>
 	</File>
 	<File name="interfaces\interfazAutenticacion.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6620" topLine="132" />
-		</Cursor>
-	</File>
-	<File name="interfaces\interfazRegistro.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="6047" topLine="131" />
+			<Cursor1 position="24989" topLine="225" />
 		</Cursor>
 		<Folding>
-			<Collapse line="520" />
-			<Collapse line="534" />
+			<Collapse line="66" />
+			<Collapse line="97" />
+			<Collapse line="133" />
+			<Collapse line="185" />
+			<Collapse line="208" />
+			<Collapse line="236" />
+			<Collapse line="271" />
+			<Collapse line="310" />
+			<Collapse line="532" />
+			<Collapse line="556" />
+			<Collapse line="579" />
+			<Collapse line="597" />
+			<Collapse line="618" />
+			<Collapse line="643" />
+			<Collapse line="666" />
 		</Folding>
 	</File>
-	<File name="recursosGraficosComunes\recursosComunesAutenticacionRegistro.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="..\include\interfaces\interfazRegistro.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="6313" topLine="52" />
+			<Cursor1 position="6079" topLine="91" />
 		</Cursor>
 		<Folding>
-			<Collapse line="107" />
-			<Collapse line="120" />
-		</Folding>
-	</File>
-	<File name="main.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="13909" topLine="0" />
-		</Cursor>
-		<Folding>
-			<Collapse line="11" />
-			<Collapse line="131" />
-			<Collapse line="277" />
-			<Collapse line="313" />
-			<Collapse line="386" />
-			<Collapse line="399" />
+			<Collapse line="79" />
+			<Collapse line="87" />
+			<Collapse line="95" />
 		</Folding>
 	</File>
 	<File name="interfaces\interfazContactos.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="8239" topLine="147" />
-		</Cursor>
-	</File>
-	<File name="recursosGraficosComunes\recursosComunesContactosSalas.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="8401" topLine="190" />
+			<Cursor1 position="33884" topLine="496" />
 		</Cursor>
 		<Folding>
-			<Collapse line="245" />
-			<Collapse line="262" />
-			<Collapse line="278" />
-			<Collapse line="293" />
-			<Collapse line="371" />
-			<Collapse line="442" />
-			<Collapse line="468" />
-			<Collapse line="519" />
-			<Collapse line="552" />
-			<Collapse line="597" />
-			<Collapse line="636" />
-			<Collapse line="652" />
-			<Collapse line="669" />
-			<Collapse line="685" />
-			<Collapse line="699" />
-			<Collapse line="720" />
-			<Collapse line="735" />
-			<Collapse line="750" />
-			<Collapse line="760" />
-			<Collapse line="770" />
+			<Collapse line="208" />
+			<Collapse line="457" />
+			<Collapse line="564" />
 		</Folding>
 	</File>
-	<EditorTabsLayout layout="@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=856;besth=468;minw=856;minh=468;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|" />
+	<File name="interfaces\interfazConfig.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3577" topLine="128" />
+		</Cursor>
+		<Folding>
+			<Collapse line="94" />
+		</Folding>
+	</File>
+	<File name="..\include\recursosGraficosComunes\recursosComunesContactosSalas.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="10061" topLine="294" />
+		</Cursor>
+		<Folding>
+			<Collapse line="113" />
+			<Collapse line="130" />
+			<Collapse line="148" />
+			<Collapse line="157" />
+			<Collapse line="169" />
+		</Folding>
+	</File>
+	<File name="..\include\interfaces\interfazSalas.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1394" topLine="47" />
+		</Cursor>
+	</File>
+	<File name="..\include\interfaces\interfazContactos.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8068" topLine="98" />
+		</Cursor>
+		<Folding>
+			<Collapse line="82" />
+			<Collapse line="92" />
+			<Collapse line="101" />
+			<Collapse line="110" />
+		</Folding>
+	</File>
+	<File name="..\include\main.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="4005" topLine="85" />
+		</Cursor>
+	</File>
+	<File name="logicaUsuario.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2060" topLine="43" />
+		</Cursor>
+	</File>
+	<File name="interfaces\interfazRegistro.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="9257" topLine="513" />
+		</Cursor>
+		<Folding>
+			<Collapse line="68" />
+			<Collapse line="99" />
+			<Collapse line="395" />
+			<Collapse line="407" />
+			<Collapse line="421" />
+			<Collapse line="464" />
+			<Collapse line="483" />
+			<Collapse line="510" />
+			<Collapse line="522" />
+			<Collapse line="546" />
+			<Collapse line="562" />
+			<Collapse line="578" />
+			<Collapse line="587" />
+			<Collapse line="599" />
+			<Collapse line="621" />
+			<Collapse line="647" />
+			<Collapse line="672" />
+			<Collapse line="695" />
+			<Collapse line="714" />
+			<Collapse line="735" />
+			<Collapse line="760" />
+			<Collapse line="786" />
+			<Collapse line="809" />
+		</Folding>
+	</File>
+	<File name="..\include\recursosGraficosComunes\recursosComunesAutenticacionRegistro.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="8950" topLine="100" />
+		</Cursor>
+		<Folding>
+			<Collapse line="92" />
+			<Collapse line="107" />
+			<Collapse line="119" />
+			<Collapse line="131" />
+		</Folding>
+	</File>
+	<EditorTabsLayout layout="0d0525b06973b98a00f83ec500000002=*0;Usuario:interfaces\interfazSalas.c,1;Usuario:..\include\interfaces\interfazSalas.h,2;Usuario:recursosGraficosComunes\recursosComunesContactosSalas.c@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=856;besth=305;minw=856;minh=305;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=0d0525b06973b98a00f83ec500000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
 </CodeBlocks_layout_file>

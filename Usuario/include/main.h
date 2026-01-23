@@ -113,10 +113,10 @@ void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
  * Maximizar la ventana y seleccionar la interfaz de contactos como interfaz de menu principal.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_interfaces *interfaces);
+void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Inicializar y configurar las interfaces graficas de autenticacion.
  *

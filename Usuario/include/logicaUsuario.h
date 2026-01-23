@@ -240,7 +240,6 @@ typedef struct
     int id;                                     /**< Identificador correspondiente del usuario. */
     char nombre [MAX_NOMBRE_USUARIO];           /**< Nombre correspondiente del usuario. */
     unsigned short int interfazActual;          /**< Interfaz sobre la cual se encuentra ubicado actualmente. */
-    unsigned short int ultimaInterfazUtilizada; /**< Ultima interfaz sobre la cual se encontro ubicado el usuario. */
 } t_usuario;
 
 /**
@@ -249,7 +248,8 @@ typedef struct
  */
 typedef struct
 {
-    sfFont *fuente1;
+    sfFont *ui;             /**< Fuente utilizada en textos de la interfaz grafica. */
+    sfFont *cuerpo;         /**< Fuente utilizada en mensajes y areas en donde el usuario escribe texto. */
 } t_fuentes;
 
 /**
@@ -258,8 +258,8 @@ typedef struct
  */
 typedef struct
 {
-    t_listaCircular listaMensajes; /**< Lista circular de mensajes. */
-    t_nodo *siguienteMensaje;      /**< Puntero al nodo que contiene el siguiente mensaje en la lista circular de mensajes. */
+    t_listaCircular listaMensajes;   /**< Lista circular de mensajes. */
+    t_nodo *siguienteMensaje;        /**< Puntero al nodo que contiene el siguiente mensaje en la lista circular de mensajes. */
     t_fuentes fuentes;
 } t_mensajes;
 
@@ -279,6 +279,7 @@ typedef struct
 /**
  * \struct t_notificacion
  * \brief  Estructura que contiene los elementos de una notificacion.
+ * \note Estructura NO ACTIVA en el Incremento 1.
  */
 typedef struct
 {
@@ -289,16 +290,6 @@ typedef struct
     sfText *textoBotonAceptar;
     sfText *textoBotonRechazar;
 } t_notificacion;
-
-/**
- * \struct t_datosGuardados
- * \brief  Estructura que guarda los datos de autenticacion del usuario.
- */
-typedef struct
-{
-    int id;
-    char nombre [MAX_NOMBRE_USUARIO];
-} t_datosGuardados;
 
 
 
@@ -364,28 +355,6 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud,
 
 
 /* ============================
-   FUNCIONES DE GUARDADO DE AUTENTICACION
-   ============================ */
-
-
-
-int guardarDatosEnArchivo (int id, const char *bufferContrasenia);
-
-/** \brief Verificar como se autenticara el usuario.
- *
- * Intenta abrir el archivo que contiene los datos guardados del usuario. En caso de que no exista, el usuario debe autenticarse manualmente, en caso contrario se guardaran
- * sus datos en la estructura que contiene los datos del usuario en la aplicacion y se autenticara automaticamente.
- *
- * \param usuario Puntero a la estructura que contiene los datos del usuario.
- *
- * \return AUTENTICACION_AUTOMATICA si se guardaron los datos de autenticacion, AUTENTICACION_MANUAL en caso contrario.
- *
- */
-bool verificarModoAutenticacion (t_usuario *usuario);
-
-
-
-/* ============================
    FUNCIONES LOGICAS DE GRAFICOS
    ============================ */
 
@@ -415,6 +384,33 @@ bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShap
  */
 bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto);
 
+/** \brief Centrar un texto dentro de una area.
+ *
+ * \param texto Puntero al texto sfText a centrar.
+ * \param posXInicial Posicion en X donde comienza el area.
+ * \param posYInicial Posicion en Y donde comienza el area.
+ * \param anchoArea Ancho (x) del area.
+ * \param altoArea Alto (y) del area.
+ *
+ */
+void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea);
+
+/** \brief Posicionar y centrar el nombre de usuario.
+ *
+ * Si el nombre de usuario no entra dentro del area establecida, se achica el tamanio del texto hasta que quede centrado.
+ *
+ * \param nombre Puntero al texto del nombre sfText a posicionar.
+ *
+ */
+void posicionarNombreUsuario (sfText *nombre);
+
+/** \brief Limitar la visualizacion de texto ingresado por el usuario sobre la barra de escritura.
+ *
+ * \param texto Puntero al texto sfText ingresado por el usuario.
+ * \param bufferTexto Puntero al buffer que contiene el texto a mostrar.
+ * \param anchoBarra Ancho de la barra de escritura.
+ */
+void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra);
 
 
 /* ============================
@@ -489,10 +485,39 @@ void liberarMensaje (void *mensaje);
 
 
 
+/**
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ */
 int crearNotificacion (t_notificacion *notificacion);
+
+/**
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ */
 void setupNotificacion (t_notificacion *notificacion, t_fuentes fuentes);
+
+/**
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ */
 int agregarNotificacion (t_listaSimple *listaNotificaciones, char *bufferNotificacion, t_fuentes fuentes);
+
+/**
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ */
 void liberarNotificacion (void *notificacion);
+
+/**
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ */
 void renderizarListaNotificaciones (void *notificacion, void *renderizado);
 
 

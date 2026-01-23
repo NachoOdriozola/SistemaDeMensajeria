@@ -57,7 +57,7 @@
  */
 typedef struct
 {
-
+    sfText *textoEnDesarrollo;              /**< Texto que indica que la funcionalidad se encuentra en desarrollo. */
 } t_interfazSalasTextos;
 
 /** \struct t_interfazSalasElementos
@@ -65,7 +65,7 @@ typedef struct
  */
 typedef struct
 {
-
+    sfRectangleShape *taparBarraEscribirMensaje;    /**< Tapar visualmente la barra para escribir mensajes. */
 } t_interfazSalasElementos;
 
 /** \struct t_interfazSalasHabilitaciones
@@ -121,11 +121,11 @@ void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_fuentes *
  * Cada evento se desarrolla en una funcion particular manejadora de eventos.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_accion (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de salas.
  *
@@ -133,11 +133,11 @@ void interfazSalas_accion (t_aplicacion *aplicacion, t_interfazSalas *interfazSa
  * correspondientes segun el evento detectado.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interfazSalas, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_actualizar (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de salas sobre la ventana.
  *
@@ -145,11 +145,11 @@ void interfazSalas_actualizar (t_aplicacion *aplicacion, t_interfazSalas *interf
  * Primero renderiza las vistas moviles y luego la vista de UI.
  *
  * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de salas.
  *

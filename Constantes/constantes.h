@@ -93,10 +93,10 @@
 #define MAX_CONTRASENIA_USUARIO 128
 
 /**
- * \def MAX_CORREO_ELECTRONICO_USUARIO
+ * \def MAX_CORREO_USUARIO
  * \brief Longitud maxima para el correo electronico del usuario.
  */
-#define MAX_CORREO_ELECTRONICO_USUARIO 256
+#define MAX_CORREO_USUARIO 256
 
 
 

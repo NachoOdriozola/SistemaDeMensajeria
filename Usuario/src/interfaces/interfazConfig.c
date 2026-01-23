@@ -113,7 +113,7 @@ void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *in
         if (evento.mouseButton.button == sfMouseLeft)
         {
             if (clickEnRectangulo (aplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
-                aplicacion->usuario.interfazActual = aplicacion->usuario.ultimaInterfazUtilizada;
+                aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         }
 
 
@@ -240,7 +240,7 @@ static int interfazConfig_inicializarElementos (t_interfazConfigElementos *eleme
 static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_fuentes *fuentes)
 {
     // textoConfig
-    sfText_setFont (textos->textoConfig, fuentes->fuente1);
+    sfText_setFont (textos->textoConfig, fuentes->ui);
     sfText_setString (textos->textoConfig, "CONFIGURACIONES");
     sfText_setFillColor (textos->textoConfig, sfColor_fromRGB (0, 0, 0));
 }

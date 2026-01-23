@@ -68,7 +68,6 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
 
     recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITAR_ESCRIBIR_CONTRASENIA;
     recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITAR_ESCRIBIR_NOMBRE;
-    recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion = DESHABILITAR_GUARDAR_AUTENTICACION;
     recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITAR_INGRESAR;
     recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
     recursosComunesAutenticacionRegistro->habilitaciones.contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
@@ -108,12 +107,11 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
 {
     sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
-    //sfRenderWindow_drawText (renderizado, textos->auxGuardarAutenticacion, NULL);
-    //sfRenderWindow_drawText (renderizado, textos->guardarAutenticacion, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarNombre, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresoIncorrecto, NULL);
     sfRenderWindow_drawText (renderizado, textos->textoBotonIngresar, NULL);
+    sfRenderWindow_drawText (renderizado, textos->textoCambiarInterfaz, NULL);
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 
@@ -121,7 +119,6 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
 {
     sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirContrasenia, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirNombre, NULL);
-    //sfRenderWindow_drawRectangleShape (renderizado, elementos->botonGuardarAutenticacion, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->botonIngresar, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->subrayadoTitulo, NULL);
 }
@@ -156,12 +153,11 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (
 {
     textos->auxEscribirContrasenia = NULL;
     textos->auxEscribirNombre = NULL;
-    textos->auxGuardarAutenticacion = NULL;
-    textos->guardarAutenticacion = NULL;
     textos->ingresarContrasenia = NULL;
     textos->ingresarNombre = NULL;
     textos->ingresoIncorrecto = NULL;
     textos->textoBotonIngresar = NULL;
+    textos->textoCambiarInterfaz = NULL;
     textos->tituloInterfaz = NULL;
 }
 
@@ -173,7 +169,6 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
 {
     elementos->barraEscribirContrasenia = NULL;
     elementos->barraEscribirNombre = NULL;
-    elementos->botonGuardarAutenticacion = NULL;
     elementos->botonIngresar = NULL;
     elementos->puntoInsercion = NULL;
     elementos->subrayadoTitulo = NULL;
@@ -204,20 +199,6 @@ static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosCom
         return ERROR_INICIALIZACION;
     }
 
-    textos->auxGuardarAutenticacion = sfText_create ();
-    if (!textos->auxGuardarAutenticacion)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto auxGuardarAutenticacion.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    textos->guardarAutenticacion = sfText_create ();
-    if (!textos->guardarAutenticacion)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto guardarAutenticacion.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     textos->ingresarContrasenia = sfText_create ();
     if (!textos->ingresarContrasenia)
     {
@@ -243,6 +224,13 @@ static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosCom
     if (!textos->textoBotonIngresar)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto textoBotonIngresar.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    textos->textoCambiarInterfaz = sfText_create ();
+    if (!textos->textoCambiarInterfaz)
+    {
+        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto textoCambiarInterfaz.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -282,13 +270,6 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursos
         return ERROR_INICIALIZACION;
     }
 
-    elementos->botonGuardarAutenticacion = sfRectangleShape_create ();
-    if (!elementos->botonGuardarAutenticacion)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear elemento botonGuardarAutenticacion.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     elementos->botonIngresar = sfRectangleShape_create ();
     if (!elementos->botonIngresar)
     {
@@ -323,46 +304,41 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursos
 static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_fuentes *fuentes)
 {
     // auxEscribirContrasenia
-    sfText_setFont (textos->auxEscribirContrasenia, fuentes->fuente1);
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (40, 54, 54));
+    sfText_setFont (textos->auxEscribirContrasenia, fuentes->cuerpo);
+    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (94, 91, 87));
 
     // auxEscribirNombre
-    sfText_setFont (textos->auxEscribirNombre, fuentes->fuente1);
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (40, 54, 54));
-
-    // auxGuardarAutenticacion
-    sfText_setFont (textos->auxGuardarAutenticacion, fuentes->fuente1);
-    sfText_setString (textos->auxGuardarAutenticacion, "X");
-    sfText_setColor (textos->auxGuardarAutenticacion, sfColor_fromRGB (209, 0, 31));
-
-    // guardarAutenticacion
-    sfText_setFont (textos->guardarAutenticacion, fuentes->fuente1);
-    sfText_setString (textos->guardarAutenticacion, "¿Desea guardar sus datos e iniciar sesion\nautomaticamente cuando inicie la aplicacion?");
-    sfText_setColor (textos->guardarAutenticacion, sfColor_fromRGB (40, 54, 54));
+    sfText_setFont (textos->auxEscribirNombre, fuentes->cuerpo);
+    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (94, 91, 87));
 
     // ingresarContrasenia
-    sfText_setFont (textos->ingresarContrasenia, fuentes->fuente1);
-    sfText_setString (textos->ingresarContrasenia, "Ingrese su contraseña:");
-    sfText_setColor (textos->ingresarContrasenia, sfColor_fromRGB (40, 54, 54));
+    sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
+    sfText_setString (textos->ingresarContrasenia, "Contraseña:");
+    sfText_setColor (textos->ingresarContrasenia, sfColor_fromRGB (43, 43, 43));
 
     // ingresarNombre
-    sfText_setFont (textos->ingresarNombre, fuentes->fuente1);
-    sfText_setString (textos->ingresarNombre, "Ingrese su nombre:");
-    sfText_setColor (textos->ingresarNombre, sfColor_fromRGB (34, 48, 48));
+    sfText_setFont (textos->ingresarNombre, fuentes->ui);
+    sfText_setString (textos->ingresarNombre, "Nombre de usuario:");
+    sfText_setColor (textos->ingresarNombre, sfColor_fromRGB (43, 43, 43));
 
     // ingresoIncorrecto
-    sfText_setFont (textos->ingresoIncorrecto, fuentes->fuente1);
-    sfText_setFillColor (textos->ingresoIncorrecto, sfColor_fromRGB (40, 54, 54));
+    sfText_setFont (textos->ingresoIncorrecto, fuentes->ui);
+    sfText_setFillColor (textos->ingresoIncorrecto, sfColor_fromRGB (43, 43, 43));
 
     // textoBotonIngresar
-    sfText_setFont (textos->textoBotonIngresar, fuentes->fuente1);
+    sfText_setFont (textos->textoBotonIngresar, fuentes->ui);
     sfText_setString (textos->textoBotonIngresar, "INGRESAR");
-    sfText_setColor (textos->textoBotonIngresar, sfColor_fromRGB (40, 54, 54));
+    sfText_setColor (textos->textoBotonIngresar, sfColor_fromRGB (94, 91, 87));
+
+    // textoCambiarInterfaz
+    sfText_setFont (textos->textoCambiarInterfaz, fuentes->ui);
+    sfText_setString (textos->textoCambiarInterfaz, "¿No tenés cuenta? Registrate acá");
+    sfText_setColor (textos->textoCambiarInterfaz, sfColor_fromRGB (43, 43, 43));
 
     // tituloInterfaz
-    sfText_setFont (textos->tituloInterfaz, fuentes->fuente1);
-    sfText_setString (textos->tituloInterfaz, "INICIAR SESION");
-    sfText_setColor (textos->tituloInterfaz, sfColor_fromRGB (34, 48, 48));
+    sfText_setFont (textos->tituloInterfaz, fuentes->ui);
+    sfText_setString (textos->tituloInterfaz, "INICIAR SESIÓN");
+    sfText_setColor (textos->tituloInterfaz, sfColor_fromRGB (43, 43, 43));
 }
 
 /** \brief Configurar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro.
@@ -373,24 +349,23 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
 static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
-    sfRectangleShape_setFillColor (elementos->barraEscribirContrasenia, sfColor_fromRGB (208, 208, 208));
+    sfRectangleShape_setFillColor (elementos->barraEscribirContrasenia, sfColor_fromRGB (222, 216, 204));
+    sfRectangleShape_setOutlineColor (elementos->barraEscribirContrasenia, sfColor_fromRGB (169, 163, 154));
 
     // barraEscribirNombre
-    sfRectangleShape_setFillColor (elementos->barraEscribirNombre, sfColor_fromRGB (208, 208, 208));
+    sfRectangleShape_setFillColor (elementos->barraEscribirNombre, sfColor_fromRGB (222, 216, 204));
+    sfRectangleShape_setOutlineColor (elementos->barraEscribirNombre, sfColor_fromRGB (169, 163, 154));
 
     // botonIngresar
-    sfRectangleShape_setFillColor (elementos->botonIngresar, sfColor_fromRGB (208, 208, 208));
-    sfRectangleShape_setOutlineColor (elementos->botonIngresar, sfColor_fromRGB (40, 54, 54));
-
-    // botonGuardarAutenticacion
-    sfRectangleShape_setFillColor (elementos->botonGuardarAutenticacion, sfColor_fromRGB (208, 208, 208));
+    sfRectangleShape_setFillColor (elementos->botonIngresar, sfColor_fromRGB (222, 216, 204));
+    sfRectangleShape_setOutlineColor (elementos->botonIngresar, sfColor_fromRGB (169, 163, 154));
 
     // puntoInsercion
-    sfRectangleShape_setFillColor (elementos->puntoInsercion, sfColor_fromRGB (34, 48, 48));
+    sfRectangleShape_setFillColor (elementos->puntoInsercion, sfColor_fromRGB (94, 91, 87));
     sfRectangleShape_rotate (elementos->puntoInsercion, -90);
 
     // subrayadoTitulo
-    sfRectangleShape_setFillColor (elementos->subrayadoTitulo, sfColor_fromRGB (34, 48, 48));
+    sfRectangleShape_setFillColor (elementos->subrayadoTitulo, sfColor_fromRGB (43, 43, 43));
 }
 
 /** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico comun (compartido) entre las interfaces de autenticacion y registro.
@@ -401,39 +376,34 @@ static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursos
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     // auxEscribirContrasenia
-    sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){64, 262});
-    sfText_setCharacterSize (textos->auxEscribirContrasenia, 24);
+    sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){42, 315});
+    sfText_setCharacterSize (textos->auxEscribirContrasenia, 22);
 
     // auxEscribirNombre
-    sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){64, 167});
-    sfText_setCharacterSize (textos->auxEscribirNombre, 24);
-
-    // auxGuardarAutenticacion
-    sfText_setPosition (textos->auxGuardarAutenticacion, (sfVector2f){415, 318});
-    sfText_setCharacterSize (textos->auxGuardarAutenticacion, 30);
-
-    // guardarAutenticacion
-    sfText_setPosition (textos->guardarAutenticacion, (sfVector2f){55, 311});
-    sfText_setCharacterSize (textos->guardarAutenticacion, 22);
+    sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 180});
+    sfText_setCharacterSize (textos->auxEscribirNombre, 22);
 
     // ingresarContrasenia
-    sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){55, 215});
+    sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){35, 255});
     sfText_setCharacterSize (textos->ingresarContrasenia, 28);
 
     // ingresarNombre
-    sfText_setPosition (textos->ingresarNombre, (sfVector2f){55, 120});
+    sfText_setPosition (textos->ingresarNombre, (sfVector2f){35, 120});
     sfText_setCharacterSize (textos->ingresarNombre, 28);
 
     // ingresoIncorrecto
-    sfText_setPosition (textos->ingresoIncorrecto, (sfVector2f){55, 384});
     sfText_setCharacterSize (textos->ingresoIncorrecto, 24);
 
     // textoBotonIngresar
-    sfText_setPosition (textos->textoBotonIngresar, (sfVector2f){227, 412});
-    sfText_setCharacterSize (textos->textoBotonIngresar, 28);
+    sfText_setCharacterSize (textos->textoBotonIngresar, 24);
+    centrarTextoEnArea (textos->textoBotonIngresar, 180, 405, 140, 35);
+
+    // textoCambiarInterfaz
+    sfText_setCharacterSize (textos->textoCambiarInterfaz, 26);
+    centrarTextoEnArea (textos->textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
-    sfText_setPosition (textos->tituloInterfaz, (sfVector2f){190, 25});
+    sfText_setPosition (textos->tituloInterfaz, (sfVector2f){120, 25});
     sfText_setCharacterSize (textos->tituloInterfaz, 36);
 }
 
@@ -445,19 +415,17 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recurso
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
-    sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){55, 263});
-    sfRectangleShape_setSize (elementos->barraEscribirContrasenia, (sfVector2f){420, 30});
+    sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){35, 315});
+    sfRectangleShape_setSize (elementos->barraEscribirContrasenia, (sfVector2f){430, 30});
+    sfRectangleShape_setOutlineThickness (elementos->barraEscribirContrasenia, 2);
 
     // barraEscribirNombre
-    sfRectangleShape_setPosition (elementos->barraEscribirNombre, (sfVector2f){55, 168});
-    sfRectangleShape_setSize (elementos->barraEscribirNombre, (sfVector2f){420, 30});
-
-    // botonGuardarAutenticacion
-    sfRectangleShape_setPosition (elementos->botonGuardarAutenticacion, (sfVector2f){406, 322});
-    sfRectangleShape_setSize (elementos->botonGuardarAutenticacion, (sfVector2f){30, 30});
+    sfRectangleShape_setPosition (elementos->barraEscribirNombre, (sfVector2f){35, 180});
+    sfRectangleShape_setSize (elementos->barraEscribirNombre, (sfVector2f){430, 30});
+    sfRectangleShape_setOutlineThickness (elementos->barraEscribirNombre, 2);
 
     // botonIngresar
-    sfRectangleShape_setPosition (elementos->botonIngresar, (sfVector2f){195, 413});
+    sfRectangleShape_setPosition (elementos->botonIngresar, (sfVector2f){180, 405});
     sfRectangleShape_setSize (elementos->botonIngresar, (sfVector2f){140, 35});
     sfRectangleShape_setOutlineThickness (elementos->botonIngresar, 2);
 
@@ -465,8 +433,8 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recu
     sfRectangleShape_setSize (elementos->puntoInsercion, (sfVector2f){26, 2});
 
     // subrayadoTitulo
-    sfRectangleShape_setPosition (elementos->subrayadoTitulo, (sfVector2f){175, 75});
-    sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){172, 2.5});
+    sfRectangleShape_setPosition (elementos->subrayadoTitulo, (sfVector2f){120, 75});
+    sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){260, 2.5});
 }
 
 /** \brief Liberar, de manera segura, todas los textos graficos comunes (compartidas) entre las interfaces de autenticacion y registro.
@@ -477,12 +445,11 @@ static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComune
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirNombre);
-    DESTRUCTOR_SEGURO_TEXTO (textos->auxGuardarAutenticacion);
-    DESTRUCTOR_SEGURO_TEXTO (textos->guardarAutenticacion);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarNombre);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresoIncorrecto);
     DESTRUCTOR_SEGURO_TEXTO (textos->textoBotonIngresar);
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoCambiarInterfaz);
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloInterfaz);
 }
 
@@ -494,40 +461,11 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosCom
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirContrasenia);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirNombre);
-    DESTRUCTOR_SEGURO_RECTANGULO (elementos->botonGuardarAutenticacion);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->botonIngresar);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->puntoInsercion);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->subrayadoTitulo);
 }
 
-
-
-/* ============================
-   FUNCIONES MANEJADORAS DE EVENTOS
-   ============================ */
-
-
-
-bool manejarClickGuardarAutenticacion (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
-{
-    if (clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.botonGuardarAutenticacion))
-    {
-        if (recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion == DESHABILITAR_GUARDAR_AUTENTICACION)
-        {
-            recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion = HABILITAR_GUARDAR_AUTENTICACION;
-            sfText_setString (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, "V");
-            sfText_setColor (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, sfColor_fromRGB (76, 175, 80));
-        }
-        else
-        {
-            recursosComunesAutenticacionRegistro->habilitaciones.guardarAutenticacion = DESHABILITAR_GUARDAR_AUTENTICACION;
-            sfText_setString (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, "X");
-            sfText_setColor (recursosComunesAutenticacionRegistro->textos.auxGuardarAutenticacion, sfColor_fromRGB (209, 0, 31));
-        }
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
-}
 
 
 
