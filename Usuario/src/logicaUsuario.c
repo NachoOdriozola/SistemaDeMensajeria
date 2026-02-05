@@ -228,54 +228,96 @@ void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contador
 
 
 
-void asignarMensaje (t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor)
-{
-    sfText *mensaje;
-    sfFloatRect bordesMensaje;
-
-    mapListaCircular (&(aplicacion->mensajes.listaMensajes), modificarPosListaMensajes);
-    mensaje = *((sfText**)aplicacion->mensajes.siguienteMensaje->dato);
-
-    sfText_setString (mensaje, bufferMensaje);
-    if (enviadoPor == MI_USUARIO)
-    {
-        bordesMensaje = sfText_getLocalBounds (mensaje);
-        sfText_setPosition (mensaje, (sfVector2f){1819 - bordesMensaje.width, 815});
-    }
-    else
-        sfText_setPosition (mensaje, (sfVector2f){485, 815});
-
-    aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.siguienteMensaje->sig;
-}
-
-void modificarPosListaMensajes (void *mensaje)
-{
-    sfVector2f pos;
-
-    pos = sfText_getPosition (*((sfText**)mensaje));
-    pos.y -= 60;
-    sfText_setPosition (*((sfText**)mensaje), pos);
-}
-
-void renderizarListaMensajes (void *mensaje, void *renderizado)
-{
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
-}
-
-void setupListaMensajes (void *mensaje, void *fuente)
+void configurarMensaje (void *mensaje, void *fuente)
 {
     sfText_setFont (*((sfText**)mensaje), (sfFont*)fuente);
     sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (94, 91, 87));
 }
 
-void tamListaMensajes (void *mensaje)
+void tamMensaje (void *mensaje)
 {
     sfText_setCharacterSize (*((sfText**)mensaje), 26);
+    sfText_setLineSpacing (*((sfText**)mensaje), 1.3);
+}
+
+void renderizarMensaje (void *mensaje, void *renderizado)
+{
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
 }
 
 void liberarMensaje (void *mensaje)
 {
     sfText_destroy (*((sfText**)mensaje));
+}
+
+void modificarPosMensaje (void *mensaje, void *desplazamientoY)
+{
+    sfVector2f pos;
+
+    pos = sfText_getPosition (*((sfText**)mensaje));
+    pos.y -= *((float*)desplazamientoY);
+    sfText_setPosition (*((sfText**)mensaje), pos);
+}
+
+void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, float anchoMax)
+{
+    int largoMensaje;
+    sfVector2f posUltimoCaracter;
+    char bufferTexto [MAX_BUFFER_MENSAJE + 200] = "";
+    char bufferPrueba [MAX_BUFFER_MENSAJE + 200] = "";
+    char palabra [64] = "";
+
+    while (*bufferMensaje)
+    {
+        largoMensaje = 0;
+        while ((bufferMensaje[largoMensaje]) && (bufferMensaje[largoMensaje] != ' '))
+            largoMensaje ++;
+
+        strncpy(palabra, bufferMensaje, largoMensaje);
+        palabra[largoMensaje] = '\0';
+
+        strcpy (bufferPrueba, bufferTexto);
+        strcat (bufferPrueba, palabra);
+
+        sfText_setString (texto, bufferPrueba);
+        posUltimoCaracter = sfText_findCharacterPos (texto, strlen (bufferPrueba));
+        if (posUltimoCaracter.x >= anchoMax)
+            strcat (bufferTexto, "\n");
+        strcat (bufferTexto, palabra);
+
+        bufferMensaje += largoMensaje;
+        if (*bufferMensaje == ' ')
+        {
+            strcat (bufferTexto, " ");
+            bufferMensaje ++;
+        }
+    }
+    sfText_setString (texto, bufferTexto);
+}
+
+void insertarMensaje (t_mensajes *mensajes, const char *bufferMensaje, t_origenMensaje origen)
+{
+    sfText *mensaje;
+    sfFloatRect limites;
+    float desplazamientoY;
+
+    mensaje = *((sfText**)mensajes->primerMensaje->dato);
+
+    sfText_setPosition (mensaje, (sfVector2f){0, 0});
+    establecerSaltoDeLineaMensaje (mensaje, bufferMensaje, 700);
+
+    limites = sfText_getLocalBounds (mensaje);
+    desplazamientoY = limites.height + 35;
+    mapListaCircularConComplemento (&(mensajes->listaMensajes), &(desplazamientoY), modificarPosMensaje);
+
+    if (origen == MENSAJE_PROPIO)
+        sfText_setPosition (mensaje, (sfVector2f){1824 - limites.width - limites.left, 825 - limites.height});
+    else
+        sfText_setPosition (mensaje, (sfVector2f){485, 825 - limites.height});
+
+    if (mensajes->primerMensaje->sig == mensajes->ultimoMensaje)
+        mensajes->ultimoMensaje = mensajes->ultimoMensaje->sig;
+    mensajes->primerMensaje = mensajes->primerMensaje->sig;
 }
 
 

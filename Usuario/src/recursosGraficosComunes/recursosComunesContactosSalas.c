@@ -139,12 +139,15 @@ void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderiz
     sfRenderWindow_drawRectangleShape (renderizado, elementos->areaMensajes, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirMensaje, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->botonEnviar, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo2, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo1, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->solapaCambiarInterfaz, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->panelInterfaz, NULL);
     sfRenderWindow_drawCircleShape (renderizado, elementos->ojalilloArriba, NULL);
     sfRenderWindow_drawCircleShape (renderizado, elementos->ojalilloAbajo, NULL);
+    sfRenderWindow_drawCircleShape (renderizado, elementos->ojalilloSelecInterfaz, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionNombre, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionTitulo, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->solapaCambiarInterfaz, NULL);
 }
 
 void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -199,7 +202,7 @@ void manejarReciboMensaje (t_aplicacion *aplicacion, char *bufferRespuesta)
     char texto [MAX_BUFFER_MENSAJE];
 
     sscanf (&(bufferRespuesta[2]), "%d|%[^\n]", &idEmisor, texto);
-    asignarMensaje (aplicacion, texto, OTRO_USUARIO);
+    insertarMensaje (&(aplicacion->mensajes), texto, MENSAJE_REMOTO);
     printf ("EL: %s\n", texto);
 }
 
@@ -212,7 +215,7 @@ void renderizarVistaMensajes (t_aplicacion *aplicacion, const t_recursosComunesC
 
     // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
 
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->renderizado, renderizarListaMensajes);
+    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->renderizado, renderizarMensaje);
 }
 
 void renderizarNotificaciones (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -271,6 +274,11 @@ static void recursosComunesContactosSalas_inicializarValoresNulosElementos (t_re
     elementos->areaMensajes = NULL;
     elementos->barraEscribirMensaje = NULL;
     elementos->botonEnviar = NULL;
+    elementos->carpetaDecorativaFondo1 = NULL;
+    elementos->carpetaDecorativaFondo2 = NULL;
+    elementos->ojalilloArriba = NULL;
+    elementos->ojalilloAbajo = NULL;
+    elementos->ojalilloSelecInterfaz = NULL;
     elementos->separacionNombre = NULL;
     elementos->separacionTitulo = NULL;
     elementos->panelInterfaz = NULL;
@@ -406,6 +414,20 @@ static int recursosComunesContactosSalas_inicializarElementos (t_recursosComunes
         return ERROR_INICIALIZACION;
     }
 
+    elementos->carpetaDecorativaFondo1 = sfRectangleShape_create ();
+    if (!elementos->carpetaDecorativaFondo1)
+    {
+        perror ("\nERROR - Recursos comunes contactos-salas, crear elemento carpetaDecorativaFondo1.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    elementos->carpetaDecorativaFondo2 = sfRectangleShape_create ();
+    if (!elementos->carpetaDecorativaFondo2)
+    {
+        perror ("\nERROR - Recursos comunes contactos-salas, crear elemento carpetaDecorativaFondo2.\n");
+        return ERROR_INICIALIZACION;
+    }
+
     elementos->ojalilloArriba = sfCircleShape_create ();
     if (!elementos->ojalilloArriba)
     {
@@ -417,6 +439,13 @@ static int recursosComunesContactosSalas_inicializarElementos (t_recursosComunes
     if (!elementos->ojalilloAbajo)
     {
         perror ("\nERROR - Recursos comunes contactos-salas, crear elemento ojalilloAbajo");
+        return ERROR_INICIALIZACION;
+    }
+
+    elementos->ojalilloSelecInterfaz = sfCircleShape_create ();
+    if (!elementos->ojalilloSelecInterfaz)
+    {
+        perror ("\nERROR - Recursos comunes contactos-salas, crear elemento ojalilloSelecInterfaz");
         return ERROR_INICIALIZACION;
     }
 
@@ -571,6 +600,14 @@ static void recursosComunesContactosSalas_configurarElementos (t_recursosComunes
     sfRectangleShape_setFillColor (elementos->botonEnviar, sfColor_fromRGB (222, 216, 204));
     sfRectangleShape_setOutlineColor (elementos->botonEnviar, sfColor_fromRGB (169, 163, 154));
 
+    // carpetaDecorativaFondo1
+    sfRectangleShape_setFillColor (elementos->carpetaDecorativaFondo1, sfColor_fromRGB (212, 206, 194));
+    sfRectangleShape_setOutlineColor (elementos->carpetaDecorativaFondo1, sfColor_fromRGBA (169, 163, 154, 191));
+
+    // carpetaDecorativaFondo2
+    sfRectangleShape_setFillColor (elementos->carpetaDecorativaFondo2, sfColor_fromRGB (207, 201, 189));
+    sfRectangleShape_setOutlineColor (elementos->carpetaDecorativaFondo2, sfColor_fromRGBA (169, 163, 154, 191));
+
     // ojalilloArriba
     sfCircleShape_setFillColor (elementos->ojalilloArriba, sfColor_fromRGBA (140, 136, 137, 191));
     sfCircleShape_setOutlineColor (elementos->ojalilloArriba, sfColor_fromRGBA (94, 91, 87, 191));
@@ -578,6 +615,10 @@ static void recursosComunesContactosSalas_configurarElementos (t_recursosComunes
     // ojalilloAbajo
     sfCircleShape_setFillColor (elementos->ojalilloAbajo, sfColor_fromRGBA (140, 136, 137, 191));
     sfCircleShape_setOutlineColor (elementos->ojalilloAbajo, sfColor_fromRGBA (94, 91, 87, 191));
+
+    // ojalilloSelecInterfaz
+    sfCircleShape_setFillColor (elementos->ojalilloSelecInterfaz, sfColor_fromRGBA (140, 136, 137, 81));
+    sfCircleShape_setOutlineColor (elementos->ojalilloSelecInterfaz, sfColor_fromRGBA (94, 91, 87, 61));
 
     // separacionNombre
     sfRectangleShape_setFillColor (elementos->separacionNombre, sfColor_fromRGB (107, 94, 75));
@@ -594,8 +635,8 @@ static void recursosComunesContactosSalas_configurarElementos (t_recursosComunes
     sfRectangleShape_rotate (elementos->puntoInsercion, -90);
 
     // solapaCambiarInterfaz
-    sfRectangleShape_setFillColor (elementos->solapaCambiarInterfaz, sfColor_fromRGB (222, 216, 204));
-    sfRectangleShape_setOutlineColor (elementos->solapaCambiarInterfaz, sfColor_fromRGB (169, 163, 154));
+    sfRectangleShape_setFillColor (elementos->solapaCambiarInterfaz, sfColor_fromRGB (217, 211, 199));
+    sfRectangleShape_setOutlineColor (elementos->solapaCambiarInterfaz, sfColor_fromRGBA (169, 163, 154, 191));
 
     // ventanaEmergente
     sfRectangleShape_setFillColor (elementos->ventanaEmergente, sfColor_fromRGB (255, 229, 127));
@@ -625,8 +666,8 @@ static void recursosComunesContactosSalas_tamYPosVentanaTextos (t_recursosComune
     sfText_setCharacterSize (textos->configuraciones, 46);
 
     // proximaInterfaz
-    sfText_setPosition (textos->proximaInterfaz, (sfVector2f){345, 476});
-    sfText_setCharacterSize (textos->proximaInterfaz, 22);
+    sfText_setPosition (textos->proximaInterfaz, (sfVector2f){343, 530});
+    sfText_setCharacterSize (textos->proximaInterfaz, 20);
     sfText_setLetterSpacing (textos->proximaInterfaz, 5);
 
     // notificaciones
@@ -668,6 +709,16 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (t_recursosCom
     sfRectangleShape_setSize (elementos->botonEnviar, (sfVector2f){115, 35});
     sfRectangleShape_setOutlineThickness (elementos->botonEnviar, 2);
 
+    // carpetaDecorativaFondo1
+    sfRectangleShape_setPosition (elementos->carpetaDecorativaFondo1, (sfVector2f){370, 130});
+    sfRectangleShape_setSize (elementos->carpetaDecorativaFondo1, (sfVector2f){20, 1009});
+    sfRectangleShape_setOutlineThickness (elementos->carpetaDecorativaFondo1, 1);
+
+    // carpetaDecorativaFondo2
+    sfRectangleShape_setPosition (elementos->carpetaDecorativaFondo2, (sfVector2f){390.2, 195});
+    sfRectangleShape_setSize (elementos->carpetaDecorativaFondo2, (sfVector2f){16, 1009});
+    sfRectangleShape_setOutlineThickness (elementos->carpetaDecorativaFondo2, 1);
+
     // ojalilloArriba
     sfCircleShape_setPosition (elementos->ojalilloArriba, (sfVector2f){5, 400});
     sfCircleShape_setRadius (elementos->ojalilloArriba, 8);
@@ -677,6 +728,11 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (t_recursosCom
     sfCircleShape_setPosition (elementos->ojalilloAbajo, (sfVector2f){5, 600});
     sfCircleShape_setRadius (elementos->ojalilloAbajo, 8);
     sfCircleShape_setOutlineThickness (elementos->ojalilloAbajo, 1);
+
+    // ojalilloSelecInterfaz
+    sfCircleShape_setPosition (elementos->ojalilloSelecInterfaz, (sfVector2f){347, 80});
+    sfCircleShape_setRadius (elementos->ojalilloSelecInterfaz, 8);
+    sfCircleShape_setOutlineThickness (elementos->ojalilloSelecInterfaz, 1);
 
     // separacionNombre
     sfRectangleShape_setPosition (elementos->separacionNombre, (sfVector2f){44, 889});
@@ -696,8 +752,8 @@ static void recursosComunesContactosSalas_tamYPosVentanaElementos (t_recursosCom
 
     // solapaCambiarInterfaz
     sfRectangleShape_setPosition (elementos->solapaCambiarInterfaz, (sfVector2f){342.5, 65});
-    sfRectangleShape_setSize (elementos->solapaCambiarInterfaz, (sfVector2f){25, 1009});
-    sfRectangleShape_setOutlineThickness (elementos->solapaCambiarInterfaz, 2);
+    sfRectangleShape_setSize (elementos->solapaCambiarInterfaz, (sfVector2f){28, 1009});
+    sfRectangleShape_setOutlineThickness (elementos->solapaCambiarInterfaz, 1.5);
 
     // ventanaEmergente
     sfRectangleShape_setPosition (elementos->ventanaEmergente, (sfVector2f){760, 380});
@@ -748,8 +804,11 @@ static void recursosComunesContactosSalas_liberarElementos (t_recursosComunesCon
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->areaMensajes);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirMensaje);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->botonEnviar);
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->carpetaDecorativaFondo1);
+    DESTRUCTOR_SEGURO_RECTANGULO (elementos->carpetaDecorativaFondo2);
     DESTRUCTOR_SEGURO_CIRCULO (elementos->ojalilloArriba);
     DESTRUCTOR_SEGURO_CIRCULO (elementos->ojalilloAbajo);
+    DESTRUCTOR_SEGURO_CIRCULO (elementos->ojalilloSelecInterfaz);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->separacionNombre);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->separacionTitulo);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->panelInterfaz);
@@ -799,79 +858,121 @@ void manejarRedimensionamientoVentanaContactosSalas (t_aplicacion *aplicacion, t
 
 bool manejarClickEnviarMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if ((clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.botonEnviar)) && (strlen (recursosComunesContactosSalas->bufferMensaje) > 0))
+    if (!clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.botonEnviar))
+        return EVENTO_NO_MANEJADO;
+
+    if (strlen (recursosComunesContactosSalas->bufferMensaje) == 0)
+        return EVENTO_NO_MANEJADO;
+
+    if (intentarEnvioMensaje (aplicacion, recursosComunesContactosSalas) == EXITO)
     {
-        if (intentarEnvioMensaje (aplicacion, recursosComunesContactosSalas) == EXITO)
-        {
-            asignarMensaje (aplicacion, recursosComunesContactosSalas->bufferMensaje, MI_USUARIO);
-            printf ("YO: %s\n", &(recursosComunesContactosSalas->bufferMensaje[1]));
-        }
-        *(recursosComunesContactosSalas->bufferMensaje) = '\0';
-        sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
-        return EVENTO_MANEJADO;
+        insertarMensaje (&(aplicacion->mensajes), recursosComunesContactosSalas->bufferMensaje, MENSAJE_PROPIO);
+        printf ("YO: %s\n", &(recursosComunesContactosSalas->bufferMensaje[1]));
     }
-    return EVENTO_NO_MANEJADO;
+    *(recursosComunesContactosSalas->bufferMensaje) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+
+    return EVENTO_MANEJADO;
 }
 
 bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITAR_ESCRIBIR_MENSAJE)
-    {
-        ingresarCaracterABuffer (recursosComunesContactosSalas->bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
-        limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->bufferMensaje, 1250);
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
-        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje != HABILITAR_ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    ingresarCaracterABuffer (recursosComunesContactosSalas->bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
+    limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->bufferMensaje, 1250);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
+
+    return EVENTO_MANEJADO;
 }
 
 bool manejarEnterEnviarMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if ((recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITAR_ESCRIBIR_MENSAJE) && (strlen (recursosComunesContactosSalas->bufferMensaje) > 0))
+    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje != HABILITAR_ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    if (strlen (recursosComunesContactosSalas->bufferMensaje) == 0)
+        return EVENTO_NO_MANEJADO;
+
+    if (intentarEnvioMensaje (aplicacion, recursosComunesContactosSalas) == EXITO)
     {
-        if (intentarEnvioMensaje (aplicacion, recursosComunesContactosSalas) == EXITO)
-        {
-            asignarMensaje (aplicacion, recursosComunesContactosSalas->bufferMensaje, MI_USUARIO);
-            printf ("YO: %s\n", &(recursosComunesContactosSalas->bufferMensaje[1]));
-        }
-        *(recursosComunesContactosSalas->bufferMensaje) = '\0';
-        sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
-        return EVENTO_MANEJADO;
+        insertarMensaje (&(aplicacion->mensajes), recursosComunesContactosSalas->bufferMensaje, MENSAJE_PROPIO);
+        printf ("YO: %s\n", &(recursosComunesContactosSalas->bufferMensaje[1]));
     }
-    return EVENTO_NO_MANEJADO;
+    *(recursosComunesContactosSalas->bufferMensaje) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+
+    return EVENTO_MANEJADO;
 }
 
-bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+bool manejarDesplazarArribaAreaMensajes (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
-    {
+    sfVector2f tamVista, posCentro;
+    sfVector2f posUltimoMensaje;
+
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes != HABILITAR_AREA_MENSAJES)
+        return EVENTO_NO_MANEJADO;
+
+    tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
+    posCentro = sfView_getCenter (recursosComunesContactosSalas->vistas.mensajes);
+    posUltimoMensaje = sfText_getPosition (*((sfText**)aplicacion->mensajes.ultimoMensaje->dato));
+    if (posCentro.y - tamVista.y / 2.f > posUltimoMensaje.y)
         sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    return EVENTO_MANEJADO;
 }
 
 bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
-    {
+    sfVector2f tamVista, posCentro;
+
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes != HABILITAR_AREA_MENSAJES)
+        return EVENTO_NO_MANEJADO;
+
+    tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
+    posCentro = sfView_getCenter (recursosComunesContactosSalas->vistas.mensajes);
+    if (posCentro.y + tamVista.y / 2.f < 870)
         sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, VELOCIDAD_SCROLL});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+
+    return EVENTO_MANEJADO;
 }
 
-bool manejarScrollAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll)
+bool manejarScrollAreaMensajes (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll)
 {
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == HABILITAR_AREA_MENSAJES)
-    {
-        sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -eventoScroll.mouseWheelScroll.delta * VELOCIDAD_SCROLL});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    sfVector2f tamVista, posCentro;
+    sfVector2f posUltimoMensaje;
+    float desplazamientoY;
+    float superiorVista, inferiorVista;
+    float limiteSuperior, limiteInferior;
+
+    if (recursosComunesContactosSalas->habilitaciones.areaMensajes != HABILITAR_AREA_MENSAJES)
+        return EVENTO_NO_MANEJADO;
+
+    tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
+    posCentro = sfView_getCenter (recursosComunesContactosSalas->vistas.mensajes);
+    posUltimoMensaje = sfText_getPosition (*((sfText**)aplicacion->mensajes.ultimoMensaje->dato));
+
+    desplazamientoY = -eventoScroll.mouseWheelScroll.delta * VELOCIDAD_SCROLL;
+
+    superiorVista = posCentro.y - tamVista.y / 2.f;
+    inferiorVista = posCentro.y + tamVista.y / 2.f;
+
+    limiteSuperior = posUltimoMensaje.y;
+    limiteInferior = 870;
+
+    if ((desplazamientoY < 0) && (superiorVista + desplazamientoY < limiteSuperior))
+        desplazamientoY = limiteSuperior - superiorVista;
+
+    if ((desplazamientoY > 0) && (inferiorVista + desplazamientoY > limiteInferior))
+        desplazamientoY = limiteInferior - inferiorVista;
+
+    if (desplazamientoY != 0)
+        sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, desplazamientoY});
+
+    return EVENTO_MANEJADO;
 }
 
 

@@ -187,7 +187,7 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContac
         }
 
         if (evento.key.code == sfKeyUp)
-            if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            if (manejarDesplazarArribaAreaMensajes (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
 
         if (evento.key.code == sfKeyDown)
             if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
@@ -196,7 +196,7 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContac
 
 
     case sfEvtMouseWheelScrolled:
-        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+        if (manejarScrollAreaMensajes (aplicacion, recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         break;
 
 
@@ -342,7 +342,7 @@ static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComu
 
     // proximaInterfaz
     sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "CONTACTOS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){345, 493});
+    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 567});
 
     // tituloInterfaz
     sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "SALAS");
@@ -494,7 +494,7 @@ static void interfazContactos_configurarTextos (t_interfazContactosTextos *texto
     // auxContactoSeleccionado
     sfText_setFont (textos->auxContactoSeleccionado, fuentes->cuerpo);
     sfText_setFillColor (textos->auxContactoSeleccionado, sfColor_fromRGB (94, 91, 87));
-    sfText_setString (textos->auxContactoSeleccionado, "fabri");
+    sfText_setString (textos->auxContactoSeleccionado, "amigo");
 
 }
 
@@ -716,20 +716,20 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
  */
 static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
-    {
-        if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
-            recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
-        else
-            recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-        *(interfazContactos->bufferAgendarContacto) = '\0';
-        sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
-        sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
+        return EVENTO_NO_MANEJADO;
+
+    if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
+        recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
+    else
+        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    *(interfazContactos->bufferAgendarContacto) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en agendar un nuevo contacto.
@@ -743,19 +743,19 @@ static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recurs
  */
 static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (clickEnTexto (aplicacion->renderizado, interfazContactos->textos.agendarContacto))
-    {
-        if (interfazContactos->habilitaciones.agendarContacto == DESHABILITAR_AGENDAR_CONTACTO)
-            interfazContactos->habilitaciones.agendarContacto = HABILITAR_AGENDAR_CONTACTO;
-        else
-            interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-        sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "AGENDAR CONTACTO");
-        sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){830, 400});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (aplicacion->renderizado, interfazContactos->textos.agendarContacto))
+        return EVENTO_NO_MANEJADO;
+
+    if (interfazContactos->habilitaciones.agendarContacto == DESHABILITAR_AGENDAR_CONTACTO)
+        interfazContactos->habilitaciones.agendarContacto = HABILITAR_AGENDAR_CONTACTO;
+    else
+        interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "AGENDAR CONTACTO");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){830, 400});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en cerrar la ventana emergente.
@@ -769,15 +769,15 @@ static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recur
  */
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
-    {
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-        interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-        *(interfazContactos->bufferAgendarContacto) = '\0';
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    *(interfazContactos->bufferAgendarContacto) = '\0';
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
@@ -791,13 +791,13 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
  */
 static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
-    {
-        aplicacion->usuario.interfazActual = INTERFAZ_SALAS;
-        cambiarInterfazASalas (recursosComunesContactosSalas, interfazContactos);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
+        return EVENTO_NO_MANEJADO;
+
+    aplicacion->usuario.interfazActual = INTERFAZ_SALAS;
+    cambiarInterfazASalas (recursosComunesContactosSalas, interfazContactos);
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el area de mensajes.
@@ -830,18 +830,15 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recur
  */
 static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
-    {
-        aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
+        return EVENTO_NO_MANEJADO;
 
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    *(interfazContactos->bufferAgendarContacto) = '\0';
 
-        interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-        *(interfazContactos->bufferAgendarContacto) = '\0';
-
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de escribir un nombre para agendarlo como un nuevo contacto.
@@ -859,15 +856,15 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
 {
     sfFloatRect limiteTextoAux;
 
-    if (interfazContactos->habilitaciones.escribirAgendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO)
-    {
-        ingresarCaracterABuffer (interfazContactos->bufferAgendarContacto, MAX_NOMBRE_USUARIO - 1, eventoChar);
-        sfText_setString (interfazContactos->textos.auxAgendarContacto, interfazContactos->bufferAgendarContacto);
-        limiteTextoAux = sfText_getGlobalBounds (interfazContactos->textos.auxAgendarContacto);
-        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){805.5 + limiteTextoAux.width, 632});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!interfazContactos->habilitaciones.escribirAgendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO)
+        return EVENTO_NO_MANEJADO;
+
+    ingresarCaracterABuffer (interfazContactos->bufferAgendarContacto, MAX_NOMBRE_USUARIO - 1, eventoChar);
+    sfText_setString (interfazContactos->textos.auxAgendarContacto, interfazContactos->bufferAgendarContacto);
+    limiteTextoAux = sfText_getGlobalBounds (interfazContactos->textos.auxAgendarContacto);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){805.5 + limiteTextoAux.width, 632});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de enviar solicitud de contacto.
@@ -880,12 +877,15 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
  */
 static bool manejarEnterIntentarAgendarContacto (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos)
 {
-    if ((interfazContactos->habilitaciones.agendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO) && (strlen (interfazContactos->bufferAgendarContacto) > 0))
-    {
-        intentarSolicitudAmistad (aplicacion, interfazContactos);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (interfazContactos->habilitaciones.agendarContacto != HABILITAR_ESCRIBIR_AGENDAR_CONTACTO)
+        return EVENTO_NO_MANEJADO;
+
+    if (strlen (interfazContactos->bufferAgendarContacto) == 0)
+        return EVENTO_NO_MANEJADO;
+
+    intentarSolicitudAmistad (aplicacion, interfazContactos);
+
+    return EVENTO_MANEJADO;
 }
 
 

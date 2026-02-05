@@ -86,19 +86,6 @@
 
 
 /**
- * \def AUTENTICACION_AUTOMATICA
- * \brief Codigo de retorno para indicar que el usuario puede autenticarse automaticamente.
- */
-#define AUTENTICACION_AUTOMATICA 1
-
-/**
- * \def AUTENTICACION_MANUAL
- * \brief Codigo de retorno para indicar que el usuario debe autenticarse manualmente.
- */
-#define AUTENTICACION_MANUAL 0
-
-
-/**
  * \def RECIBIO_RESPUESTA
  * \brief Codigo de retorno para indicar que se recibio una respuesta del servidor.
  */
@@ -115,7 +102,7 @@
  * \def MAX_MENSAJES_MEMORIA
  * \brief Cantidad maxima de mensajes que se guardan en memoria en la lista circular de mensajes.
  */
-#define MAX_MENSAJES_MEMORIA 5
+#define MAX_MENSAJES_MEMORIA 25
 
 
 /**
@@ -154,11 +141,6 @@
  * \brief Constante para reiniciar el contador del punto de insercion.
  */
 #define REINICIAR_CONTADOR_PUNTO_INSERCION 0
-
-
-//a chekear
-#define MI_USUARIO 1
-#define OTRO_USUARIO 0
 
 
 
@@ -258,8 +240,9 @@ typedef struct
  */
 typedef struct
 {
-    t_listaCircular listaMensajes;   /**< Lista circular de mensajes. */
-    t_nodo *siguienteMensaje;        /**< Puntero al nodo que contiene el siguiente mensaje en la lista circular de mensajes. */
+    t_listaCircular listaMensajes;      /**< Lista circular de mensajes. */
+    t_nodo *primerMensaje;              /**< Puntero al primer mensaje de la lista circular de mensajes. */
+    t_nodo *ultimoMensaje;              /**< Puntero al ultimo mensaje de la lista circular de mensajes. */
     t_fuentes fuentes;
 } t_mensajes;
 
@@ -290,6 +273,12 @@ typedef struct
     sfText *textoBotonAceptar;
     sfText *textoBotonRechazar;
 } t_notificacion;
+
+typedef enum
+{
+    MENSAJE_PROPIO,
+    MENSAJE_REMOTO
+} t_origenMensaje;
 
 
 
@@ -413,6 +402,7 @@ void posicionarNombreUsuario (sfText *nombre);
 void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra);
 
 
+
 /* ============================
    FUNCIONES DE ESCRITURA
    ============================ */
@@ -470,12 +460,75 @@ void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contador
 
 
 
-void asignarMensaje (t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor);
-void modificarPosListaMensajes (void *mensaje);
-void renderizarListaMensajes (void *mensaje, void *renderizado);
-void setupListaMensajes (void *mensaje, void *fuente);
-void tamListaMensajes (void *mensaje);
+/** \brief Configurar un mensaje.
+ *
+ * Establecerle un color y la fuente enviada como parametro.
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ * \param fuente Puntero a fuente sfFont.
+ *
+ */
+void configurarMensaje (void *mensaje, void *fuente);
+
+/** \brief Establecer un tamanio a un mensaje. Ademas, agrega un espaciado de linea.
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ *
+ */
+void tamMensaje (void *mensaje);
+
+/** \brief Renderizar un mensaje.
+ *
+ * No se limpia ni muestra la ventana, solo lo renderiza.
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ *
+ */
+void renderizarMensaje (void *mensaje, void *renderizado);
+
+/** \brief Liberar un mensaje sfText.
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ *
+ */
 void liberarMensaje (void *mensaje);
+
+/** \brief Modificar la posicion de un mensaje.
+ *
+ * Unicamente modifica la posicion en Y del mensaje.
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ * \param desplazamientoY Puntero a la cantidad de desplazamiento en Y que se desea modificar.
+ *
+ */
+void modificarPosMensaje (void *mensaje, void *desplazamientoY);
+
+/** \brief Establecer los saltos de linea necesarios a un mensaje sfText.
+ *
+ * Establecer una cadena valida al texto sfText, con saltos de linea incorporados, que las lineas no sobrepasen el ancho maximo enviado como parametro.
+ *
+ * \param texto Puntero al mensaje sfText.
+ * \param bufferMensaje Buffer que almacena el mensaje completo (sin saltos de linea).
+ * \param anchoMax Ancho maximo que no debe sobrepasar los limites del mensaje.
+ *
+ */
+void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, float anchoMax);
+
+/** \brief Insertar un mensaje a la lista circular de mensajes.
+ *
+ * Trabaja sobre el puntero al nodo del primer mensaje de la lista circular.
+ * Establecer los saltos de linea necesarios para que el mensaje no sobrepase los limites establecidos.
+ * Desplazar en Y a toda la lista circular de mensajes. El desplazamiento depende del alto del mensaje a insertar.
+ * Dependiendo del origen del mensaje, se establece una posicion u otra al mismo.
+ * Actualizar correspondientemente los punteros a nodo del primer y ultimo mensaje de la lista circular de mensajes.
+ *
+ * \param mensajes Puntero a la estructura que almacena datos sobre los mensajes.
+ * \param bufferMensaje Buffer que almacena el mensaje completo.
+ * \param origen Origen de quien envio mensaje.
+ *
+ */
+void insertarMensaje (t_mensajes *mensajes, const char *bufferMensaje, t_origenMensaje origen);
 
 
 

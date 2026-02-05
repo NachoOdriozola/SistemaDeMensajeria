@@ -295,9 +295,10 @@ void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces)
 
 
     // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LA LISTA DE MENSAJES ---------------
-    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.cuerpo, setupListaMensajes);
-    mapListaCircular (&(aplicacion->mensajes.listaMensajes), tamListaMensajes);
-    aplicacion->mensajes.siguienteMensaje = aplicacion->mensajes.listaMensajes;
+    mapListaCircularConComplemento (&(aplicacion->mensajes.listaMensajes), aplicacion->mensajes.fuentes.cuerpo, configurarMensaje);
+    mapListaCircular (&(aplicacion->mensajes.listaMensajes), tamMensaje);
+    aplicacion->mensajes.primerMensaje = aplicacion->mensajes.listaMensajes;
+    aplicacion->mensajes.ultimoMensaje = aplicacion->mensajes.listaMensajes;
 
 
     printf ("-CONFIGURACION EXITOSA-\n");

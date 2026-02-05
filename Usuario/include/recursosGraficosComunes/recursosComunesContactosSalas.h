@@ -132,8 +132,11 @@ typedef struct
     sfRectangleShape *areaMensajes;             /**< Area donde se muestran los mensajes enviados y recibidos. */
     sfRectangleShape *barraEscribirMensaje;     /**< Barra donde el usuario escribe el mensaje. */
     sfRectangleShape *botonEnviar;              /**< Boton para enviar mensaje. */
+    sfRectangleShape *carpetaDecorativaFondo1;  /**< Carpeta decorativa ubicada al fondo.*/
+    sfRectangleShape *carpetaDecorativaFondo2;  /**< Carpeta decorativa ubicada al fondo.*/
     sfCircleShape *ojalilloArriba;              /**< Ojalillo decorativo superior. */
     sfCircleShape *ojalilloAbajo;               /**< Ojalillo decorativo inferior. */
+    sfCircleShape *ojalilloSelecInterfaz;
     sfRectangleShape *separacionNombre;         /**< Barra decorativa que separa el panel del nombre de usuario. */
     sfRectangleShape *separacionTitulo;         /**< Barra decorativa que separa el panel del titulo de la interfaz. */
     sfRectangleShape *panelInterfaz;            /**< Panel principal de la interfaz ubicado a la izquierda de la ventana. */
@@ -353,7 +356,7 @@ bool manejarEnterEnviarMensaje (t_aplicacion *aplicacion, t_recursosComunesConta
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+bool manejarDesplazarArribaAreaMensajes (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de desplazar abajo el area de mensajes.
  *
@@ -375,7 +378,7 @@ bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recurso
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-bool manejarScrollAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll);
+bool manejarScrollAreaMensajes (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoScroll);
 
 
 

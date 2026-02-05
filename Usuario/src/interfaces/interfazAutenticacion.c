@@ -578,12 +578,15 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
  */
 static bool manejarClickIntentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) && (clickEnRectangulo (aplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar)))
-    {
-        intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (recursosComunesAutenticacionRegistro->habilitaciones.ingresar != HABILITAR_INGRESAR)
+        return EVENTO_NO_MANEJADO;
+
+    if (!clickEnRectangulo (aplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar))
+        return EVENTO_NO_MANEJADO;
+
+    intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el texto para cambiar a la interfaz de registro.
@@ -596,13 +599,13 @@ static bool manejarClickIntentarAutenticacion (t_aplicacion *aplicacion, t_recur
  */
 static bool manejarClickCambiarInterfazARegistro (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
-    {
-        aplicacion->usuario.interfazActual = INTERFAZ_REGISTRO;
-        cambiarInterfazARegistro (recursosComunesAutenticacionRegistro);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (aplicacion->renderizado, recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
+        return EVENTO_NO_MANEJADO;
+
+    aplicacion->usuario.interfazActual = INTERFAZ_REGISTRO;
+    cambiarInterfazARegistro (recursosComunesAutenticacionRegistro);
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de escribir el nombre de usuario.
@@ -619,15 +622,15 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE)
-    {
-        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar);
-        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 208});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre != HABILITAR_ESCRIBIR_NOMBRE)
+        return EVENTO_NO_MANEJADO;
+
+    ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar);
+    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 208});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de escribir la contrasenia del usuario.
@@ -644,15 +647,15 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)
-    {
-        ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar);
-        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 343});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia != HABILITAR_ESCRIBIR_CONTRASENIA)
+        return EVENTO_NO_MANEJADO;
+
+    ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar);
+    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 343});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de presionado de la tecla "enter" para intentar autenticar.
@@ -665,13 +668,16 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
  */
 static bool manejarEnterIntentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if ((recursosComunesAutenticacionRegistro->habilitaciones.ingresar == HABILITAR_INGRESAR) &&
-        ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITAR_ESCRIBIR_NOMBRE) || (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITAR_ESCRIBIR_CONTRASENIA)))
-    {
-        intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (recursosComunesAutenticacionRegistro->habilitaciones.ingresar != HABILITAR_INGRESAR)
+        return EVENTO_NO_MANEJADO;
+
+    if ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre != HABILITAR_ESCRIBIR_NOMBRE) &&
+        (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia != HABILITAR_ESCRIBIR_CONTRASENIA))
+        return EVENTO_NO_MANEJADO;
+
+    intentarAutenticacion (aplicacion, recursosComunesAutenticacionRegistro);
+
+    return EVENTO_MANEJADO;
 }
 
 

@@ -290,7 +290,7 @@ static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursos
 
     // proximaInterfaz
     sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "SALAS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){345, 476});
+    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 530});
 
     // tituloInterfaz
     sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "CONTACTOS");
@@ -551,18 +551,18 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_re
  */
 static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
-    {
-        if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
-            recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
-        else
-            recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
-        sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
+        return EVENTO_NO_MANEJADO;
+
+    if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
+        recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
+    else
+        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en cerrar la ventana emergente.
@@ -575,13 +575,13 @@ static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recurs
  */
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
-    {
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
@@ -595,13 +595,13 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
  */
 static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
-    if (clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
-    {
-        aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-        cambiarInterfazAContactos (recursosComunesContactosSalas, interfazSalas);
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
+        return EVENTO_NO_MANEJADO;
+
+    aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+    cambiarInterfazAContactos (recursosComunesContactosSalas, interfazSalas);
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el area de mensajes.
@@ -634,15 +634,13 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recur
  */
 static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
-    if (clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
-    {
-        aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
+        return EVENTO_NO_MANEJADO;
 
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+    aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
 
-        return EVENTO_MANEJADO;
-    }
-    return EVENTO_NO_MANEJADO;
+    return EVENTO_MANEJADO;
 }
 
 
