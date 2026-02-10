@@ -1,4 +1,4 @@
-#include "../include/logicaServidor.h"
+#include "../include/logicaAplicacion.h"
 
 
 
@@ -217,6 +217,7 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
 
     t_cliente *cliente;
 
+    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];
     sqlite3_stmt *sentencia;
     int resultadoConsulta;
 
@@ -228,8 +229,8 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
     sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%s", nombreUsuario, contraseniaUsuario); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
-    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
@@ -263,10 +264,11 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO], correoElectronico [MAX_CORREO_ELECTRONICO_USUARIO];
+    char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO], correoElectronico [MAX_CORREO_USUARIO];
 
     t_cliente *cliente;
 
+    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];
     sqlite3_stmt *sentencia;
     int resultadoConsulta;
 
@@ -278,8 +280,8 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     sscanf (&(buffersComunicacion->solicitud[2]), "%[^|]|%[^|]|%s", nombreUsuario, contraseniaUsuario, correoElectronico); // Extraer nombre y contrasenia de la solicitud recibida.
 
 
-    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
@@ -300,8 +302,8 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     }
 
 
-    strcpy (buffersComunicacion->consultaSQLITE, "INSERT INTO usuarios (nombre, contrasenia, correoElectronico) VALUES (?, ?, ?);");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consultaSQLITE, "INSERT INTO usuarios (nombre, contrasenia, correoElectronico) VALUES (?, ?, ?);");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
@@ -316,8 +318,8 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     sqlite3_finalize (sentencia);
 
 
-    strcpy (buffersComunicacion->consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ?;");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
@@ -350,6 +352,7 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
 
     t_cliente cliente;
 
+    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];
     sqlite3_stmt *sentencia;
 
 
@@ -368,8 +371,8 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
     }
 
 
-    strcpy (buffersComunicacion->consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto, fecha) VALUES (?, ?, ?, ?);");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, buffersComunicacion->consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    strcpy (consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto, fecha) VALUES (?, ?, ?, ?);");
+    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_ERROR_SERVIDOR);

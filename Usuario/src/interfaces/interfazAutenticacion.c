@@ -275,7 +275,7 @@ static int intentarAutenticacion (t_aplicacion *aplicacion, t_recursosComunesAut
     int id;
 
     snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s", INDICE_SOLICITUD_AUTENTICACION, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia);
-    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
+    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
     sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &id);
 
     if (estadoRespuesta == INDICE_RESPUESTA_EXITO)

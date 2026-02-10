@@ -1,6 +1,6 @@
 /**
  * \file   logicaServidor.h
- * \brief  Contiene las funciones estructurales base, las de gestion de clientes y las de procesamiento de solicitudes del servidor.
+ * \brief  Contiene funciones logicas, defines y macros globales de la aplicacion.
  */
 
 
@@ -20,15 +20,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <stdbool.h>
 #include <winsock2.h>
 #include <windows.h>
 #include <ws2tcpip.h>
-#include <stdbool.h>
 #include <sqlite3.h>
 
 #include "../../Constantes/constantes.h"
 #include "../../EstructurasDeDatos/include/listaSimple.h"
 #include "../../EstructurasDeDatos/include/tablaHash.h"
+#include "estructuras.h"
 
 
 
@@ -69,48 +70,6 @@
  * \brief Codigo de retorno que indica que no se recibio ninguna solicitud.
  */
 #define NO_RECIBIO_SOLICITUD 0
-
-
-
-/* ============================
-   ESTRUCTURAS
-   ============================ */
-
-
-
-/**
- * \struct t_buffersComunicacion
- * \brief  Contiene los buffers necesarios para establecer la comunicacion entre el cliente y el servidor.
- */
-typedef struct
-{
-    char solicitud [MAX_BUFFER_SOLICITUD];              /**< Buffer que almacena una solicitud un clientes. */
-    char respuesta [MAX_BUFFER_RESPUESTA];              /**< Buffer que almacena una respuestas del servidor para enviar al cliente. */
-    char consultaSQLITE [MAX_BUFFER_CONSULTA_SQLITE];   /**< Buffer que almacena una consulta SQLite. */
-} t_buffersComunicacion;
-
-/**
- * \struct t_cliente
- * \brief  Representa un cliente.
- */
-typedef struct
-{
-    SOCKET sock; /**< Socket del cliente. */
-    int id;      /**< Identificador correspondiente del usuario. */
-} t_cliente;
-
-
-/**
- * \struct t_servidor
- * \brief  Estructura base del servidor.
- */
-typedef struct
-{
-    SOCKET sock;                                     /**< Socket del servidor. */
-    sqlite3 *baseDeDatos;                            /**< Puntero a la base de datos. */
-    t_listaSimple listaSimpleClientesNoAutenticados; /**< Lista simple de clientes conectados pero no autenticados. */
-    t_tablaHash tablaHashClientes;                   /**< Tabla hash de clientes conectados y autenticados. */
-} t_servidor;
 
 
 

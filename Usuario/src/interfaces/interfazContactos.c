@@ -211,7 +211,7 @@ void interfazContactos_actualizar (t_aplicacion *aplicacion, t_recursosComunesCo
 
     char bufferRespuesta [MAX_BUFFER_RESPUESTA];
 
-    if (recibirRespuesta (aplicacion->sock, bufferRespuesta) == RECIBIO_RESPUESTA)
+    if (recibirRespuesta (aplicacion->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA) == RECIBIO_RESPUESTA)
     {
         switch (*bufferRespuesta)
         {
@@ -295,7 +295,7 @@ void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *in
 
     sprintf (bufferSolicitud, "%c|%s|%s", INDICE_SOLICITUD_AGENDAR_CONTACTO, aplicacion->usuario.nombre, interfazContactos->bufferAgendarContacto);
     printf ("Enviado: %s\n", bufferSolicitud);
-    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
+    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
     sscanf (bufferRespuesta, "%c", &estadoSolicitud);
 
     free (bufferSolicitud);

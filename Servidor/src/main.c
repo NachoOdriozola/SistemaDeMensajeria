@@ -1,4 +1,4 @@
-#include "../include/logicaServidor.h"
+#include "../include/logicaAplicacion.h"
 
 int main ()
 {

@@ -1,4 +1,4 @@
-#include "../include/logicaUsuario.h"
+#include "../include/logicaAplicacion.h"
 
 
 
@@ -45,86 +45,10 @@ void liberarFuentes (t_fuentes *fuentes)
 
 
 /* ============================
-   FUNCIONES DE SOCKETS
-   ============================ */
-
-
-
-bool recibirRespuesta (SOCKET sock, char *bufferRespuesta)
-{
-    int bytesRecibidos;
-
-    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-    if (bytesRecibidos > 0)
-    {
-        bufferRespuesta += bytesRecibidos;
-        *bufferRespuesta = '\0';
-        return RECIBIO_RESPUESTA;
-    }
-
-    return NO_RECIBIO_RESPUESTA;
-}
-
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud, char *bufferRespuesta)
-{
-    u_long modoSocket = 0; //Socket modo bloqueante
-    int bytesRecibidos;
-
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-    send (sock, bufferSolicitud, strlen (bufferSolicitud), 0);
-    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
-    bufferRespuesta += bytesRecibidos;
-    *bufferRespuesta = '\0';
-    modoSocket = 1;     // Socket modo no bloqueante
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-}
-
-
-
-/* ============================
    FUNCIONES LOGICAS DE GRAFICOS
    ============================ */
 
 
-
-bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo)
-{
-    sfVector2i mousePixel;
-    sfVector2f mouseMundo;
-    sfFloatRect limiteRectangulo;
-
-    mousePixel = sfMouse_getPositionRenderWindow (renderizado);
-    mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
-    limiteRectangulo = sfRectangleShape_getGlobalBounds (rectangulo);
-
-    return sfFloatRect_contains (&limiteRectangulo, mouseMundo.x, mouseMundo.y);
-}
-
-bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
-{
-    sfVector2i mousePixel;
-    sfVector2f mouseMundo;
-    sfFloatRect limiteTexto;
-
-    mousePixel = sfMouse_getPositionRenderWindow (renderizado);
-    mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
-    limiteTexto = sfText_getGlobalBounds (texto);
-
-    return sfFloatRect_contains (&limiteTexto, mouseMundo.x, mouseMundo.y);
-}
-
-void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea)
-{
-    sfFloatRect limites;
-
-    limites = sfText_getLocalBounds(texto);
-
-    sfText_setPosition (texto, (sfVector2f)
-                        {
-                            round (posXInicial + anchoArea / 2.f - limites.width / 2.f - limites.left),
-                            round (posYInicial + altoArea / 2.f - limites.height /2.f - limites.top)
-                        });
-}
 
 void posicionarNombreUsuario (sfText *nombre)
 {
@@ -142,82 +66,6 @@ void posicionarNombreUsuario (sfText *nombre)
         limites = sfText_getLocalBounds (nombre);
         i -= 2;
     }
-}
-
-void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra)
-{
-    unsigned short int i;
-    sfFloatRect limites;
-
-    sfText_setString(texto, bufferTexto);
-    limites = sfText_getLocalBounds(texto);
-
-    if (limites.width <= anchoBarra)
-        return;
-
-    for (i = 0; i < (strlen(bufferTexto)); i++)
-    {
-        sfText_setString(texto, bufferTexto + i);
-        limites = sfText_getLocalBounds(texto);
-        if (limites.width <= anchoBarra)
-            break;
-    }
-}
-
-
-
-/* ============================
-   FUNCIONES DE ESCRITURA
-   ============================ */
-
-
-
-void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
-{
-    int largoBuffer;
-
-    largoBuffer = strlen (buffer);
-
-    if (eventoChar.text.unicode == 13) // Si la tecla es "Enter" retorna.
-        return;
-
-    if (eventoChar.text.unicode != 8) //Si la tecla no es "Backspace".
-    {
-        if (largoBuffer < tamMaxBuffer - 1)
-        {
-            buffer [largoBuffer] = (char)eventoChar.text.unicode;
-            buffer [largoBuffer + 1] = '\0';
-        }
-    }
-    else if (largoBuffer > 0) // Si la tecla es "Backspace".
-            buffer [largoBuffer - 1] = '\0';
-}
-
-
-
-/* ============================
-   FUNCIONES DE PUNTO DE INSERCION
-   ============================ */
-
-
-
-void actualizarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion)
-{
-    (*contadorPuntoInsercion) ++;
-    if (*contadorPuntoInsercion >= VELOCIDAD_PARPADEO_PUNTO_INSERCION)
-    {
-        *contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
-        if (*puntoInsercion == DESHABILITAR_PUNTO_INSERCION)
-            *puntoInsercion = HABILITAR_PUNTO_INSERCION;
-        else
-            *puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
-    }
-}
-
-void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion)
-{
-    *puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
-    *contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
 }
 
 

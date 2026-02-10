@@ -41,8 +41,9 @@
 		<Unit filename="../../EstructurasDeDatos/src/tablaHash.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../include/logicaServidor.h" />
-		<Unit filename="logicaServidor.c">
+		<Unit filename="../include/estructuras.h" />
+		<Unit filename="../include/logicaAplicacion.h" />
+		<Unit filename="logicaAplicacion.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">

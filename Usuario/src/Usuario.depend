@@ -1664,7 +1664,7 @@
 
 1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
 
-1768718324 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+1770324237 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
 
 1768456487 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
 	"../include/listaSimple.h"
@@ -1676,24 +1676,20 @@
 	"nodo.h"
 	"../../Constantes/constantes.h"
 
-1770065091 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
+1770663180 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
 	"../../include/interfaces/interfazAutenticacion.h"
 
-1769189307 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
+1770662981 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
+	"../utiles.h"
 	"../../../Constantes/constantes.h"
-	"../logicaUsuario.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
 1770154551 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\logicausuario.h
@@ -1712,102 +1708,83 @@
 	"../../EstructurasDeDatos/include/listaCircular.h"
 	"../../EstructurasDeDatos/include/listaSimple.h"
 
-1769178062 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
+1770662972 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
+	"../utiles.h"
 	"../../../Constantes/constantes.h"
-	"../logicaUsuario.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 
-1769188404 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
+1770324237 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
 	"../../include/interfaces/interfazConfig.h"
 
-1768456487 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
+1770662992 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
+	"../utiles.h"
 	"../../../Constantes/constantes.h"
-	"../logicaUsuario.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 
-1770063952 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
+1770663200 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
 	"../../include/interfaces/interfazRegistro.h"
 
-1769190125 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
+1770663056 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
+	"../utiles.h"
 	"../../../Constantes/constantes.h"
-	"../logicaUsuario.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1770154743 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
+1770663208 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
 	"../../include/interfaces/interfazSalas.h"
 
-1769192969 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
+1770663068 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
-	"../../../Constantes/constantes.h"
+	"../utiles.h"
+	"../../../EstructurasDeDatos/include/listaSimple.h"
 	"../../../EstructurasDeDatos/include/listaCircular.h"
-	"../logicaUsuario.h"
+	"../../../Constantes/constantes.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1770156723 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
+1770662960 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"SFML/Audio.h"
+	"../utiles.h"
 	"../../../Constantes/constantes.h"
-	"../logicaUsuario.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 
-1770084388 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
+1770324237 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
 	"../include/main.h"
 
-1769189549 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
+1770663149 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1815,41 +1792,40 @@
 	<winsock2.h>
 	<windows.h>
 	<ws2tcpip.h>
+	"utiles.h"
 	"../../Constantes/constantes.h"
-	"../../EstructurasDeDatos/include/listaSimple.h"
-	"../../EstructurasDeDatos/include/listaCircular.h"
-	"logicaUsuario.h"
+	"estructuras.h"
+	"logicaAplicacion.h"
+	"recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
+	"recursosGraficosComunes/recursosComunesContactosSalas.h"
 	"interfaces/interfazAutenticacion.h"
 	"interfaces/interfazConfig.h"
 	"interfaces/interfazContactos.h"
 	"interfaces/interfazRegistro.h"
 	"interfaces/interfazSalas.h"
 
-1769189244 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
+1770663050 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
-	<conio.h>
-	<math.h>
-	<winsock2.h>
-	<ws2tcpip.h>
-	<stdbool.h>
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
-	"../../../Constantes/constantes.h"
-	"../../../EstructurasDeDatos/include/listaCircular.h"
+	"../utiles.h"
 	"../../../EstructurasDeDatos/include/listaSimple.h"
-	"../logicaUsuario.h"
+	"../../../EstructurasDeDatos/include/listaCircular.h"
+	"../../../Constantes/constantes.h"
+	"../estructuras.h"
+	"../logicaAplicacion.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1769179972 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
+1770324237 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
 	"../../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1770157018 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
+1770324237 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1770154848 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
+1770663203 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
 	"../../include/interfaces/interfazContactos.h"
 
 1770154554 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicausuario.c
@@ -2057,4 +2033,43 @@
 
 1768014921 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
+
+1770662871 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\utiles.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<math.h>
+	<winsock2.h>
+	<ws2tcpip.h>
+	<stdbool.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+
+1770662786 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\estructuras.h
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"../../Constantes/constantes.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/listaCircular.h"
+
+1770662886 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\logicaaplicacion.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	"SFML/Graphics.h"
+	"SFML/Window.h"
+	"SFML/System.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/listaCircular.h"
+	"utiles.h"
+	"../../Constantes/constantes.h"
+	"estructuras.h"
+
+1770662467 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicaaplicacion.c
+	"../include/logicaAplicacion.h"
+
+1770660999 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\utiles.c
+	"../include/utiles.h"
 

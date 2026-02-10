@@ -25,9 +25,12 @@
 #include <ws2tcpip.h>
 
 #include "../../Constantes/constantes.h"
-#include "../../EstructurasDeDatos/include/listaSimple.h"
-#include "../../EstructurasDeDatos/include/listaCircular.h"
-#include "logicaUsuario.h"
+#include "utiles.h"
+#include "estructuras.h"
+#include "logicaAplicacion.h"
+
+#include "recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
+#include "recursosGraficosComunes/recursosComunesContactosSalas.h"
 
 #include "interfaces/interfazAutenticacion.h"
 #include "interfaces/interfazConfig.h"

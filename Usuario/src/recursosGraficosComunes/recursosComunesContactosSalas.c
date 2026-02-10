@@ -185,7 +185,7 @@ int intentarEnvioMensaje (t_aplicacion *aplicacion, t_recursosComunesContactosSa
 
     idReceptor = atoi (&(recursosComunesContactosSalas->bufferMensaje[0]));
     snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", INDICE_SOLICITUD_MENSAJE, aplicacion->usuario.id, idReceptor, &(recursosComunesContactosSalas->bufferMensaje[1]));
-    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
+    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
     sscanf (bufferRespuesta, "%c", &estadoRespuesta);
     if (estadoRespuesta != INDICE_RESPUESTA_EXITO)
     {

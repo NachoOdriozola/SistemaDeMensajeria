@@ -19,19 +19,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <conio.h>
-#include <math.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <stdbool.h>
 
 #include "SFML/Graphics.h"
 #include "SFML/Window.h"
 #include "SFML/System.h"
-#include "SFML/Audio.h"
 
 #include "../../../Constantes/constantes.h"
-#include "../logicaUsuario.h"
+#include "../utiles.h"
+#include "../estructuras.h"
+#include "../logicaAplicacion.h"
 
 
 

@@ -195,7 +195,7 @@ void interfazSalas_actualizar (t_aplicacion *aplicacion, t_recursosComunesContac
         perror ("ERROR - Sin memoria.\n");
         return;
     }
-    if (recibirRespuesta (aplicacion->sock, bufferRespuesta) == RECIBIO_RESPUESTA)
+    if (recibirRespuesta (aplicacion->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA) == RECIBIO_RESPUESTA)
     {
         switch (*bufferRespuesta)
         {

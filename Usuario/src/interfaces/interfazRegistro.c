@@ -280,7 +280,7 @@ static int intentarRegistro (t_aplicacion *aplicacion, t_recursosComunesAutentic
     int id;
 
     snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s|%s", INDICE_SOLICITUD_REGISTRO, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia, interfazRegistro->bufferCorreo);
-    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta);
+    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
     sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &id);
 
     if (estadoRespuesta == INDICE_RESPUESTA_EXITO)

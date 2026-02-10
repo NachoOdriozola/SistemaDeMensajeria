@@ -684,18 +684,18 @@
 	"../../EstructurasDeDatos/include/listaSimple.h"
 	"../../EstructurasDeDatos/include/tablaHash.h"
 
-1768413915 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+1770324237 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
 
-1768454491 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
+1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"nodo.h"
 	"../../Constantes/constantes.h"
 
-1768451876 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
+1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
 
-1768456154 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
+1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -703,9 +703,38 @@
 	"../../Constantes/constantes.h"
 	"listaSimple.h"
 
-1768413915 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\main.c
-	"../include/logicaServidor.h"
+1770669786 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\main.c
+	"../include/logicaAplicacion.h"
 
-1768454380 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
+1768456487 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
 	"../include/listaSimple.h"
+
+1768456487 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\tablahash.c
+	"../include/tablaHash.h"
+
+1770670051 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\logicaaplicacion.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<conio.h>
+	<stdbool.h>
+	<winsock2.h>
+	<windows.h>
+	<ws2tcpip.h>
+	<sqlite3.h>
+	"../../Constantes/constantes.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/tablaHash.h"
+	"estructuras.h"
+
+1770669560 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\estructuras.h
+	<winsock2.h>
+	<ws2tcpip.h>
+	<sqlite3.h>
+	"../../Constantes/constantes.h"
+	"../../EstructurasDeDatos/include/listaSimple.h"
+	"../../EstructurasDeDatos/include/tablaHash.h"
+
+1770670007 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\logicaaplicacion.c
+	"../include/logicaAplicacion.h"
 
