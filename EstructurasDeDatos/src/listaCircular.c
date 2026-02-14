@@ -14,14 +14,14 @@ int insertarSegundoCircular (t_listaCircular *pl, const void *dato, unsigned tam
     if (!nuevoNodo)
     {
         perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
+        return 1;
     }
     nuevoNodo->dato = malloc (tamDato);
     if (!nuevoNodo->dato)
     {
         perror ("ERROR - Sin memoria.\n");
         free (nuevoNodo);
-        return ERROR_SIN_MEMORIA;
+        return 1;
     }
     memcpy (nuevoNodo->dato, dato, tamDato);
     nuevoNodo->tam = tamDato;
@@ -37,7 +37,7 @@ int insertarSegundoCircular (t_listaCircular *pl, const void *dato, unsigned tam
         (*pl)->sig = nuevoNodo;
     }
 
-    return EXITO;
+    return 0;
 }
 
 void mapListaCircular (t_listaCircular *pl, void accion (void *dato))

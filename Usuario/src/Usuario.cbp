@@ -47,7 +47,6 @@
 		<Unit filename="../include/interfaces/interfazContactos.h" />
 		<Unit filename="../include/interfaces/interfazRegistro.h" />
 		<Unit filename="../include/interfaces/interfazSalas.h" />
-		<Unit filename="../include/logicaAplicacion.h" />
 		<Unit filename="../include/main.h" />
 		<Unit filename="../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h" />
 		<Unit filename="../include/recursosGraficosComunes/recursosComunesContactosSalas.h" />
@@ -65,9 +64,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="interfaces/interfazSalas.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="logicaAplicacion.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">

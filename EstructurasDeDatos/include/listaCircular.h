@@ -18,7 +18,6 @@
 #include <string.h>
 
 #include "nodo.h"
-#include "../../Constantes/constantes.h"
 
 
 /* ============================
@@ -49,7 +48,7 @@ void crearListaCircular (t_listaCircular *pl);
  * \param dato Puntero al dato que se quiere guardar.
  * \param tamDato tamanio en bytes del dato.
  *
- * \return EXITO si se ejecuto correctamente, ERROR_SIN_MEMORIA en caso de no poder asignar memoria.
+ * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
 int insertarSegundoCircular (t_listaCircular *pl, const void *dato, unsigned tamDato);

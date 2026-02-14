@@ -8,18 +8,21 @@
 
 
 
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
+static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
 static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
-static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_fuentes *fuentes);
+static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
+static void recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
 static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
@@ -35,6 +38,11 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
+    // FUENTES
+
+    recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (&(recursosComunesAutenticacionRegistro->fuentes));
+
+
     // TEXTOS
 
     recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (&(recursosComunesAutenticacionRegistro->textos));
@@ -46,6 +54,12 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
+
+    // FUENTES
+
+    if (recursosComunesAutenticacionRegistro_inicializarFuentes (&(recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
 
     // TEXTOS
 
@@ -62,15 +76,15 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
     return EXITO;
 }
 
-void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_fuentes *fuentes)
+void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITAR_ESCRIBIR_CONTRASENIA;
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITAR_ESCRIBIR_NOMBRE;
-    recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITAR_INGRESAR;
-    recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
-    recursosComunesAutenticacionRegistro->habilitaciones.contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
+    recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITADO;
+    recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITADO;
+    recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITADO;
+
+    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion));
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -83,7 +97,7 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
 
     // TEXTOS
 
-    recursosComunesAutenticacionRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos), fuentes);
+    recursosComunesAutenticacionRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos), &(recursosComunesAutenticacionRegistro->fuentes));
 
 
     // ELEMENTOS
@@ -127,6 +141,11 @@ void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacio
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
+    // FUENTES
+
+    recursosComunesAutenticacionRegistro_liberarFuentes (&(recursosComunesAutenticacionRegistro->fuentes));
+
+
     // TEXTOS
 
     recursosComunesAutenticacionRegistro_liberarTextos (&(recursosComunesAutenticacionRegistro->textos));
@@ -144,6 +163,16 @@ void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacio
    ============================ */
 
 
+
+/** \brief Establecer en NULL a todas las fuentes graficas comunes (compartidos) entre las interfaces de autenticacion y registro.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ */
+static void recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+{
+    fuentes->cuerpo = NULL;
+    fuentes->ui = NULL;
+}
 
 /** \brief Establecer en NULL a todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
@@ -174,9 +203,38 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
     elementos->subrayadoTitulo = NULL;
 }
 
-/** \brief Inicializar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
+/** \brief Inicializar los recursos graficos de fuentes comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * Crear todos los recursos graficos de texto. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ * Crear todos los recursos graficos de fuentes. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
+ *
+ */
+static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+{
+    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    if (!fuentes->ui)
+    {
+        perror ("\nERROR - Crear fuente UI.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    fuentes->cuerpo = sfFont_createFromFile ("fuenteMensajes.ttf");
+    if (!fuentes->cuerpo)
+    {
+        perror ("\nERROR - Crear fuente cuerpo.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
+    return EXITO;
+}
+
+/** \brief Inicializar los recursos graficos de textos comunes (compartidos) entre las interfaces de autenticacion y registro.
+ *
+ * Crear todos los recursos graficos de textos. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
@@ -298,10 +356,10 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursos
 /** \brief Configurar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_fuentes *fuentes)
+static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     // auxEscribirContrasenia
     sfText_setFont (textos->auxEscribirContrasenia, fuentes->cuerpo);
@@ -437,9 +495,21 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recu
     sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){260, 2.5});
 }
 
+/** \brief Liberar, de manera segura, todas las fuentes graficas comunes (compartidas) entre las interfaces de autenticacion y registro.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+static void recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+{
+    DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);
+    DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
+}
+
 /** \brief Liberar, de manera segura, todas los textos graficos comunes (compartidas) entre las interfaces de autenticacion y registro.
  *
- * \param elementos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ *
  */
 static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
@@ -456,6 +526,7 @@ static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComune
 /** \brief Liberar, de manera segura, todas los elementos graficos comunes (compartidas) entre las interfaces de autenticacion y registro.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
+ *
  */
 static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {

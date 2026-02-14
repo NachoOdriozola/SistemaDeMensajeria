@@ -27,7 +27,6 @@
 #include "../../../Constantes/constantes.h"
 #include "../utiles.h"
 #include "../estructuras.h"
-#include "../logicaAplicacion.h"
 
 
 
@@ -37,50 +36,21 @@
 
 
 
-/**
- * \def HABILITAR_ESCRIBIR_NOMBRE
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su nombre esta habilitado.
- */
-#define HABILITAR_ESCRIBIR_NOMBRE 1
-
-/**
- * \def DESHABILITAR_ESCRIBIR_NOMBRE
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su nombre esta deshabilitado.
- */
-#define DESHABILITAR_ESCRIBIR_NOMBRE 0
-
-/**
- * \def HABILITAR_ESCRIBIR_CONTRASENIA
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su contrasenia esta habilitado.
- */
-#define HABILITAR_ESCRIBIR_CONTRASENIA 1
-
-/**
- * \def DESHABILITAR_ESCRIBIR_CONTRASENIA
- * \brief Codigo para indicar que el ingreso de texto por parte del usuario para escribir su contrasenia esta deshabilitado.
- */
-#define DESHABILITAR_ESCRIBIR_CONTRASENIA 0
-
-
-/**
- * \def HABILITAR_INGRESAR
- * \brief Codigo para indicar que el ingreso de usuario esta habilitado.
- */
-#define HABILITAR_INGRESAR 1
-
-/**
- * \def DESHABILITAR_INGRESAR
- * \brief Codigo para indicar que el ingreso de usuario esta deshabilitado.
- */
-#define DESHABILITAR_INGRESAR 0
-
-
-
 /* ============================
    ESTRUCTURAS
    ============================ */
 
 
+
+/**
+ * \struct t_recursosComunesAutenticacionRegistroFuentes
+ * \brief  Contiene las fuentes graficas de textos comunes (compartidos) entre las interfaces de autenticacion y registro.
+ */
+typedef struct
+{
+    sfFont *cuerpo;         /**< Fuente utilizada en mensajes y areas en donde el usuario escribe texto. */
+    sfFont *ui;             /**< Fuente utilizada en textos de la interfaz grafica. */
+} t_recursosComunesAutenticacionRegistroFuentes;
 
 /** \struct t_recursosComunesAutenticacionRegistroTextos
  * \brief Contiene todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
@@ -114,11 +84,10 @@ typedef struct
  */
 typedef struct
 {
-    bool escribirContrasenia;                   /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su contrasenia. */
-    bool escribirNombre;                        /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su nombre. */
-    bool ingresar;                              /**< Habilitar/deshabilitar el ingreso de usuario. */
-    bool puntoInsercion;                        /**< Activar/desactivar el punto de insercion. */
-    unsigned short int contadorPuntoInsercion;  /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
+    t_habilitacion escribirContrasenia;                   /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su contrasenia. */
+    t_habilitacion escribirNombre;                        /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su nombre. */
+    t_habilitacion ingresar;                              /**< Habilitar/deshabilitar el ingreso de usuario. */
+    t_puntoInsercion puntoInsercion;
 } t_recursosComunesAutenticacionRegistroHabilitaciones;
 
 /** \struct t_recursosComunesAutenticacionRegistro
@@ -126,11 +95,12 @@ typedef struct
  */
 typedef struct
 {
+    t_recursosComunesAutenticacionRegistroFuentes fuentes;
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
     t_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
-    char bufferNombre [MAX_NOMBRE_USUARIO];             /**< Buffer donde se guarda el nombre que escribe el usuario. */
-    char bufferContrasenia [MAX_CONTRASENIA_USUARIO];    /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
+    char bufferNombre [MAX_NOMBRE_USUARIO];                                 /**< Buffer donde se guarda el nombre que escribe el usuario. */
+    char bufferContrasenia [MAX_CONTRASENIA_USUARIO];                       /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
 } t_recursosComunesAutenticacionRegistro;
 
 
@@ -157,10 +127,9 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
  * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_fuentes *fuentes);
+void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Renderizar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
  *

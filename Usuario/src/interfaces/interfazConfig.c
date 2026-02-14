@@ -8,13 +8,15 @@
 
 
 
+static void interfazConfig_inicializarValoresNulosFuentes (t_interfazConfigFuentes *fuentes);
 static void interfazConfig_inicializarValoresNulosTextos (t_interfazConfigTextos *textos);
 static void interfazConfig_inicializarValoresNulosElementos (t_interfazConfigElementos *elementos);
 
+static int interfazConfig_inicializarFuentes (t_interfazConfigFuentes *fuentes);
 static int interfazConfig_inicializarTextos (t_interfazConfigTextos *textos);
 static int interfazConfig_inicializarElementos (t_interfazConfigElementos *elementos);
 
-static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_fuentes *fuentes);
+static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_interfazConfigFuentes *fuentes);
 static void interfazConfig_configurarElementos (t_interfazConfigElementos *elementos);
 
 static void interfazConfig_tamYPosVentanaTextos (t_interfazConfigTextos *textos);
@@ -23,6 +25,7 @@ static void interfazConfig_tamYPosVentanaElementos (t_interfazConfigElementos *e
 static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const t_interfazConfigTextos *textos);
 static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, const t_interfazConfigElementos *elementos);
 
+static void interfazConfig_liberarFuentes (t_interfazConfigFuentes *fuentes);
 static void interfazConfig_liberarTextos (t_interfazConfigTextos *textos);
 static void interfazConfig_liberarElementos (t_interfazConfigElementos *elementos);
 
@@ -38,6 +41,11 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig)
 {
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
+    // FUENTES
+
+    interfazConfig_inicializarValoresNulosFuentes (&(interfazConfig->fuentes));
+
+
     // TEXTOS
 
     interfazConfig_inicializarValoresNulosTextos (&(interfazConfig->textos));
@@ -49,6 +57,12 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig)
 
 
     // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
+
+    // FUENTES
+
+    if (interfazConfig_inicializarFuentes (&(interfazConfig->fuentes)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
 
     // TEXTOS
 
@@ -65,13 +79,13 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig)
     return EXITO;
 }
 
-void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuentes *fuentes)
+void interfazConfig_configurar (t_interfazConfig *interfazConfig)
 {
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
     // TEXTOS
 
-    interfazConfig_configurarTextos (&(interfazConfig->textos), fuentes);
+    interfazConfig_configurarTextos (&(interfazConfig->textos), &(interfazConfig->fuentes));
 
 
     // ELEMENTOS
@@ -91,29 +105,29 @@ void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuente
     interfazConfig_tamYPosVentanaElementos (&(interfazConfig->elementos));
 }
 
-void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *interfazConfig)
+void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, const t_interfazConfig *interfazConfig)
 {
     sfEvent evento;
 
-    sfRenderWindow_pollEvent (aplicacion->renderizado, &evento);
+    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
     switch (evento.type)
     {
 
     case sfEvtClosed:
-        sfRenderWindow_close (aplicacion->renderizado);
+        sfRenderWindow_close (contextoAplicacion->renderizado);
         break;
 
 
     case sfEvtResized:
-       // if (manejarRedimensionamientoVentana (aplicacion, evento) == ERROR_SIN_MEMORIA)
+       // if (manejarRedimensionamientoVentana (contextoAplicacion, evento) == ERROR_SIN_MEMORIA)
         break;
 
 
     case sfEvtMouseButtonPressed:
         if (evento.mouseButton.button == sfMouseLeft)
         {
-            if (clickEnRectangulo (aplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
-                aplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+            if (clickEnRectangulo (contextoAplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
+                contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
         }
 
 
@@ -151,6 +165,11 @@ void interfazConfig_liberar (t_interfazConfig *interfazConfig)
 {
     // --------------- LIBERAR RECURSOS GRAFICOS ---------------
 
+    // FUENTES
+
+    interfazConfig_liberarFuentes (&(interfazConfig->fuentes));
+
+
     // TEXTOS
 
     interfazConfig_liberarTextos (&(interfazConfig->textos));
@@ -169,9 +188,20 @@ void interfazConfig_liberar (t_interfazConfig *interfazConfig)
 
 
 
+/** \brief Establecer en NULL a todos las fuentes graficas de la interfaz de configuraciones.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de la interfaz de configuraciones.
+ *
+ */
+static void interfazConfig_inicializarValoresNulosFuentes (t_interfazConfigFuentes *fuentes)
+{
+    fuentes->ui = NULL;
+}
+
 /** \brief Establecer en NULL a todos los textos graficos de la interfaz de configuraciones.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ *
  */
 static void interfazConfig_inicializarValoresNulosTextos (t_interfazConfigTextos *textos)
 {
@@ -181,10 +211,33 @@ static void interfazConfig_inicializarValoresNulosTextos (t_interfazConfigTextos
 /** \brief Establecer en NULL a todos los elementos graficos de la interfaz de configuraciones.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ *
  */
 static void interfazConfig_inicializarValoresNulosElementos (t_interfazConfigElementos *elementos)
 {
     elementos->rectanguloVolver = NULL;
+}
+
+/** \brief Inicializar los recursos graficos de fuentes de la interfaz de configuraciones.
+ *
+ * Crea todos los recursos graficos de fuentes. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de la interfaz de configuraciones.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
+ *
+ */
+static int interfazConfig_inicializarFuentes (t_interfazConfigFuentes *fuentes)
+{
+    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    if (!fuentes->ui)
+    {
+        perror ("\nERROR - Crear fuente UI.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
+    return EXITO;
 }
 
 /** \brief Inicializar los recursos graficos de texto de la interfaz de configuraciones.
@@ -234,10 +287,10 @@ static int interfazConfig_inicializarElementos (t_interfazConfigElementos *eleme
 /** \brief Configurar los recursos graficos de textos de la interfaz de configuraciones.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de la interfaz de configuraciones.
  *
  */
-static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_fuentes *fuentes)
+static void interfazConfig_configurarTextos (t_interfazConfigTextos *textos, const t_interfazConfigFuentes *fuentes)
 {
     // textoConfig
     sfText_setFont (textos->textoConfig, fuentes->ui);
@@ -284,7 +337,7 @@ static void interfazConfig_tamYPosVentanaElementos (t_interfazConfigElementos *e
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
  *
  */
@@ -297,7 +350,7 @@ static void interfazConfig_renderizarTextos (sfRenderWindow *renderizado, const 
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
  *
  */
@@ -306,9 +359,20 @@ static void interfazConfig_renderizarElementos (sfRenderWindow *renderizado, con
     sfRenderWindow_drawRectangleShape (renderizado, elementos->rectanguloVolver, NULL);
 }
 
+/** \brief Liberar, de manera segura, todas las fuentes graficas de la interfaz de configuraciones.
+ *
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de la interfaz de configuraciones.
+ *
+ */
+static void interfazConfig_liberarFuentes (t_interfazConfigFuentes *fuentes)
+{
+    DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
+}
+
 /** \brief Liberar, de manera segura, todas los textos graficos de la interfaz de configuraciones.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de configuraciones.
+ *
  */
 static void interfazConfig_liberarTextos (t_interfazConfigTextos *textos)
 {
@@ -318,6 +382,7 @@ static void interfazConfig_liberarTextos (t_interfazConfigTextos *textos)
 /** \brief Liberar, de manera segura, todas los elementos graficos de la interfaz de configuraciones.
  *
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de configuraciones.
+ *
  */
 static void interfazConfig_liberarElementos (t_interfazConfigElementos *elementos)
 {

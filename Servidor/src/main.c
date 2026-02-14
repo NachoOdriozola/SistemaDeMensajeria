@@ -5,7 +5,7 @@ int main ()
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
 
-    t_servidor servidor;
+    t_contextoServidor contextoServidor;
     t_nodo **clienteAProcesar;
     t_buffersComunicacion buffersComunicacion;
     char ingresoCaracter = '\0';
@@ -20,15 +20,16 @@ int main ()
     // --------------- INICIALIZAR Y CONFIGURAR LOS RECURSOS DEL SERVIDOR ---------------
 
 
-    if (inicializarServidor (&servidor) == ERROR_INICIALIZACION)
+    if (inicializarServidor (&contextoServidor) == ERROR_INICIALIZACION)
     {
         perror ("ERROR - Inicializacion de servidor.\n");
+        liberarServidor (&contextoServidor);
         return ERROR_INICIALIZACION;
     }
-    if (configurarServidor (&servidor) == ERROR_CONFIGURACION)
+    if (configurarServidor (&contextoServidor) == ERROR_CONFIGURACION)
     {
         perror ("ERROR - configuracion de servidor.\n");
-        liberarServidor (&servidor);
+        liberarServidor (&contextoServidor);
         return ERROR_CONFIGURACION;
     }
     printf ("-SERVIDOR INICIADO CORRECTAMENTE-\n\n");
@@ -42,31 +43,31 @@ int main ()
     while (ingresoCaracter != CARACTER_APAGAR_SERVIDOR)
     {
         // Si hay un cliente nuevo, lo acepta y lo inserta en la lista simple de clientes conectados pero no autenticados.
-        nuevoCliente.sock = accept (servidor.sock, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
+        nuevoCliente.sock = accept (contextoServidor.sock, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
         if (nuevoCliente.sock != INVALID_SOCKET)
-            procesarNuevoCliente (&nuevoCliente, &(servidor.listaSimpleClientesNoAutenticados));
+            procesarNuevoCliente (&nuevoCliente, &(contextoServidor.listaSimpleClientesNoAutenticados));
 
         // Si un cliente de la lista simple de no autenticados o de la tabla hash envia una solicitud, guarda su direccion y la solicitud para procesarla.
-        if ((recibirSolicitudEnListaSimple (&(servidor.listaSimpleClientesNoAutenticados), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD) ||
-            (recibirSolicitudEnTablaHash (&(servidor.tablaHashClientes), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD))
+        if ((recibirSolicitudEnListaSimple (&(contextoServidor.listaSimpleClientesNoAutenticados), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD) ||
+            (recibirSolicitudEnTablaHash (&(contextoServidor.tablaHashClientes), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD))
         {
             printf ("Solicitud recibida: %s\n", buffersComunicacion.solicitud);
             switch (buffersComunicacion.solicitud[0])
             {
-            case INDICE_SOLICITUD_AUTENTICACION:
-                manejarSolicitudAutenticacion (&servidor, clienteAProcesar, &buffersComunicacion);
+            case SOLICITUD_AUTENTICACION:
+                manejarSolicitudAutenticacion (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_SOLICITUD_REGISTRO:
-                manejarSolicitudRegistro (&servidor, clienteAProcesar, &buffersComunicacion);
+            case SOLICITUD_REGISTRO:
+                manejarSolicitudRegistro (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_SOLICITUD_MENSAJE:
-                manejarEnvioMensaje (&servidor, clienteAProcesar, &buffersComunicacion);
+            case SOLICITUD_MENSAJE:
+                manejarEnvioMensaje (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
 
-            case INDICE_SOLICITUD_AGENDAR_CONTACTO:
-                //manejarSolicitudContacto (&servidor, clienteAProcesar, &buffersComunicacion);
+            case SOLICITUD_AGENDAR_CONTACTO:
+                //manejarSolicitudContacto (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
             }
         }
@@ -86,7 +87,7 @@ int main ()
     // --------------- LIBERAR LOS RECURSOS DEL SERVIDOR Y RETORNAR ---------------
 
 
-    liberarServidor (&servidor);
+    liberarServidor (&contextoServidor);
 
     system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
 

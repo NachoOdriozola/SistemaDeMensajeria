@@ -27,7 +27,6 @@
 #include "../../../Constantes/constantes.h"
 #include "../utiles.h"
 #include "../estructuras.h"
-#include "../logicaAplicacion.h"
 
 
 
@@ -44,6 +43,14 @@
    ============================ */
 
 
+
+/** \struct t_interfazConfigFuentes
+ * \brief Contiene las fuentes graficas de la interfaz de configuraciones.
+ */
+typedef struct
+{
+    sfFont *ui;                      /**< Fuente utilizada en textos de la interfaz grafica. */
+} t_interfazConfigFuentes;
 
 /** \struct t_interfazConfigTextos
  * \brief Contiene todos los textos graficos de la interfaz de configuraciones.
@@ -74,6 +81,7 @@ typedef struct
  */
 typedef struct
 {
+    t_interfazConfigFuentes fuentes;
     t_interfazConfigTextos textos;
     t_interfazConfigElementos elementos;
     t_interfazConfigHabilitaciones habilitaciones;
@@ -106,17 +114,17 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig);
  * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
  *
  */
-void interfazConfig_configurar (t_interfazConfig *interfazConfig, const t_fuentes *fuentes);
+void interfazConfig_configurar (t_interfazConfig *interfazConfig);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de configuraciones.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y realizar o invocar las funciones correspondientes segun el evento detectado.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */
-void interfazConfig_accion (t_aplicacion *aplicacion, const t_interfazConfig *interfazConfig);
+void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, const t_interfazConfig *interfazConfig);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de configuraciones.
  *
@@ -132,8 +140,8 @@ void interfazConfig_actualizar (t_interfazConfig *interfazConfig);
  *
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de configuraciones en la ventana.
  *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  *
  */
 void interfazConfig_renderizar (sfRenderWindow *renderizado, const t_interfazConfig *interfazConfig);

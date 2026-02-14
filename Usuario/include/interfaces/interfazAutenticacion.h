@@ -27,7 +27,6 @@
 #include "../../../Constantes/constantes.h"
 #include "../utiles.h"
 #include "../estructuras.h"
-#include "../logicaAplicacion.h"
 #include "../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
 
@@ -103,28 +102,28 @@ int interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutentic
  * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecerle un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion, const t_fuentes *fuentes);
+void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de autenticacion.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y realizar o invocar las funciones correspondientes segun el evento detectado.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_accion (t_aplicacion *aplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazAutenticacion *interfazAutenticacion);
+void interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazAutenticacion *interfazAutenticacion);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de autenticacion.
  *
  * Capturar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc.) y realizar o invocar las funciones
  * correspondientes segun el evento detectado.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
  */
@@ -134,12 +133,12 @@ void interfazAutenticacion_actualizar (t_recursosComunesAutenticacionRegistro *r
  *
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de autenticacion en la ventana.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazAutenticacion *interfazAutenticacion);
+void interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazAutenticacion *interfazAutenticacion);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de autenticacion.
  *

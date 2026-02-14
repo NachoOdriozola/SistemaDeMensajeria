@@ -40,6 +40,13 @@
 
 
 /**
+ * \def ERROR_CONFIGURACION
+ * \brief Codigo de retorno para fallos en la configuracion.
+ */
+#define ERROR_CONFIGURACION -200
+
+
+/**
  * \def CARACTER_APAGAR_SERVIDOR
  * \brief Caracter que el usuario debe escribir en consola para apagar el servidor.
  */
@@ -51,6 +58,7 @@
  * \brief Cantidad de buckets que tiene la tabla hash.
  */
 #define CANT_BUCKETS_TABLA_HASH 1000
+
 
 /**
  * \def MAX_BUFFER_CONSULTA_SQLITE
@@ -84,33 +92,33 @@
  * Iniciar la API de Winsock, abrir la base de datos y crear el socket del servidor, la tabla hash de clientes y la lista simple de clientes
  * conectados pero no autenticados.
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int inicializarServidor (t_servidor *servidor);
+int inicializarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Configurar los recursos del servidor.
  *
  * Configurar el socket del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado. Ademas, establecerlo como modo no bloqueante.
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  * \return EXITO si se configuro correctamente, ERROR_CONFIGURACION en caso de error.
  *
  */
-int configurarServidor (t_servidor *servidor);
+int configurarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Liberar los recursos del servidor.
  *
  * Vaciar la lista simple de clientes conectados pero no autenticados, vaciar y eliminar la tabla hash de clientes y cerrar el socket del servidor,
  * la base de datos y la API de Winsock.
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  */
-void liberarServidor (t_servidor *servidor);
+void liberarServidor (t_contextoServidor *contextoServidor);
 
 
 
@@ -177,14 +185,14 @@ bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelClien
  * Si no lo son, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES".
  * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  * \param clienteAProcesar Referencia al nodo del cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
  *
  */
-int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de registro.
  *
@@ -195,14 +203,14 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
  * no autenticados a la tabla hash, y le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID.
  * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
  *
  */
-int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de envio de mensaje.
  *
@@ -212,14 +220,14 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
  * Busca el ID del receptor en la tabla hash, si se encuentra conectado, le envia el mensaje en tiempo real.
  * En caso de que el servidor falle, le responde al cliente "INDICE_RESPUESTA_ERROR_SERVIDOR".
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return EXITO si se proceso correctamente, ERROR_INICIALIZACION en caso contrario.
  *
  */
-int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 /** \brief Verifica y procesa la solicitud de solicitud de contacto
  *
@@ -227,14 +235,14 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
  * Si existe, inserta en la base de datos la solicitud de amistad.
  * Le responde al cliente el resultado del proceso y, si el usuario receptor esta conectado, le envia la solicitud de amistad.
  *
- * \param servidor Puntero a la estructura base del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  * \param clienteAProcesar Referencia al cliente que envio la solicitud y se debe procesar.
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
  *
  */
-int manejarSolicitudContacto (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
+int manejarSolicitudContacto (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);
 
 
 

@@ -21,8 +21,6 @@
 #include "SFML/System.h"
 
 #include "../../Constantes/constantes.h"
-#include "../../EstructurasDeDatos/include/listaSimple.h"
-#include "../../EstructurasDeDatos/include/listaCircular.h"
 
 
 
@@ -33,71 +31,40 @@
 
 
 /**
+ * \enum t_interfaz
+ * \brief Indica las interfaces graficas de la aplicacion.
+ */
+typedef enum
+{
+    INTERFAZ_AUTENTICACION,
+    INTERFAZ_REGISTRO,
+    INTERFAZ_CONTACTOS,
+    INTERFAZ_SALAS,
+    INTERFAZ_CONFIG
+} t_interfaz;
+
+/**
  * \struct t_usuario
- * \brief  Representa un usuario.
+ * \brief Representa un usuario.
  */
 typedef struct
 {
     int id;                                     /**< Identificador correspondiente del usuario. */
     char nombre [MAX_NOMBRE_USUARIO];           /**< Nombre correspondiente del usuario. */
-    unsigned short int interfazActual;          /**< Interfaz sobre la cual se encuentra ubicado actualmente. */
+    t_interfaz interfazActual;                  /**< Interfaz sobre la cual se encuentra ubicado actualmente. */
 } t_usuario;
 
 /**
- * \struct t_fuentes
- * \brief  Estructura que contiene las fuentes graficas para los textos.
+ * \struct t_contextoAplicacion
+ * \brief Contexto (estados y recursos) global de la aplicacion.
  */
 typedef struct
 {
-    sfFont *ui;             /**< Fuente utilizada en textos de la interfaz grafica. */
-    sfFont *cuerpo;         /**< Fuente utilizada en mensajes y areas en donde el usuario escribe texto. */
-} t_fuentes;
-
-/**
- * \struct t_mensajes
- * \brief
- */
-typedef struct
-{
-    t_listaCircular listaMensajes;      /**< Lista circular de mensajes. */
-    t_nodo *primerMensaje;              /**< Puntero al primer mensaje de la lista circular de mensajes. */
-    t_nodo *ultimoMensaje;              /**< Puntero al ultimo mensaje de la lista circular de mensajes. */
-    t_fuentes fuentes;
-} t_mensajes;
-
-/**
- * \struct t_aplicacion
- * \brief  Estructura base de la aplicacion
- */
-typedef struct
-{
+    bool estadoWinsock;                 /**< Estado de Winsock API */
     sfRenderWindow *renderizado;        /**< Renderizado de la ventana. */
     SOCKET sock;                        /**< Socket del usuario. */
     t_usuario usuario;
-    t_mensajes mensajes;
-    t_listaSimple listaNotificaciones;  /**< Lista simple de notificaciones. */
-} t_aplicacion;
-
-/**
- * \struct t_notificacion
- * \brief  Estructura que contiene los elementos de una notificacion.
- * \note Estructura NO ACTIVA en el Incremento 1.
- */
-typedef struct
-{
-    sfRectangleShape *recuadro;
-    sfRectangleShape *botonAceptar;
-    sfRectangleShape *botonRechazar;
-    sfText *textoNotificacion;
-    sfText *textoBotonAceptar;
-    sfText *textoBotonRechazar;
-} t_notificacion;
-
-typedef enum
-{
-    MENSAJE_PROPIO,
-    MENSAJE_REMOTO
-} t_origenMensaje;
+} t_contextoAplicacion;
 
 
 

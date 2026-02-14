@@ -27,7 +27,6 @@
 #include "../../Constantes/constantes.h"
 #include "utiles.h"
 #include "estructuras.h"
-#include "logicaAplicacion.h"
 
 #include "recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 #include "recursosGraficosComunes/recursosComunesContactosSalas.h"
@@ -73,35 +72,35 @@ typedef struct
  * Iniciar la API de Winsock y crear el socket del usuario y conectarlo con el servidor, el renderizado de la ventana, los recursos graficos comunes esenciales (contactos y salas),
  * las interfaces graficas esenciales, las fuentes para las letras y la lista de mensajes y de notificaciones.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int inicializarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
+int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
 
 /** \brief Configurar los recursos de la aplicacion.
  *
  * Configurar el renderizado, los recursos graficos comunes esenciales (contactos y salas), las interfaces graficas esenciales,
  * la lista de mensajes, y ademas establecerles un tamanio y una posicion sobre la ventana.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-void configurarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
+void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
 
 /** \brief Liberar los recursos de la aplicacion.
  *
  * Liberar la lista de mensajes y la lista de notificaciones, las interfaces graficas esenciales y de autenticacion, los recursos graficos comunes esenciales (contactos y salas) y de autenticacion (autenticacion y registro),
  * las fuentes de los textos graficos, el socket del usuario junto con la API de Winsock y el renderizado de la ventana. En orden contrario a como se crearon.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
-void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
+void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
 
 
 
@@ -115,24 +114,24 @@ void liberarAplicacion (t_aplicacion *aplicacion, t_interfaces *interfaces);
  *
  * Maximizar la ventana y seleccionar la interfaz de contactos como interfaz de menu principal.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
  *
  */
-void iniciarMenuPrincipal (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void iniciarMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Inicializar y configurar las interfaces graficas de autenticacion.
  *
  * Seleccionar la interfaz de autenticacion como interfaz principal e inicializar, configurar y establecer un tamanio y una posicion sobre la ventana
  * a los recursos graficos comunes de autenticacion (autenticacion y registro) y las interfaces de autenticacion y registro.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int iniciarAutenticacionManual (t_aplicacion *aplicacion, t_interfaces *interfaces);
+int iniciarAutenticacionManual (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
 
 
 

@@ -21,11 +21,28 @@ static void liberarCliente (void *cliente);
 
 
 
-int inicializarServidor (t_servidor *servidor)
+int inicializarServidor (t_contextoServidor *contextoServidor)
 {
+    printf ("-INICIALIZANDO LOS RECURSOS DEL SERVIDOR-\t");
+
     int resultado;
 
-    printf ("-INICIALIZANDO LOS RECURSOS DEL SERVIDOR-\t");
+
+    // --------------- INICIALIZAR VALORES NULOS ---------------
+
+    contextoServidor->estadoWinsock = false;
+    contextoServidor->sock = INVALID_SOCKET;
+    contextoServidor->baseDeDatos = NULL;
+
+
+    // --------------- CREAR TABLA HASH DE CLIENTES ---------------
+
+    crearTablaHash (&(contextoServidor->tablaHashClientes), CANT_BUCKETS_TABLA_HASH);
+
+
+    // --------------- CREAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
+
+    crearListaSimple (&(contextoServidor->listaSimpleClientesNoAutenticados));
 
 
     // --------------- INICIALIZAR WINSOCK API ---------------
@@ -35,37 +52,28 @@ int inicializarServidor (t_servidor *servidor)
     resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
     if (resultado != 0)
     {
-        printf ("ERROR - Inicializar Winsock: %d.\n", resultado);
+        printf ("\nERROR - Inicializar Winsock: %d.\n", resultado);
         return ERROR_INICIALIZACION;
     }
+    contextoServidor->estadoWinsock = true;
 
 
     // --------------- INICIALIZAR SOCKET DEL SERVIDOR ---------------
 
-    servidor->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (servidor->sock == INVALID_SOCKET)
+    contextoServidor->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (contextoServidor->sock == INVALID_SOCKET)
     {
-        printf ("ERROR - Crear socket del servidor: %d.\n", WSAGetLastError ());
+        printf ("\nERROR - Crear socket del servidor: %d.\n", WSAGetLastError ());
         return ERROR_INICIALIZACION;
     }
 
 
-    // --------------- CREAR TABLA HASH DE CLIENTES ---------------
-
-    crearTablaHash (&(servidor->tablaHashClientes), CANT_BUCKETS_TABLA_HASH);
-
-
-    // --------------- CREAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
-
-    crearListaSimple (&(servidor->listaSimpleClientesNoAutenticados));
-
-
     // --------------- ABRIR BASE DE DATOS ---------------
 
-    resultado = sqlite3_open ("AplicacionDeMensajes.db", &(servidor->baseDeDatos));
+    resultado = sqlite3_open ("AplicacionDeMensajes.db", &(contextoServidor->baseDeDatos));
     if (resultado)
     {
-        printf ("ERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
+        printf ("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
         return ERROR_INICIALIZACION;
     }
 
@@ -74,7 +82,7 @@ int inicializarServidor (t_servidor *servidor)
     return EXITO;
 }
 
-int configurarServidor (t_servidor *servidor)
+int configurarServidor (t_contextoServidor *contextoServidor)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DEL SERVIDOR-\t");
 
@@ -87,51 +95,54 @@ int configurarServidor (t_servidor *servidor)
     dirServidor.sin_family = AF_INET;
     dirServidor.sin_port = htons (PUERTO); // Escuchar en el puerto asignado.
     dirServidor.sin_addr.s_addr = INADDR_ANY; // Aceptar conexiones de cualquier direccion IP.
-    if (bind (servidor->sock, (struct sockaddr*)(&dirServidor), sizeof (dirServidor)) == SOCKET_ERROR)
+    if (bind (contextoServidor->sock, (struct sockaddr*)(&dirServidor), sizeof (dirServidor)) == SOCKET_ERROR)
     {
-        printf ("ERROR - Enlazar socket al servidor: %d.\n", WSAGetLastError ());
+        printf ("\nERROR - Enlazar socket al servidor: %d.\n", WSAGetLastError ());
         return ERROR_CONFIGURACION;
     }
-    if (listen (servidor->sock, SOMAXCONN) == SOCKET_ERROR)
+    if (listen (contextoServidor->sock, SOMAXCONN) == SOCKET_ERROR)
     {
-        printf ("ERROR - Escuchar socket del servidor %d.\n", WSAGetLastError ());
+        printf ("\nERROR - Escuchar socket del servidor %d.\n", WSAGetLastError ());
         return ERROR_CONFIGURACION;
     }
-    ioctlsocket (servidor->sock, FIONBIO, &modoSocket);
+    ioctlsocket (contextoServidor->sock, FIONBIO, &modoSocket);
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
     return EXITO;
 }
 
-void liberarServidor (t_servidor *servidor)
+void liberarServidor (t_contextoServidor *contextoServidor)
 {
     printf ("-LIBERANDO LOS RECURSOS DEL SERVIDOR-\t");
 
 
     // --------------- LIBERAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
 
-    vaciarListaSimpleConAccion (&(servidor->listaSimpleClientesNoAutenticados), liberarCliente);
+    vaciarListaSimpleConAccion (&(contextoServidor->listaSimpleClientesNoAutenticados), liberarCliente);
 
 
     // --------------- LIBERAR TABLA HASH ---------------
 
-    eliminarTablaHashConAccion (&(servidor->tablaHashClientes), liberarCliente);
+    eliminarTablaHashConAccion (&(contextoServidor->tablaHashClientes), liberarCliente);
 
 
     // --------------- CERRAR BASE DE DATOS ---------------
 
-    sqlite3_close (servidor->baseDeDatos);
+    if (contextoServidor->baseDeDatos != NULL)
+        sqlite3_close (contextoServidor->baseDeDatos);
 
 
     // --------------- LIBERAR SOCKET DEL SERVIDOR ---------------
 
-    closesocket (servidor->sock);
+    if (contextoServidor->sock != INVALID_SOCKET)
+        closesocket (contextoServidor->sock);
 
 
     // --------------- LIBERAR WINSOCK API ---------------
 
-    WSACleanup ();
+    if (contextoServidor->estadoWinsock == true)
+        WSACleanup ();
 
 
     printf ("-LIBERACION EXITOSA-\n");
@@ -208,7 +219,7 @@ bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelClien
 
 
 
-int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
@@ -230,10 +241,10 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
 
 
     strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_SERVIDOR, -1);
         send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
@@ -246,11 +257,11 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
         // Recupera su ID y la guarda en el cliente correspondiente.
         cliente->id = sqlite3_column_int (sentencia, 0);
 
-        vincularNodoATablaHash (&(servidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_EXITO, cliente->id);
+        vincularNodoATablaHash (&(contextoServidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_EXITO, cliente->id);
     }
     else
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_CREDENCIALES, -1);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_CREDENCIALES, -1);
     sqlite3_finalize (sentencia);
 
     send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
@@ -259,7 +270,7 @@ int manejarSolicitudAutenticacion (t_servidor *servidor, t_nodo **clienteAProces
     return EXITO;
 }
 
-int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
@@ -281,10 +292,10 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
 
 
     strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_SERVIDOR, -1);
         send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
@@ -295,7 +306,7 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     sqlite3_finalize (sentencia);
     if (resultadoConsulta == SQLITE_ROW) // Si encontro un usuario en la base de datos ya registrado con el mismo nombre o correo electronico.
     {
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_CREDENCIALES, -1);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_CREDENCIALES, -1);
         send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
         return EXITO;
@@ -303,10 +314,10 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
 
 
     strcpy (consultaSQLITE, "INSERT INTO usuarios (nombre, contrasenia, correoElectronico) VALUES (?, ?, ?);");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_SERVIDOR, -1);
         send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
@@ -319,10 +330,10 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
 
 
     strcpy (consultaSQLITE, "SELECT id FROM usuarios WHERE nombre = ?;");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_ERROR_SERVIDOR, -1);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_SERVIDOR, -1);
         send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
@@ -334,15 +345,15 @@ int manejarSolicitudRegistro (t_servidor *servidor, t_nodo **clienteAProcesar, t
     cliente->id = sqlite3_column_int (sentencia, 0);
     sqlite3_finalize (sentencia);
 
-    vincularNodoATablaHash (&(servidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
-    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", INDICE_RESPUESTA_EXITO, cliente->id);
+    vincularNodoATablaHash (&(contextoServidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente desde la lista simple de no autenticados a la tabla hash.
+    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_EXITO, cliente->id);
     send (cliente->sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
     printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
 
     return EXITO;
 }
 
-int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
@@ -364,7 +375,7 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
 
     if (idEmisor == idReceptor)
     {
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_ERROR_CREDENCIALES);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", RESPUESTA_ERROR_CREDENCIALES);
         send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         printf ("Respuesta enviada: %s\n\n", buffersComunicacion->respuesta);
         return ERROR_INICIALIZACION;
@@ -372,10 +383,10 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
 
 
     strcpy (consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto, fecha) VALUES (?, ?, ?, ?);");
-    if (sqlite3_prepare_v2 (servidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (servidor->baseDeDatos));
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_ERROR_SERVIDOR);
+        printf ("ERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", RESPUESTA_ERROR_SERVIDOR);
         send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         return ERROR_INICIALIZACION;
     }
@@ -387,13 +398,13 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
     sqlite3_step (sentencia);
     sqlite3_finalize (sentencia);
 
-    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", INDICE_RESPUESTA_EXITO);
+    snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c", RESPUESTA_EXITO);
     send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
     printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
 
-    if (buscarClaveUnicaEnTablaHash (&(servidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (t_cliente), cmpIdCliente) == ENCONTRO_CLAVE)
+    if (buscarClaveUnicaEnTablaHash (&(contextoServidor->tablaHashClientes), &idReceptor, funcionHash, &cliente, sizeof (t_cliente), cmpIdCliente))
     {
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", INDICE_RESPUESTA_MENSAJE, idEmisor, texto);
+        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", RESPUESTA_MENSAJE, idEmisor, texto);
         send (cliente.sock, buffersComunicacion->respuesta, strlen (buffersComunicacion->respuesta), 0);
         printf ("Respuesta enviada: %s\n", buffersComunicacion->respuesta);
     }
@@ -403,7 +414,7 @@ int manejarEnvioMensaje (t_servidor *servidor, t_nodo **clienteAProcesar, t_buff
 }
 
 /*
-int manejarSolicitudContacto (t_servidor *servidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
+int manejarSolicitudContacto (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion)
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 

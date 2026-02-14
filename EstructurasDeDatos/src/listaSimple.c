@@ -14,14 +14,14 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
     if (!nuevoNodo)
     {
         perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
+        return 1;
     }
     nuevoNodo->dato = malloc (tamDato);
     if (!nuevoNodo->dato)
     {
         perror ("ERROR - Sin memoria.\n");
         free (nuevoNodo);
-        return ERROR_SIN_MEMORIA;
+        return 1;
     }
 
     memcpy (nuevoNodo->dato, dato, tamDato);
@@ -29,7 +29,7 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
     nuevoNodo->sig = *pl;
     *pl = nuevoNodo;
 
-    return EXITO;
+    return 0;
 }
 
 void vincularNodoAlInicioListaSimple (t_listaSimple *pl, t_nodo *nodoAVincular)
@@ -63,12 +63,12 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
         if (cmp ((*pl)->dato, key) == 0)
         {
             memcpy (returnDato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
-            return ENCONTRO_CLAVE;
+            return 1;
         }
         pl = &((*pl)->sig);
     }
 
-    return NO_ENCONTRO_CLAVE;
+    return 0;
 }
 
 t_nodo* desvincularNodoDeListaSimple (t_nodo **nodoADesvincular)

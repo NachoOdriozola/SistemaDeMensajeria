@@ -18,7 +18,6 @@
 #include <string.h>
 
 #include "nodo.h"
-#include "../../Constantes/constantes.h"
 
 
 /* ============================
@@ -55,7 +54,7 @@ void crearListaSimple (t_listaSimple *pl);
  * \param dato Puntero al dato que se quiere guardar.
  * \param tamDato tamanio en bytes del dato.
  *
- * \return EXITO si se ejecuto correctamente, ERROR_SIN_MEMORIA en caso de no poder asignar memoria.
+ * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
 int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned tamDato);
@@ -95,7 +94,7 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
  * \param tamDato tamanio en bytes del dato a guardar.
  * \param cmp Funcion de comparacion que se debe realizar para encontrar el nodo con la clave.
  *
- * \return ENCONTRO_CLAVE si encontro la clave, NO_ENCONTRO_CLAVE en caso contrario.
+ * \return 1 si encontro la clave, 0 en caso contrario.
  *
  */
 int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));

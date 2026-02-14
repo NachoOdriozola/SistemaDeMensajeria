@@ -1,6 +1,6 @@
 /**
  * \file   utiles.h
- * \brief  Contiene funciones utiles logicas.
+ * \brief  Contiene defines, macros, estructuras y funciones logicas utiles.
  */
 
 
@@ -50,16 +50,17 @@
 
 
 /**
- * \def HABILITAR_PUNTO_INSERCION
- * \brief Codigo para activar el punto de insercion.
+ * \def EVENTO_MANEJADO
+ * \brief Codigo de retorno para indicar que el evento fue manejado.
  */
-#define HABILITAR_PUNTO_INSERCION 1
+#define EVENTO_MANEJADO 1
 
 /**
- * \def DESHABILITAR_PUNTO_INSERCION
- * \brief Codigo para desactivar el punto de insercion.
+ * \def EVENTO_NO_MANEJADO
+ * \brief Codigo de retorno para indicar que el evento no fue manejado.
  */
-#define DESHABILITAR_PUNTO_INSERCION 0
+#define EVENTO_NO_MANEJADO 0
+
 
 /**
  * \def VELOCIDAD_PARPADEO_PUNTO_INSERCION
@@ -72,6 +73,96 @@
  * \brief Constante para reiniciar el contador del punto de insercion.
  */
 #define REINICIAR_CONTADOR_PUNTO_INSERCION 0
+
+
+
+/* ============================
+   MACROS
+   ============================ */
+
+
+
+/**
+ * \brief Libera de forma segura un objeto de tipo vista (sfView) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfView_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfView` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_VISTA(x) if(x) {sfView_destroy(x); x = NULL;}
+
+/**
+ * \brief Libera de forma segura un objeto de tipo texto (sfText) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfText_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfText` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_TEXTO(x) if(x) {sfText_destroy(x); x = NULL;}
+
+/**
+ * \brief Libera de forma segura un objeto de tipo rectangulo (sfRectangleShape) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfRectangleShape_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfRectangleShape` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_RECTANGULO(x) if(x) {sfRectangleShape_destroy(x); x = NULL;}
+
+/**
+ * \brief Libera de forma segura un objeto de tipo circulo (sfCircleShape) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfCircleShape_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfCircleShape` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_CIRCULO(x) if(x) {sfCircleShape_destroy(x); x = NULL;}
+
+/**
+ * \brief Libera de forma segura un objeto de tipo fuente (sfFont) si existe.
+ *
+ * Verifica si el puntero es valido (no nulo) antes de llamar a `sfFont_destroy()`.
+ * Luego, lo asigna a NULL.
+ * Garantiza un cierre seguro de recursos graficos.
+ *
+ * \param x Puntero al objeto `sfFont` a destruir.
+ */
+#define DESTRUCTOR_SEGURO_FUENTE(x) if(x) {sfFont_destroy(x); x = NULL;}
+
+
+
+/* ============================
+   ESTRUCTURAS
+   ============================ */
+
+
+
+/**
+ * \enum t_habilitacion
+ * \brief Representa el estado de habilitacion de un recurso o funcionalidad. Activo (HABILITADO) o inactivo (DESHABILITADO).
+ */
+typedef enum
+{
+    HABILITADO,
+    DESHABILITADO
+} t_habilitacion;
+
+/** \struct t_puntoInsercion
+ * \brief Gestiona el punto de insercion.
+ */
+typedef struct
+{
+    t_habilitacion estado;              /**< Activar/desactivar el punto de insercion. */
+    unsigned short int contador;        /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
+} t_puntoInsercion;
 
 
 
@@ -190,27 +281,34 @@ void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar
 
 
 
+/** \brief Inicializar o resetear el punto de insercion.
+ *
+ * Deshabilitar (desactivar) el parpadeo del punto de insercion y reiniciar su contador.
+ *
+ * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
+ *
+ */
+void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion);
+
+/** \brief Preguntar si el punto de insercion esta habilitado o deshabilitado.
+ *
+ * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
+ *
+ *
+ * \return 1 si se encuentra habilitado, 0 si no lo esta.
+ */
+bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion);
+
 /** \brief Actualizar el punto de insercion segun su estado.
  *
  * Avanzar el contador del punto de insercion. Si el punto de insercion alcanza la velocidad (constante) establecida, se reinicia el contador y se actualiza (activa/desactiva) segun su estado:
  * si el punto de insercion esta deshabilitado, se habilita.
  * si el punto de insercion esta habilitado, se deshabilita.
  *
- * \param puntoInsercion Habilitacion para activar/desactivar (mostrar o no) el punto de insercion.
- * \param contadorPuntoInsercion Contador para activar/desactivar determinado tiempo el punto de insercion.
+ * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
  *
  */
-void actualizarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion);
-
-/** \brief Reiniciar el punto de insercion.
- *
- * Deshabilitar (desactivar) el parpadeo del punto de insercion y reiniciar su contador.
- *
- * \param puntoInsercion Habilitacion para activar/desactivar (mostrar o no) el punto de insercion.
- * \param contadorPuntoInsercion Contador para activar/desactivar determinado tiempo el punto de insercion.
- *
- */
-void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion);
+void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion);
 
 
 

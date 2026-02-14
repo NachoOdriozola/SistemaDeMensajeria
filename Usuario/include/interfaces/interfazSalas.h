@@ -29,7 +29,6 @@
 #include "../../../EstructurasDeDatos/include/listaCircular.h"
 #include "../utiles.h"
 #include "../estructuras.h"
-#include "../logicaAplicacion.h"
 #include "../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
 
@@ -107,46 +106,46 @@ int interfazSalas_inicializar (t_interfazSalas *interfazSalas);
  * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_fuentes *fuentes);
+void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalasFuentes *fuentes);
 
 /** \brief Manejar las acciones que realiza el usuario sobre la interfaz de salas.
  *
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y manejar la respuesta correspondientes segun el evento detectado.
  * Cada evento se desarrolla en una funcion particular manejadora de eventos.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_accion (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
+void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de salas.
  *
  * Capturar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc.) y realizar o invocar las funciones
  * correspondientes segun el evento detectado.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_actualizar (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
+void interfazSalas_actualizar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 /** \brief Mostrar los recursos graficos actualizados de la interfaz de salas sobre la ventana.
  *
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de salas en la ventana.
  * Primero renderiza las vistas moviles y luego la vista de UI.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
  *
  */
-void interfazSalas_renderizar (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas);
+void interfazSalas_renderizar (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de salas.
  *

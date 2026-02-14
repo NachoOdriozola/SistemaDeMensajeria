@@ -142,23 +142,30 @@ void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar
 
 
 
-void actualizarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion)
+void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion)
 {
-    (*contadorPuntoInsercion) ++;
-    if (*contadorPuntoInsercion >= VELOCIDAD_PARPADEO_PUNTO_INSERCION)
-    {
-        *contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
-        if (*puntoInsercion == DESHABILITAR_PUNTO_INSERCION)
-            *puntoInsercion = HABILITAR_PUNTO_INSERCION;
-        else
-            *puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
-    }
+    puntoInsercion->estado = DESHABILITADO;
+    puntoInsercion->contador = REINICIAR_CONTADOR_PUNTO_INSERCION;
 }
 
-void reiniciarPuntoInsercion (bool *puntoInsercion, unsigned short int *contadorPuntoInsercion)
+bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion)
 {
-    *puntoInsercion = DESHABILITAR_PUNTO_INSERCION;
-    *contadorPuntoInsercion = REINICIAR_CONTADOR_PUNTO_INSERCION;
+    if (puntoInsercion->estado == HABILITADO)
+        return 1;
+    return 0;
+}
+
+void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion)
+{
+    puntoInsercion->contador ++;
+    if (puntoInsercion->contador >= VELOCIDAD_PARPADEO_PUNTO_INSERCION)
+    {
+        puntoInsercion->contador = REINICIAR_CONTADOR_PUNTO_INSERCION;
+        if (puntoInsercion->estado == DESHABILITADO)
+            puntoInsercion->estado = HABILITADO;
+        else
+            puntoInsercion->estado = DESHABILITADO;
+    }
 }
 
 

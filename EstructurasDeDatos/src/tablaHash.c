@@ -6,27 +6,27 @@ int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
     int i;
 
     if (cantBuckets <= 0)
-        return EXITO;
+        return 0;
 
     tablaHash->cantBuckets = cantBuckets;
     tablaHash->buckets = (t_listaSimple*) malloc (cantBuckets * sizeof (t_listaSimple));
     if (!tablaHash->buckets)
     {
         perror ("ERROR - Sin memoria.\n");
-        return ERROR_SIN_MEMORIA;
+        return 1;
     }
 
     for (i = 0; i < cantBuckets; i++)
         crearListaSimple (&(tablaHash->buckets[i]));
 
-    return EXITO;
+    return 0;
 }
 
 int insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
 {
-    if (insertarAlInicioListaSimple (&(tablaHash->buckets[funcionHash(clave)]), dato, tamDato) == ERROR_SIN_MEMORIA)
-        return ERROR_SIN_MEMORIA;
-    return EXITO;
+    if (insertarAlInicioListaSimple (&(tablaHash->buckets[funcionHash(clave)]), dato, tamDato) == 1)
+        return 1;
+    return 0;
 }
 
 void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodo *nodoAVincular)
@@ -36,9 +36,9 @@ void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int func
 
 int buscarClaveUnicaEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
 {
-    if (buscarClaveUnicaEnListaSimple (&(tablaHash->buckets[funcionHash(clave)]), clave, returnDato, tamDato, cmp) == ENCONTRO_CLAVE)
-        return ENCONTRO_CLAVE;
-    return NO_ENCONTRO_CLAVE;
+    if (buscarClaveUnicaEnListaSimple (&(tablaHash->buckets[funcionHash(clave)]), clave, returnDato, tamDato, cmp) == 1)
+        return 1;
+    return 0;
 }
 
 void mapTablaHash (t_tablaHash *tablaHash, void accion (void*))

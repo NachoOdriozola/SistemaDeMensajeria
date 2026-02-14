@@ -33,10 +33,10 @@
 
 
 /**
- * \struct t_buffersComunicacion
+ * \union t_buffersComunicacion
  * \brief  Contiene los buffers necesarios para establecer la comunicacion entre el cliente y el servidor.
  */
-typedef struct
+typedef union
 {
     char solicitud [MAX_BUFFER_SOLICITUD];              /**< Buffer que almacena una solicitud un clientes. */
     char respuesta [MAX_BUFFER_RESPUESTA];              /**< Buffer que almacena una respuestas del servidor para enviar al cliente. */
@@ -52,18 +52,18 @@ typedef struct
     int id;      /**< Identificador correspondiente del usuario. */
 } t_cliente;
 
-
 /**
- * \struct t_servidor
- * \brief  Estructura base del servidor.
+ * \struct t_contextoServidor
+ * \brief  Contexto (estados y recursos) global del servidor.
  */
 typedef struct
 {
+    bool estadoWinsock;                              /**< Estado de Winsock API */
     SOCKET sock;                                     /**< Socket del servidor. */
     sqlite3 *baseDeDatos;                            /**< Puntero a la base de datos. */
     t_listaSimple listaSimpleClientesNoAutenticados; /**< Lista simple de clientes conectados pero no autenticados. */
     t_tablaHash tablaHashClientes;                   /**< Tabla hash de clientes conectados y autenticados. */
-} t_servidor;
+} t_contextoServidor;
 
 
 

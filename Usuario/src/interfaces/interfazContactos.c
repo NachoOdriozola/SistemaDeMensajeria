@@ -25,13 +25,13 @@ static void interfazContactos_inicializarValoresNulosElementos (t_interfazContac
 static int interfazContactos_inicializarTextos (t_interfazContactosTextos *textos);
 static int interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos);
 
-static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_fuentes *fuentes);
+static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_recursosComunesContactosSalasFuentes *fuentes);
 static void interfazContactos_configurarElementos (t_interfazContactosElementos *elementos);
 
 static void interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos);
 static void interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos);
 
-static void interfazContactos_renderizarVistaUI (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
+static void interfazContactos_renderizarVistaUI (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
 static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos);
 static void interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos);
 
@@ -48,16 +48,16 @@ static void interfazContactos_liberarElementos (t_interfazContactosElementos *el
 
 static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
-static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
-static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
-static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 
 static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar);
 
-static bool manejarEnterIntentarAgendarContacto (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos);
+static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 
 
@@ -98,12 +98,12 @@ int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
     return EXITO;
 }
 
-void interfazContactos_configurar (t_interfazContactos *interfazContactos, const t_fuentes *fuentes)
+void interfazContactos_configurar (t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalasFuentes *fuentes)
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITAR_ESCRIBIR_AGENDAR_CONTACTO;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
+    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITADO;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -135,37 +135,37 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos, const
     interfazContactos_tamYPosVentanaElementos (&(interfazContactos->elementos));
 }
 
-void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     sfEvent evento;
 
 
-    sfRenderWindow_pollEvent (aplicacion->renderizado, &evento);
+    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
     switch (evento.type)
     {
 
     case sfEvtClosed:
-        sfRenderWindow_close (aplicacion->renderizado);
+        sfRenderWindow_close (contextoAplicacion->renderizado);
         break;
 
 
     case sfEvtResized:
-        manejarRedimensionamientoVentanaContactosSalas (aplicacion, recursosComunesContactosSalas, evento);
+        manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
         break;
 
 
     case sfEvtMouseButtonPressed:
         if (evento.mouseButton.button == sfMouseLeft)
         {
-            if (manejarClickEscribirMensaje (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickEscribirAgendarContacto (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickNotificaciones (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickAgendarContacto (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickCerrarVentanaEmergente (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickSolapaCambiarInterfaz (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickAreaMensajes (aplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickEnviarMensaje (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickCambiarInterfazConfig (aplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickEscribirAgendarContacto (contextoAplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickNotificaciones (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickAgendarContacto (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            //if (manejarClickCerrarVentanaEmergente (contextoAplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            if (manejarClickSolapaCambiarInterfaz (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+            if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            //if (manejarClickCambiarInterfazConfig (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
         }
         break;
 
@@ -182,12 +182,12 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContac
     case sfEvtKeyPressed:
         if (evento.key.code == sfKeyEnter)
         {
-            if (manejarEnterEnviarMensaje (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
             //if (manejarEnterIntentarAgendarContacto (aplicacion, interfazContactos) == EVENTO_MANEJADO) break;
         }
 
         if (evento.key.code == sfKeyUp)
-            if (manejarDesplazarArribaAreaMensajes (aplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
 
         if (evento.key.code == sfKeyDown)
             if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
@@ -196,7 +196,7 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContac
 
 
     case sfEvtMouseWheelScrolled:
-        if (manejarScrollAreaMensajes (aplicacion, recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         break;
 
 
@@ -205,22 +205,22 @@ void interfazContactos_accion (t_aplicacion *aplicacion, t_recursosComunesContac
     }
 }
 
-void interfazContactos_actualizar (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     // --------------- RECIBIR RESPUESTAS DEL SERVIDOR ---------------
 
     char bufferRespuesta [MAX_BUFFER_RESPUESTA];
 
-    if (recibirRespuesta (aplicacion->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA) == RECIBIO_RESPUESTA)
+    if (recibirRespuesta (contextoAplicacion->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA) == RECIBIO_RESPUESTA)
     {
         switch (*bufferRespuesta)
         {
-        case INDICE_RESPUESTA_AGENDAR_CONTACTO:
-            agregarNotificacion (&(aplicacion->listaNotificaciones), bufferRespuesta, aplicacion->mensajes.fuentes);
+        case RESPUESTA_AGENDAR_CONTACTO:
+            //agregarNotificacion (&(recursosComunesContactosSalas->listaNotificaciones), bufferRespuesta, &(recursosComunesContactosSalas->fuentes));
             break;
 
-        case INDICE_RESPUESTA_MENSAJE:
-            manejarReciboMensaje (aplicacion, bufferRespuesta);
+        case RESPUESTA_MENSAJE:
+            manejarReciboMensaje (&(recursosComunesContactosSalas->contextoMensajes), bufferRespuesta);
             break;
         }
     }
@@ -228,29 +228,29 @@ void interfazContactos_actualizar (t_aplicacion *aplicacion, t_recursosComunesCo
 
     // --------------- PUNTO DE INSERCION ---------------
 
-    if ((recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITAR_ESCRIBIR_MENSAJE) ||
-        (interfazContactos->habilitaciones.escribirAgendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO))
-        actualizarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion), &(recursosComunesContactosSalas->habilitaciones.contadorPuntoInsercion));
+    if ((recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITADO) ||
+        (interfazContactos->habilitaciones.escribirAgendarContacto == HABILITADO))
+        actualizarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
     else
-        reiniciarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion), &(recursosComunesContactosSalas->habilitaciones.contadorPuntoInsercion));
+        resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
 }
 
-void interfazContactos_renderizar (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
+void interfazContactos_renderizar (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
 {
-    sfRenderWindow_clear (aplicacion->renderizado, sfColor_fromRGB (244, 241, 236));
+    sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
 
     // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
 
-    renderizarVistaMensajes (aplicacion, recursosComunesContactosSalas);
+    renderizarVistaMensajes (renderizado, recursosComunesContactosSalas);
 
 
     // --------------- RENDERIZAR VISTA DE UI ---------------
 
-    interfazContactos_renderizarVistaUI (aplicacion, recursosComunesContactosSalas, interfazContactos);
+    interfazContactos_renderizarVistaUI (renderizado, recursosComunesContactosSalas, interfazContactos);
 
 
-    sfRenderWindow_display (aplicacion->renderizado);
+    sfRenderWindow_display (renderizado);
 }
 
 void interfazContactos_liberar (t_interfazContactos *interfazContactos)
@@ -275,7 +275,7 @@ void interfazContactos_liberar (t_interfazContactos *interfazContactos)
 
 
 
-void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos)
+void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
     char *bufferSolicitud, *bufferRespuesta;
     char estadoSolicitud;
@@ -293,17 +293,17 @@ void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *in
         return;
     }
 
-    sprintf (bufferSolicitud, "%c|%s|%s", INDICE_SOLICITUD_AGENDAR_CONTACTO, aplicacion->usuario.nombre, interfazContactos->bufferAgendarContacto);
+    sprintf (bufferSolicitud, "%c|%s|%s", SOLICITUD_AGENDAR_CONTACTO, contextoAplicacion->usuario.nombre, interfazContactos->bufferAgendarContacto);
     printf ("Enviado: %s\n", bufferSolicitud);
-    enviarSolicitudYRecibirRespuesta (aplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
+    enviarSolicitudYRecibirRespuesta (contextoAplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
     sscanf (bufferRespuesta, "%c", &estadoSolicitud);
 
     free (bufferSolicitud);
     free (bufferRespuesta);
 
-    if (estadoSolicitud == INDICE_RESPUESTA_EXITO)
+    if (estadoSolicitud == RESPUESTA_EXITO)
         printf ("Le envio la solicitud de amistad.\n");
-    else if (estadoSolicitud == INDICE_RESPUESTA_ERROR_SERVIDOR)
+    else if (estadoSolicitud == RESPUESTA_ERROR_SERVIDOR)
         printf ("No se envio la solicitud de amistad.\n");
 }
 
@@ -312,7 +312,7 @@ void intentarSolicitudAmistad (t_aplicacion *aplicacion, t_interfazContactos *in
  * Deshabilitar las habilitaciones y restablecer los buffers al inicio.
  * Modificar unicamente los recursos graficos de texto y/o elementos que se necesiten adaptar para cambiar a la interfaz de salas.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  */
@@ -320,16 +320,18 @@ static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComu
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITAR_ESCRIBIR_MENSAJE;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITAR_ESCRIBIR_AGENDAR_CONTACTO;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
+    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITADO;
+
+    resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
 
-    *(recursosComunesContactosSalas->bufferMensaje) = '\0';
+    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
     *(interfazContactos->bufferAgendarContacto) = '\0';
 
 
@@ -357,14 +359,14 @@ static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComu
  * Si se encuentra habilitada la ventana emergente de agendar contacto, renderizar los elementos y textos graficos.
  * No se limpia ni muestra la pantalla, solo los renderiza.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  */
 static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
 {
-    if (interfazContactos->habilitaciones.agendarContacto == HABILITAR_AGENDAR_CONTACTO)
+    if (interfazContactos->habilitaciones.agendarContacto == HABILITADO)
     {
         // ELEMENTOS
 
@@ -477,10 +479,10 @@ static int interfazContactos_inicializarElementos (t_interfazContactosElementos 
 /** \brief Configurar los recursos graficos de textos de la interfaz de contactos.
  *
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
- * \param fuentes Puntero a la estructura que contiene las fuentes graficas de texto cargadas para utilizar.
+ * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
-static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_fuentes *fuentes)
+static void interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_recursosComunesContactosSalasFuentes *fuentes)
 {
     // agendarContacto
     sfText_setFont (textos->agendarContacto, fuentes->ui);
@@ -556,53 +558,53 @@ static void interfazContactos_tamYPosVentanaElementos (t_interfazContactosElemen
  * interfaces de contactos y salas. Ademas, si se encuentran habilitados, renderiza la ventana emergente de agendar contacto, notificaciones y el punto de insercion.
  * No se limpia ni muestra la pantalla, solo los renderiza.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  */
-static void interfazContactos_renderizarVistaUI (t_aplicacion *aplicacion, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
+static void interfazContactos_renderizarVistaUI (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
 
-    sfRenderWindow_setView (aplicacion->renderizado, recursosComunesContactosSalas->vistas.UI);
+    sfRenderWindow_setView (renderizado, recursosComunesContactosSalas->vistas.UI);
 
 
     // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
 
     // ELEMENTOS
 
-    recursosComunesContactosSalas_renderizarElementos (aplicacion->renderizado, &(recursosComunesContactosSalas->elementos));
-    interfazContactos_renderizarElementos (aplicacion->renderizado, &(interfazContactos->elementos));
+    recursosComunesContactosSalas_renderizarElementos (renderizado, &(recursosComunesContactosSalas->elementos));
+    interfazContactos_renderizarElementos (renderizado, &(interfazContactos->elementos));
 
 
     // TEXTOS
 
-    recursosComunesContactosSalas_renderizarTextos (aplicacion->renderizado, &(recursosComunesContactosSalas->textos));
-    interfazContactos_renderizarTextos (aplicacion->renderizado, &(interfazContactos->textos));
+    recursosComunesContactosSalas_renderizarTextos (renderizado, &(recursosComunesContactosSalas->textos));
+    interfazContactos_renderizarTextos (renderizado, &(interfazContactos->textos));
 
 
     // --------------- RENDERIZAR AGENDAR CONTACTO ---------------
 
-    renderizarAgendarContacto (aplicacion->renderizado, recursosComunesContactosSalas, interfazContactos);
+    renderizarAgendarContacto (renderizado, recursosComunesContactosSalas, interfazContactos);
 
 
     // --------------- RENDERIZAR NOTIFICACIONES ---------------
 
-    renderizarNotificaciones (aplicacion, recursosComunesContactosSalas);
+    renderizarNotificaciones (renderizado, recursosComunesContactosSalas);
 
 
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
 
-    if (recursosComunesContactosSalas->habilitaciones.puntoInsercion == HABILITAR_PUNTO_INSERCION)
-        sfRenderWindow_drawRectangleShape (aplicacion->renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
+    if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion)))
+        sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
 }
 
 /** \brief Renderizar los recursos graficos de textos de la interfaz de contactos.
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de la interfaz de contactos.
  *
  */
@@ -616,7 +618,7 @@ static void interfazContactos_renderizarTextos (sfRenderWindow *renderizado, con
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de la interfaz de contactos.
  *
  */
@@ -656,8 +658,8 @@ static void interfazContactos_liberarElementos (t_interfazContactosElementos *el
 
 /** \brief Manejar el evento de click en la barra para escribir mensaje.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -669,21 +671,21 @@ static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_re
 
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.barraEscribirMensaje))
     {
-        recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITAR_ESCRIBIR_MENSAJE;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-        interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITAR_ESCRIBIR_AGENDAR_CONTACTO;
+        recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITADO;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+        interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITADO;
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
         sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
         return EVENTO_MANEJADO;
     }
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITAR_ESCRIBIR_MENSAJE;
+    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
     return EVENTO_NO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en la barra para escribir un nombre para agendarlo como un nuevo contacto.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -695,36 +697,36 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
 
     if (clickEnRectangulo (renderizado, interfazContactos->elementos.barraEscribirAgendarContacto))
     {
-        interfazContactos->habilitaciones.escribirAgendarContacto = HABILITAR_ESCRIBIR_AGENDAR_CONTACTO;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+        interfazContactos->habilitaciones.escribirAgendarContacto = HABILITADO;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
         limiteTextoAux = sfText_getGlobalBounds (interfazContactos->textos.auxAgendarContacto);
         sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){805.5 + limiteTextoAux.width, 632});
         return EVENTO_MANEJADO;
     }
-    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITAR_ESCRIBIR_AGENDAR_CONTACTO;
+    interfazContactos->habilitaciones.escribirAgendarContacto = DESHABILITADO;
     return EVENTO_NO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en abrir notificaciones.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.notificaciones))
+    if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.notificaciones))
         return EVENTO_NO_MANEJADO;
 
-    if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITAR_NOTIFICACIONES)
-        recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITAR_NOTIFICACIONES;
+    if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITADO)
+        recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITADO;
     else
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
     *(interfazContactos->bufferAgendarContacto) = '\0';
     sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
     sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
@@ -734,24 +736,24 @@ static bool manejarClickNotificaciones (const t_aplicacion *aplicacion, t_recurs
 
 /** \brief Manejar el evento de click en agendar un nuevo contacto.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static bool manejarClickAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (!clickEnTexto (aplicacion->renderizado, interfazContactos->textos.agendarContacto))
+    if (!clickEnTexto (renderizado, interfazContactos->textos.agendarContacto))
         return EVENTO_NO_MANEJADO;
 
-    if (interfazContactos->habilitaciones.agendarContacto == DESHABILITAR_AGENDAR_CONTACTO)
-        interfazContactos->habilitaciones.agendarContacto = HABILITAR_AGENDAR_CONTACTO;
+    if (interfazContactos->habilitaciones.agendarContacto == DESHABILITADO)
+        interfazContactos->habilitaciones.agendarContacto = HABILITADO;
     else
-        interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
+        interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
     sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "AGENDAR CONTACTO");
     sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){830, 400});
 
@@ -760,8 +762,8 @@ static bool manejarClickAgendarContacto (const t_aplicacion *aplicacion, t_recur
 
 /** \brief Manejar el evento de click en cerrar la ventana emergente.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -772,9 +774,9 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
     if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
         return EVENTO_NO_MANEJADO;
 
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
     *(interfazContactos->bufferAgendarContacto) = '\0';
 
     return EVENTO_MANEJADO;
@@ -782,19 +784,19 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
 
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (!clickEnRectangulo (aplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
+    if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    aplicacion->usuario.interfazActual = INTERFAZ_SALAS;
+    contextoAplicacion->usuario.interfazActual = INTERFAZ_SALAS;
     cambiarInterfazASalas (recursosComunesContactosSalas, interfazContactos);
 
     return EVENTO_MANEJADO;
@@ -802,8 +804,8 @@ static bool manejarClickSolapaCambiarInterfaz (t_aplicacion *aplicacion, t_recur
 
 /** \brief Manejar el evento de click en el area de mensajes.
  *
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -812,30 +814,30 @@ static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recur
 {
     if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
     {
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = HABILITAR_AREA_MENSAJES;
+        recursosComunesContactosSalas->habilitaciones.areaMensajes = HABILITADO;
         return EVENTO_MANEJADO;
     }
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITAR_AREA_MENSAJES;
+    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
     return EVENTO_NO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el boton para cambiar a la interfaz de configuraciones.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
-    if (!clickEnTexto (aplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
+    if (!clickEnTexto (contextoAplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
         return EVENTO_NO_MANEJADO;
 
-    aplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITAR_NOTIFICACIONES;
-    interfazContactos->habilitaciones.agendarContacto = DESHABILITAR_AGENDAR_CONTACTO;
+    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    interfazContactos->habilitaciones.agendarContacto = DESHABILITADO;
     *(interfazContactos->bufferAgendarContacto) = '\0';
 
     return EVENTO_MANEJADO;
@@ -845,7 +847,7 @@ static bool manejarClickCambiarInterfazConfig (t_aplicacion *aplicacion, t_recur
  *
  * Si se encuentra habilitada la escritura para agendar un nuevo contacto, se agrega el caracter al buffer que contiene el nombre del contacto, lo muestra por pantalla y modifica el punto de insercion.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene los buffers, habilitacion y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
@@ -856,7 +858,7 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
 {
     sfFloatRect limiteTextoAux;
 
-    if (!interfazContactos->habilitaciones.escribirAgendarContacto == HABILITAR_ESCRIBIR_AGENDAR_CONTACTO)
+    if (!interfazContactos->habilitaciones.escribirAgendarContacto == HABILITADO)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (interfazContactos->bufferAgendarContacto, MAX_NOMBRE_USUARIO - 1, eventoChar);
@@ -869,21 +871,21 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
 
 /** \brief Manejar el evento de enviar solicitud de contacto.
  *
- * \param aplicacion Puntero a la estructura base de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEnterIntentarAgendarContacto (t_aplicacion *aplicacion, t_interfazContactos *interfazContactos)
+static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
-    if (interfazContactos->habilitaciones.agendarContacto != HABILITAR_ESCRIBIR_AGENDAR_CONTACTO)
+    if (interfazContactos->habilitaciones.agendarContacto == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
     if (strlen (interfazContactos->bufferAgendarContacto) == 0)
         return EVENTO_NO_MANEJADO;
 
-    intentarSolicitudAmistad (aplicacion, interfazContactos);
+    intentarSolicitudAmistad (contextoAplicacion, interfazContactos);
 
     return EVENTO_MANEJADO;
 }
