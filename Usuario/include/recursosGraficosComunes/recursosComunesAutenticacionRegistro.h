@@ -79,28 +79,29 @@ typedef struct
     sfRectangleShape *subrayadoTitulo;                  /**< Barra decorativa para subrayar el titulo de la interfaz. */
 } t_recursosComunesAutenticacionRegistroElementos;
 
-/** \struct t_recursosComunesAutenticacionRegistroHabilitaciones
- * \brief Contiene todas las habilitaciones comunes (compartidas) entre las interfaces de autenticacion y registro.
+/** \enum t_recursosComunesAutenticacionRegistroFoco
+ * \brief Contiene todos los estados de foco comunes (compartidas) entre las interfaces de autenticacion y registro.
  */
-typedef struct
+typedef enum
 {
-    t_habilitacion escribirContrasenia;                   /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su contrasenia. */
-    t_habilitacion escribirNombre;                        /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su nombre. */
-    t_habilitacion ingresar;                              /**< Habilitar/deshabilitar el ingreso de usuario. */
-    t_puntoInsercion puntoInsercion;
-} t_recursosComunesAutenticacionRegistroHabilitaciones;
+    ESCRIBIR_CONTRASENIA,                  /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su contrasenia. */
+    ESCRIBIR_NOMBRE,                       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su nombre. */
+    RCAR_NINGUNO                           /**< Ningun foco establecido. */
+} t_recursosComunesAutenticacionRegistroFoco;
 
 /** \struct t_recursosComunesAutenticacionRegistro
- * \brief Estructura base que contiene los buffers, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
+ * \brief Estructura base que contiene los buffers, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
 {
     t_recursosComunesAutenticacionRegistroFuentes fuentes;
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
-    t_recursosComunesAutenticacionRegistroHabilitaciones habilitaciones;
+    t_recursosComunesAutenticacionRegistroFoco estadoFoco;
+    t_habilitacion ingreso;                                                 /**< Habilitar/deshabilitar la posibilidad de ingreso de usuario. */
     char bufferNombre [MAX_NOMBRE_USUARIO];                                 /**< Buffer donde se guarda el nombre que escribe el usuario. */
     char bufferContrasenia [MAX_CONTRASENIA_USUARIO];                       /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
+    t_puntoInsercion puntoInsercion;
 } t_recursosComunesAutenticacionRegistro;
 
 
@@ -111,11 +112,16 @@ typedef struct
 
 
 
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
 /** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
- *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
@@ -126,7 +132,7 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
  *
  * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  *
  */
 void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
@@ -153,10 +159,36 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
 
 /** \brief Liberar, de manera segura, todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de autenticacion y registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  *
  */
 void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
+
+
+/* ============================
+   FUNCIONES LOGICAS
+   ============================ */
+
+
+
+/** \brief Activar la interfaz de autenticacion.
+ *
+ * Modificar los estados de foco, los buffers, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de autenticacion.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
+/** \brief Activar la interfaz de registro.
+ *
+ * Modificar los estados de foco, los buffers, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de registro.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 

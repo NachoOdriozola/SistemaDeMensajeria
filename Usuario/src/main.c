@@ -26,14 +26,8 @@ int main()
         liberarAplicacion (&contextoAplicacion, &interfaces);
         return ERROR_INICIALIZACION;
     }
-    configurarAplicacion (&contextoAplicacion, &interfaces);
 
-    if (iniciarAutenticacionManual (&contextoAplicacion, &interfaces) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar recursos para autenticacion manual.\n");
-        liberarAplicacion (&contextoAplicacion, &interfaces);
-        return ERROR_INICIALIZACION;
-    }
+    configurarAplicacion (&contextoAplicacion, &interfaces);
 
 
     // --------------- EJECUCION DEL BUCLE PRINCIPAL: funciones de las interfaces ---------------
@@ -49,7 +43,7 @@ int main()
             interfazAutenticacion_renderizar (contextoAplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.autenticacion));
             if (contextoAplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
+                iniciarInterfazMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -63,7 +57,7 @@ int main()
             interfazRegistro_renderizar (contextoAplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.registro));
             if (contextoAplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
+                iniciarInterfazMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -123,6 +117,51 @@ int main()
 
 
 
+void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces)
+{
+    // --------------- APLICACION ---------------
+
+    contextoAplicacion->estadoWinsock = false;
+    contextoAplicacion->renderizado = NULL;
+    contextoAplicacion->sock = INVALID_SOCKET;
+
+
+    // --------------- RECURSOS GRAFICOS COMUNES ---------------
+
+    // Recursos graficos comunes entre las interfaces de contactos y salas
+
+    recursosComunesContactosSalas_inicializarValoresNulos (&(interfaces->recursosComunesContactosSalas));
+
+
+    // Recursos graficos comunes entre las interfaces de autenticacion y registro
+
+    recursosComunesAutenticacionRegistro_inicializarValoresNulos (&(interfaces->recursosComunesAutenticacionRegistro));
+
+
+    // --------------- INTERFACES GRAFICAS ESENCIALES ---------------
+
+    // Interfaz grafica de contactos
+
+    interfazContactos_inicializarValoresNulos (&(interfaces->contactos));
+
+
+    // Interfaz grafica de salas
+
+    interfazSalas_inicializarValoresNulos (&(interfaces->salas));
+
+
+    // --------------- INTERFACES GRAFICAS DE AUTENTICACION ---------------
+
+    // Interfaz grafica de autenticacion
+
+    interfazAutenticacion_inicializarValoresNulos (&(interfaces->autenticacion));
+
+
+    // Interfaz grafica de registro
+
+    interfazRegistro_inicializarValoresNulos (&(interfaces->registro));
+}
+
 int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces)
 {
     printf ("-INICIALIZANDO LOS RECURSOS DE LA APLICACION-\t");
@@ -130,9 +169,7 @@ int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
-    contextoAplicacion->estadoWinsock = false;
-    contextoAplicacion->renderizado = NULL;
-    contextoAplicacion->sock = INVALID_SOCKET;
+    inicializarValoresNulosAplicacion (contextoAplicacion, interfaces);
 
 
     // --------------- INICIALIZAR WINSOCK API ---------------
@@ -183,11 +220,22 @@ int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     printf ("-CONECTADO CON EL SERVIDOR-\t");
 
 
-    // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES ESENCIALES ---------------
+    // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES ---------------
+
+    // Recursos graficos comunes entre las interfaces de contactos y salas
 
     if (recursosComunesContactosSalas_inicializar (&(interfaces->recursosComunesContactosSalas)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar recursos comunes contactos-salas.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
+    // Recursos graficos comunes entre las interfaces de autenticacion y registro
+
+    if (recursosComunesAutenticacionRegistro_inicializar (&(interfaces->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
+    {
+        perror ("\nERROR - Inicializar recursos comunes autenticacion-registro.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -212,6 +260,26 @@ int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     }
 
 
+    // --------------- INICIALIZAR INTERFACES GRAFICAS DE AUTENTICACION ---------------
+
+    // Interfaz grafica de autenticacion
+
+    if (interfazAutenticacion_inicializar (&(interfaces->autenticacion)) == ERROR_INICIALIZACION)
+    {
+        perror ("\nERROR - Inicializar interfaz de autenticacion.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
+    // Interfaz grafica de registro
+
+    if (interfazRegistro_inicializar (&(interfaces->registro)) == ERROR_INICIALIZACION)
+    {
+        perror ("\nERROR - Inicializar interfaz de registro.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+
     printf ("-INICIALIZACION EXITOSA-\n");
     return EXITO;
 }
@@ -221,14 +289,25 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     printf ("-CONFIGURANDO LOS RECURSOS DE LA APLICACION-\t");
 
 
-    // --------------- CONFIGURAR RENDERIZADO ---------------
+    // --------------- CONFIGURAR APLICACION ---------------
 
     sfRenderWindow_setFramerateLimit (contextoAplicacion->renderizado, 60);
+    contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
+
+    sfEvent evento;
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
 
 
-    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LOS RECURSOS GRAFICOS COMUNES ESENCIALES ---------------
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LOS RECURSOS GRAFICOS COMUNES ---------------
+
+    // Recursos graficos comunes entre las interfaces de contactos y salas
 
     recursosComunesContactosSalas_configurar (&(interfaces->recursosComunesContactosSalas));
+
+
+    // Recursos graficos comunes entre las interfaces de autenticacion y registro
+
+    recursosComunesAutenticacionRegistro_configurar (&(interfaces->recursosComunesAutenticacionRegistro));
 
 
     // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LAS INTERFACES GRAFICAS ESENCIALES ---------------
@@ -243,24 +322,24 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     interfazSalas_configurar (&(interfaces->salas), &(interfaces->recursosComunesContactosSalas.fuentes));
 
 
+    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LAS INTERFACES GRAFICAS DE AUTENTICACION ---------------
+
+    // Interfaz grafica de autenticacion
+
+    interfazAutenticacion_configurar (&(interfaces->autenticacion), &(interfaces->recursosComunesAutenticacionRegistro.fuentes));
+
+
+    // Interfaz grafica de registro
+
+    interfazRegistro_configurar (&(interfaces->registro), &(interfaces->recursosComunesAutenticacionRegistro.fuentes));
+
+
     printf ("-CONFIGURACION EXITOSA-\n");
 }
 
 void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces)
 {
     printf ("-LIBERANDO LOS RECURSOS DE LA APLICACION-\t");
-
-
-    // --------------- LIBERAR INTERFACES GRAFICAS ESENCIALES ---------------
-
-    // Interfaz grafica de contactos
-
-    interfazContactos_liberar (&(interfaces->contactos));
-
-
-    // Interfaz grafica de salas
-
-    interfazSalas_liberar (&(interfaces->salas));
 
 
     // --------------- LIBERAR INTERFACES GRAFICAS DE AUTENTICACION ---------------
@@ -273,6 +352,18 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *
     // Interfaz grafica de registro
 
     interfazRegistro_liberar (&(interfaces->registro));
+
+
+    // --------------- LIBERAR INTERFACES GRAFICAS ESENCIALES ---------------
+
+    // Interfaz grafica de contactos
+
+    interfazContactos_liberar (&(interfaces->contactos));
+
+
+    // Interfaz grafica de salas
+
+    interfazSalas_liberar (&(interfaces->salas));
 
 
     // --------------- LIBERAR RECURSOS GRAFICOS COMUNES ---------------
@@ -309,82 +400,6 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *
 }
 
 
-
-/* ============================
-   FUNCIONES DE INICIO
-   ============================ */
-
-
-
-void iniciarMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    // --------------- CONFIGURAR APLICACION ---------------
-
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-    sfText_setString (recursosComunesContactosSalas->textos.nombreUsuario, contextoAplicacion->usuario.nombre);
-    posicionarNombreUsuario (recursosComunesContactosSalas->textos.nombreUsuario);
-
-
-    // --------------- MAXIMIZAR VENTANA ---------------
-
-    ShowWindow (sfRenderWindow_getSystemHandle (contextoAplicacion->renderizado), SW_MAXIMIZE);
-}
-
-int iniciarAutenticacionManual (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces)
-{
-    // --------------- CONFIGURAR APLICACION ---------------
-
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
-
-
-    // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES DE AUTENTICACION ---------------
-
-    if (recursosComunesAutenticacionRegistro_inicializar (&(interfaces->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar recursos comunes autenticacion-registro.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-
-    // --------------- INICIALIZAR INTERFACES GRAFICAS DE AUTENTICACION ---------------
-
-    // Interfaz grafica de autenticacion
-
-    if (interfazAutenticacion_inicializar (&(interfaces->autenticacion)) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar interfaz de autenticacion.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-
-    // Interfaz grafica de registro
-
-    if (interfazRegistro_inicializar (&(interfaces->registro)) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar interfaz de salas.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-
-    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LOS RECURSOS GRAFICOS COMUNES DE AUTENTICACION ---------------
-
-    recursosComunesAutenticacionRegistro_configurar (&(interfaces->recursosComunesAutenticacionRegistro));
-
-
-    // --------------- CONFIGURAR Y ESTABLECER UN TAMANIO Y UNA POSICION SOBRE LA VENTANA A LAS INTERFACES GRAFICAS DE AUTENTICACION ---------------
-
-    // Interfaz grafica de autenticacion
-
-    interfazAutenticacion_configurar (&(interfaces->autenticacion), &(interfaces->recursosComunesAutenticacionRegistro.fuentes));
-
-
-    // Interfaz grafica de registro
-
-    interfazRegistro_configurar (&(interfaces->registro), &(interfaces->recursosComunesAutenticacionRegistro.fuentes));
-
-
-    return EXITO;
-}
 
 
 

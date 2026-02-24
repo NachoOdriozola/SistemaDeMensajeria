@@ -40,10 +40,8 @@ static void recursosComunesContactosSalas_liberarVistas (t_recursosComunesContac
 
 
 
-int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void recursosComunesContactosSalas_inicializarValoresNulos (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    // --------------- INICIALIZAR VALORES NULOS ---------------
-
     // FUENTES
 
     recursosComunesContactosSalas_inicializarValoresNulosFuentes (&(recursosComunesContactosSalas->fuentes));
@@ -66,13 +64,11 @@ int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *
 
     // LISTA DE MENSAJES
 
-    sfText *mensajes [MAX_MENSAJES_MEMORIA];
+    crearListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes));
+}
 
-    recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (mensajes, MAX_MENSAJES_MEMORIA);
-
-
-    // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
-
+int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
     // FUENTES
 
     if (recursosComunesContactosSalas_inicializarFuentes (&(recursosComunesContactosSalas->fuentes)) == ERROR_INICIALIZACION)
@@ -99,7 +95,11 @@ int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *
 
     // LISTA DE MENSAJES
 
-    if (recursosComunesContactosSalas_inicializarListaMensajes (&(recursosComunesContactosSalas->contextoMensajes), mensajes, MAX_MENSAJES_MEMORIA) == ERROR_INICIALIZACION)
+    sfText *vecMensajes [MAX_MENSAJES_MEMORIA];
+
+    recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (vecMensajes, MAX_MENSAJES_MEMORIA);
+
+    if (recursosComunesContactosSalas_inicializarListaMensajes (&(recursosComunesContactosSalas->contextoMensajes), vecMensajes, MAX_MENSAJES_MEMORIA) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -108,13 +108,14 @@ int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *
 
 void recursosComunesContactosSalas_configurar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    // --------------- CONFIGURAR HABILITACIONES ---------------
+    // --------------- CONFIGURAR FOCO ---------------
 
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
 
-    resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
 
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
@@ -250,6 +251,88 @@ void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRes
     printf ("EL: %s\n", texto);
 }
 
+void activarInterfazContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    // --------------- CONFIGURAR FOCO ---------------
+
+    recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
+
+
+    // --------------- CONFIGURAR BUFFERS ---------------
+
+    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
+
+
+    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
+
+    mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
+
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
+
+
+    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
+
+    // TEXTO
+
+    // auxEscribirMensaje
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+
+    // proximaInterfaz
+    sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "SALAS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 530});
+
+    // tituloInterfaz
+    sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "CONTACTOS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){79, 37});
+
+
+    // ELEMENTOS
+}
+
+void activarInterfazSalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    // --------------- CONFIGURAR FOCO ---------------
+
+    recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
+
+
+    // --------------- CONFIGURAR BUFFERS ---------------
+
+    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
+
+
+    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
+
+    mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
+
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
+
+
+    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
+
+    // TEXTOS
+
+    // auxEscribirMensaje
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+
+    // proximaInterfaz
+    sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "CONTACTOS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 567});
+
+    // tituloInterfaz
+    sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "SALAS");
+    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){120, 37});
+
+
+    // ELEMENTOS
+}
+
 void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- ESTABLECER VISTA DE MENSAJES ---------------
@@ -264,7 +347,7 @@ void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesCont
 
 void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.notificaciones == HABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco == NOTIFICACIONES)
     {
         // ELEMENTOS
 
@@ -292,13 +375,21 @@ void posicionarNombreUsuario (sfText *nombre)
     centrarTextoEnArea (nombre, 44, 888, 254, 120);
 
     limites = sfText_getLocalBounds (nombre);
-    while ((limites.width > 254) && (i > 10))
+    while ((limites.width > 254) && (i > 10)) // Mientras el nombre sobrepase el area.
     {
         sfText_setCharacterSize (nombre, i);
         centrarTextoEnArea (nombre, 44, 888, 254, 120);
         limites = sfText_getLocalBounds (nombre);
         i -= 2;
     }
+}
+
+void iniciarInterfazMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+    sfText_setString (recursosComunesContactosSalas->textos.nombreUsuario, contextoAplicacion->usuario.nombre);
+    posicionarNombreUsuario (recursosComunesContactosSalas->textos.nombreUsuario);
+    ShowWindow (sfRenderWindow_getSystemHandle (contextoAplicacion->renderizado), SW_MAXIMIZE); //Maximizar la ventana
 }
 
 
@@ -312,18 +403,23 @@ void posicionarNombreUsuario (sfText *nombre)
 void configurarMensaje (void *mensaje, void *fuente)
 {
     sfText_setFont (*((sfText**)mensaje), (sfFont*)fuente);
-    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (94, 91, 87));
+    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (53, 53, 53));
 }
 
 void tamMensaje (void *mensaje)
 {
-    sfText_setCharacterSize (*((sfText**)mensaje), 26);
+    sfText_setCharacterSize (*((sfText**)mensaje), 22);
     sfText_setLineSpacing (*((sfText**)mensaje), 1.3);
 }
 
 void renderizarMensaje (void *mensaje, void *renderizado)
 {
     sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
+}
+
+void vaciarMensaje (void *mensaje)
+{
+    sfText_setString (*((sfText**)mensaje), "");
 }
 
 void liberarMensaje (void *mensaje)
@@ -351,7 +447,7 @@ void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, fl
     while (*bufferMensaje)
     {
         largoMensaje = 0;
-        while ((bufferMensaje[largoMensaje]) && (bufferMensaje[largoMensaje] != ' '))
+        while ((bufferMensaje[largoMensaje] != '\0') && (bufferMensaje[largoMensaje] != ' ')) // Encontrar una palabra.
             largoMensaje ++;
 
         strncpy(palabra, bufferMensaje, largoMensaje);
@@ -363,7 +459,7 @@ void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, fl
         sfText_setString (texto, bufferPrueba);
         posUltimoCaracter = sfText_findCharacterPos (texto, strlen (bufferPrueba));
         if (posUltimoCaracter.x >= anchoMax)
-            strcat (bufferTexto, "\n");
+            strcat (bufferTexto, "\n"); // Agregar salto de linea si la palabra sobrepaso el ancho permitido.
         strcat (bufferTexto, palabra);
 
         bufferMensaje += largoMensaje;
@@ -616,16 +712,16 @@ static void recursosComunesContactosSalas_inicializarValoresNulosVistas (t_recur
 
 /** \brief Establecer en NULL a los mensajes sfText antes de insertarlos a la lista de mensajes.
  *
- * \param mensajes Doble puntero a vector de mensajes sfText.
+ * \param vecMensajes Doble puntero a vector de mensajes sfText.
  * \param maxMensajes Cantidad de mensajes a establecer en NULL.
  *
  */
-static void recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (sfText **mensajes, unsigned short int maxMensajes)
+static void recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (sfText **vecMensajes, unsigned short int maxMensajes)
 {
     unsigned short int i;
 
     for (i = 0; i < maxMensajes; i ++)
-        mensajes[i] = NULL;
+        vecMensajes[i] = NULL;
 }
 
 /** \brief Inicializar los recursos graficos de fuentes comunes (compartidos) entre las interfaces de contactos y salas.
@@ -639,14 +735,14 @@ static void recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (
  */
 static int recursosComunesContactosSalas_inicializarFuentes (t_recursosComunesContactosSalasFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    fuentes->ui = sfFont_createFromFile ("fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("fuenteMensajes.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Crear fuente cuerpo.\n");
@@ -884,32 +980,30 @@ static int recursosComunesContactosSalas_inicializarVistas (t_recursosComunesCon
     return EXITO;
 }
 
-/** \brief Crear la lista circular de mensajes y la cantidad de mensajes sfText solicitada.
+/** \brief Crear la cantidad de mensajes sfText solicitada.
  *
  * Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
  *
  * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
- * \param mensajes Doble puntero a vector de mensajes sfText.
+ * \param vecMensajes Doble puntero a vector de mensajes sfText.
  * \param maxMensajes Cantidad de mensajes a crear.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-static int recursosComunesContactosSalas_inicializarListaMensajes (t_contextoMensajes *contextoMensajes, sfText **mensajes, unsigned short int maxMensajes)
+static int recursosComunesContactosSalas_inicializarListaMensajes (t_contextoMensajes *contextoMensajes, sfText **vecMensajes, unsigned short int maxMensajes)
 {
     unsigned short int i;
 
-    crearListaCircular (&(contextoMensajes->listaMensajes));
-
     for (i = 0; i < maxMensajes; i ++)
     {
-        mensajes[i] = sfText_create ();
-        if (!(mensajes[i]))
+        vecMensajes[i] = sfText_create ();
+        if (!(vecMensajes[i]))
         {
             printf ("\nERROR - No se pudo crear el mensaje[%u].\n", i);
             return ERROR_INICIALIZACION;
         }
-        insertarSegundoCircular (&(contextoMensajes->listaMensajes), &(mensajes[i]), sizeof (sfText*));
+        insertarSegundoCircular (&(contextoMensajes->listaMensajes), &(vecMensajes[i]), sizeof (sfText*));
     }
 
 
@@ -931,7 +1025,7 @@ static void recursosComunesContactosSalas_configurarTextos (t_recursosComunesCon
 
     // auxEscribirMensaje
     sfText_setFont (textos->auxEscribirMensaje, fuentes->cuerpo);
-    sfText_setFillColor (textos->auxEscribirMensaje, sfColor_fromRGB (94, 91, 87));
+    sfText_setFillColor (textos->auxEscribirMensaje, sfColor_fromRGB (53, 53, 53));
 
     // cerrarVentanaEmergente
     sfText_setFont (textos->cerrarVentanaEmergente, fuentes->ui);
@@ -1047,7 +1141,7 @@ static void recursosComunesContactosSalas_tamYPosVentanaTextos (t_recursosComune
 
     // auxEscribirMensaje
     sfText_setPosition (textos->auxEscribirMensaje, (sfVector2f){449, 912});
-    sfText_setCharacterSize (textos->auxEscribirMensaje, 26);
+    sfText_setCharacterSize (textos->auxEscribirMensaje, 24);
 
     // cerrarVentanaEmergente
     sfText_setPosition (textos->cerrarVentanaEmergente, (sfVector2f){1070, 390});
@@ -1257,9 +1351,23 @@ void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado
 
     sfRenderWindow_setSize (renderizado, tamVentana);
 
-    // Redimensionar vista UI
+    // Redimensionar vista UI.
     sfView_setSize (vistas->UI, (sfVector2f){ANCHO_LOGICO_VENTANA, ALTO_LOGICO_VENTANA});
     sfView_setCenter (vistas->UI, (sfVector2f){ANCHO_LOGICO_VENTANA / 2.0f, ALTO_LOGICO_VENTANA / 2.0f});
+}
+
+bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (!clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.barraEscribirMensaje))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesContactosSalas->estadoFoco = ESCRIBIR_MENSAJE;
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
+
+    return EVENTO_MANEJADO;
 }
 
 bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -1276,7 +1384,18 @@ bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
         printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
     }
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+
+
+    return EVENTO_MANEJADO;
+}
+
+bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (!clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
+        return EVENTO_NO_MANEJADO;
+    recursosComunesContactosSalas->estadoFoco = AREA_MENSAJES;
 
     return EVENTO_MANEJADO;
 }
@@ -1285,7 +1404,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
@@ -1298,7 +1417,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
 
 bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
     if (strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == 0)
@@ -1310,7 +1429,8 @@ bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
         printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
     }
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
 
     return EVENTO_MANEJADO;
 }
@@ -1320,7 +1440,7 @@ bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recurs
     sfVector2f tamVista, posCentro;
     sfVector2f posUltimoMensaje;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
@@ -1328,6 +1448,7 @@ bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recurs
     posUltimoMensaje = sfText_getPosition (*((sfText**)recursosComunesContactosSalas->contextoMensajes.ultimoMensaje->dato));
     if (posCentro.y - tamVista.y / 2.f > posUltimoMensaje.y)
         sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
+
     return EVENTO_MANEJADO;
 }
 
@@ -1335,7 +1456,7 @@ bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recurso
 {
     sfVector2f tamVista, posCentro;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
@@ -1354,7 +1475,7 @@ bool manejarScrollAreaMensajes (t_recursosComunesContactosSalas *recursosComunes
     float superiorVista, inferiorVista;
     float limiteSuperior, limiteInferior;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);

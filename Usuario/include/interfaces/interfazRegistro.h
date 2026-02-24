@@ -62,22 +62,23 @@ typedef struct
     sfRectangleShape *barraEscribirCorreo;   /**< Barra donde el usuario escribe su correo electronico. */
 } t_interfazRegistroElementos;
 
-/** \struct t_interfazRegistroHabilitaciones
- * \brief Contiene todas las habilitaciones de la interfaz de registro.
+/** \enum t_interfazRegistroFoco
+ * \brief Contiene todos los estados de foco de la interfaz de registro.
  */
-typedef struct
+typedef enum
 {
-    t_habilitacion escribirCorreo;
-} t_interfazRegistroHabilitaciones;
+    ESCRIBIR_CORREO,        /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su correo electronico. */
+    IR_NINGUNO              /**< Ningun foco establecido. */
+} t_interfazRegistroFoco;
 
 /** \struct t_interfazRegistro
- * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de registro.
+ * \brief Estructura base que contiene los buffers, focos y une los recursos graficos de la interfaz de registro.
  */
 typedef struct
 {
     t_interfazRegistroTextos textos;
     t_interfazRegistroElementos elementos;
-    t_interfazRegistroHabilitaciones habilitaciones;
+    t_interfazRegistroFoco estadoFoco;
     char bufferCorreo [MAX_CORREO_USUARIO];
 } t_interfazRegistro;
 
@@ -89,11 +90,16 @@ typedef struct
 
 
 
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de registro.
+ *
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ */
+void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro);
+
 /** \brief Inicializar los recursos graficos de la interfaz de registro.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recursos.
- *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
@@ -104,7 +110,7 @@ int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro);
  *
  * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
@@ -115,8 +121,8 @@ void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, const t_
  * Capturar los eventos generados por el usuario (clicks, teclado, redimensionado, etc.) y realizar o invocar las funciones correspondientes segun el evento detectado.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  */
 void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
@@ -126,8 +132,8 @@ void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recurs
  * Capturar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc.) y realizar o invocar las funciones
  * correspondientes segun el evento detectado.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  */
 void interfazRegistro_actualizar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
@@ -137,15 +143,15 @@ void interfazRegistro_actualizar (t_recursosComunesAutenticacionRegistro *recurs
  * Limpiar la ventana anterior y mostrar los elementos graficos actualizados de la interfaz de registro en la ventana.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  */
 void interfazRegistro_renderizar (sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazRegistro *interfazRegistro);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de registro.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  */
 void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro);

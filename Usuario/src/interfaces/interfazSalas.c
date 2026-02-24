@@ -8,7 +8,8 @@
 
 
 
-static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
+static void desactivarInterfazSalas (t_interfazSalas *interfazSalas);
+static void deshabilitarFocos (t_recursosComunesContactosSalas *recursosComunesContactoSalas, t_interfazSalas *interfazSalas);
 
 
 
@@ -45,11 +46,9 @@ static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos)
 
 
 
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+static bool manejarClickCambiarInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
 
 
@@ -60,10 +59,8 @@ static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoApl
 
 
 
-int interfazSalas_inicializar (t_interfazSalas *interfazSalas)
+void interfazSalas_inicializarValoresNulos (t_interfazSalas *interfazSalas)
 {
-    // --------------- INICIALIZAR VALORES NULOS ---------------
-
     // TEXTOS
 
     interfazSalas_inicializarTextos (&(interfazSalas->textos));
@@ -72,10 +69,10 @@ int interfazSalas_inicializar (t_interfazSalas *interfazSalas)
     // ELEMENTOS
 
     interfazSalas_inicializarElementos (&(interfazSalas->elementos));
+}
 
-
-    // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
-
+int interfazSalas_inicializar (t_interfazSalas *interfazSalas)
+{
     // TEXTOS
 
     if (interfazSalas_inicializarTextos (&(interfazSalas->textos)) == ERROR_INICIALIZACION)
@@ -93,8 +90,9 @@ int interfazSalas_inicializar (t_interfazSalas *interfazSalas)
 
 void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_recursosComunesContactosSalasFuentes *fuentes)
 {
-    // --------------- CONFIGURAR HABILITACIONES ---------------
+    // --------------- CONFIGURAR FOCO ---------------
 
+    interfazSalas->estadoFoco = IS_NINGUNO;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -147,35 +145,9 @@ void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosC
     case sfEvtMouseButtonPressed:
         if (evento.mouseButton.button == sfMouseLeft)
         {
-            //if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickNotificaciones (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickCerrarVentanaEmergente (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickSolapaCambiarInterfaz (contextoAplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickCambiarInterfazConfig (contextoAplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            if (manejarClickCambiarInterfazContactos (contextoAplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
+            deshabilitarFocos (recursosComunesContactosSalas, interfazSalas);
         }
-        break;
-
-
-    case sfEvtTextEntered:
-        if (evento.text.unicode < 128)
-        {
-            //if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    case sfEvtKeyPressed:
-        if (evento.key.code == sfKeyEnter)
-        {
-            //if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    case sfEvtMouseWheelScrolled:
-        //if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
         break;
 
 
@@ -186,36 +158,12 @@ void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosC
 
 void interfazSalas_actualizar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
-    // RECIBIR MENSAJES DE OTROS USUARIOS
-    char *bufferRespuesta;
-
-    bufferRespuesta = malloc (MAX_BUFFER_RESPUESTA);
-    if (!bufferRespuesta)
-    {
-        perror ("ERROR - Sin memoria.\n");
-        return;
-    }
-    if (recibirRespuesta (contextoAplicacion->sock, bufferRespuesta, MAX_BUFFER_RESPUESTA) == RECIBIO_RESPUESTA)
-    {
-        switch (*bufferRespuesta)
-        {
-        case RESPUESTA_AGENDAR_CONTACTO:
-            //agregarNotificacion (&(recursosComunesContactosSalas->listaNotificaciones), bufferRespuesta, &(recursosComunesContactosSalas->fuentes));
-            break;
-
-        case RESPUESTA_MENSAJE:
-            break;
-        }
-    }
-    free (bufferRespuesta);
-
-
     // --------------- PUNTO DE INSERCION ---------------
 
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == HABILITADO)
-        actualizarPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
-    else
-        resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
+    if (recursosComunesContactosSalas->estadoFoco == ESCRIBIR_MENSAJE)
+        actualizarPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
+    else if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->puntoInsercion)))
+        resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
 }
 
 void interfazSalas_renderizar (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas)
@@ -258,49 +206,30 @@ void interfazSalas_liberar (t_interfazSalas *interfazSalas)
 
 
 
-/** \brief Modificar las configuraciones de las habilitaciones, buffers y recursos graficos para adaptarlos a la interfaz de contactos.
+/** \brief Desactivar la interfaz de salas para cambiar de interfaz.
  *
- * Deshabilitar las habilitaciones y restablecer los buffers al inicio.
- * Modificar unicamente los recursos graficos de texto y/o elementos que se necesiten adaptar para cambiar a la interfaz de contactos.
+ * Modificar los estados de foco y los recursos graficos de texto y/o elementos que se necesiten desactivar para cambiar de interfaz.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
-static void cambiarInterfazAContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
+static void desactivarInterfazSalas (t_interfazSalas *interfazSalas)
 {
-    // --------------- CONFIGURAR HABILITACIONES ---------------
+    // --------------- CONFIGURAR FOCO ---------------
 
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    interfazSalas->estadoFoco = IS_NINGUNO;
+}
 
-    resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
-
-
-    // --------------- CONFIGURAR BUFFERS ---------------
-
-    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-
-
-    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
-
-    // TEXTO
-
-    // auxEscribirMensaje
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
-
-    // proximaInterfaz
-    sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "SALAS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 530});
-
-    // tituloInterfaz
-    sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "CONTACTOS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){79, 37});
-
-
-    // ELEMENTOS
-
+/** \brief Deshabilitar los estados de foco de los recursos comunes entre las interfaces de contactos y salas y de la interfaz de salas.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
+ *
+ */
+static void deshabilitarFocos (t_recursosComunesContactosSalas *recursosComunesContactoSalas, t_interfazSalas *interfazSalas)
+{
+    recursosComunesContactoSalas->estadoFoco = RCCS_NINGUNO;
+    interfazSalas->estadoFoco = IS_NINGUNO;
 }
 
 
@@ -428,8 +357,8 @@ static void interfazSalas_tamYPosVentanaElementos (t_interfazSalasElementos *ele
  * No se limpia ni muestra la pantalla, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
 static void interfazSalas_renderizarVistaUI (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas)
@@ -456,14 +385,9 @@ static void interfazSalas_renderizarVistaUI (sfRenderWindow *renderizado, const 
     sfRenderWindow_drawRectangleShape (renderizado, interfazSalas->elementos.taparBarraEscribirMensaje, NULL); // TAPAR LOS ELEMENTOS GRAFICOS QUE NO SE ENCUENTREN ACTIVOS EN EL INCREMENTO 1.
 
 
-    // --------------- RENDERIZAR NOTIFICACIONES ---------------
-
-    renderizarNotificaciones (renderizado, recursosComunesContactosSalas);
-
-
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
 
-    if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion)))
+    if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->puntoInsercion)))
         sfRenderWindow_drawRectangleShape (renderizado, recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
 }
 
@@ -519,36 +443,16 @@ static void interfazSalas_liberarElementos (t_interfazSalasElementos *elementos)
 
 
 
-/** \brief Manejar el evento de click en la barra para escribir mensaje.
- *
- * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
- *
- */
-static bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    sfFloatRect limiteTextoAux;
-
-    if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.barraEscribirMensaje))
-    {
-        recursosComunesContactosSalas->habilitaciones.escribirMensaje = HABILITADO;
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
-        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
-        return EVENTO_MANEJADO;
-    }
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
-    return EVENTO_NO_MANEJADO;
-}
-
 /** \brief Manejar el evento de click en abrir notificaciones.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
  *
  */
 static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -556,11 +460,11 @@ static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_rec
     if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.notificaciones))
         return EVENTO_NO_MANEJADO;
 
-    if (recursosComunesContactosSalas->habilitaciones.notificaciones == DESHABILITADO)
-        recursosComunesContactosSalas->habilitaciones.notificaciones = HABILITADO;
+    if (recursosComunesContactosSalas->estadoFoco == RCCS_NINGUNO)
+        recursosComunesContactosSalas->estadoFoco = NOTIFICACIONES;
     else
-        recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+        recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
+
     sfText_setString (recursosComunesContactosSalas->textos.tituloVentanaEmergente, "NOTIFICACIONES");
     sfText_setPosition (recursosComunesContactosSalas->textos.tituloVentanaEmergente, (sfVector2f){840, 400});
 
@@ -570,9 +474,13 @@ static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_rec
 /** \brief Manejar el evento de click en cerrar la ventana emergente.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
  *
  */
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -580,8 +488,7 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
     if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
         return EVENTO_NO_MANEJADO;
 
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
+    recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
 
     return EVENTO_MANEJADO;
 }
@@ -589,62 +496,57 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
+static bool manejarClickCambiarInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
+    sfEvent evento;
+
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
+
     contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-    cambiarInterfazAContactos (recursosComunesContactosSalas, interfazSalas);
+    desactivarInterfazSalas (interfazSalas);
+    activarInterfazContactos (recursosComunesContactosSalas);
 
     return EVENTO_MANEJADO;
-}
-
-/** \brief Manejar el evento de click en el area de mensajes.
- *
- * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
- *
- */
-static bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    if (clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
-    {
-        recursosComunesContactosSalas->habilitaciones.areaMensajes = HABILITADO;
-        return EVENTO_MANEJADO;
-    }
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
-    return EVENTO_NO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el boton para cambiar a la interfaz de configuraciones.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
  *
  */
 static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas)
 {
+    sfEvent evento;
+
     if (!clickEnTexto (contextoAplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
         return EVENTO_NO_MANEJADO;
 
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
+
     contextoAplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    desactivarInterfazSalas (interfazSalas);
+    activarInterfazContactos (recursosComunesContactosSalas);
+    deshabilitarFocos (recursosComunesContactosSalas, interfazSalas);
 
     return EVENTO_MANEJADO;
 }
-
 
 
 

@@ -64,22 +64,22 @@ typedef struct
     sfRectangleShape *taparBarraEscribirMensaje;    /**< Tapar visualmente la barra para escribir mensajes. */
 } t_interfazSalasElementos;
 
-/** \struct t_interfazSalasHabilitaciones
- * \brief Contiene todas las habilitaciones de la interfaz de salas.
+/** \enum t_interfazSalasFoco
+ * \brief Contiene los estados de foco de la interfaz de salas.
  */
-typedef struct
+typedef enum
 {
-
-} t_interfazSalasHabilitaciones;
+    IS_NINGUNO                   /**< Ningun foco establecido. */
+} t_interfazSalasFoco;
 
 /** \struct t_interfazSalas
- * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de salas.
+ * \brief Estructura base que contiene los buffers, focos y une los recursos graficos de la interfaz de salas.
  */
 typedef struct
 {
     t_interfazSalasTextos textos;
     t_interfazSalasElementos elementos;
-    t_interfazSalasHabilitaciones habilitaciones;
+    t_interfazSalasFoco estadoFoco;
 } t_interfazSalas;
 
 
@@ -90,22 +90,29 @@ typedef struct
 
 
 
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de salas.
+ *
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
+ *
+ */
+void interfazSalas_inicializarValoresNulos (t_interfazSalas *interfazSalas);
+
 /** \brief Inicializar los recursos graficos de la interfaz de salas.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
- *
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
 int interfazSalas_inicializar (t_interfazSalas *interfazSalas);
 
-/** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de salas.
+/** \brief Configurar los recursos graficos, focos y buffers de la interfaz de salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y luego configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso.
+ * Deshabilitar el estado de foco, apuntar los buffers a NULL y luego configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso.
  *
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
@@ -117,8 +124,8 @@ void interfazSalas_configurar (t_interfazSalas *interfazSalas, const t_recursosC
  * Cada evento se desarrolla en una funcion particular manejadora de eventos.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
 void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
@@ -129,8 +136,8 @@ void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosC
  * correspondientes segun el evento detectado.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
 void interfazSalas_actualizar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazSalas *interfazSalas);
@@ -141,15 +148,15 @@ void interfazSalas_actualizar (t_contextoAplicacion *contextoAplicacion, t_recur
  * Primero renderiza las vistas moviles y luego la vista de UI.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
 void interfazSalas_renderizar (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazSalas *interfazSalas);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de salas.
  *
- * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de salas.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *
  */
 void interfazSalas_liberar (t_interfazSalas *interfazSalas);

@@ -81,6 +81,11 @@ int interfazConfig_inicializar (t_interfazConfig *interfazConfig)
 
 void interfazConfig_configurar (t_interfazConfig *interfazConfig)
 {
+    // --------------- CONFIGURAR FOCO ---------------
+
+    interfazConfig->estadoFoco = ICF_NINGUNO;
+
+
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
 
     // TEXTOS
@@ -105,7 +110,7 @@ void interfazConfig_configurar (t_interfazConfig *interfazConfig)
     interfazConfig_tamYPosVentanaElementos (&(interfazConfig->elementos));
 }
 
-void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, const t_interfazConfig *interfazConfig)
+void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, t_interfazConfig *interfazConfig)
 {
     sfEvent evento;
 
@@ -114,6 +119,7 @@ void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, const t_in
     {
 
     case sfEvtClosed:
+        interfazConfig_liberar (interfazConfig);
         sfRenderWindow_close (contextoAplicacion->renderizado);
         break;
 

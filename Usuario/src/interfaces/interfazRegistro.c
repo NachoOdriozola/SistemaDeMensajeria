@@ -9,7 +9,9 @@
 
 
 static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
-static void cambiarInterfazAAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static void estadoHabilitarIngreso (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro);
+static void deshabilitarFocos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 
 
 
@@ -49,10 +51,10 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_rec
 static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static bool manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
-static bool manejarClickCambiarInterfazAAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static bool manejarClickCambiarInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 
-static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
-static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar);
+static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
+static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
 static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
 
 static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
@@ -65,10 +67,8 @@ static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicaci
 
 
 
-int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro)
+void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro)
 {
-    // --------------- INICIALIZAR VALORES NULOS ---------------
-
     // TEXTOS
 
     interfazRegistro_inicializarValoresNulosTextos (&(interfazRegistro->textos));
@@ -77,10 +77,10 @@ int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro)
     // ELEMENTOS
 
     interfazRegistro_inicializarValoresNulosElementos (&(interfazRegistro->elementos));
+}
 
-
-    // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
-
+int interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro)
+{
     // TEXTOS
 
     if (interfazRegistro_inicializarTextos (&(interfazRegistro->textos)) == ERROR_INICIALIZACION)
@@ -100,7 +100,7 @@ void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, const t_
 {
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    interfazRegistro->habilitaciones.escribirCorreo = DESHABILITADO;
+    interfazRegistro->estadoFoco = IR_NINGUNO;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -158,7 +158,8 @@ void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recurs
             if (manejarClickEscribirContrasenia (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickEscribirCorreo (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
             if (manejarClickIntentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazAAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+            if (manejarClickCambiarInterfazAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+            deshabilitarFocos (recursosComunesAutenticacionRegistro, interfazRegistro);
         }
         break;
 
@@ -166,8 +167,8 @@ void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recurs
     case sfEvtTextEntered:
         if (evento.text.unicode < 128)
         {
-            if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
-            if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
+            if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
+            if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
             if (manejarEscribirCorreo (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
         }
         break;
@@ -188,25 +189,14 @@ void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recurs
 
 void interfazRegistro_actualizar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
-    int largoBufferEscribirNombre, largoBufferEscribirContrasenia;
-
-    largoBufferEscribirNombre = strlen (recursosComunesAutenticacionRegistro->bufferNombre);
-    largoBufferEscribirContrasenia = strlen (recursosComunesAutenticacionRegistro->bufferContrasenia);
-
-    if ((largoBufferEscribirNombre > 0) && (largoBufferEscribirContrasenia > 0))
-        recursosComunesAutenticacionRegistro->habilitaciones.ingresar = HABILITADO;
-    else
-        recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITADO;
-
-
     // --------------- PUNTO DE INSERCION ---------------
 
-    if ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == HABILITADO) ||
-        (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == HABILITADO ||
-         interfazRegistro->habilitaciones.escribirCorreo == HABILITADO))
-        actualizarPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion));
-    else
-        resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion));
+    if ((recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
+        (recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA ||
+         interfazRegistro->estadoFoco == ESCRIBIR_CORREO))
+        actualizarPuntoInsercion (&(recursosComunesAutenticacionRegistro->puntoInsercion));
+    else if (puntoInsercionHabilitado (&(recursosComunesAutenticacionRegistro->puntoInsercion)))
+        resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->puntoInsercion));
 }
 
 void interfazRegistro_renderizar (sfRenderWindow *renderizado, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, const t_interfazRegistro *interfazRegistro)
@@ -230,7 +220,7 @@ void interfazRegistro_renderizar (sfRenderWindow *renderizado, t_recursosComunes
 
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
 
-    if (puntoInsercionHabilitado (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion)))
+    if (puntoInsercionHabilitado (&(recursosComunesAutenticacionRegistro->puntoInsercion)))
         sfRenderWindow_drawRectangleShape (renderizado, recursosComunesAutenticacionRegistro->elementos.puntoInsercion, NULL);
 
 
@@ -262,14 +252,14 @@ void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro)
 /** \brief Intentar registrar usuario.
  *
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * INDICE_SOLICITUD_REGISTRO|nombre|contrasenia|correoElectronico
+ * SOLICITUD_REGISTRO|nombre|contrasenia|correo electronico
  * Envia la solicitud y espera la respuesta para saber su estado.
  * Si se ejecuto con exito, guarda el ID del usuario y selecciona la interfaz de contactos como menu principal.
  * Se comunican a traves del socket de la aplicacion.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
  */
@@ -305,30 +295,38 @@ static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recurso
     return ERROR_INICIALIZACION;
 }
 
-/** \brief Modificar las configuraciones de los recursos graficos para adaptarlos a la interfaz de autenticacion.
+/** \brief Analizar si se habilita, o no, el ingreso del usuario.
  *
- * Modificar unicamente los recursos graficos de texto o elementos que se necesiten adaptar para cambiar a la interfaz de autenticacion.
- *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  */
-static void cambiarInterfazAAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+static void estadoHabilitarIngreso (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
-    // --------------- CONFIGURAR HABILITACIONES ---------------
+    if ((strlen (recursosComunesAutenticacionRegistro->bufferNombre) > 0) &&
+        (strlen (recursosComunesAutenticacionRegistro->bufferContrasenia) > 0) &&
+        (strlen (interfazRegistro->bufferCorreo) > 0))
+        recursosComunesAutenticacionRegistro->ingreso = HABILITADO;
+    else
+        recursosComunesAutenticacionRegistro->ingreso = DESHABILITADO;
+}
 
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITADO;
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITADO;
-    recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITADO;
-    interfazRegistro->habilitaciones.escribirCorreo = DESHABILITADO;
+/** \brief Desactivar la interfaz de registro para cambiar de interfaz.
+ *
+ * Modificar los estados de foco y los recursos graficos de texto y/o elementos que se necesiten desactivar para cambiar de interfaz.
+ *
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ */
+static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro)
+{
+    // --------------- CONFIGURAR FOCO ---------------
 
-    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion));
+    interfazRegistro->estadoFoco = IR_NINGUNO;
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
 
-    *(recursosComunesAutenticacionRegistro->bufferContrasenia) = '\0';
-    *(recursosComunesAutenticacionRegistro->bufferNombre) = '\0';
     *(interfazRegistro->bufferCorreo) = '\0';
 
 
@@ -336,53 +334,23 @@ static void cambiarInterfazAAutenticacion (t_recursosComunesAutenticacionRegistr
 
     // TEXTO
 
-    // auxEscribirContrasenia
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 315});
-
     // auxEscribirCorreo
     sfText_setString (interfazRegistro->textos.auxEscribirCorreo, "");
 
-    // auxEscribirNombre
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 180});
-
-    // ingresarContrasenia
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 255});
-
-    // ingresarNombre
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){35, 120});
-
-    // ingresoIncorrecto
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "");
-
-    // textoBotonIngresar
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, "INGRESAR");
-    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 405, 140, 35);
-
-    // textoCambiarInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿No tenés cuenta? Registrate acá");
-    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
-
-    // tituloInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "INICIAR SESIÓN");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){120, 25});
-
 
     // ELEMENTOS
+}
 
-    // barraEscribirContrasenia
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia, (sfVector2f){35, 315});
-
-    // barraEscribirNombre
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre, (sfVector2f){35, 180});
-
-    // botonIngresar
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonIngresar, (sfVector2f){180, 405});
-
-    // subrayadoTitulo
-    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){120, 75});
-    sfRectangleShape_setSize (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){260, 2.5});
+/** \brief Deshabilitar los estados de foco de los recursos comunes entre las interfaces de autenticacion y registro y de la interfaz de registro.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ */
+static void deshabilitarFocos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+{
+    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+    interfazRegistro->estadoFoco = IR_NINGUNO;
 }
 
 
@@ -489,7 +457,7 @@ static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos,
 {
     // auxEscribirCorreo
     sfText_setFont (textos->auxEscribirCorreo, fuentes->cuerpo);
-    sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (94, 91, 87));
+    sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
 
     // ingresarCorreo
     sfText_setFont (textos->ingresarCorreo, fuentes->ui);
@@ -617,8 +585,8 @@ static void interfazRegistro_liberarElementos (t_interfazRegistroElementos *elem
 /** \brief Manejar el evento de click en la barra para escribir el nombre de usuario.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -627,24 +595,22 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_rec
 {
     sfFloatRect limiteTextoAux;
 
-    if (clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre))
-    {
-        recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = HABILITADO;
-        recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITADO;
-        interfazRegistro->habilitaciones.escribirCorreo = DESHABILITADO;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
-        return EVENTO_MANEJADO;
-    }
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITADO;
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_NOMBRE;
+    interfazRegistro->estadoFoco = IR_NINGUNO;
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en la barra para escribir la contrasenia del usuario.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -653,23 +619,22 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
 {
     sfFloatRect limiteTextoAux;
 
-    if (clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia))
-    {
-        recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = HABILITADO;
-        interfazRegistro->habilitaciones.escribirCorreo = DESHABILITADO;
-        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
-        return EVENTO_MANEJADO;
-    }
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITADO;
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnRectangulo (renderizado, recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_CONTRASENIA;
+    interfazRegistro->estadoFoco = IR_NINGUNO;
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en la barra para escribir el correo electronico del usuario.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -678,28 +643,29 @@ static bool manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_rec
 {
     sfFloatRect limiteTextoAux;
 
-    if (clickEnRectangulo (renderizado, interfazRegistro->elementos.barraEscribirCorreo))
-    {
-        interfazRegistro->habilitaciones.escribirCorreo = HABILITADO;
-        limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
-        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
-        return EVENTO_MANEJADO;
-    }
-    interfazRegistro->habilitaciones.escribirCorreo = DESHABILITADO;
-    return EVENTO_NO_MANEJADO;
+    if (!clickEnRectangulo (renderizado, interfazRegistro->elementos.barraEscribirCorreo))
+        return EVENTO_NO_MANEJADO;
+
+    interfazRegistro->estadoFoco = ESCRIBIR_CORREO;
+    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+    limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
+
+    return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de click en el boton para intentar registrar.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
 static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
-    if (recursosComunesAutenticacionRegistro->habilitaciones.ingresar == DESHABILITADO)
+    if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar))
@@ -713,41 +679,48 @@ static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicaci
 /** \brief Manejar el evento de click en el texto para cambiar a la interfaz de autenticacion.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickCambiarInterfazAAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+static bool manejarClickCambiarInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
+    sfEvent evento;
+
     if (!clickEnTexto (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
+
     contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
-    cambiarInterfazAAutenticacion (recursosComunesAutenticacionRegistro, interfazRegistro);
+    desactivarInterfazRegistro (interfazRegistro);
+    activarInterfazAutenticacion (recursosComunesAutenticacionRegistro);
 
     return EVENTO_MANEJADO;
 }
 
 /** \brief Manejar el evento de escribir el nombre de usuario.
  *
- * Si se encuentra habilitado el escribir nombre, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
+static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == DESHABILITADO)
+    if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar);
+    estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
     limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
     limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
@@ -757,22 +730,24 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
 
 /** \brief Manejar el evento de escribir la contrasenia del usuario.
  *
- * Si se encuentra habilitado el escribir contrasenia, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, sfEvent eventoChar)
+static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == DESHABILITADO)
+    if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar);
+    estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
     limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
     limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
@@ -784,8 +759,8 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
  *
  * Si se encuentra habilitado el escribir correo, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -795,10 +770,11 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
 {
     sfFloatRect limiteTextoAux;
 
-    if (interfazRegistro->habilitaciones.escribirCorreo == DESHABILITADO)
+    if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO, eventoChar);
+    estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
     limitarVisualizarTextoSobreBarra (interfazRegistro->textos.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);
     limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
@@ -809,20 +785,20 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
 /** \brief Manejar el evento de presionado de la tecla "enter" para intentar registrar.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
 static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
-    if (recursosComunesAutenticacionRegistro->habilitaciones.ingresar == DESHABILITADO)
+    if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
-    if ((recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre == DESHABILITADO) &&
-        (recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia == DESHABILITADO) &&
-        (interfazRegistro->habilitaciones.escribirCorreo == DESHABILITADO))
+    if ((recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE) &&
+        (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA) &&
+        (interfazRegistro->estadoFoco != ESCRIBIR_CORREO))
         return EVENTO_NO_MANEJADO;
 
     intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);

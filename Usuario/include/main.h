@@ -67,10 +67,20 @@ typedef struct
 
 
 
+/** \brief Inicializar los valores de los recursos de la aplicacion en NULL.
+ *
+ * Inicializar en NULL: un estado de la API de Winsock, el renderizado de la ventana, el socket del usuario, los recursos graficos comunes y las interfaces graficas.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
+ *
+ */
+void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
+
 /** \brief Inicializar los recursos de la aplicacion.
  *
- * Iniciar la API de Winsock y crear el socket del usuario y conectarlo con el servidor, el renderizado de la ventana, los recursos graficos comunes esenciales (contactos y salas),
- * las interfaces graficas esenciales, las fuentes para las letras y la lista de mensajes y de notificaciones.
+ * Crear: la API de Winsock, el renderizado de la ventana, el socket del usuario y conectarlo con el servidor, los recursos graficos comunes y las interfaces graficas.
+ * Antes de crear cada recurso, los inicializa en NULL.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
@@ -82,8 +92,7 @@ int inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
 /** \brief Configurar los recursos de la aplicacion.
  *
- * Configurar el renderizado, los recursos graficos comunes esenciales (contactos y salas), las interfaces graficas esenciales,
- * la lista de mensajes, y ademas establecerles un tamanio y una posicion sobre la ventana.
+ * Configurar: la aplicacion, los recursos graficos comunes y las interfaces graficas.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
@@ -93,45 +102,14 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
 /** \brief Liberar los recursos de la aplicacion.
  *
- * Liberar la lista de mensajes y la lista de notificaciones, las interfaces graficas esenciales y de autenticacion, los recursos graficos comunes esenciales (contactos y salas) y de autenticacion (autenticacion y registro),
- * las fuentes de los textos graficos, el socket del usuario junto con la API de Winsock y el renderizado de la ventana. En orden contrario a como se crearon.
+ * Liberar: la API de Winsock, el renderizado de la ventana, el socket del usuario, los recursos graficos comunes y las interfaces graficas.
+ * Antes de liberar, pregunta si el recurso fue creado o no.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
  *
  */
 void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
-
-
-
-/* ============================
-   FUNCIONES DE INICIO
-   ============================ */
-
-
-
-/** \brief Preparar la aplicacion para iniciar el menu principal.
- *
- * Maximizar la ventana y seleccionar la interfaz de contactos como interfaz de menu principal.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
- *
- */
-void iniciarMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
-/** \brief Inicializar y configurar las interfaces graficas de autenticacion.
- *
- * Seleccionar la interfaz de autenticacion como interfaz principal e inicializar, configurar y establecer un tamanio y una posicion sobre la ventana
- * a los recursos graficos comunes de autenticacion (autenticacion y registro) y las interfaces de autenticacion y registro.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param interfaces Puntero a la estructura unificadora de interfaces graficas.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
- *
- */
-int iniciarAutenticacionManual (t_contextoAplicacion *contextoAplicacion, t_interfaces *interfaces);
 
 
 
