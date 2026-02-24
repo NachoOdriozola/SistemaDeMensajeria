@@ -78,13 +78,19 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
 
 void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
+    // --------------- CONFIGURAR FOCO ---------------
+
+    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+
+
     // --------------- CONFIGURAR HABILITACIONES ---------------
 
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirContrasenia = DESHABILITADO;
-    recursosComunesAutenticacionRegistro->habilitaciones.escribirNombre = DESHABILITADO;
-    recursosComunesAutenticacionRegistro->habilitaciones.ingresar = DESHABILITADO;
+    recursosComunesAutenticacionRegistro->ingreso = DESHABILITADO;
 
-    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->habilitaciones.puntoInsercion));
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->puntoInsercion));
 
 
     // --------------- CONFIGURAR BUFFERS ---------------
@@ -536,6 +542,22 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosCom
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->puntoInsercion);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->subrayadoTitulo);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

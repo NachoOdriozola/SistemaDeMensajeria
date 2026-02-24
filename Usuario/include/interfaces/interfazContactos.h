@@ -64,23 +64,24 @@ typedef struct
     sfRectangleShape *barraEscribirAgendarContacto;     /**< Barra donde el usuario escribe el nombre del contacto. */
 } t_interfazContactosElementos;
 
-/** \struct t_interfazContactosHabilitaciones
- * \brief Contiene todas las habilitaciones de la interfaz de contactos.
+/** \enum t_interfazContactosFoco
+ * \brief Contiene los estados de foco de la interfaz de contactos.
  */
-typedef struct
+typedef enum
 {
-    t_habilitacion agendarContacto;               /**< Abrir/cerrar la ventana emergente de agendar contacto. */
-    t_habilitacion escribirAgendarContacto;       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir el nombre del contacto */
-} t_interfazContactosHabilitaciones;
+    AGENDAR_CONTACTO,                     /**< Abrir/cerrar la ventana emergente de agendar contacto. */
+    ESCRIBIR_AGENDAR_CONTACTO,            /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir el nombre del contacto */
+    ICT_NINGUNO                           /**< Ningun foco establecido. */
+} t_interfazContactosFoco;
 
 /** \struct t_interfazContactos
- * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de contactos.
+ * \brief Estructura base que contiene los buffers, focos y une los recursos graficos de la interfaz de contactos.
  */
 typedef struct
 {
     t_interfazContactosTextos textos;
     t_interfazContactosElementos elementos;
-    t_interfazContactosHabilitaciones habilitaciones;
+    t_interfazContactosFoco estadoFoco;
     char bufferAgendarContacto [MAX_NOMBRE_USUARIO];    /**< Buffer donde se guarda el nombre del contacto que escribe el usuario. */
 } t_interfazContactos;
 
@@ -96,18 +97,18 @@ typedef struct
  *
  * Establecer todas las variables graficas en NULL y luego crear cada recurso.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
 int interfazContactos_inicializar (t_interfazContactos *interfazContactos);
 
-/** \brief Configurar los recursos graficos, habilitaciones y buffers de la interfaz de contactos.
+/** \brief Configurar los recursos graficos, focos y buffers de la interfaz de contactos.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
+ * Deshabilitar el estado de foco, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
  *
  */
@@ -119,8 +120,8 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos, const
  * Cada evento se desarrolla en una funcion particular manejadora de eventos.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  */
 void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
@@ -131,8 +132,8 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
  * correspondientes segun el evento detectado.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  */
 void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
@@ -143,15 +144,15 @@ void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_r
  * Primero renderiza las vistas moviles y luego la vista de UI.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  */
 void interfazContactos_renderizar (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de contactos.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y habilitaciones de la interfaz de contactos.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  */
 void interfazContactos_liberar (t_interfazContactos *interfazContactos);

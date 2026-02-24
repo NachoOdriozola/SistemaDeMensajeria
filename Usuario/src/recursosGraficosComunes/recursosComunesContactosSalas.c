@@ -108,13 +108,14 @@ int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *
 
 void recursosComunesContactosSalas_configurar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    // --------------- CONFIGURAR HABILITACIONES ---------------
+    // --------------- CONFIGURAR FOCO ---------------
 
-    recursosComunesContactosSalas->habilitaciones.areaMensajes = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.escribirMensaje = DESHABILITADO;
-    recursosComunesContactosSalas->habilitaciones.notificaciones = DESHABILITADO;
+    recursosComunesContactosSalas->estadoFoco = RCCS_NINGUNO;
 
-    resetearPuntoInsercion (&(recursosComunesContactosSalas->habilitaciones.puntoInsercion));
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
 
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
@@ -264,7 +265,7 @@ void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesCont
 
 void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.notificaciones == HABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco == NOTIFICACIONES)
     {
         // ELEMENTOS
 
@@ -324,6 +325,11 @@ void tamMensaje (void *mensaje)
 void renderizarMensaje (void *mensaje, void *renderizado)
 {
     sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
+}
+
+void vaciarMensaje (void *mensaje)
+{
+    sfText_setString (*((sfText**)mensaje), "");
 }
 
 void liberarMensaje (void *mensaje)
@@ -1262,6 +1268,20 @@ void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado
     sfView_setCenter (vistas->UI, (sfVector2f){ANCHO_LOGICO_VENTANA / 2.0f, ALTO_LOGICO_VENTANA / 2.0f});
 }
 
+bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (!clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.barraEscribirMensaje))
+        return EVENTO_NO_MANEJADO;
+
+    recursosComunesContactosSalas->estadoFoco = ESCRIBIR_MENSAJE;
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
+
+    return EVENTO_MANEJADO;
+}
+
 bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.botonEnviar))
@@ -1276,7 +1296,18 @@ bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
         printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
     }
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+
+
+    return EVENTO_MANEJADO;
+}
+
+bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    if (!clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
+        return EVENTO_NO_MANEJADO;
+    recursosComunesContactosSalas->estadoFoco = AREA_MENSAJES;
 
     return EVENTO_MANEJADO;
 }
@@ -1285,7 +1316,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
 {
     sfFloatRect limiteTextoAux;
 
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
     ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
@@ -1298,7 +1329,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
 
 bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    if (recursosComunesContactosSalas->habilitaciones.escribirMensaje == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
     if (strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == 0)
@@ -1310,7 +1341,8 @@ bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
         printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
     }
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
 
     return EVENTO_MANEJADO;
 }
@@ -1320,7 +1352,7 @@ bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recurs
     sfVector2f tamVista, posCentro;
     sfVector2f posUltimoMensaje;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
@@ -1335,7 +1367,7 @@ bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recurso
 {
     sfVector2f tamVista, posCentro;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
@@ -1354,7 +1386,7 @@ bool manejarScrollAreaMensajes (t_recursosComunesContactosSalas *recursosComunes
     float superiorVista, inferiorVista;
     float limiteSuperior, limiteInferior;
 
-    if (recursosComunesContactosSalas->habilitaciones.areaMensajes == DESHABILITADO)
+    if (recursosComunesContactosSalas->estadoFoco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);

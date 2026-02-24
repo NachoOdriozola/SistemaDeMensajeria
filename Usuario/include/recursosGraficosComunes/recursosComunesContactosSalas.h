@@ -142,16 +142,16 @@ typedef struct
     sfView *mensajes;                      /**< Vista movil que navega sobre el historial de mensajes. */
 } t_recursosComunesContactosSalasVistas;
 
-/** \struct t_recursosComunesContactosSalasHabilitaciones
- * \brief Contiene todas las habilitaciones comunes (compartidas) entre las interfaces de contactos y salas.
+/** \enum t_recursosComunesContactosSalasFoco
+ * \brief Contiene los estados de foco comunes (compartidos) entre las interfaces de contactos y salas.
  */
-typedef struct
+typedef enum
 {
-    t_habilitacion areaMensajes;                          /**< Indicar si el area de mensajes fue seleccionado/deseleccionado por el usuario. */
-    t_habilitacion escribirMensaje;                       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir un mensaje. */
-    t_habilitacion notificaciones;                        /**< Abrir/cerrar la ventana emergente de notificaciones. */
-    t_puntoInsercion puntoInsercion;
-} t_recursosComunesContactosSalasHabilitaciones;
+    AREA_MENSAJES,                          /**< Indicar si el area de mensajes fue seleccionado/deseleccionado por el usuario. */
+    ESCRIBIR_MENSAJE,                       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir un mensaje. */
+    NOTIFICACIONES,                         /**< Abrir/cerrar la ventana emergente de notificaciones. */
+    RCCS_NINGUNO                            /**< Ningun foco establecido. */
+} t_recursosComunesContactosSalasFoco;
 
 /**
  * \struct t_contextoMensajes
@@ -191,7 +191,7 @@ typedef struct
 } t_notificacion;
 
 /** \struct t_recursosComunesContactosSalas
- * \brief Estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \brief Estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  */
 typedef struct
 {
@@ -199,8 +199,9 @@ typedef struct
     t_recursosComunesContactosSalasTextos textos;
     t_recursosComunesContactosSalasElementos elementos;
     t_recursosComunesContactosSalasVistas vistas;
-    t_recursosComunesContactosSalasHabilitaciones habilitaciones;
+    t_recursosComunesContactosSalasFoco estadoFoco;
     t_contextoMensajes contextoMensajes;
+    t_puntoInsercion puntoInsercion;
 } t_recursosComunesContactosSalas;
 
 
@@ -215,18 +216,18 @@ typedef struct
  *
  * Establecer todas las variables graficas, la lista de mensajes y vistas en NULL y luego crear cada recurso y vista.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
 int recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Configurar los recursos graficos, la lista de mensajes, contexto de mensajes y habilitaciones comunes (compartidos) entre las interfaces de contactos y salas.
+/** \brief Configurar los recursos graficos, la lista de mensajes, contexto de mensajes y focos comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Deshabilitar todas las banderas habilitadoras, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico y a la lista de mensajes.
+ * Deshabilitar el estado de foco, apuntar los buffers a NULL y configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico y a la lista de mensajes.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  */
 void recursosComunesContactosSalas_configurar (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
@@ -253,7 +254,7 @@ void recursosComunesContactosSalas_renderizarElementos (sfRenderWindow *renderiz
 
 /** \brief Liberar, de manera segura, todos los recursos graficos y vistas comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  */
 void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
@@ -273,7 +274,7 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
  * Se comunican a traves del socket de la aplicacion.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
  */
@@ -295,7 +296,7 @@ void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRes
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  */
 void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
@@ -306,7 +307,7 @@ void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesCont
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  */
 void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
@@ -354,6 +355,13 @@ void tamMensaje (void *mensaje);
  *
  */
 void renderizarMensaje (void *mensaje, void *renderizado);
+
+/** \brief Vacia (resetea) un mensaje sfText. Setea su string a "".
+ *
+ * \param mensaje Doble puntero a mensaje sfText.
+ *
+ */
+void vaciarMensaje (void *mensaje);
 
 /** \brief Liberar un mensaje sfText.
  *
@@ -455,11 +463,21 @@ void renderizarListaNotificaciones (void *notificacion, void *renderizado);
  * y fijar los valores logicos de la vista UI.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param eventoRedimensionamiento Variable de evento que contiene los nuevos valores de la ventana redimensionada.
  *
  */
 void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado, t_recursosComunesContactosSalasVistas *vistas, sfEvent eventoRedimensionamiento);
+
+/** \brief Manejar el evento de click en la barra para escribir mensaje.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de click en el boton para enviar mensaje.
  *
@@ -468,18 +486,28 @@ void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado
  * Reestablecer el buffer de escribir mensaje.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
 bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
+/** \brief Manejar el evento de click en el area de mensajes.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 /** \brief Manejar el evento de escribir mensaje.
  *
  * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
@@ -494,7 +522,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
  * Reestablecer el buffer de escribir mensaje.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -505,7 +533,7 @@ bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
  *
  * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes hacia arriba por la velocidad del scroll.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -516,7 +544,7 @@ bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recurs
  *
  * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes hacia abajo por la velocidad del scroll.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
@@ -527,7 +555,7 @@ bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recurso
  *
  * Si se encuentra seleccionada el area de mensajes, mueve la vista de mensajes segun el scroll realizado y la velocidad del scroll.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, habilitaciones y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param eventoScroll Variable de evento que contiene datos sobre el scroll.
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.

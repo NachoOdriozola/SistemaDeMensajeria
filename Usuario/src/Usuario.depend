@@ -1652,10 +1652,10 @@
 1761020333 source:c:\users\ignac\documents\appdemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
 	"../../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1770940774 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listacircular.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listacircular.c
 	"../include/listaCircular.h"
 
-1770940778 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listacircular.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listacircular.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -1663,21 +1663,21 @@
 
 1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
 
-1771031128 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
 
-1770940527 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
 	"../include/listaSimple.h"
 
-1770940521 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	"nodo.h"
 
-1771029411 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
+1771963792 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
 	"../../include/interfaces/interfazAutenticacion.h"
 
-1771032089 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
+1771962615 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1705,7 +1705,7 @@
 	"../../EstructurasDeDatos/include/listaCircular.h"
 	"../../EstructurasDeDatos/include/listaSimple.h"
 
-1771034739 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
+1771963696 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunesautenticacionregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1716,10 +1716,10 @@
 	"../utiles.h"
 	"../estructuras.h"
 
-1770839678 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
 	"../../include/interfaces/interfazConfig.h"
 
-1771032070 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1730,10 +1730,10 @@
 	"../utiles.h"
 	"../estructuras.h"
 
-1771029415 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
+1771963779 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
 	"../../include/interfaces/interfazRegistro.h"
 
-1771032089 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
+1771962684 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1745,10 +1745,10 @@
 	"../estructuras.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1771029420 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
+1771962820 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
 	"../../include/interfaces/interfazSalas.h"
 
-1771032089 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
+1771873790 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1762,7 +1762,7 @@
 	"../estructuras.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1771032180 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
+1771873746 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\recursosgraficoscomunes\recursoscomunescontactossalas.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1775,10 +1775,10 @@
 	"../../../EstructurasDeDatos/include/listaCircular.h"
 	"../estructuras.h"
 
-1770839700 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\main.c
 	"../include/main.h"
 
-1771032089 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\main.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1797,7 +1797,7 @@
 	"interfaces/interfazRegistro.h"
 	"interfaces/interfazSalas.h"
 
-1771032089 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
+1771873821 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazcontactos.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -1811,13 +1811,13 @@
 	"../estructuras.h"
 	"../recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1771023885 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
+1771963706 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunesautenticacionregistro.c
 	"../../include/recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1771023684 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
+1771965132 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1771029411 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
+1771962783 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
 	"../../include/interfaces/interfazContactos.h"
 
 1770154554 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicausuario.c
@@ -2026,7 +2026,7 @@
 1768014921 source:c:\users\ignac\documents\aplicaciondemensajes\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1771029461 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\utiles.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\utiles.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -2038,7 +2038,7 @@
 	"SFML/Window.h"
 	"SFML/System.h"
 
-1771032150 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\estructuras.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\estructuras.h
 	"SFML/Graphics.h"
 	"SFML/Window.h"
 	"SFML/System.h"
@@ -2060,6 +2060,6 @@
 1770835877 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicaaplicacion.c
 	"../include/logicaAplicacion.h"
 
-1771029454 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\utiles.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\utiles.c
 	"../include/utiles.h"
 
