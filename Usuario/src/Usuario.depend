@@ -1674,7 +1674,7 @@
 	<string.h>
 	"nodo.h"
 
-1772067966 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
+1772397528 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazautenticacion.c
 	"../../include/interfaces/interfazAutenticacion.h"
 
 1772028366 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazautenticacion.h
@@ -1716,7 +1716,7 @@
 	"../utiles.h"
 	"../estructuras.h"
 
-1772026200 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
+1772397539 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazconfig.c
 	"../../include/interfaces/interfazConfig.h"
 
 1772026211 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazconfig.h
@@ -1730,7 +1730,7 @@
 	"../utiles.h"
 	"../estructuras.h"
 
-1772067966 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
+1772397560 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazregistro.c
 	"../../include/interfaces/interfazRegistro.h"
 
 1772028460 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazregistro.h
@@ -1745,7 +1745,7 @@
 	"../estructuras.h"
 	"../recursosGraficosComunes/recursosComunesAutenticacionRegistro.h"
 
-1772064699 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
+1772397571 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazsalas.c
 	"../../include/interfaces/interfazSalas.h"
 
 1772028616 c:\users\ignac\documents\aplicaciondemensajes\usuario\include\interfaces\interfazsalas.h
@@ -1817,7 +1817,7 @@
 1772061061 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\recursosgraficoscomunes\recursoscomunescontactossalas.c
 	"../../include/recursosGraficosComunes/recursosComunesContactosSalas.h"
 
-1772062947 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
+1772397466 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\interfaces\interfazcontactos.c
 	"../../include/interfaces/interfazContactos.h"
 
 1770154554 source:c:\users\ignac\documents\aplicaciondemensajes\usuario\src\logicausuario.c

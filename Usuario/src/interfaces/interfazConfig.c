@@ -114,31 +114,33 @@ void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, t_interfaz
 {
     sfEvent evento;
 
-    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
-    switch (evento.type)
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento))
     {
-
-    case sfEvtClosed:
-        interfazConfig_liberar (interfazConfig);
-        sfRenderWindow_close (contextoAplicacion->renderizado);
-        break;
-
-
-    case sfEvtResized:
-       // if (manejarRedimensionamientoVentana (contextoAplicacion, evento) == ERROR_SIN_MEMORIA)
-        break;
-
-
-    case sfEvtMouseButtonPressed:
-        if (evento.mouseButton.button == sfMouseLeft)
+        switch (evento.type)
         {
-            if (clickEnRectangulo (contextoAplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
-                contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+
+        case sfEvtClosed:
+            interfazConfig_liberar (interfazConfig);
+            sfRenderWindow_close (contextoAplicacion->renderizado);
+            break;
+
+
+        case sfEvtResized:
+           // if (manejarRedimensionamientoVentana (contextoAplicacion, evento) == ERROR_SIN_MEMORIA)
+            break;
+
+
+        case sfEvtMouseButtonPressed:
+            if (evento.mouseButton.button == sfMouseLeft)
+            {
+                if (clickEnRectangulo (contextoAplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
+                    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+            }
+
+
+        default:
+            break;
         }
-
-
-    default:
-        break;
     }
 }
 

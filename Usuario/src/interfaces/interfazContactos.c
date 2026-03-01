@@ -130,62 +130,64 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
     sfEvent evento;
 
 
-    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
-    switch (evento.type)
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento))
     {
-
-    case sfEvtClosed:
-        sfRenderWindow_close (contextoAplicacion->renderizado);
-        break;
-
-
-    case sfEvtResized:
-        manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
-        break;
-
-
-    case sfEvtMouseButtonPressed:
-        if (evento.mouseButton.button == sfMouseLeft)
+        switch (evento.type)
         {
-            if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazSalas (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
+
+        case sfEvtClosed:
+            sfRenderWindow_close (contextoAplicacion->renderizado);
+            break;
+
+
+        case sfEvtResized:
+            manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
+            break;
+
+
+        case sfEvtMouseButtonPressed:
+            if (evento.mouseButton.button == sfMouseLeft)
+            {
+                if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarClickCambiarInterfazSalas (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+                if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
+            }
+            break;
+
+
+        case sfEvtTextEntered:
+            if (evento.text.unicode < 128)
+            {
+                if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+            }
+            break;
+
+
+        case sfEvtKeyPressed:
+            if (evento.key.code == sfKeyEnter)
+            {
+                if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            }
+
+            if (evento.key.code == sfKeyUp)
+                if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
+            if (evento.key.code == sfKeyDown)
+                if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
+            break;
+
+
+        case sfEvtMouseWheelScrolled:
+            if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+            break;
+
+
+        default:
+            break;
         }
-        break;
-
-
-    case sfEvtTextEntered:
-        if (evento.text.unicode < 128)
-        {
-            if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    case sfEvtKeyPressed:
-        if (evento.key.code == sfKeyEnter)
-        {
-            if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-        }
-
-        if (evento.key.code == sfKeyUp)
-            if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-
-        if (evento.key.code == sfKeyDown)
-            if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-
-        break;
-
-
-    case sfEvtMouseWheelScrolled:
-        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-        break;
-
-
-    default:
-        break;
     }
 }
 

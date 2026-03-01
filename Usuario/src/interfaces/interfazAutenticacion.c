@@ -135,51 +135,53 @@ void interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_r
     sfEvent evento;
 
 
-    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
-    switch (evento.type)
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento))
     {
-
-    case sfEvtClosed:
-        sfRenderWindow_close (contextoAplicacion->renderizado);
-        break;
-
-
-    case sfEvtResized:
-        sfRenderWindow_setSize (contextoAplicacion->renderizado, (sfVector2u){500, 620});
-        break;
-
-
-    case sfEvtMouseButtonPressed:
-        if (evento.mouseButton.button == sfMouseLeft)
+        switch (evento.type)
         {
-            if (manejarClickEscribirNombre (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickEscribirContrasenia (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickIntentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-            if (manejarClickCambiarInterfazRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazAutenticacion) == EVENTO_MANEJADO) break;
-            deshabilitarFocos (recursosComunesAutenticacionRegistro, interfazAutenticacion);
+
+        case sfEvtClosed:
+            sfRenderWindow_close (contextoAplicacion->renderizado);
+            break;
+
+
+        case sfEvtResized:
+            sfRenderWindow_setSize (contextoAplicacion->renderizado, (sfVector2u){500, 620});
+            break;
+
+
+        case sfEvtMouseButtonPressed:
+            if (evento.mouseButton.button == sfMouseLeft)
+            {
+                if (manejarClickEscribirNombre (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+                if (manejarClickEscribirContrasenia (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+                if (manejarClickIntentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+                if (manejarClickCambiarInterfazRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazAutenticacion) == EVENTO_MANEJADO) break;
+                deshabilitarFocos (recursosComunesAutenticacionRegistro, interfazAutenticacion);
+            }
+            break;
+
+
+        case sfEvtTextEntered:
+            if (evento.text.unicode < 128)
+            {
+                if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
+                if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
+            }
+            break;
+
+
+        case sfEvtKeyPressed:
+            if (evento.key.code == sfKeyEnter)
+            {
+                if (manejarEnterIntentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
+            }
+            break;
+
+
+        default:
+            break;
         }
-        break;
-
-
-    case sfEvtTextEntered:
-        if (evento.text.unicode < 128)
-        {
-            if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
-            if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    case sfEvtKeyPressed:
-        if (evento.key.code == sfKeyEnter)
-        {
-            if (manejarEnterIntentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    default:
-        break;
     }
 }
 

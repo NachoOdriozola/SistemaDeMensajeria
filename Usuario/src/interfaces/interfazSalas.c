@@ -128,31 +128,33 @@ void interfazSalas_accion (t_contextoAplicacion *contextoAplicacion, t_recursosC
     sfEvent evento;
 
 
-    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
-    switch (evento.type)
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento))
     {
-
-    case sfEvtClosed:
-        sfRenderWindow_close (contextoAplicacion->renderizado);
-        break;
-
-
-    case sfEvtResized:
-        manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
-        break;
-
-
-    case sfEvtMouseButtonPressed:
-        if (evento.mouseButton.button == sfMouseLeft)
+        switch (evento.type)
         {
-            if (manejarClickCambiarInterfazContactos (contextoAplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
-            deshabilitarFocos (recursosComunesContactosSalas, interfazSalas);
+
+        case sfEvtClosed:
+            sfRenderWindow_close (contextoAplicacion->renderizado);
+            break;
+
+
+        case sfEvtResized:
+            manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
+            break;
+
+
+        case sfEvtMouseButtonPressed:
+            if (evento.mouseButton.button == sfMouseLeft)
+            {
+                if (manejarClickCambiarInterfazContactos (contextoAplicacion, recursosComunesContactosSalas, interfazSalas) == EVENTO_MANEJADO) break;
+                deshabilitarFocos (recursosComunesContactosSalas, interfazSalas);
+            }
+            break;
+
+
+        default:
+            break;
         }
-        break;
-
-
-    default:
-        break;
     }
 }
 
