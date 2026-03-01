@@ -178,7 +178,8 @@ bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelClien
 
 /** \brief Verifica y procesa la solicitud de autenticacion.
  *
- * Parsea la cadena del buffer de solicitud.
+ * Parsea la cadena enviada en el buffer de solicitud compuesta de la siguiente manera:
+ * SOLICITUD_AUTENTICACION|nombre|contrasenia
  * Consulta en la base de datos si las credenciales que envio el usuario existen y son validas.
  * Si lo son, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes no autenticados a la tabla hash, y
  * le responde al cliente "INDICE_RESPUESTA_EXITO" y su ID.
@@ -196,7 +197,8 @@ int manejarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodo 
 
 /** \brief Verifica y procesa la solicitud de registro.
  *
- * Parsea la cadena del buffer de solicitud.
+ * Parsea la cadena enviada en el buffer de solicitud compuesta de la siguiente manera:
+ * SOLICITUD_REGISTRO|nombre|contrasenia|correo electronico
  * Consulta en la base de datos si el nombre de usuario y/o el correo electronico ya existen.
  * Si ya existen, no realiza ninguna accion y le responde al cliente "INDICE_RESPUESTA_ERROR_CREDENCIALES".
  * Si no existen, lo inserta en la base de datos, recupera su ID, la guarda en la estructura del cliente y lo mueve de la lista simple de clientes
@@ -240,6 +242,10 @@ int manejarEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo **clienteA
  * \param buffersComunicacion Puntero a la estructura que contiene los buffers necesarios para la comunicacion entre el cliente y el servidor.
  *
  * \return OK si se proceso correctamente, ERROR_SIN_MEMORIA si no se pudo asignar memoria dinamica o ERROR_INICIALIZACION si no se pudo realizar una consulta SQLite.
+ *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
  *
  */
 int manejarSolicitudContacto (t_contextoServidor *contextoServidor, t_nodo **clienteAProcesar, t_buffersComunicacion *buffersComunicacion);

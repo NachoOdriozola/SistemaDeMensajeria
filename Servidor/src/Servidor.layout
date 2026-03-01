@@ -2,9 +2,20 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Debug" />
+<<<<<<< HEAD
 	<File name="logicaAplicacion.c" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="15473" topLine="75" />
+=======
+	<File name="main.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2250" topLine="35" />
+		</Cursor>
+	</File>
+	<File name="logicaAplicacion.c" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7337" topLine="52" />
+>>>>>>> chore/mantenimiento-general
 		</Cursor>
 		<Folding>
 			<Collapse line="24" />
@@ -15,10 +26,23 @@
 			<Collapse line="201" />
 			<Collapse line="222" />
 			<Collapse line="273" />
+<<<<<<< HEAD
+=======
+			<Collapse line="356" />
+>>>>>>> chore/mantenimiento-general
 			<Collapse line="575" />
 			<Collapse line="587" />
 			<Collapse line="608" />
 		</Folding>
 	</File>
+<<<<<<< HEAD
 	<EditorTabsLayout layout="07e56a40698fe2f200001cd100000002=*0;Servidor:logicaAplicacion.c@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=856;besth=468;minw=856;minh=468;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=07e56a40698fe2f200001cd100000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
+=======
+	<File name="..\include\logicaAplicacion.h" open="0" top="0" tabpos="0" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="7232" topLine="174" />
+		</Cursor>
+	</File>
+	<EditorTabsLayout layout="@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=856;besth=282;minw=856;minh=282;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|" />
+>>>>>>> chore/mantenimiento-general
 </CodeBlocks_layout_file>

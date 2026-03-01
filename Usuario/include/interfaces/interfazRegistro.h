@@ -90,9 +90,14 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos de la interfaz de registro.
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de registro.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recursos.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ */
+void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro);
+
+/** \brief Inicializar los recursos graficos de la interfaz de registro.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *

@@ -212,9 +212,16 @@ typedef struct
 
 
 
+/** \brief Inicializar todas las variables graficas en NULL y crear la lista de mensajes de los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ */
+void recursosComunesContactosSalas_inicializarValoresNulos (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 /** \brief Inicializar los recursos graficos, la lista de mensajes y vistas comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * Establecer todas las variables graficas, la lista de mensajes y vistas en NULL y luego crear cada recurso y vista.
+ * Para la lista circular de mensajes, se crea un vector de punteros sfText que primero se inicializan en NULL y luego se crean los sfText y se insertan a la lista circular.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
@@ -290,6 +297,24 @@ int intentarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosCo
  */
 void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta);
 
+/** \brief Activar la interfaz de contactos.
+ *
+ * Modificar los estados de foco, los buffers, vaciar la lista de mensajes, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de contactos.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ */
+void activarInterfazContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Activar la interfaz de salas.
+ *
+ * Modificar los estados de foco, los buffers, vaciar la lista de mensajes, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de salas.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ */
+void activarInterfazSalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 /** \brief Renderizar la vista de mensajes.
  *
  * Establecer la vista de mensajes en el renderizado, y renderizar la lista de mensajes.
@@ -309,6 +334,10 @@ void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesCont
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
 void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
@@ -320,6 +349,16 @@ void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComu
  *
  */
 void posicionarNombreUsuario (sfText *nombre);
+
+/** \brief Preparar la aplicacion para iniciar la interfaz del menu principal.
+ *
+ * Seleccionar la interfaz de contactos como la interfaz del menu principal, establecer y posicionar el nombre de usuario en las interfaces y maximizar la ventana.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ *
+ */
+void iniciarInterfazMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 
 

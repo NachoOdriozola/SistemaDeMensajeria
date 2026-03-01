@@ -684,9 +684,9 @@
 	"../../EstructurasDeDatos/include/listaSimple.h"
 	"../../EstructurasDeDatos/include/tablaHash.h"
 
-1771031128 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\constantes\constantes.h
 
-1770940521 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\listasimple.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -694,23 +694,23 @@
 
 1768456487 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\nodo.h
 
-1770940597 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\include\tablahash.h
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
 	<stdbool.h>
 	"listaSimple.h"
 
-1771031000 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\main.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\main.c
 	"../include/logicaAplicacion.h"
 
-1770940527 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\listasimple.c
 	"../include/listaSimple.h"
 
-1770940592 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\tablahash.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\estructurasdedatos\src\tablahash.c
 	"../include/tablaHash.h"
 
-1771030963 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\logicaaplicacion.h
+1772026776 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\logicaaplicacion.h
 	<stdio.h>
 	<string.h>
 	<stdlib.h>
@@ -725,7 +725,7 @@
 	"../../EstructurasDeDatos/include/tablaHash.h"
 	"estructuras.h"
 
-1771031107 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\estructuras.h
+1771035351 c:\users\ignac\documents\aplicaciondemensajes\servidor\include\estructuras.h
 	<winsock2.h>
 	<ws2tcpip.h>
 	<sqlite3.h>
@@ -733,6 +733,6 @@
 	"../../EstructurasDeDatos/include/listaSimple.h"
 	"../../EstructurasDeDatos/include/tablaHash.h"
 
-1770940737 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\logicaaplicacion.c
+1771035351 source:c:\users\ignac\documents\aplicaciondemensajes\servidor\src\logicaaplicacion.c
 	"../include/logicaAplicacion.h"
 

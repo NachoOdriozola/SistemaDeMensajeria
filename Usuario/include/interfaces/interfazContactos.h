@@ -82,7 +82,6 @@ typedef struct
     t_interfazContactosTextos textos;
     t_interfazContactosElementos elementos;
     t_interfazContactosFoco estadoFoco;
-    char bufferAgendarContacto [MAX_NOMBRE_USUARIO];    /**< Buffer donde se guarda el nombre del contacto que escribe el usuario. */
 } t_interfazContactos;
 
 
@@ -93,9 +92,14 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos de la interfaz de contactos.
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de contactos.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ *
+ */
+void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazContactos);
+
+/** \brief Inicializar los recursos graficos de la interfaz de contactos.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *

@@ -90,9 +90,16 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos de la interfaz de salas.
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de salas.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
+ *
+ */
+void interfazSalas_inicializarValoresNulos (t_interfazSalas *interfazSalas);
+
+/** \brief Inicializar los recursos graficos de la interfaz de salas.
  *
  * \param interfazSalas Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de salas.
  *

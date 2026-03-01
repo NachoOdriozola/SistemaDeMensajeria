@@ -294,7 +294,6 @@ void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion);
  *
  * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
  *
- *
  * \return 1 si se encuentra habilitado, 0 si no lo esta.
  */
 bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion);

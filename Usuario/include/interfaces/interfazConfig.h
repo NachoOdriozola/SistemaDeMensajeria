@@ -68,23 +68,23 @@ typedef struct
     sfRectangleShape *rectanguloVolver;
 } t_interfazConfigElementos;
 
-/** \struct t_interfazConfigHabilitaciones
- * \brief Contiene todas las habilitaciones de la interfaz de configuraciones.
+/** \enum t_interfazConfigFoco
+ * \brief Contiene todos los estados de foco de la interfaz de configuraciones.
  */
-typedef struct
+typedef enum
 {
-
-} t_interfazConfigHabilitaciones;
+    ICF_NINGUNO
+} t_interfazConfigFoco;
 
 /** \struct t_interfazConfig
- * \brief Estructura base que contiene los buffers, habilitaciones y une los recursos graficos de la interfaz de configuraciones.
+ * \brief Estructura base que contiene los buffers, focos y une los recursos graficos de la interfaz de configuraciones.
  */
 typedef struct
 {
     t_interfazConfigFuentes fuentes;
     t_interfazConfigTextos textos;
     t_interfazConfigElementos elementos;
-    t_interfazConfigHabilitaciones habilitaciones;
+    t_interfazConfigFoco estadoFoco;
 } t_interfazConfig;
 
 
@@ -124,7 +124,7 @@ void interfazConfig_configurar (t_interfazConfig *interfazConfig);
  * \param interfazConfig Puntero a la estructura base de los recursos graficos de la interfaz de configuraciones.
  *
  */
-void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, const t_interfazConfig *interfazConfig);
+void interfazConfig_accion (t_contextoAplicacion *contextoAplicacion, t_interfazConfig *interfazConfig);
 
 /** \brief Manejar las acciones que ocurren sin intervencion directa del usuario en la interfaz de configuraciones.
  *

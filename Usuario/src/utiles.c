@@ -93,15 +93,15 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
     sfText_setString(texto, bufferTexto);
     limites = sfText_getLocalBounds(texto);
 
-    if (limites.width <= anchoBarra)
+    if (limites.width <= anchoBarra) // Si el texto entra en la barra de escritura.
         return;
 
-    for (i = 0; i < (strlen(bufferTexto)); i++)
+    for (i = 1; i <= (strlen(bufferTexto)); i++)
     {
         sfText_setString(texto, bufferTexto + i);
         limites = sfText_getLocalBounds(texto);
         if (limites.width <= anchoBarra)
-            break;
+            return;
     }
 }
 
@@ -122,7 +122,7 @@ void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar
     if (eventoChar.text.unicode == 13) // Si la tecla es "Enter" retorna.
         return;
 
-    if (eventoChar.text.unicode != 8) //Si la tecla no es "Backspace".
+    if (eventoChar.text.unicode != 8) // Si la tecla no es "Backspace".
     {
         if (largoBuffer < tamMaxBuffer - 1)
         {

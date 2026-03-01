@@ -86,9 +86,14 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos de la interfaz de autenticacion.
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de autenticacion.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
+ * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de autenticacion.
+ *
+ */
+void interfazAutenticacion_inicializarValoresNulos (t_interfazAutenticacion *interfazAutenticacion);
+
+/** \brief Inicializar los recursos graficos de la interfaz de autenticacion.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de autenticacion.
  *

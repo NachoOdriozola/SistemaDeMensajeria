@@ -8,7 +8,7 @@
 
 
 
-static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static void desactivarInterfazContactos (t_interfazContactos *interfazContactos);
 static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
 static void deshabilitarFocos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 
@@ -51,7 +51,7 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
 static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
-static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickCambiarInterfazSalas (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 
 static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar);
@@ -65,11 +65,8 @@ static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoA
    ============================ */
 
 
-
-int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
+void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazContactos)
 {
-    // --------------- INICIALIZAR VALORES NULOS ---------------
-
     // TEXTOS
 
     interfazContactos_inicializarValoresNulosTextos (&(interfazContactos->textos));
@@ -78,10 +75,10 @@ int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
     // ELEMENTOS
 
     interfazContactos_inicializarValoresNulosElementos (&(interfazContactos->elementos));
+}
 
-
-    // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
-
+int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
+{
     // TEXTOS
 
     if (interfazContactos_inicializarTextos (&(interfazContactos->textos)) == ERROR_INICIALIZACION)
@@ -102,11 +99,6 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos, const
     // --------------- CONFIGURAR FOCO ---------------
 
     interfazContactos->estadoFoco = ICT_NINGUNO;
-
-
-    // --------------- CONFIGURAR BUFFERS ---------------
-
-    *(interfazContactos->bufferAgendarContacto) = '\0';
 
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
@@ -138,69 +130,64 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
     sfEvent evento;
 
 
-    sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento);
-    switch (evento.type)
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento))
     {
-
-    case sfEvtClosed:
-        sfRenderWindow_close (contextoAplicacion->renderizado);
-        break;
-
-
-    case sfEvtResized:
-        manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
-        break;
-
-
-    case sfEvtMouseButtonPressed:
-        if (evento.mouseButton.button == sfMouseLeft)
+        switch (evento.type)
         {
-            if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickAgendarContacto (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickEscribirAgendarContacto (contextoAplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickNotificaciones (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            //if (manejarClickCerrarVentanaEmergente (contextoAplicacion->renderizado, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickSolapaCambiarInterfaz (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarClickCambiarInterfazConfig (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
-            deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
+
+        case sfEvtClosed:
+            sfRenderWindow_close (contextoAplicacion->renderizado);
+            break;
+
+
+        case sfEvtResized:
+            manejarRedimensionamientoVentanaContactosSalas (contextoAplicacion->renderizado, &(recursosComunesContactosSalas->vistas), evento);
+            break;
+
+
+        case sfEvtMouseButtonPressed:
+            if (evento.mouseButton.button == sfMouseLeft)
+            {
+                if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarClickCambiarInterfazSalas (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
+                if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
+            }
+            break;
+
+
+        case sfEvtTextEntered:
+            if (evento.text.unicode < 128)
+            {
+                if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+            }
+            break;
+
+
+        case sfEvtKeyPressed:
+            if (evento.key.code == sfKeyEnter)
+            {
+                if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+            }
+
+            if (evento.key.code == sfKeyUp)
+                if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
+            if (evento.key.code == sfKeyDown)
+                if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+
+            break;
+
+
+        case sfEvtMouseWheelScrolled:
+            if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
+            break;
+
+
+        default:
+            break;
         }
-        break;
-
-
-    case sfEvtTextEntered:
-        if (evento.text.unicode < 128)
-        {
-            if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-            //if (manejarEscribirAgendarContacto (recursosComunesContactosSalas, interfazContactos, evento) == EVENTO_MANEJADO) break;
-        }
-        break;
-
-
-    case sfEvtKeyPressed:
-        if (evento.key.code == sfKeyEnter)
-        {
-            if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            //if (manejarEnterIntentarAgendarContacto (aplicacion, interfazContactos) == EVENTO_MANEJADO) break;
-        }
-
-        if (evento.key.code == sfKeyUp)
-            if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-
-        if (evento.key.code == sfKeyDown)
-            if (manejarDesplazarAbajoAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-
-        break;
-
-
-    case sfEvtMouseWheelScrolled:
-        if (manejarScrollAreaMensajes (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-        break;
-
-
-    default:
-        break;
     }
 }
 
@@ -214,10 +201,6 @@ void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_r
     {
         switch (*bufferRespuesta)
         {
-        case RESPUESTA_AGENDAR_CONTACTO:
-            //agregarNotificacion (&(recursosComunesContactosSalas->listaNotificaciones), bufferRespuesta, &(recursosComunesContactosSalas->fuentes));
-            break;
-
         case RESPUESTA_MENSAJE:
             manejarReciboMensaje (&(recursosComunesContactosSalas->contextoMensajes), bufferRespuesta);
             break;
@@ -227,10 +210,9 @@ void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_r
 
     // --------------- PUNTO DE INSERCION ---------------
 
-    if ((recursosComunesContactosSalas->estadoFoco == ESCRIBIR_MENSAJE) ||
-        (interfazContactos->estadoFoco == ESCRIBIR_AGENDAR_CONTACTO))
+    if (recursosComunesContactosSalas->estadoFoco == ESCRIBIR_MENSAJE)
         actualizarPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
-    else
+    else if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->puntoInsercion)))
         resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
 }
 
@@ -279,6 +261,7 @@ void interfazContactos_liberar (t_interfazContactos *interfazContactos)
  *
  * \warning No invocar desde produccion.
  */
+/*
 void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
     char *bufferSolicitud, *bufferRespuesta;
@@ -310,56 +293,20 @@ void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_inter
     else if (estadoSolicitud == RESPUESTA_ERROR_SERVIDOR)
         printf ("No se envio la solicitud de amistad.\n");
 }
+*/
 
-/** \brief Modificar las configuraciones de los focos, punto de insercion, lista de mensajes, buffers y recursos graficos para adaptarlos a la interfaz de salas.
+/** \brief Desactivar la interfaz de contactos para cambiar de interfaz.
  *
- * Deshabilitar los estados de focos, resetear el punto de insercion, vaciar la lista de mensajes y restablecer los buffers.
- * Modificar unicamente los recursos graficos de texto y/o elementos que se necesiten adaptar para cambiar a la interfaz de salas.
+ * Modificar los estados de foco y los recursos graficos de texto y/o elementos que se necesiten desactivar para cambiar de interfaz.
  *
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
  */
-static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static void desactivarInterfazContactos (t_interfazContactos *interfazContactos)
 {
     // --------------- CONFIGURAR FOCO ---------------
 
-    deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
-
-
-    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
-
-    resetearPuntoInsercion (&(recursosComunesContactosSalas->puntoInsercion));
-
-
-    // --------------- CONFIGURAR BUFFERS ---------------
-
-    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    *(interfazContactos->bufferAgendarContacto) = '\0';
-
-
-    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
-
-    mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
-
-
-    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
-
-    // TEXTOS
-
-    // auxEscribirMensaje
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
-
-    // proximaInterfaz
-    sfText_setString (recursosComunesContactosSalas->textos.proximaInterfaz, "CONTACTOS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.proximaInterfaz, (sfVector2f){343, 567});
-
-    // tituloInterfaz
-    sfText_setString (recursosComunesContactosSalas->textos.tituloInterfaz, "SALAS");
-    sfText_setPosition (recursosComunesContactosSalas->textos.tituloInterfaz, (sfVector2f){120, 37});
-
-
-    // ELEMENTOS
+    interfazContactos->estadoFoco = ICT_NINGUNO;
 }
 
 /** \brief Renderizar los recursos graficos de agendar contacto.
@@ -370,6 +317,10 @@ static void cambiarInterfazASalas (t_recursosComunesContactosSalas *recursosComu
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
  *
  */
 static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos)
@@ -604,16 +555,6 @@ static void interfazContactos_renderizarVistaUI (sfRenderWindow *renderizado, co
     interfazContactos_renderizarTextos (renderizado, &(interfazContactos->textos));
 
 
-    // --------------- RENDERIZAR AGENDAR CONTACTO ---------------
-
-    renderizarAgendarContacto (renderizado, recursosComunesContactosSalas, interfazContactos);
-
-
-    // --------------- RENDERIZAR NOTIFICACIONES ---------------
-
-    renderizarNotificaciones (renderizado, recursosComunesContactosSalas);
-
-
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
 
     if (puntoInsercionHabilitado (&(recursosComunesContactosSalas->puntoInsercion)))
@@ -682,6 +623,10 @@ static void interfazContactos_liberarElementos (t_interfazContactosElementos *el
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
@@ -710,6 +655,10 @@ static bool manejarClickAgendarContacto (const sfRenderWindow *renderizado, t_re
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
 static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
@@ -734,7 +683,12 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
+ /*
 static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.notificaciones))
@@ -752,6 +706,7 @@ static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_rec
 
     return EVENTO_MANEJADO;
 }
+*/
 
 /** \brief Manejar el evento de click en cerrar la ventana emergente.
  *
@@ -761,7 +716,12 @@ static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_rec
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
+ /*
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
     if (!clickEnTexto (renderizado, recursosComunesContactosSalas->textos.cerrarVentanaEmergente))
@@ -772,6 +732,7 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
 
     return EVENTO_MANEJADO;
 }
+*/
 
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
  *
@@ -782,13 +743,18 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
  */
-static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+static bool manejarClickCambiarInterfazSalas (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
+    sfEvent evento;
+
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
+
     contextoAplicacion->usuario.interfazActual = INTERFAZ_SALAS;
-    cambiarInterfazASalas (recursosComunesContactosSalas, interfazContactos);
+    desactivarInterfazContactos (interfazContactos);
+    activarInterfazSalas (recursosComunesContactosSalas);
 
     return EVENTO_MANEJADO;
 }
@@ -801,15 +767,23 @@ static bool manejarClickSolapaCambiarInterfaz (t_contextoAplicacion *contextoApl
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
 static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
 {
+    sfEvent evento;
+
     if (!clickEnTexto (contextoAplicacion->renderizado, recursosComunesContactosSalas->textos.configuraciones))
         return EVENTO_NO_MANEJADO;
 
+    while (sfRenderWindow_pollEvent (contextoAplicacion->renderizado, &evento)){continue;}
+
     contextoAplicacion->usuario.interfazActual = INTERFAZ_CONFIG;
+    desactivarInterfazContactos (interfazContactos);
     deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
-    *(interfazContactos->bufferAgendarContacto) = '\0';
 
     return EVENTO_MANEJADO;
 }
@@ -824,7 +798,12 @@ static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoApl
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
+ /*
 static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar)
 {
     sfFloatRect limiteTextoAux;
@@ -839,6 +818,7 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
 
     return EVENTO_MANEJADO;
 }
+*/
 
 /** \brief Manejar el evento de enviar solicitud de contacto.
  *
@@ -847,7 +827,12 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
  *
  * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
  *
+ * \note Funcionalidad NO ACTIVA en el Incremento 1.
+ *
+ * \warning No invocar desde produccion.
+ *
  */
+ /*
 static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
     if (interfazContactos->estadoFoco != ESCRIBIR_AGENDAR_CONTACTO)
@@ -860,6 +845,7 @@ static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoA
 
     return EVENTO_MANEJADO;
 }
+*/
 
 
 

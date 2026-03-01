@@ -112,9 +112,14 @@ typedef struct
 
 
 
-/** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
+/** \brief Inicializar todas las variables graficas en NULL de los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * Establecer todas las variables graficas en NULL y luego crear cada recurso.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
+/** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  *
@@ -158,6 +163,32 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
  *
  */
 void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
+
+
+/* ============================
+   FUNCIONES LOGICAS
+   ============================ */
+
+
+
+/** \brief Activar la interfaz de autenticacion.
+ *
+ * Modificar los estados de foco, los buffers, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de autenticacion.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+
+/** \brief Activar la interfaz de registro.
+ *
+ * Modificar los estados de foco, los buffers, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de registro.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ *
+ */
+void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 

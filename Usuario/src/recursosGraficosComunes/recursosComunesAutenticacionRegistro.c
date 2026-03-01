@@ -34,10 +34,8 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosCom
 
 
 
-int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    // --------------- INICIALIZAR VALORES NULOS ---------------
-
     // FUENTES
 
     recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (&(recursosComunesAutenticacionRegistro->fuentes));
@@ -51,10 +49,10 @@ int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutentica
     // ELEMENTOS
 
     recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (&(recursosComunesAutenticacionRegistro->elementos));
+}
 
-
-    // --------------- INICIALIZAR RECUROS GRAFICOS ---------------
-
+int recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+{
     // FUENTES
 
     if (recursosComunesAutenticacionRegistro_inicializarFuentes (&(recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
@@ -165,6 +163,150 @@ void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacio
 
 
 /* ============================
+   FUNCIONES LOGICAS
+   ============================ */
+
+
+
+void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+{
+    // --------------- CONFIGURAR FOCO ---------------
+
+    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+
+
+    // --------------- CONFIGURAR BUFFERS ---------------
+
+    *(recursosComunesAutenticacionRegistro->bufferContrasenia) = '\0';
+    *(recursosComunesAutenticacionRegistro->bufferNombre) = '\0';
+
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->puntoInsercion));
+
+
+    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
+
+    // TEXTO
+
+    // auxEscribirContrasenia
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 315});
+
+    // auxEscribirNombre
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 180});
+
+    // ingresarContrasenia
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 255});
+
+    // ingresarNombre
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){35, 120});
+
+    // ingresoIncorrecto
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "");
+
+    // textoBotonIngresar
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, "INGRESAR");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 405, 140, 35);
+
+    // textoCambiarInterfaz
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿No tenés cuenta? Registrate acá");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
+
+    // tituloInterfaz
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "INICIAR SESIÓN");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){120, 25});
+
+
+    // ELEMENTOS
+
+    // barraEscribirContrasenia
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia, (sfVector2f){35, 315});
+
+    // barraEscribirNombre
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre, (sfVector2f){35, 180});
+
+    // botonIngresar
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonIngresar, (sfVector2f){180, 405});
+
+    // subrayadoTitulo
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){120, 75});
+    sfRectangleShape_setSize (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){260, 2.5});
+}
+
+void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+{
+    // --------------- CONFIGURAR FOCO ---------------
+
+    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+
+
+    // --------------- CONFIGURAR BUFFERS ---------------
+
+    *(recursosComunesAutenticacionRegistro->bufferContrasenia) = '\0';
+    *(recursosComunesAutenticacionRegistro->bufferNombre) = '\0';
+
+
+    // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
+
+    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->puntoInsercion));
+
+
+    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
+
+    // TEXTO
+
+    // auxEscribirContrasenia
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 295});
+
+    // auxEscribirNombre
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 170});
+
+    // ingresarContrasenia
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 225});
+
+    // ingresarNombre
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarNombre, (sfVector2f){35, 100});
+
+    // ingresoIncorrecto
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "");
+
+    // textoBotonIngresar
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, "REGISTRAR");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 452, 140, 35);
+
+    // textoCambiarInterfaz
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿Ya tenés cuenta? Iniciá sesión acá");
+    centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
+
+    // tituloInterfaz
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "CREAR CUENTA");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){130, 25});
+
+
+    // ELEMENTOS
+
+    // barraEscribirContrasenia
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia, (sfVector2f){35, 295});
+
+    // barraEscribirNombre
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre, (sfVector2f){35, 170});
+
+    // botonIngresar
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.botonIngresar, (sfVector2f){180, 452});
+
+    // subrayadoTitulo
+    sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){130, 75});
+    sfRectangleShape_setSize (recursosComunesAutenticacionRegistro->elementos.subrayadoTitulo, (sfVector2f){240, 2.5});
+}
+
+
+
+/* ============================
    FUNCIONES COMPLEMENTARIAS
    ============================ */
 
@@ -220,14 +362,14 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
  */
 static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    fuentes->ui = sfFont_createFromFile ("fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("fuenteMensajes.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Crear fuente cuerpo.\n");
@@ -369,11 +511,11 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
 {
     // auxEscribirContrasenia
     sfText_setFont (textos->auxEscribirContrasenia, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (94, 91, 87));
+    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
 
     // auxEscribirNombre
     sfText_setFont (textos->auxEscribirNombre, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (94, 91, 87));
+    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
     // ingresarContrasenia
     sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
