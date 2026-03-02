@@ -34,7 +34,8 @@
    DEFINES
    ============================ */
 
-
+#define VALIDO 0
+#define INVALIDO 1
 
 /* ============================
    ESTRUCTURAS
@@ -52,13 +53,31 @@ typedef struct
     sfFont *ui;             /**< Fuente utilizada en textos de la interfaz grafica. */
 } t_recursosComunesAutenticacionRegistroFuentes;
 
+/** \struct t_inputContrasenia
+ * \brief Contexto sobre el input de la contrasenia del usuario.
+ */
+typedef struct
+{
+    sfText *auxEscribirContrasenia;     /**< Muestra la contrasenia que escribe el usuario. */
+    bool validez;                       /**< Indicar si el ingreso es valido o invalido. */
+} t_inputContrasenia;
+
+/** \struct t_inputNombre
+ * \brief Contexto sobre el input del nombre de usuario.
+ */
+typedef struct
+{
+    sfText *auxEscribirNombre;          /**< Muestra el nombre que escribe el usuario. */
+    t_habilitacion validez;             /**< Indicar si el ingreso es valido o invalido. */
+} t_inputNombre;
+
 /** \struct t_recursosComunesAutenticacionRegistroTextos
  * \brief Contiene todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  */
 typedef struct
 {
-    sfText *auxEscribirContrasenia;     /**< Muestra la contrasenia que escribe el usuario. */
-    sfText *auxEscribirNombre;          /**< Muestra el nombre que escribe el usuario. */
+    t_inputContrasenia inputContrasenia;
+    t_inputNombre inputNombre;
     sfText *ingresarContrasenia;        /**< Indica al usuario donde escribir su contrasenia. */
     sfText *ingresarNombre;             /**< Indica al usuario donde escribir su nombre. */
     sfText *ingresoIncorrecto;          /**< Mensaje de error al ingresar incorrectamente el usuario. */

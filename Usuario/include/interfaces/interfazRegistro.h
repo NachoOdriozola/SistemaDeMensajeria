@@ -36,6 +36,9 @@
    ============================ */
 
 
+#define INGRESO_VALIDO 0
+#define INGRESO_INVALIDO 1
+
 
 /* ============================
    ESTRUCTURAS
@@ -43,12 +46,21 @@
 
 
 
+/** \struct t_inputCorreo
+ * \brief Contexto sobre el input del correo electronico del usuario.
+ */
+typedef struct
+{
+    sfText *auxEscribirCorreo;              /**< Muestra el correo electronico que escribe el usuario. */
+    bool validez;                           /**< Indicar si el ingreso es valido o invalido. */
+} t_inputCorreo;
+
 /** \struct t_interfazRegistroTextos
  * \brief Contiene todos los textos graficos de la interfaz de registro.
  */
 typedef struct
 {
-    sfText *auxEscribirCorreo;              /**< Muestra el correo electronico que escribe el usuario. */
+    t_inputCorreo inputCorreo;
     sfText *ingresarCorreo;                 /**< Indica al usuario donde escribir su correo electronico. */
     sfText *textoInformativoContrasenia;    /**< Texto informativo sobre la contrasenia. */
     sfText *textoInformativoNombre;         /**< Texto informativo sobre el nombre. */

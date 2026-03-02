@@ -113,25 +113,63 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
 
 
 
-void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
+int ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
 {
     int largoBuffer;
+    char caracter = (char)eventoChar.text.unicode;
+
+
+    if ((caracter != 8) && ((caracter < 32) || (caracter > 126))) // Si es un caracter de control, o que no sea ASCII 1 Byte o que no sea el "Backspace".
+        return CARACTER_INVALIDO;
 
     largoBuffer = strlen (buffer);
 
-    if (eventoChar.text.unicode == 13) // Si la tecla es "Enter" retorna.
-        return;
-
-    if (eventoChar.text.unicode != 8) // Si la tecla no es "Backspace".
+    if (caracter != 8) // Si el caracter no es "Backspace".
     {
         if (largoBuffer < tamMaxBuffer - 1)
         {
-            buffer [largoBuffer] = (char)eventoChar.text.unicode;
+            buffer [largoBuffer] = caracter;
             buffer [largoBuffer + 1] = '\0';
         }
     }
-    else if (largoBuffer > 0) // Si la tecla es "Backspace".
-            buffer [largoBuffer - 1] = '\0';
+    else if (largoBuffer > 0) // Si el caracter es "Backspace" y el buffer no esta vacio.
+        buffer [largoBuffer - 1] = '\0';
+
+    return 0;
+}
+
+int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer)
+{
+    const sfUint32 *texto, *pTexto;
+    int largoTexto = 0, espacioDisponible;
+
+    texto = sfClipboard_getUnicodeString ();
+    pTexto = texto;
+
+    espacioDisponible = tamMaxBuffer - 1 - strlen (buffer);
+
+    while (*pTexto != 0)
+    {
+        if (*pTexto < 32 || *pTexto > 126)
+            return CARACTER_INVALIDO;
+        largoTexto ++;
+        pTexto ++;
+    }
+
+    if (largoTexto > espacioDisponible)
+        return 1;
+
+    pTexto = texto;
+    buffer = buffer + strlen (buffer);
+    while (*pTexto != 0)
+    {
+        *buffer = (char)(*pTexto);
+        buffer ++;
+        pTexto ++;
+    }
+    *buffer = '\0';
+
+    return 0;
 }
 
 

@@ -123,8 +123,8 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
 
 void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos)
 {
-    sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
-    sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
+    sfRenderWindow_drawText (renderizado, textos->inputContrasenia.auxEscribirContrasenia, NULL);
+    sfRenderWindow_drawText (renderizado, textos->inputNombre.auxEscribirNombre, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarNombre, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresoIncorrecto, NULL);
@@ -191,12 +191,22 @@ void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recur
     // TEXTO
 
     // auxEscribirContrasenia
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 315});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, (sfVector2f){42, 315});
+    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+    {
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    }
 
     // auxEscribirNombre
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 180});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, (sfVector2f){42, 180});
+    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+    {
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    }
 
     // ingresarContrasenia
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 255});
@@ -259,12 +269,14 @@ void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosCo
     // TEXTO
 
     // auxEscribirContrasenia
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, (sfVector2f){42, 295});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, (sfVector2f){42, 295});
+    recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
 
     // auxEscribirNombre
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, "");
-    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, (sfVector2f){42, 170});
+    sfText_setString (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, "");
+    sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, (sfVector2f){42, 170});
+    recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
 
     // ingresarContrasenia
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 225});
@@ -328,8 +340,8 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes 
  */
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
-    textos->auxEscribirContrasenia = NULL;
-    textos->auxEscribirNombre = NULL;
+    textos->inputContrasenia.auxEscribirContrasenia = NULL;
+    textos->inputNombre.auxEscribirNombre = NULL;
     textos->ingresarContrasenia = NULL;
     textos->ingresarNombre = NULL;
     textos->ingresoIncorrecto = NULL;
@@ -391,15 +403,15 @@ static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosCo
  */
 static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
-    textos->auxEscribirContrasenia = sfText_create ();
-    if (!textos->auxEscribirContrasenia)
+    textos->inputContrasenia.auxEscribirContrasenia = sfText_create ();
+    if (!textos->inputContrasenia.auxEscribirContrasenia)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto auxEscribirContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->auxEscribirNombre = sfText_create ();
-    if (!textos->auxEscribirNombre)
+    textos->inputNombre.auxEscribirNombre = sfText_create ();
+    if (!textos->inputNombre.auxEscribirNombre)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto auxEscribirNombre.\n");
         return ERROR_INICIALIZACION;
@@ -510,12 +522,14 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursos
 static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     // auxEscribirContrasenia
-    sfText_setFont (textos->auxEscribirContrasenia, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    sfText_setFont (textos->inputContrasenia.auxEscribirContrasenia, fuentes->cuerpo);
+    sfText_setColor (textos->inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    textos->inputContrasenia.validez = VALIDO;
 
     // auxEscribirNombre
-    sfText_setFont (textos->auxEscribirNombre, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    sfText_setFont (textos->inputNombre.auxEscribirNombre, fuentes->cuerpo);
+    sfText_setColor (textos->inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    textos->inputNombre.validez = VALIDO;
 
     // ingresarContrasenia
     sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
@@ -582,12 +596,12 @@ static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursos
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     // auxEscribirContrasenia
-    sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){42, 315});
-    sfText_setCharacterSize (textos->auxEscribirContrasenia, 22);
+    sfText_setPosition (textos->inputContrasenia.auxEscribirContrasenia, (sfVector2f){42, 315});
+    sfText_setCharacterSize (textos->inputContrasenia.auxEscribirContrasenia, 22);
 
     // auxEscribirNombre
-    sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 180});
-    sfText_setCharacterSize (textos->auxEscribirNombre, 22);
+    sfText_setPosition (textos->inputNombre.auxEscribirNombre, (sfVector2f){42, 180});
+    sfText_setCharacterSize (textos->inputNombre.auxEscribirNombre, 22);
 
     // ingresarContrasenia
     sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){35, 255});
@@ -661,8 +675,8 @@ static void recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComun
  */
 static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
-    DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirContrasenia);
-    DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirNombre);
+    DESTRUCTOR_SEGURO_TEXTO (textos->inputContrasenia.auxEscribirContrasenia);
+    DESTRUCTOR_SEGURO_TEXTO (textos->inputNombre.auxEscribirNombre);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarNombre);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresoIncorrecto);

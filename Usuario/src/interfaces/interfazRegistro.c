@@ -9,6 +9,7 @@
 
 
 static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static void estadoHabilitarIngreso (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro);
 static void deshabilitarFocos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
@@ -58,6 +59,10 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
 static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
 
 static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+
+static bool manejarPegarPortapapelesEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static bool manejarPegarPortapapelesEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static bool manejarPegarPortapapelesEscribirCorreo (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 
 
 
@@ -166,20 +171,25 @@ void interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_recurs
 
 
         case sfEvtTextEntered:
-            if (evento.text.unicode < 128)
-            {
-                if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
-                if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
-                if (manejarEscribirCorreo (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
-            }
+            if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
+            if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
+            if (manejarEscribirCorreo (recursosComunesAutenticacionRegistro, interfazRegistro, evento) == EVENTO_MANEJADO) break;
             break;
 
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-            {
                 if (manejarEnterIntentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
-            }
+
+            if (evento.key.control && evento.key.code == sfKeyV)
+                if (manejarPegarPortapapelesEscribirNombre (recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+
+            if (evento.key.control && evento.key.code == sfKeyV)
+                if (manejarPegarPortapapelesEscribirContrasenia (recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+
+            if (evento.key.control && evento.key.code == sfKeyV)
+                if (manejarPegarPortapapelesEscribirCorreo (recursosComunesAutenticacionRegistro, interfazRegistro) == EVENTO_MANEJADO) break;
+
             break;
 
 
@@ -297,6 +307,62 @@ static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recurso
     return ERROR_INICIALIZACION;
 }
 
+/** \brief Validar el ingreso de datos para el registro de usuario y tomar acciones.
+ *
+ * Preguntar si los datos ingresados son validos segun las restricciones establecidas.
+ * En caso de no ser validos, se establece su validez como invalidos y se modifica el color del texto de input.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ * \return INGRESO_VALIDO si el ingreso es valido, INGRESO_INVALIDO en caso contrario.
+ *
+ */
+static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+{
+    bool flag = 0;
+
+    // NOMBRE
+
+    if (strlen (recursosComunesAutenticacionRegistro->bufferNombre) < 3)
+    {
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INVALIDO;
+        flag = 1;
+    }
+
+
+    // CONTRASENIA
+
+    if (strlen (recursosComunesAutenticacionRegistro->bufferContrasenia) < 8)
+    {
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INVALIDO;
+        flag = 1;
+    }
+
+
+    // CORREO ELECTRONICO
+
+    char *ptr;
+
+    ptr = strchr (interfazRegistro->bufferCorreo, '@');
+    if ((ptr == NULL) || // No tiene arroba
+        (ptr == interfazRegistro->bufferCorreo) || // Empieza con @
+        (strchr (ptr, '.') == NULL) || // No tiene un punto despues del @
+        (strchr (ptr + 1, '@') != NULL)) // Tiene 2 arrobas
+    {
+        sfText_setColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
+        interfazRegistro->textos.inputCorreo.validez = INVALIDO;
+        flag = 1;
+    }
+
+
+    if (flag)
+        return INGRESO_INVALIDO;
+    return INGRESO_VALIDO;
+}
+
 /** \brief Analizar si se habilita, o no, el ingreso del usuario.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
@@ -337,7 +403,12 @@ static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro)
     // TEXTO
 
     // auxEscribirCorreo
-    sfText_setString (interfazRegistro->textos.auxEscribirCorreo, "");
+    sfText_setString (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, "");
+    if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+    {
+        interfazRegistro->textos.inputCorreo.validez = VALIDO;
+        sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+    }
 
 
     // ELEMENTOS
@@ -369,7 +440,7 @@ static void deshabilitarFocos (t_recursosComunesAutenticacionRegistro *recursosC
  */
 static void interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos)
 {
-    textos->auxEscribirCorreo = NULL;
+    textos->inputCorreo.auxEscribirCorreo = NULL;
     textos->ingresarCorreo = NULL;
     textos->textoInformativoContrasenia = NULL;
     textos->textoInformativoNombre = NULL;
@@ -395,8 +466,8 @@ static void interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistr
  */
 static int interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos)
 {
-    textos->auxEscribirCorreo = sfText_create ();
-    if (!textos->auxEscribirCorreo)
+    textos->inputCorreo.auxEscribirCorreo = sfText_create ();
+    if (!textos->inputCorreo.auxEscribirCorreo)
     {
         perror ("\nERROR - Interfaz de registro, crear texto auxEscribirCorreo.\n");
         return ERROR_INICIALIZACION;
@@ -458,8 +529,9 @@ static int interfazRegistro_inicializarElementos (t_interfazRegistroElementos *e
 static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     // auxEscribirCorreo
-    sfText_setFont (textos->auxEscribirCorreo, fuentes->cuerpo);
-    sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+    sfText_setFont (textos->inputCorreo.auxEscribirCorreo, fuentes->cuerpo);
+    sfText_setFillColor (textos->inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+    textos->inputCorreo.validez = VALIDO;
 
     // ingresarCorreo
     sfText_setFont (textos->ingresarCorreo, fuentes->ui);
@@ -473,7 +545,7 @@ static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos,
 
     // textoInformativoNombre
     sfText_setFont (textos->textoInformativoNombre, fuentes->ui);
-    sfText_setString (textos->textoInformativoNombre, "Entre 3 y 25 caracteres");
+    sfText_setString (textos->textoInformativoNombre, "Mínimo 3 caracteres");
     sfText_setFillColor (textos->textoInformativoNombre, sfColor_fromRGB (94, 91, 87));
 }
 
@@ -497,8 +569,8 @@ static void interfazRegistro_configurarElementos (t_interfazRegistroElementos *e
 static void interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos)
 {
     // auxEscribirCorreo
-    sfText_setPosition (textos->auxEscribirCorreo, (sfVector2f){42, 392});
-    sfText_setCharacterSize (textos->auxEscribirCorreo, 22);
+    sfText_setPosition (textos->inputCorreo.auxEscribirCorreo, (sfVector2f){42, 392});
+    sfText_setCharacterSize (textos->inputCorreo.auxEscribirCorreo, 22);
 
     // ingresarCorro
     sfText_setPosition (textos->ingresarCorreo, (sfVector2f){35, 350});
@@ -536,7 +608,7 @@ static void interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElemento
  */
 static void interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_interfazRegistroTextos *textos)
 {
-    sfRenderWindow_drawText (renderizado, textos->auxEscribirCorreo, NULL);
+    sfRenderWindow_drawText (renderizado, textos->inputCorreo.auxEscribirCorreo, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarCorreo, NULL);
     sfRenderWindow_drawText (renderizado, textos->textoInformativoContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->textoInformativoNombre, NULL);
@@ -561,7 +633,7 @@ static void interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, c
  */
 static void interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos)
 {
-    DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirCorreo);
+    DESTRUCTOR_SEGURO_TEXTO (textos->inputCorreo.auxEscribirCorreo);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarCorreo);
     DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoNombre);
     DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoContrasenia);
@@ -602,7 +674,7 @@ static bool manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_rec
 
     recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_NOMBRE;
     interfazRegistro->estadoFoco = IR_NINGUNO;
-    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
 
     return EVENTO_MANEJADO;
@@ -626,7 +698,7 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
 
     recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_CONTRASENIA;
     interfazRegistro->estadoFoco = IR_NINGUNO;
-    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
 
     return EVENTO_MANEJADO;
@@ -650,7 +722,7 @@ static bool manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_rec
 
     interfazRegistro->estadoFoco = ESCRIBIR_CORREO;
     recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
-    limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
+    limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.inputCorreo.auxEscribirCorreo);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
 
     return EVENTO_MANEJADO;
@@ -673,7 +745,8 @@ static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicaci
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
 
-    intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_VALIDO)
+        intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
 
     return EVENTO_MANEJADO;
 }
@@ -705,7 +778,9 @@ static bool manejarClickCambiarInterfazAutenticacion (t_contextoAplicacion *cont
 
 /** \brief Manejar el evento de escribir el nombre de usuario.
  *
- * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra el foco en escribir nombre, intenta agregar el caracter al buffer del nombre.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
@@ -721,10 +796,17 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
-    ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar);
+    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO, eventoChar) == CARACTER_INVALIDO)
+        return EVENTO_NO_MANEJADO;
+
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
-    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
+    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+    {
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    }
+    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
 
     return EVENTO_MANEJADO;
@@ -732,7 +814,9 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
 
 /** \brief Manejar el evento de escribir la contrasenia del usuario.
  *
- * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra el foco en escribir contrasenia, intenta agregar el caracter al buffer de la contrasenia.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
@@ -748,10 +832,17 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar);
+    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar) == CARACTER_INVALIDO)
+        return EVENTO_NO_MANEJADO;
+
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
-    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
+    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+    {
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+        sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    }
+    limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
+    limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
 
     return EVENTO_MANEJADO;
@@ -759,7 +850,9 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
 
 /** \brief Manejar el evento de escribir el correo electronico del usuario.
  *
- * Si se encuentra habilitado el escribir correo, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra el foco en escribir correo, intenta agregar el caracter al buffer del correo.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
  *
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
@@ -775,10 +868,17 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
     if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
-    ingresarCaracterABuffer (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO, eventoChar);
+    if (ingresarCaracterABuffer (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO, eventoChar) == CARACTER_INVALIDO)
+        return EVENTO_NO_MANEJADO;
+
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    limitarVisualizarTextoSobreBarra (interfazRegistro->textos.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);
-    limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
+    if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+    {
+        interfazRegistro->textos.inputCorreo.validez = VALIDO;
+        sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+    }
+    limitarVisualizarTextoSobreBarra (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);
+    limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.inputCorreo.auxEscribirCorreo);
     sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
 
     return EVENTO_MANEJADO;
@@ -803,9 +903,115 @@ static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicaci
         (interfazRegistro->estadoFoco != ESCRIBIR_CORREO))
         return EVENTO_NO_MANEJADO;
 
-    intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_VALIDO)
+        intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
 
     return EVENTO_NO_MANEJADO;
+}
+
+/** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir nombre.
+ *
+ * Si se encuentra el foco en escribir nombre, intenta agregar el caracter al buffer del nombre.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+static bool manejarPegarPortapapelesEscribirNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
+        return EVENTO_NO_MANEJADO;
+
+    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO))
+    {
+        estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
+        if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+        {
+            recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+            sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+        }
+        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre);
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 198});
+    }
+
+    return EVENTO_MANEJADO;
+}
+
+/** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir contrasenia.
+ *
+ * Si se encuentra el foco en escribir contrasenia, intenta agregar el caracter al buffer de la contrasenia.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+static bool manejarPegarPortapapelesEscribirContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
+        return EVENTO_NO_MANEJADO;
+
+    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO))
+    {
+        estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
+        if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+        {
+            recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+            sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+        }
+        limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia);
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 323});
+    }
+
+    return EVENTO_MANEJADO;
+}
+
+/** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir correo electronico.
+ *
+ * Si se encuentra el foco en escribir correo, intenta agregar el caracter al buffer del correo.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
+ *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+static bool manejarPegarPortapapelesEscribirCorreo (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
+        return EVENTO_NO_MANEJADO;
+
+    if (!pegarDesdePortapapeles (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO))
+    {
+        estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
+        if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+        {
+            interfazRegistro->textos.inputCorreo.validez = VALIDO;
+            sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+        }
+        limitarVisualizarTextoSobreBarra (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);
+        limiteTextoAux = sfText_getGlobalBounds (interfazRegistro->textos.inputCorreo.auxEscribirCorreo);
+        sfRectangleShape_setPosition (recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limiteTextoAux.width, 420});
+    }
+
+    return EVENTO_MANEJADO;
 }
 
 

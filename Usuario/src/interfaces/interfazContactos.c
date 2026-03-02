@@ -158,18 +158,16 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
 
 
         case sfEvtTextEntered:
-            if (evento.text.unicode < 128)
-            {
-                if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
-            }
+            if (manejarEscribirMensaje (recursosComunesContactosSalas, evento) == EVENTO_MANEJADO) break;
             break;
 
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-            {
                 if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-            }
+
+            if (evento.key.control && evento.key.code == sfKeyV)
+                if (manejarPegarPortapapelesEscribirMensaje (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
 
             if (evento.key.code == sfKeyUp)
                 if (manejarDesplazarArribaAreaMensajes (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
@@ -846,9 +844,6 @@ static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoA
     return EVENTO_MANEJADO;
 }
 */
-
-
-
 
 
 

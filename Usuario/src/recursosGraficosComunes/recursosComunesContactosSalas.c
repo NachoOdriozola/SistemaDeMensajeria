@@ -1407,7 +1407,9 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
     if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
-    ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar);
+    if (ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar) != CARACTER_INVALIDO)
+        return EVENTO_NO_MANEJADO;
+
     limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
     limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
     sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
@@ -1431,6 +1433,23 @@ bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recu
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
     sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
     sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+
+    return EVENTO_MANEJADO;
+}
+
+bool manejarPegarPortapapelesEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    sfFloatRect limiteTextoAux;
+
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    if (!pegarDesdePortapapeles (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE))
+    {
+        limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
+        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
+    }
 
     return EVENTO_MANEJADO;
 }

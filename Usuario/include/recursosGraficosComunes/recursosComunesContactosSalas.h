@@ -544,7 +544,9 @@ bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComu
 
 /** \brief Manejar el evento de escribir mensaje.
  *
- * Si se encuentra habilitado el escribir mensaje, se agrega el caracter al buffer del mensaje, lo muestra por pantalla y modifica el punto de insercion.
+ * Si se encuentra el foco en escribir mensaje, intenta agregar el caracter al buffer del mensaje.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  * \param eventoChar Variable de evento que contiene el caracter de la letra ingresada.
@@ -567,6 +569,19 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
  *
  */
 bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir mensaje.
+ *
+ * Si se encuentra el foco en escribir mensaje, intenta agregar el caracter al buffer del mensaje.
+ * En caso de exito, analiza si se habilita el ingreso del usuario, actualiza visualmente el caracter ingresado en la UI y modifica el punto de insercion.
+ * En caso de falla, retorna EVENTO_NO_MANEJADO sin realizar ninguna accion.
+ *
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+bool manejarPegarPortapapelesEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de desplazar arriba el area de mensajes.
  *

@@ -63,6 +63,13 @@
 
 
 /**
+ * \def CARACTER_INVALIDO
+ * \brief Codigo de retorno para indicar que el caracter es invalido (es un caracter de control).
+ */
+#define CARACTER_INVALIDO -1
+
+
+/**
  * \def VELOCIDAD_PARPADEO_PUNTO_INSERCION
  * \brief Constante que determina la velocidad de parpadeo del punto de insercion.
  */
@@ -262,16 +269,33 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
 
 /** \brief Ingresar un caracter almacenado en un evento a un buffer.
  *
+ * Si es un caracter de control, retorna.
  * Procesar el caracter y colocarlo en la posicion que corresponda dentro del buffer.
  * Acepta el caracter "Backspace" para borrado de texto.
- * Si la tecla es "Enter" retorna.
+ * Utiliza solo caracteres ASCII imprimibles (1 Byte).
  *
  * \param buffer Puntero al buffer donde se almacenara el caracter.
  * \param tamMaxBuffer Tamanio maximo del buffer. Es por como esta definido, ej: char buffer [5], el tamanio maximo es '5'.
  * \param eventoChar Variable de evento que contiene el caracter.
  *
+ * \return CARACTER_INVALIDO en caso de que el caracter ingresado no sea valido (es un caracter de control), 0 en caso de exito.
+ *
  */
-void ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
+int ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
+
+/** \brief Pegar desde el portapapeles a un buffer.
+ *
+ * Verifica que el portapapeles no contenga caracteres invalidos (no ASCII imprimible (1 Byte)).
+ * Verifica que el buffer tenga espacio suficiente para pegar el portapapeles.
+ * Copia el texto del portapapeles al buffer y asegura terminar la cadena con '\0'.
+ *
+ * \param buffer Puntero al buffer donde se almacenara la copia del portapapeles.
+ * \param tamMaxBuffer Tamanio maximo del buffer. Es por como esta definido, ej: char buffer [5], el tamanio maximo es '5'.
+ *
+ * \return CARACTER_INVALIDO en caso de que el portapapeles contenga caracteres invalidos, 1 en caso de que el buffer no tenga espacio suficiente para pegar el portapapeles, y 0 en caso de exito.
+ *
+ */
+int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer);
 
 
 
