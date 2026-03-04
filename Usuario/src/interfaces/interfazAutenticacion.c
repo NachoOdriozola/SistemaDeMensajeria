@@ -8,7 +8,7 @@
 
 
 
-static int intentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static char intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static void estadoHabilitarIngreso (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static void desactivarInterfazAutenticacion (t_interfazAutenticacion *interfazAutenticacion);
 static void deshabilitarFocos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazAutenticacion *interfazAutenticacion);
@@ -164,11 +164,8 @@ void interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_r
 
 
         case sfEvtTextEntered:
-            if (evento.text.unicode < 128)
-            {
-                if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
-                if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
-            }
+            if (manejarEscribirNombre (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
+            if (manejarEscribirContrasenia (recursosComunesAutenticacionRegistro, evento) == EVENTO_MANEJADO) break;
             break;
 
 
@@ -252,20 +249,20 @@ void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticaci
 
 
 
-/** \brief Intentar autenticar usuario.
+/** \brief Intentar solicitud para autenticar el usuario.
  *
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_AUTENTICACION|nombre|contrasenia
+ * SOLICITUD_AUTENTICACION|nombre de usuario|contrasenia del usuario
  * Envia la solicitud y espera la respuesta para saber su estado.
- * Si se ejecuto con exito, guarda el ID del usuario y selecciona la interfaz de contactos como menu principal.
+ * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario.
  * Se comunican a traves del socket de la aplicacion.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
- * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
+ * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
  */
-static int intentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static char intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
     char estadoRespuesta;
@@ -276,25 +273,9 @@ static int intentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_re
     sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &id);
 
     if (estadoRespuesta == RESPUESTA_EXITO)
-    {
         contextoAplicacion->usuario.id = id;
-        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
-        return EXITO;
-    }
-    else
-    {
-        if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES)
-        {
-            printf ("Nombre o contrasenia incorrectos.\n");
-            sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
-            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
-        }
-        else
-            printf ("Error servidor.\n");
-    }
 
-    return ERROR_INICIALIZACION;
+    return estadoRespuesta;
 }
 
 /** \brief Analizar si se habilita, o no, el ingreso del usuario.
@@ -544,13 +525,25 @@ static bool manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, 
  */
 static bool manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
+    char estadoRespuesta;
+
     if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
 
-    intentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro);
+    estadoRespuesta = intentarAutenticar (contextoAplicacion, recursosComunesAutenticacionRegistro);
+    if (estadoRespuesta == RESPUESTA_EXITO)
+    {
+        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+    }
+    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    {
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
+        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+    }
 
     return EVENTO_MANEJADO;
 }
@@ -650,6 +643,8 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
  */
 static bool manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
+    char estadoRespuesta;
+
     if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
@@ -657,7 +652,17 @@ static bool manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoApl
         (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA))
         return EVENTO_NO_MANEJADO;
 
-    intentarAutenticacion (contextoAplicacion, recursosComunesAutenticacionRegistro);
+    estadoRespuesta = intentarAutenticar (contextoAplicacion, recursosComunesAutenticacionRegistro);
+    if (estadoRespuesta == RESPUESTA_EXITO)
+    {
+        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+    }
+    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    {
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
+        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+    }
 
     return EVENTO_MANEJADO;
 }

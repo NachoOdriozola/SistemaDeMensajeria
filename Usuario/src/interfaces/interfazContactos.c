@@ -8,6 +8,10 @@
 
 
 
+static char intentarEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, int idReceptor);
+static void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta, int idContactoSeleccionado);
+static char intentarSeleccionarContacto (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 static void desactivarInterfazContactos (t_interfazContactos *interfazContactos);
 static void renderizarAgendarContacto (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas, const t_interfazContactos *interfazContactos);
 static void deshabilitarFocos (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
@@ -51,11 +55,13 @@ static bool manejarClickEscribirAgendarContacto (const sfRenderWindow *renderiza
 static bool manejarClickNotificaciones (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickAgendarContacto (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
+static bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCambiarInterfazSalas (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarClickCambiarInterfazConfig (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 
 static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos, sfEvent eventoChar);
 
+static bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos);
 static bool manejarEnterIntentarAgendarContacto (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 
@@ -96,6 +102,11 @@ int interfazContactos_inicializar (t_interfazContactos *interfazContactos)
 
 void interfazContactos_configurar (t_interfazContactos *interfazContactos, const t_recursosComunesContactosSalasFuentes *fuentes)
 {
+    // --------------- CONFIGURAR CONTACTO SELECCIONADO ---------------
+
+    interfazContactos->idContactoSeleccionado = ID_INVALIDO;
+
+
     // --------------- CONFIGURAR FOCO ---------------
 
     interfazContactos->estadoFoco = ICT_NINGUNO;
@@ -151,7 +162,7 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
                 if (manejarClickEscribirMensaje (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
                 if (manejarClickCambiarInterfazSalas (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
                 if (manejarClickAreaMensajes (contextoAplicacion->renderizado, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
-                if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarClickEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
                 deshabilitarFocos (recursosComunesContactosSalas, interfazContactos);
             }
             break;
@@ -164,7 +175,7 @@ void interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_recur
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-                if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
+                if (manejarEnterEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == EVENTO_MANEJADO) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
                 if (manejarPegarPortapapelesEscribirMensaje (recursosComunesContactosSalas) == EVENTO_MANEJADO) break;
@@ -200,7 +211,7 @@ void interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_r
         switch (*bufferRespuesta)
         {
         case RESPUESTA_MENSAJE:
-            manejarReciboMensaje (&(recursosComunesContactosSalas->contextoMensajes), bufferRespuesta);
+            manejarReciboMensaje (&(recursosComunesContactosSalas->contextoMensajes), bufferRespuesta, interfazContactos->idContactoSeleccionado);
             break;
         }
     }
@@ -254,13 +265,104 @@ void interfazContactos_liberar (t_interfazContactos *interfazContactos)
 
 
 
+/** \brief Intentar solicitud para enviar un mensaje a otro usuario.
+ *
+ * Si no se tiene seleccionado un contacto para comunicarse (ID del receptor invalido), retorna.
+ * Genera una cadena de solicitud valida compuesta de la siguiente manera:
+ * SOLICITUD_MENSAJE|ID del emisor|ID del receptor|texto
+ * Envia la solicitud y espera la respuesta para saber su estado.
+ * Se comunican a traves del socket de la aplicacion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param idReceptor ID del contacto seleccionado para comunicarse.
+ *
+ * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ *
+ */
+static char intentarEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, int idReceptor)
+{
+    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    char estadoRespuesta;
+
+    if (idReceptor == ID_INVALIDO)
+    {
+        estadoRespuesta = RESPUESTA_ERROR_OPERACION_INVALIDA;
+        return estadoRespuesta;
+    }
+
+    snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", SOLICITUD_MENSAJE, contextoAplicacion->usuario.id, idReceptor, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    enviarSolicitudYRecibirRespuesta (contextoAplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
+    sscanf (bufferRespuesta, "%c", &estadoRespuesta);
+
+    return estadoRespuesta;
+}
+
+/** \brief Manejar el recibo de solicitud de un mensaje por parte de otro usuario.
+ *
+ * Parsear la cadena de respuesta para obtener el ID del emisor y el texto de mensaje.
+ * Si el ID del emisor corresponde con el ID del contacto seleccionado para comunicarse, inserta el mensaje a la lista de mensajes.
+ *
+ * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
+ * \param bufferRespuesta Buffer donde se recibio la respuesta del servidor.
+ * \param idContactoSeleccionado ID del contacto seleccionado para comunicarse.
+ *
+ */
+static void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta, int idContactoSeleccionado)
+{
+    int idEmisor;
+    char texto [MAX_BUFFER_MENSAJE];
+
+    sscanf (&(bufferRespuesta[2]), "%d|%[^\n]", &idEmisor, texto);
+    if (idEmisor == idContactoSeleccionado)
+        insertarMensaje (contextoMensajes, texto, MENSAJE_REMOTO);
+}
+
+/** \brief Intentar solicitud para seleccionar un contacto para comunicarse.
+ *
+ * Verifica si el nombre del contacto seleccionado no es el propio nombre de usuario, en tal caso retorna.
+ * Genera una cadena de solicitud valida compuesta de la siguiente manera:
+ * SOLICITUD_SELECCIONAR_CONTACTO|nombre del contacto
+ * Envia la solicitud y espera la respuesta para saber su estado.
+ * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario receptor.
+ * Se comunican a traves del socket de la aplicacion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ *
+ * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ *
+ */
+static char intentarSeleccionarContacto (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+{
+    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    char estadoRespuesta;
+    int idReceptor;
+
+    if (strcmp (&(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]), contextoAplicacion->usuario.nombre) == 0)
+    {
+        estadoRespuesta = RESPUESTA_ERROR_OPERACION_INVALIDA;
+        return estadoRespuesta;
+    }
+
+    snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%s", SOLICITUD_SELECCIONAR_CONTACTO, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
+    enviarSolicitudYRecibirRespuesta (contextoAplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
+    sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &idReceptor);
+
+    if (estadoRespuesta == RESPUESTA_EXITO)
+        interfazContactos->idContactoSeleccionado = idReceptor;
+
+    return estadoRespuesta;
+}
+
 /**
  * \note Funcionalidad NO ACTIVA en el Incremento 1.
  *
  * \warning No invocar desde produccion.
  */
 /*
-void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
     char *bufferSolicitud, *bufferRespuesta;
     char estadoSolicitud;
@@ -465,8 +567,6 @@ static void interfazContactos_configurarTextos (t_interfazContactosTextos *texto
     // auxContactoSeleccionado
     sfText_setFont (textos->auxContactoSeleccionado, fuentes->cuerpo);
     sfText_setFillColor (textos->auxContactoSeleccionado, sfColor_fromRGB (94, 91, 87));
-    sfText_setString (textos->auxContactoSeleccionado, "amigo");
-
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de contactos.
@@ -732,6 +832,56 @@ static bool manejarClickCerrarVentanaEmergente (const sfRenderWindow *renderizad
 }
 */
 
+/** \brief Manejar el evento de click en el boton para enviar mensaje.
+ *
+ * Preguntar si el mensaje a enviar es un comando (empieza con '/' y tiene menos de 26 caracteres.
+ * En caso que si lo sea, intentar seleccionar contacto. Si resulto en exito, muestra el nombre del contacto seleccionado en la UI y vacia la lista de mensajes.
+ * En caso que no lo sea, intentar enviar mensaje. Si resulto en exito, lo inserta a la lista de mensajes.
+ * Reestablecer el buffer de escribir mensaje y mover el punto de insercion al inicio.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+static bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+{
+    int largoMensaje;
+
+    if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.botonEnviar))
+        return EVENTO_NO_MANEJADO;
+
+    largoMensaje = strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+
+    if (largoMensaje == 0)
+        return EVENTO_NO_MANEJADO;
+
+    if (*(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == '/') // Si es un comando
+    {
+        if ((largoMensaje - 1 >= 3) && (largoMensaje <= MAX_NOMBRE_USUARIO)) // La comparacion logica verdadera tendria que ser: largoMensaje - 1 <= MAX_NOMBRE_USUARIO - 1
+            if (intentarSeleccionarContacto (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == RESPUESTA_EXITO)
+            {
+                sfText_setString (interfazContactos->textos.auxContactoSeleccionado, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
+                centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
+                mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
+            }
+    }
+    else // Es un mensaje
+    {
+        if (intentarEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas, interfazContactos->idContactoSeleccionado) == RESPUESTA_EXITO)
+            insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
+    }
+
+    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+
+
+    return EVENTO_MANEJADO;
+}
+
 /** \brief Manejar el evento de click en la solapa para cambiar de interfaz.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
@@ -817,6 +967,56 @@ static bool manejarEscribirAgendarContacto (t_recursosComunesContactosSalas *rec
     return EVENTO_MANEJADO;
 }
 */
+
+/** \brief Manejar el evento de enviar mensaje.
+ *
+ * Preguntar si el mensaje a enviar es un comando (empieza con '/' y tiene menos de 26 caracteres.
+ * En caso que si lo sea, intentar seleccionar contacto. Si resulto en exito, muestra el nombre del contacto seleccionado en la UI y vacia la lista de mensajes.
+ * En caso que no lo sea, intentar enviar mensaje. Si resulto en exito, lo inserta a la lista de mensajes.
+ * Reestablecer el buffer de escribir mensaje y mover el punto de insercion al inicio.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ *
+ * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
+ *
+ */
+static bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas, t_interfazContactos *interfazContactos)
+{
+    int largoMensaje;
+
+    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    largoMensaje = strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+
+    if (largoMensaje == 0)
+        return EVENTO_NO_MANEJADO;
+
+    if (*(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == '/') // Si es un comando
+    {
+        if ((largoMensaje - 1 >= 3) && (largoMensaje <= MAX_NOMBRE_USUARIO)) // La comparacion logica verdadera tendria que ser: largoMensaje - 1 <= MAX_NOMBRE_USUARIO - 1
+            if (intentarSeleccionarContacto (contextoAplicacion, recursosComunesContactosSalas, interfazContactos) == RESPUESTA_EXITO)
+            {
+                sfText_setString (interfazContactos->textos.auxContactoSeleccionado, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
+                centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
+                mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
+            }
+    }
+    else
+    {
+        if (intentarEnviarMensaje (contextoAplicacion, recursosComunesContactosSalas, interfazContactos->idContactoSeleccionado) == RESPUESTA_EXITO)
+            insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
+    }
+
+    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+
+
+    return EVENTO_MANEJADO;
+}
 
 /** \brief Manejar el evento de enviar solicitud de contacto.
  *

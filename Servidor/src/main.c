@@ -52,7 +52,7 @@ int main ()
             (recibirSolicitudEnTablaHash (&(contextoServidor.tablaHashClientes), &clienteAProcesar, buffersComunicacion.solicitud) == RECIBIO_SOLICITUD))
         {
             printf ("Solicitud recibida: %s\n", buffersComunicacion.solicitud);
-            switch (buffersComunicacion.solicitud[0])
+            switch (*(buffersComunicacion.solicitud))
             {
             case SOLICITUD_AUTENTICACION:
                 manejarSolicitudAutenticacion (&contextoServidor, clienteAProcesar, &buffersComunicacion);
@@ -63,8 +63,11 @@ int main ()
                 break;
 
             case SOLICITUD_MENSAJE:
-                manejarEnvioMensaje (&contextoServidor, clienteAProcesar, &buffersComunicacion);
+                manejarSolicitudEnvioMensaje (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
+
+            case SOLICITUD_SELECCIONAR_CONTACTO:
+                manejarSolicitudSeleccionContacto (&contextoServidor, clienteAProcesar, &buffersComunicacion);
 
             case SOLICITUD_AGENDAR_CONTACTO:
                 //manejarSolicitudContacto (&contextoServidor, clienteAProcesar, &buffersComunicacion);

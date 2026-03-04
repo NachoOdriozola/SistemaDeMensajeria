@@ -8,7 +8,7 @@
 
 
 
-static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
+static char intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static void estadoHabilitarIngreso (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro);
 static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro);
@@ -261,21 +261,21 @@ void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro)
 
 
 
-/** \brief Intentar registrar usuario.
+/** \brief Intentar solicitud para registrar el usuario.
  *
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_REGISTRO|nombre|contrasenia|correo electronico
+ * SOLICITUD_REGISTRO|nombre de usuario|contrasenia del usuario|correo electronico del usuario
  * Envia la solicitud y espera la respuesta para saber su estado.
- * Si se ejecuto con exito, guarda el ID del usuario y selecciona la interfaz de contactos como menu principal.
+ * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario.
  * Se comunican a traves del socket de la aplicacion.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
  *
- * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
+ * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
  */
-static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
+static char intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
     char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
     char estadoRespuesta;
@@ -286,25 +286,9 @@ static int intentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recurso
     sscanf (bufferRespuesta, "%c|%d", &estadoRespuesta, &id);
 
     if (estadoRespuesta == RESPUESTA_EXITO)
-    {
         contextoAplicacion->usuario.id = id;
-        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
-        return EXITO;
-    }
-    else
-    {
-        if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES)
-        {
-            printf ("Nombre o correo electronico ya registrado.\n");
-            sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrónico ya registrado");
-            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
-        }
-        else
-            printf ("Error de servidor.\n");
-    }
 
-    return ERROR_INICIALIZACION;
+    return estadoRespuesta;
 }
 
 /** \brief Validar el ingreso de datos para el registro de usuario y tomar acciones.
@@ -739,14 +723,28 @@ static bool manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_rec
  */
 static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
+    char estadoRespuesta;
+
     if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
     if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesAutenticacionRegistro->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
 
-    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_VALIDO)
-        intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_INVALIDO)
+        return EVENTO_MANEJADO;
+
+    estadoRespuesta = intentarRegistrar (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (estadoRespuesta == RESPUESTA_EXITO)
+    {
+        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+    }
+    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    {
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrónico ya registrado");
+        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+    }
 
     return EVENTO_MANEJADO;
 }
@@ -895,6 +893,8 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
  */
 static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro, t_interfazRegistro *interfazRegistro)
 {
+    char estadoRespuesta;
+
     if (recursosComunesAutenticacionRegistro->ingreso == DESHABILITADO)
         return EVENTO_NO_MANEJADO;
 
@@ -903,8 +903,20 @@ static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicaci
         (interfazRegistro->estadoFoco != ESCRIBIR_CORREO))
         return EVENTO_NO_MANEJADO;
 
-    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_VALIDO)
-        intentarRegistro (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (validarIngresoDatos (recursosComunesAutenticacionRegistro, interfazRegistro) == INGRESO_INVALIDO)
+        return EVENTO_MANEJADO;
+
+    estadoRespuesta = intentarRegistrar (contextoAplicacion, recursosComunesAutenticacionRegistro, interfazRegistro);
+    if (estadoRespuesta == RESPUESTA_EXITO)
+    {
+        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+    }
+    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    {
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrónico ya registrado");
+        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+    }
 
     return EVENTO_NO_MANEJADO;
 }

@@ -34,6 +34,12 @@
  */
 #define ERROR_SIN_MEMORIA -101
 
+/**
+ * \def ERROR_OPERACION
+ * \brief Codigo de retorno para fallos en la operacion logica de la funcion.
+ */
+#define ERROR_OPERACION -102
+
 
 
 /* ============================
@@ -93,6 +99,12 @@
  */
 #define PUERTO 8080
 
+/**
+ * \def ID_INVALIDO
+ * \brief ID de usuario invalido.
+ */
+#define ID_INVALIDO -1
+
 
 
 /* ============================
@@ -107,10 +119,11 @@
  */
 typedef enum
 {
-    SOLICITUD_AUTENTICACION = '1',
-    SOLICITUD_REGISTRO = '2',
-    SOLICITUD_MENSAJE = '3',
-    SOLICITUD_AGENDAR_CONTACTO = '4'
+    SOLICITUD_AUTENTICACION = 'a',
+    SOLICITUD_REGISTRO = 'b',
+    SOLICITUD_MENSAJE = 'c',
+    SOLICITUD_SELECCIONAR_CONTACTO = 'd',
+    SOLICITUD_AGENDAR_CONTACTO = 'e'
 } t_tipoSolicitud;
 
 /**
@@ -119,8 +132,8 @@ typedef enum
  */
 typedef enum
 {
-    RESPUESTA_MENSAJE = 'a',
-    RESPUESTA_AGENDAR_CONTACTO = 'b'
+    RESPUESTA_MENSAJE = 'A',
+    RESPUESTA_AGENDAR_CONTACTO = 'B'
 } t_tipoRespuesta;
 
 /**
@@ -129,9 +142,12 @@ typedef enum
  */
 typedef enum
 {
-    RESPUESTA_EXITO = '0',
-    RESPUESTA_ERROR_SERVIDOR = '1',
-    RESPUESTA_ERROR_CREDENCIALES = '2'
+    RESPUESTA_EXITO = 'a',
+
+    RESPUESTA_ERROR_SERVIDOR = 'b',
+    RESPUESTA_ERROR_CREDENCIALES_INVALIDAS = 'c',
+    RESPUESTA_ERROR_USUARIO_NO_ENCONTRADO = 'd',
+    RESPUESTA_ERROR_OPERACION_INVALIDA = 'e'
 } t_estadoRespuesta;
 
 

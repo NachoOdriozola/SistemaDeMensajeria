@@ -175,7 +175,7 @@ void interfazSalas_renderizar (sfRenderWindow *renderizado, t_recursosComunesCon
 
     // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
 
-    renderizarVistaMensajes (renderizado, recursosComunesContactosSalas);
+    //renderizarVistaMensajes (renderizado, recursosComunesContactosSalas);
 
 
     // --------------- RENDERIZAR VISTA DE UI ---------------

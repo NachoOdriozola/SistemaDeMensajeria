@@ -82,6 +82,7 @@ typedef struct
     t_interfazContactosTextos textos;
     t_interfazContactosElementos elementos;
     t_interfazContactosFoco estadoFoco;
+    int idContactoSeleccionado;                     /**< ID del contacto seleccionado para comunicarse. */
 } t_interfazContactos;
 
 
@@ -160,21 +161,6 @@ void interfazContactos_renderizar (sfRenderWindow *renderizado, t_recursosComune
  *
  */
 void interfazContactos_liberar (t_interfazContactos *interfazContactos);
-
-
-
-/* ============================
-   FUNCIONES LOGICAS
-   ============================ */
-
-
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-void intentarSolicitudAmistad (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 
 

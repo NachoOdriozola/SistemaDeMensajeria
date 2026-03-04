@@ -222,35 +222,6 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
 
 
 
-int intentarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    char bufferSolicitud [MAX_BUFFER_SOLICITUD], bufferRespuesta [MAX_BUFFER_RESPUESTA];
-    char estadoRespuesta;
-    int idReceptor;
-
-    idReceptor = atoi (&(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[0]));
-    snprintf (bufferSolicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", SOLICITUD_MENSAJE, contextoAplicacion->usuario.id, idReceptor, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
-    enviarSolicitudYRecibirRespuesta (contextoAplicacion->sock, bufferSolicitud, bufferRespuesta, MAX_BUFFER_RESPUESTA);
-    sscanf (bufferRespuesta, "%c", &estadoRespuesta);
-    if (estadoRespuesta != RESPUESTA_EXITO)
-    {
-        printf ("Error servidor.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    return EXITO;
-}
-
-void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta)
-{
-    int idEmisor;
-    char texto [MAX_BUFFER_MENSAJE];
-
-    sscanf (&(bufferRespuesta[2]), "%d|%[^\n]", &idEmisor, texto);
-    insertarMensaje (contextoMensajes, texto, MENSAJE_REMOTO);
-    printf ("EL: %s\n", texto);
-}
-
 void activarInterfazContactos (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     // --------------- CONFIGURAR FOCO ---------------
@@ -261,11 +232,6 @@ void activarInterfazContactos (t_recursosComunesContactosSalas *recursosComunesC
     // --------------- CONFIGURAR BUFFERS ---------------
 
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-
-
-    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
-
-    mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
 
 
     // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
@@ -302,11 +268,6 @@ void activarInterfazSalas (t_recursosComunesContactosSalas *recursosComunesConta
     // --------------- CONFIGURAR BUFFERS ---------------
 
     *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-
-
-    // --------------- CONFIGURAR LISTA DE MENSAJES ---------------
-
-    mapListaCircular (&(recursosComunesContactosSalas->contextoMensajes.listaMensajes), vaciarMensaje);
 
 
     // --------------- CONFIGURAR PUNTO DE INSERCION ---------------
@@ -386,7 +347,6 @@ void posicionarNombreUsuario (sfText *nombre)
 
 void iniciarInterfazMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
     sfText_setString (recursosComunesContactosSalas->textos.nombreUsuario, contextoAplicacion->usuario.nombre);
     posicionarNombreUsuario (recursosComunesContactosSalas->textos.nombreUsuario);
     ShowWindow (sfRenderWindow_getSystemHandle (contextoAplicacion->renderizado), SW_MAXIMIZE); //Maximizar la ventana
@@ -1370,27 +1330,6 @@ bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosC
     return EVENTO_MANEJADO;
 }
 
-bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    if (!clickEnRectangulo (contextoAplicacion->renderizado, recursosComunesContactosSalas->elementos.botonEnviar))
-        return EVENTO_NO_MANEJADO;
-
-    if (strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == 0)
-        return EVENTO_NO_MANEJADO;
-
-    if (intentarEnvioMensaje (contextoAplicacion, recursosComunesContactosSalas) == EXITO)
-    {
-        insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
-        printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
-    }
-    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
-    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
-
-
-    return EVENTO_MANEJADO;
-}
-
 bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
     if (!clickEnRectangulo (renderizado, recursosComunesContactosSalas->elementos.areaMensajes))
@@ -1408,31 +1347,11 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
         return EVENTO_NO_MANEJADO;
 
     if (ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar) != CARACTER_INVALIDO)
-        return EVENTO_NO_MANEJADO;
-
-    limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
-    limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
-    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
-
-    return EVENTO_MANEJADO;
-}
-
-bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
-        return EVENTO_NO_MANEJADO;
-
-    if (strlen (recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == 0)
-        return EVENTO_NO_MANEJADO;
-
-    if (intentarEnvioMensaje (contextoAplicacion, recursosComunesContactosSalas) == EXITO)
     {
-        insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
-        printf ("YO: %s\n", &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
+        limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
+        limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
+        sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451 + limiteTextoAux.width, 942});
     }
-    *(recursosComunesContactosSalas->contextoMensajes.bufferMensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje);
-    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
 
     return EVENTO_MANEJADO;
 }

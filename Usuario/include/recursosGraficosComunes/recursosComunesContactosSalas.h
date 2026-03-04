@@ -274,29 +274,6 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
 
 
 
-/** \brief Intentar enviar un mensaje a otro usuario.
- *
- * Genera una cadena de solicitud valida que incluye el indice de la solicitud, el ID del emisor, el ID del receptor y el texto del mensaje.
- * Envia la solicitud al servidor y espera su respuesta para saber su estado.
- * Se comunican a traves del socket de la aplicacion.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \return EXITO si se pudo enviar correctamente, ERROR_INICIALIZACION en caso contrario.
- */
-int intentarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
-/** \brief Manejar el recibo de un mensaje por parte de otro usuario.
- *
- * Parsea la cadena de respuesta para obtener el ID del emisor y el texto de mensaje, luego asigna el mensaje a la lista circular de mensajes.
- *
- * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
- * \param bufferRespuesta Buffer donde se recibio la respuesta del servidor.
- *
- */
-void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta);
-
 /** \brief Activar la interfaz de contactos.
  *
  * Modificar los estados de foco, los buffers, vaciar la lista de mensajes, resetear el punto de insercion y los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de contactos.
@@ -395,7 +372,7 @@ void tamMensaje (void *mensaje);
  */
 void renderizarMensaje (void *mensaje, void *renderizado);
 
-/** \brief Vacia (resetea) un mensaje sfText. Setea su string a "".
+/** \brief Vaciar (resetear) un mensaje sfText. Setear su string a "".
  *
  * \param mensaje Doble puntero a mensaje sfText.
  *
@@ -518,20 +495,6 @@ void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado
  */
 bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Manejar el evento de click en el boton para enviar mensaje.
- *
- * Intentar enviar el mensaje al destinatario.
- * Si resulto en exito, asigna el mensaje a la lista circular de mensajes y lo muestra por pantalla.
- * Reestablecer el buffer de escribir mensaje.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
- *
- */
-bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
 /** \brief Manejar el evento de click en el area de mensajes.
  *
  * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
@@ -555,20 +518,6 @@ bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComu
  *
  */
 bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoChar);
-
-/** \brief Manejar el evento de enviar mensaje.
- *
- * Intentar enviar el mensaje al destinatario.
- * Si resulto en exito, asigna el mensaje a la lista circular de mensajes y lo muestra por pantalla.
- * Reestablecer el buffer de escribir mensaje.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \return EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
- *
- */
-bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
 /** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir mensaje.
  *
