@@ -193,18 +193,18 @@ void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recur
     // auxEscribirContrasenia
     sfText_setString (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, "");
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, (sfVector2f){42, 315});
-    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INPUT_INVALIDO)
     {
-        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INPUT_VALIDO;
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
     }
 
     // auxEscribirNombre
     sfText_setString (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, "");
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, (sfVector2f){42, 180});
-    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INPUT_INVALIDO)
     {
-        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INPUT_VALIDO;
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
     }
 
@@ -271,12 +271,10 @@ void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosCo
     // auxEscribirContrasenia
     sfText_setString (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, "");
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, (sfVector2f){42, 295});
-    recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
 
     // auxEscribirNombre
     sfText_setString (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, "");
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, (sfVector2f){42, 170});
-    recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
 
     // ingresarContrasenia
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.ingresarContrasenia, (sfVector2f){35, 225});
@@ -524,12 +522,12 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
     // auxEscribirContrasenia
     sfText_setFont (textos->inputContrasenia.auxEscribirContrasenia, fuentes->cuerpo);
     sfText_setColor (textos->inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
-    textos->inputContrasenia.validez = VALIDO;
+    textos->inputContrasenia.validez = INPUT_VALIDO;
 
     // auxEscribirNombre
     sfText_setFont (textos->inputNombre.auxEscribirNombre, fuentes->cuerpo);
     sfText_setColor (textos->inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
-    textos->inputNombre.validez = VALIDO;
+    textos->inputNombre.validez = INPUT_VALIDO;
 
     // ingresarContrasenia
     sfText_setFont (textos->ingresarContrasenia, fuentes->ui);

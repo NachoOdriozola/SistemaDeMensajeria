@@ -396,40 +396,42 @@ void modificarPosMensaje (void *mensaje, void *desplazamientoY)
     sfText_setPosition (*((sfText**)mensaje), pos);
 }
 
-void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, float anchoMax)
+void establecerSaltoDeLineaMensaje(sfText *texto, const char *bufferMensaje, float anchoMax)
 {
-    int largoMensaje;
+    int largoPalabra, i;
+    int largoActual;
     sfVector2f posUltimoCaracter;
-    char bufferTexto [MAX_BUFFER_MENSAJE + 200] = "";
-    char bufferPrueba [MAX_BUFFER_MENSAJE + 200] = "";
-    char palabra [64] = "";
+    char bufferTexto[MAX_BUFFER_MENSAJE + 100] = "";
 
     while (*bufferMensaje)
     {
-        largoMensaje = 0;
-        while ((bufferMensaje[largoMensaje] != '\0') && (bufferMensaje[largoMensaje] != ' ')) // Encontrar una palabra.
-            largoMensaje ++;
+        // Establecer la longitud de la palabra.
+        largoPalabra = 0;
+        while ((bufferMensaje[largoPalabra] != '\0') && (bufferMensaje[largoPalabra] != ' '))
+            largoPalabra++;
 
-        strncpy(palabra, bufferMensaje, largoMensaje);
-        palabra[largoMensaje] = '\0';
+        // Procesar palabra caracter por caracter.
+        for (i = 0; i < largoPalabra; i++)
+        {
+            largoActual = strlen (bufferTexto);
 
-        strcpy (bufferPrueba, bufferTexto);
-        strcat (bufferPrueba, palabra);
+            bufferTexto[largoActual] = bufferMensaje[i];
+            bufferTexto[largoActual + 1] = '\0';
 
-        sfText_setString (texto, bufferPrueba);
-        posUltimoCaracter = sfText_findCharacterPos (texto, strlen (bufferPrueba));
-        if (posUltimoCaracter.x >= anchoMax)
-            strcat (bufferTexto, "\n"); // Agregar salto de linea si la palabra sobrepaso el ancho permitido.
-        strcat (bufferTexto, palabra);
+            sfText_setString (texto, bufferTexto);
+            posUltimoCaracter = sfText_findCharacterPos (texto, strlen(bufferTexto));
+            if (posUltimoCaracter.x >= anchoMax)
+                strcat (bufferTexto, "\n"); // Agregar salto de linea si la palabra sobrepaso el ancho permitido.
+        }
 
-        bufferMensaje += largoMensaje;
+        bufferMensaje += largoPalabra;
         if (*bufferMensaje == ' ')
         {
             strcat (bufferTexto, " ");
-            bufferMensaje ++;
+            bufferMensaje++;
         }
     }
-    sfText_setString (texto, bufferTexto);
+    sfText_setString(texto, bufferTexto);
 }
 
 void insertarMensaje (t_contextoMensajes *contextoMensajes, const char *bufferMensaje, t_origenMensaje origen)

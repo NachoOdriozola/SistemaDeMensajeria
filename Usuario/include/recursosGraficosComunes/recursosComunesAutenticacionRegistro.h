@@ -34,8 +34,21 @@
    DEFINES
    ============================ */
 
-#define VALIDO 0
-#define INVALIDO 1
+
+
+/**
+ * \def INPUT_VALIDO
+ * \brief Indicador que el input es valido.
+ */
+#define INPUT_VALIDO 0
+
+/**
+ * \def INPUT_INVALIDO
+ * \brief Indicador que el input es invalido.
+ */
+#define INPUT_INVALIDO 1
+
+
 
 /* ============================
    ESTRUCTURAS

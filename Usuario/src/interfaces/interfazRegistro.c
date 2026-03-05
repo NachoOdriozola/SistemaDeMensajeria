@@ -311,7 +311,7 @@ static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursos
     if (strlen (recursosComunesAutenticacionRegistro->bufferNombre) < 3)
     {
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
-        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INVALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INPUT_INVALIDO;
         flag = 1;
     }
 
@@ -321,7 +321,7 @@ static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursos
     if (strlen (recursosComunesAutenticacionRegistro->bufferContrasenia) < 8)
     {
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
-        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INVALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INPUT_INVALIDO;
         flag = 1;
     }
 
@@ -337,7 +337,7 @@ static int validarIngresoDatos (t_recursosComunesAutenticacionRegistro *recursos
         (strchr (ptr + 1, '@') != NULL)) // Tiene 2 arrobas
     {
         sfText_setColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
-        interfazRegistro->textos.inputCorreo.validez = INVALIDO;
+        interfazRegistro->textos.inputCorreo.validez = INPUT_INVALIDO;
         flag = 1;
     }
 
@@ -388,9 +388,9 @@ static void desactivarInterfazRegistro (t_interfazRegistro *interfazRegistro)
 
     // auxEscribirCorreo
     sfText_setString (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, "");
-    if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+    if (interfazRegistro->textos.inputCorreo.validez == INPUT_INVALIDO)
     {
-        interfazRegistro->textos.inputCorreo.validez = VALIDO;
+        interfazRegistro->textos.inputCorreo.validez = INPUT_VALIDO;
         sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
     }
 
@@ -515,7 +515,7 @@ static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos,
     // auxEscribirCorreo
     sfText_setFont (textos->inputCorreo.auxEscribirCorreo, fuentes->cuerpo);
     sfText_setFillColor (textos->inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
-    textos->inputCorreo.validez = VALIDO;
+    textos->inputCorreo.validez = INPUT_VALIDO;
 
     // ingresarCorreo
     sfText_setFont (textos->ingresarCorreo, fuentes->ui);
@@ -798,9 +798,9 @@ static bool manejarEscribirNombre (t_recursosComunesAutenticacionRegistro *recur
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+    if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INPUT_INVALIDO)
     {
-        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INPUT_VALIDO;
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
     }
     limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
@@ -834,9 +834,9 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+    if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INPUT_INVALIDO)
     {
-        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+        recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INPUT_VALIDO;
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
     }
     limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
@@ -870,9 +870,9 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-    if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+    if (interfazRegistro->textos.inputCorreo.validez == INPUT_INVALIDO)
     {
-        interfazRegistro->textos.inputCorreo.validez = VALIDO;
+        interfazRegistro->textos.inputCorreo.validez = INPUT_VALIDO;
         sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
     }
     limitarVisualizarTextoSobreBarra (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);
@@ -943,9 +943,9 @@ static bool manejarPegarPortapapelesEscribirNombre (t_recursosComunesAutenticaci
     if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferNombre, MAX_NOMBRE_USUARIO))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-        if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INVALIDO)
+        if (recursosComunesAutenticacionRegistro->textos.inputNombre.validez == INPUT_INVALIDO)
         {
-            recursosComunesAutenticacionRegistro->textos.inputNombre.validez = VALIDO;
+            recursosComunesAutenticacionRegistro->textos.inputNombre.validez = INPUT_VALIDO;
             sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
         }
         limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputNombre.auxEscribirNombre, recursosComunesAutenticacionRegistro->bufferNombre, 415);
@@ -978,9 +978,9 @@ static bool manejarPegarPortapapelesEscribirContrasenia (t_recursosComunesAutent
     if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-        if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INVALIDO)
+        if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INPUT_INVALIDO)
         {
-            recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = VALIDO;
+            recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez = INPUT_VALIDO;
             sfText_setColor (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
         }
         limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);
@@ -1013,9 +1013,9 @@ static bool manejarPegarPortapapelesEscribirCorreo (t_recursosComunesAutenticaci
     if (!pegarDesdePortapapeles (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
-        if (interfazRegistro->textos.inputCorreo.validez == INVALIDO)
+        if (interfazRegistro->textos.inputCorreo.validez == INPUT_INVALIDO)
         {
-            interfazRegistro->textos.inputCorreo.validez = VALIDO;
+            interfazRegistro->textos.inputCorreo.validez = INPUT_VALIDO;
             sfText_setFillColor (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
         }
         limitarVisualizarTextoSobreBarra (interfazRegistro->textos.inputCorreo.auxEscribirCorreo, interfazRegistro->bufferCorreo, 415);

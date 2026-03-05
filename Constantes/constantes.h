@@ -52,20 +52,20 @@
  * \def MAX_BUFFER_SOLICITUD
  * \brief Tamanio maximo del buffer para comunicar solicitudes entre el cliente y el servidor. Incluye el '0'.
  */
-#define MAX_BUFFER_SOLICITUD 2048
+#define MAX_BUFFER_SOLICITUD 781
 
 /**
  * \def MAX_BUFFER_RESPUESTA
  * \brief Tamanio maximo del buffer para comunicar respuestas entre el cliente y el servidor. Incluye el '0'.
  */
-#define MAX_BUFFER_RESPUESTA 2048
+#define MAX_BUFFER_RESPUESTA 781
 
 
 /**
  * \def MAX_BUFFER_MENSAJE
  * \brief Longitud maxima para el mensaje escrito por el usuario. Incluye el '0'.
  */
-#define MAX_BUFFER_MENSAJE 2001
+#define MAX_BUFFER_MENSAJE 751
 
 /**
  * \def MAX_NOMBRE_USUARIO
@@ -77,13 +77,13 @@
  * \def MAX_CONTRASENIA_USUARIO
  * \brief Longitud maxima para la contrasenia del usuario. Incluye el '0'.
  */
-#define MAX_CONTRASENIA_USUARIO 128
+#define MAX_CONTRASENIA_USUARIO 65
 
 /**
  * \def MAX_CORREO_USUARIO
  * \brief Longitud maxima para el correo electronico del usuario. Incluye el '0'.
  */
-#define MAX_CORREO_USUARIO 256
+#define MAX_CORREO_USUARIO 129
 
 
 
