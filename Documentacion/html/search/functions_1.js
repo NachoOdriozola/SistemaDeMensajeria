@@ -1,5 +1,0 @@
-var searchData=
-[
-  ['buscarclaveunicaenlistasimple_0',['buscarClaveUnicaEnListaSimple',['../lista_simple_8h.html#aa31b0594395da9ee16a4201dd6b4ff41',1,'buscarClaveUnicaEnListaSimple(t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp(const void *a, const void *b)):&#160;listaSimple.c'],['../lista_simple_8c.html#aa31b0594395da9ee16a4201dd6b4ff41',1,'buscarClaveUnicaEnListaSimple(t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp(const void *a, const void *b)):&#160;listaSimple.c']]],
-  ['buscarclaveunicaentablahash_1',['buscarClaveUnicaEnTablaHash',['../tabla_hash_8h.html#a62bca3fd01048411eac8aeb2484bec86',1,'buscarClaveUnicaEnTablaHash(t_tablaHash *tablaHash, const void *clave, int funcionHash(const void *), void *returnDato, unsigned tamDato, int cmp(const void *, const void *)):&#160;tablaHash.c'],['../tabla_hash_8c.html#a62bca3fd01048411eac8aeb2484bec86',1,'buscarClaveUnicaEnTablaHash(t_tablaHash *tablaHash, const void *clave, int funcionHash(const void *), void *returnDato, unsigned tamDato, int cmp(const void *, const void *)):&#160;tablaHash.c']]]
-];

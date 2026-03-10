@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['eliminarnodoconaccionlistasimple_0',['eliminarNodoConAccionListaSimple',['../lista_simple_8h.html#aa8594f5df0f0f40a66ee352c3197d75b',1,'eliminarNodoConAccionListaSimple(t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion(void *dato)):&#160;listaSimple.c'],['../lista_simple_8c.html#aa8594f5df0f0f40a66ee352c3197d75b',1,'eliminarNodoConAccionListaSimple(t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion(void *dato)):&#160;listaSimple.c']]],
-  ['eliminartablahashconaccion_1',['eliminarTablaHashConAccion',['../tabla_hash_8h.html#ae1752078d4a61e21b7dd578a9052ddb0',1,'eliminarTablaHashConAccion(t_tablaHash *tablaHash, void accion(void *)):&#160;tablaHash.c'],['../tabla_hash_8c.html#ae1752078d4a61e21b7dd578a9052ddb0',1,'eliminarTablaHashConAccion(t_tablaHash *tablaHash, void accion(void *)):&#160;tablaHash.c']]],
-  ['enviarsolicitudyrecibirrespuesta_2',['enviarSolicitudYRecibirRespuesta',['../logica_usuario_8h.html#afe47e4241a65795f1af1657d85a16f82',1,'enviarSolicitudYRecibirRespuesta(SOCKET sock, const char *bufferSolicitud, char *bufferRespuesta):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#afe47e4241a65795f1af1657d85a16f82',1,'enviarSolicitudYRecibirRespuesta(SOCKET sock, const char *bufferSolicitud, char *bufferRespuesta):&#160;logicaUsuario.c']]],
-  ['enviaryrecibirsolicitud_3',['enviarYRecibirSolicitud',['../_pruebas_2_debug_usuario_2main_8h.html#ad1778901af43accd5a06ff9da571aed2',1,'main.h']]]
-];

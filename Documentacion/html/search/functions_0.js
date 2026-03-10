@@ -1,6 +1,0 @@
-var searchData=
-[
-  ['actualizarpuntoinsercion_0',['actualizarPuntoInsercion',['../logica_usuario_8h.html#af9135fd546978c106dc310186f5d4972',1,'actualizarPuntoInsercion(bool *puntoInsercion, unsigned short int *contadorPuntoInsercion):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#af9135fd546978c106dc310186f5d4972',1,'actualizarPuntoInsercion(bool *puntoInsercion, unsigned short int *contadorPuntoInsercion):&#160;logicaUsuario.c']]],
-  ['agregarnotificacion_1',['agregarNotificacion',['../logica_usuario_8h.html#a65ab391236b88bdf877a39e667c572e6',1,'agregarNotificacion(t_listaSimple *listaNotificaciones, char *bufferNotificacion, t_fuentes fuentes):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#a65ab391236b88bdf877a39e667c572e6',1,'agregarNotificacion(t_listaSimple *listaNotificaciones, char *bufferNotificacion, t_fuentes fuentes):&#160;logicaUsuario.c']]],
-  ['asignarmensaje_2',['asignarMensaje',['../logica_usuario_8h.html#a966c711a744037473ca2631a3d31c4f7',1,'asignarMensaje(t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor):&#160;logicaUsuario.c'],['../logica_usuario_8c.html#a966c711a744037473ca2631a3d31c4f7',1,'asignarMensaje(t_aplicacion *aplicacion, const char *bufferMensaje, bool enviadoPor):&#160;logicaUsuario.c']]]
-];
