@@ -20,12 +20,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SFML/Graphics.h"
-#include "SFML/Window.h"
-#include "SFML/System.h"
+#include "../../external/csfml/include/SFML/System.h"
+#include "../../external/csfml/include/SFML/Window.h"
+#include "../../external/csfml/include/SFML/Graphics.h"
 
-#include "../../../shared/include/constantes.h"
-#include "../../../shared/include/protocolos.h"
+#include "../../shared/constantes/include/constantes.h"
+#include "../../../shared/protocolos/include/protocolos.h"
 #include "../utiles.h"
 #include "../estructuras.h"
 

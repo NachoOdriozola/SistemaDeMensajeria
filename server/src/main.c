@@ -22,14 +22,16 @@ int main ()
 
     if (inicializarServidor (&contextoServidor) == ERROR_INICIALIZACION)
     {
-        perror ("ERROR - Inicializacion de servidor.\n");
+        perror ("\nERROR - Inicializacion de servidor.\n");
         liberarServidor (&contextoServidor);
+        system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
         return ERROR_INICIALIZACION;
     }
     if (configurarServidor (&contextoServidor) == ERROR_CONFIGURACION)
     {
-        perror ("ERROR - configuracion de servidor.\n");
+        perror ("\nERROR - configuracion de servidor.\n");
         liberarServidor (&contextoServidor);
+        system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
         return ERROR_CONFIGURACION;
     }
     printf ("-SERVIDOR INICIADO CORRECTAMENTE-\n\n");

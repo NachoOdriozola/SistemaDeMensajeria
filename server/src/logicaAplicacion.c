@@ -31,7 +31,7 @@ int inicializarBaseDatos(sqlite3 **bd)
     FILE *arch;
 
 
-    resultado = sqlite3_open ("../../../database/database.db", bd);
+    resultado = sqlite3_open ("../../../server/database/database.db", bd);
     if (resultado != SQLITE_OK)
     {
         printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*bd));
@@ -60,7 +60,7 @@ int inicializarBaseDatos(sqlite3 **bd)
     // Si no existe, ejecutar schema.sql.
     if (!resultado)
     {
-        arch = fopen("../../../database/schema.sql", "rb");
+        arch = fopen("schema.sql", "rb");
         if (!arch)
         {
             perror ("\nERROR - Abrir archivo schema.sql.\n");
@@ -155,7 +155,8 @@ int inicializarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- INICIALIZAR BASE DE DATOS ---------------
 
-    inicializarBaseDatos (&(contextoServidor->baseDeDatos));
+    if (inicializarBaseDatos (&(contextoServidor->baseDeDatos)) != EXITO)
+        return ERROR_INICIALIZACION;
 
 
     printf ("-INICIALIZACION EXITOSA-\n");
@@ -266,7 +267,7 @@ bool recibirSolicitudEnListaSimple (t_listaSimple *listaSimple, t_nodo ***nodoDe
             return RECIBIO_SOLICITUD;
         }
 
-        if ((bytesRecibidos == 0) || ((bytesRecibidos == SOCKET_ERROR) && (WSAGetLastError() == WSAECONNRESET))) // Si el cliente perdio la conexión.
+        if ((bytesRecibidos == 0) || ((bytesRecibidos == SOCKET_ERROR) && (WSAGetLastError() == WSAECONNRESET))) // Si el cliente perdio la conexiï¿½n.
         {
             printf ("Cliente ID: %d desconectado.\n\n", cliente->id);
             eliminarNodoConAccionListaSimple (listaSimple, NULL, 0, liberarCliente); // Elimina el cliente desconectado de la lista simple.
@@ -718,7 +719,7 @@ static int cmpIdCliente (const void *cliente, const void *clave)
  *
  */
 /*
-static void mostrarCliente (void *cliente) //Función temporal
+static void mostrarCliente (void *cliente) //Funciï¿½n temporal
 {
     printf ("%d\n", (*((t_cliente*)cliente)).id);
 }

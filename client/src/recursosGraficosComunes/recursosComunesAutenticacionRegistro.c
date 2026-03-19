@@ -222,11 +222,13 @@ void activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recur
     centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 405, 140, 35);
 
     // textoCambiarInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿No tenés cuenta? Registrate acá");
+    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, bufferTextoCambiarInterfaz);
     centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, "INICIAR SESIÓN");
+    sfUint32 bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
+    sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, bufferTituloInterfaz);
     sfText_setPosition (recursosComunesAutenticacionRegistro->textos.tituloInterfaz, (sfVector2f){120, 25});
 
 
@@ -290,7 +292,8 @@ void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosCo
     centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoBotonIngresar, 180, 452, 140, 35);
 
     // textoCambiarInterfaz
-    sfText_setString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, "¿Ya tenés cuenta? Iniciá sesión acá");
+    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, bufferTextoCambiarInterfaz);
     centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
@@ -372,14 +375,14 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
  */
 static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("../../../assets/fonts/fuenteUI.ttf");
+    fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("../../../assets/fonts/fuenteCuerpo.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("../../../client/assets/fonts/fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Crear fuente cuerpo.\n");
@@ -531,8 +534,9 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
 
     // ingresarContrasenia
     sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
-    sfText_setString (textos->ingresarContrasenia, "Contraseña:");
     sfText_setColor (textos->ingresarContrasenia, sfColor_fromRGB (43, 43, 43));
+    sfUint32 bufferIngresarContrasenia [] = {'C', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ':', 0};
+    sfText_setUnicodeString (textos->ingresarContrasenia, bufferIngresarContrasenia);
 
     // ingresarNombre
     sfText_setFont (textos->ingresarNombre, fuentes->ui);
@@ -550,13 +554,15 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
 
     // textoCambiarInterfaz
     sfText_setFont (textos->textoCambiarInterfaz, fuentes->ui);
-    sfText_setString (textos->textoCambiarInterfaz, "¿No tenés cuenta? Registrate acá");
     sfText_setColor (textos->textoCambiarInterfaz, sfColor_fromRGB (43, 43, 43));
+    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (textos->textoCambiarInterfaz, bufferTextoCambiarInterfaz);
 
     // tituloInterfaz
     sfText_setFont (textos->tituloInterfaz, fuentes->ui);
-    sfText_setString (textos->tituloInterfaz, "INICIAR SESIÓN");
     sfText_setColor (textos->tituloInterfaz, sfColor_fromRGB (43, 43, 43));
+    sfUint32 bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
+    sfText_setUnicodeString (textos->tituloInterfaz, bufferTituloInterfaz);
 }
 
 /** \brief Configurar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro.

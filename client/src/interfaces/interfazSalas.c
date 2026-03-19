@@ -313,8 +313,9 @@ static void interfazSalas_configurarTextos (t_interfazSalasTextos *textos, const
 {
     // textoEnDesarrollo
     sfText_setFont (textos->textoEnDesarrollo, fuentes->ui);
-    sfText_setString (textos->textoEnDesarrollo, "Salas públicas . Próximamente");
     sfText_setFillColor (textos->textoEnDesarrollo, sfColor_fromRGBA (94, 91, 87, 191));
+    sfUint32 bufferTextoEnDesarrollo [] = {'S', 'a', 'l', 'a', 's', ' ', 'p', 0x00fa, 'b', 'i', 'c', 'a', 's', ' ', '.', ' ', 'P', 'r', 0x00f3, 'x', 'i', 'm', 'a', 'm', 'e', 'n', 't', 'e', 0};
+    sfText_setUnicodeString (textos->textoEnDesarrollo, bufferTextoEnDesarrollo);
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de salas.

@@ -24,9 +24,9 @@
 #include <ws2tcpip.h>
 #include <stdbool.h>
 
-#include "SFML/Graphics.h"
-#include "SFML/Window.h"
-#include "SFML/System.h"
+#include "../../external/csfml/include/SFML/System.h"
+#include "../../external/csfml/include/SFML/Window.h"
+#include "../../external/csfml/include/SFML/Graphics.h"
 
 
 

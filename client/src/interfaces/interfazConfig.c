@@ -237,7 +237,7 @@ static void interfazConfig_inicializarValoresNulosElementos (t_interfazConfigEle
  */
 static int interfazConfig_inicializarFuentes (t_interfazConfigFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("fuenteUi.ttf");
+    fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");

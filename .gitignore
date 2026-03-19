@@ -1,23 +1,11 @@
 # Ejecutables
 *.exe
 
-# Archivos objeto
-*.o
-
 # Base de datos
 *.db
 
 # Doxygen
 docs/html
-docs/latex
 
-# IDE
-*.cbp
-*.layout
-*.depend
-
-server/src/bin
-server/src/obj
-
-client/src/bin
-client/src/obj
+# CMake
+build/

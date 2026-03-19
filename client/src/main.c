@@ -24,6 +24,7 @@ int main()
     {
         perror ("\nERROR - Inicializar los recursos de la aplicacion.\n");
         liberarAplicacion (&contextoAplicacion, &interfaces);
+        system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
         return ERROR_INICIALIZACION;
     }
 
@@ -104,7 +105,7 @@ int main()
 
 
     liberarAplicacion (&contextoAplicacion, &interfaces);
-    system ("pause");
+    system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
 
     return EXITO;
 }

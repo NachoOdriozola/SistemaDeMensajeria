@@ -519,18 +519,21 @@ static void interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos,
 
     // ingresarCorreo
     sfText_setFont (textos->ingresarCorreo, fuentes->ui);
-    sfText_setString (textos->ingresarCorreo, "Correo electrónico:");
     sfText_setFillColor (textos->ingresarCorreo, sfColor_fromRGB (43, 43, 43));
+    sfUint32 bufferIngresarCorreo [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', 0};
+    sfText_setUnicodeString (textos->ingresarCorreo, bufferIngresarCorreo);
 
     // textoInformativoContrasenia
     sfText_setFont (textos->textoInformativoContrasenia, fuentes->ui);
-    sfText_setString (textos->textoInformativoContrasenia, "Mínimo 8 caracteres");
     sfText_setFillColor (textos->textoInformativoContrasenia, sfColor_fromRGB (94, 91, 87));
+    sfUint32 bufferTextoInformativoContrasenia [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '8', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    sfText_setUnicodeString (textos->textoInformativoContrasenia, bufferTextoInformativoContrasenia);
 
     // textoInformativoNombre
     sfText_setFont (textos->textoInformativoNombre, fuentes->ui);
-    sfText_setString (textos->textoInformativoNombre, "Mínimo 3 caracteres");
     sfText_setFillColor (textos->textoInformativoNombre, sfColor_fromRGB (94, 91, 87));
+    sfUint32 bufferTextoInformativoNombre [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '3', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    sfText_setUnicodeString (textos->textoInformativoNombre, bufferTextoInformativoNombre);
 }
 
 /** \brief Configurar los recursos graficos de elementos de la interfaz de registro.
@@ -742,7 +745,7 @@ static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicaci
     }
     else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
     {
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrónico ya registrado");
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrï¿½nico ya registrado");
         centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
     }
 
@@ -914,7 +917,7 @@ static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicaci
     }
     else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
     {
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrónico ya registrado");
+        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o correo electrï¿½nico ya registrado");
         centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
     }
 

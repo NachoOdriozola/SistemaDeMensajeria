@@ -697,14 +697,14 @@ static void recursosComunesContactosSalas_inicializarValoresNulosListaMensajes (
  */
 static int recursosComunesContactosSalas_inicializarFuentes (t_recursosComunesContactosSalasFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("../../../assets/fonts/fuenteUI.ttf");
+    fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("../../../assets/fonts/fuenteCuerpo.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("../../../client/assets/fonts/fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Crear fuente cuerpo.\n");

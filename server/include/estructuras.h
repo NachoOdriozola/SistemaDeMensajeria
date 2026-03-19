@@ -20,9 +20,9 @@
 #include <ws2tcpip.h>
 #include <sqlite3.h>
 
-#include "../../shared/include/constantes.h"
-#include "../../shared/estructurasDeDatos/include/listaSimple.h"
-#include "../../shared/estructurasDeDatos/include/tablaHash.h"
+#include "../../shared/constantes/include/constantes.h"
+#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
+#include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 
 
 
