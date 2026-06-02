@@ -45,7 +45,7 @@ int inicializarBaseDatos(sqlite3 **bd)
         return ERROR_SIN_MEMORIA;
     }
 
-    // Verificar si existe la tabla usuarios.
+    // Verificar si existe la tabla usuarios
     strcpy (consultaSQLITE, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';");
     if (sqlite3_prepare_v2(*bd, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
@@ -57,10 +57,10 @@ int inicializarBaseDatos(sqlite3 **bd)
     resultado = (sqlite3_step (sentencia) == SQLITE_ROW);
     sqlite3_finalize(sentencia);
 
-    // Si no existe, ejecutar schema.sql.
+    // Si no existe, ejecutar schema.sql
     if (!resultado)
     {
-        arch = fopen("schema.sql", "rb");
+        arch = fopen("../../../server/database/schema.sql", "rb");
         if (!arch)
         {
             perror ("\nERROR - Abrir archivo schema.sql.\n");
