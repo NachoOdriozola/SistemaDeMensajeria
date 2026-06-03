@@ -534,15 +534,24 @@ static bool manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoApl
         return EVENTO_NO_MANEJADO;
 
     estadoRespuesta = intentarAutenticar (contextoAplicacion, recursosComunesAutenticacionRegistro);
-    if (estadoRespuesta == RESPUESTA_EXITO)
+    switch(estadoRespuesta)
     {
-        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
-    }
-    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
-    {
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
-        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+        case RESPUESTA_EXITO:
+            contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+            strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+            break;
+
+        case RESPUESTA_ERROR_CREDENCIALES_INVALIDAS:
+            sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
+            sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
+            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            break;
+
+        case RESPUESTA_ERROR_OPERACION_INVALIDA:
+
+            sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
+            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            break;
     }
 
     return EVENTO_MANEJADO;
@@ -653,15 +662,24 @@ static bool manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoApl
         return EVENTO_NO_MANEJADO;
 
     estadoRespuesta = intentarAutenticar (contextoAplicacion, recursosComunesAutenticacionRegistro);
-    if (estadoRespuesta == RESPUESTA_EXITO)
+    switch(estadoRespuesta)
     {
-        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-        strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
-    }
-    else if (estadoRespuesta == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
-    {
-        sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre o contraseña incorrectos");
-        centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+        case RESPUESTA_EXITO:
+            contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+            strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
+            break;
+
+        case RESPUESTA_ERROR_CREDENCIALES_INVALIDAS:
+            sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
+            sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
+            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            break;
+
+        case RESPUESTA_ERROR_OPERACION_INVALIDA:
+
+            sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
+            centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            break;
     }
 
     return EVENTO_MANEJADO;

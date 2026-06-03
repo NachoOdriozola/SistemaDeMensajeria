@@ -62,7 +62,8 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
     {
         if (cmp ((*pl)->dato, key) == 0)
         {
-            memcpy (returnDato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
+            if (returnDato != NULL)
+                memcpy (returnDato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
             return 1;
         }
         pl = &((*pl)->sig);

@@ -305,6 +305,7 @@ int manejarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodo 
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
     char nombreUsuario [MAX_NOMBRE_USUARIO], contraseniaUsuario [MAX_CONTRASENIA_USUARIO];
+    int idCliente;
 
     t_cliente *cliente;
 
@@ -332,10 +333,15 @@ int manejarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodo 
     resultadoConsulta = sqlite3_step (sentencia);
     if (resultadoConsulta == SQLITE_ROW) // Si encontro un usuario en la base de datos con tal nombre y contrasenia.
     {
-        cliente->id = sqlite3_column_int (sentencia, 0); // Recupera su ID y la guarda en el cliente correspondiente.
-
-        vincularNodoATablaHash (&(contextoServidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente de la lista simple de clientes no autenticados a la tabla hash.
-        snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_EXITO, cliente->id);
+        idCliente = sqlite3_column_int (sentencia, 0); // Recupera su ID
+        if (buscarClaveUnicaEnTablaHash (&(contextoServidor->tablaHashClientes), &idCliente, funcionHash, NULL, 0, cmpIdCliente)) // Si el cliente ya esta conectado
+            snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_OPERACION_INVALIDA, ID_INVALIDO);
+        else
+        {
+            cliente->id = idCliente;
+            vincularNodoATablaHash (&(contextoServidor->tablaHashClientes), &(cliente->id), funcionHash, desvincularNodoDeListaSimple (clienteAProcesar)); // Mover cliente de la lista simple de clientes no autenticados a la tabla hash.
+            snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_EXITO, cliente->id);
+        }
     }
     else
         snprintf (buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", RESPUESTA_ERROR_CREDENCIALES_INVALIDAS, ID_INVALIDO);

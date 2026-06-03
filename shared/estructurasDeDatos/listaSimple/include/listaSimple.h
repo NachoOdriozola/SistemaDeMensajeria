@@ -87,6 +87,7 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
 /** \brief Buscar una clave unica en la lista simple.
  *
  * Verifica devolver en returnDato el tamanio minimo entre el parametro enviado y el tamanio almacenado en el nodo.
+ * returnDato puede ser NULL si no se necesita almacenar el dato buscado.
  *
  * \param pl Direccion de la lista simple.
  * \param key Puntero a la clave a buscar.
