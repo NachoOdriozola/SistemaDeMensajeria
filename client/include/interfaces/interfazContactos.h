@@ -10,9 +10,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    INCLUDES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -24,24 +24,25 @@
 #include "../../external/csfml/include/SFML/Window.h"
 #include "../../external/csfml/include/SFML/Graphics.h"
 
-#include "../../shared/constantes/include/constantes.h"
 #include "../../../shared/protocolos/include/protocolos.h"
+#include "../comunicacion.h"
+#include "../../shared/constantes/include/constantes.h"
 #include "../../../shared/estructurasDeDatos/listaCircular/include/listaCircular.h"
 #include "../utiles.h"
-#include "../estructuras.h"
 #include "../recursosGraficosComunes/recursosComunesContactosSalas.h"
+#include "../estructuras.h"
 
 
 
-/* ============================
+/* ============================================================================================================================================
    DEFINES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
-/* ============================
+/* ============================================================================================================================================
    ESTRUCTURAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -50,8 +51,6 @@
  */
 typedef struct
 {
-    sfText *agendarContacto;             /**< Boton para abrir la ventana emergente de agendar contacto. */
-    sfText *auxAgendarContacto;          /**< Muestra el nombre del contacto que escribe el usuario. */
     sfText *auxContactoSeleccionado;     /**< Nombre del contacto que el usuario selecciono para comunicar. */
 } t_interfazContactosTextos;
 
@@ -61,7 +60,6 @@ typedef struct
 typedef struct
 {
     sfRectangleShape *areaContactoSeleccionado;         /**< Area que encierra el nombre del contacto que el usuario selecciono para comunicar. */
-    sfRectangleShape *barraEscribirAgendarContacto;     /**< Barra donde el usuario escribe el nombre del contacto. */
 } t_interfazContactosElementos;
 
 /** \enum t_interfazContactosFoco
@@ -70,7 +68,6 @@ typedef struct
 typedef enum
 {
     AGENDAR_CONTACTO,                     /**< Abrir/cerrar la ventana emergente de agendar contacto. */
-    ESCRIBIR_AGENDAR_CONTACTO,            /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir el nombre del contacto */
     ICT_NINGUNO                           /**< Ningun foco establecido. */
 } t_interfazContactosFoco;
 
@@ -87,9 +84,9 @@ typedef struct
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES ESTRUCTURALES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 

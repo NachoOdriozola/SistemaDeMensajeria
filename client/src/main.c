@@ -2,9 +2,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    MAIN
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -44,7 +44,8 @@ int main()
             interfazAutenticacion_renderizar (contextoAplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.autenticacion));
             if (contextoAplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarInterfazMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
+                ShowWindow (sfRenderWindow_getSystemHandle (contextoAplicacion.renderizado), SW_MAXIMIZE);
+                establecerYPosicionarNombreUsuario (&(interfaces.recursosComunesContactosSalas), contextoAplicacion.usuario.nombre);
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -58,7 +59,8 @@ int main()
             interfazRegistro_renderizar (contextoAplicacion.renderizado, &(interfaces.recursosComunesAutenticacionRegistro), &(interfaces.registro));
             if (contextoAplicacion.usuario.interfazActual == INTERFAZ_CONTACTOS)
             {
-                iniciarInterfazMenuPrincipal (&contextoAplicacion, &(interfaces.recursosComunesContactosSalas));
+                ShowWindow (sfRenderWindow_getSystemHandle (contextoAplicacion.renderizado), SW_MAXIMIZE);
+                establecerYPosicionarNombreUsuario (&(interfaces.recursosComunesContactosSalas), contextoAplicacion.usuario.nombre);
                 recursosComunesAutenticacionRegistro_liberar (&(interfaces.recursosComunesAutenticacionRegistro));
                 interfazAutenticacion_liberar (&(interfaces.autenticacion));
                 interfazRegistro_liberar (&(interfaces.registro));
@@ -112,9 +114,9 @@ int main()
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES ESTRUCTURALES BASE
-   ============================ */
+   ============================================================================================================================================ */
 
 
 

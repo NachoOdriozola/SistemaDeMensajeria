@@ -1,4 +1,5 @@
-#include "../include/logicaAplicacion.h"
+#include "../include/main.h"
+
 
 int main ()
 {
@@ -70,9 +71,6 @@ int main ()
 
             case SOLICITUD_SELECCIONAR_CONTACTO:
                 manejarSolicitudSeleccionContacto (&contextoServidor, clienteAProcesar, &buffersComunicacion);
-
-            case SOLICITUD_AGENDAR_CONTACTO:
-                //manejarSolicitudContacto (&contextoServidor, clienteAProcesar, &buffersComunicacion);
                 break;
             }
         }

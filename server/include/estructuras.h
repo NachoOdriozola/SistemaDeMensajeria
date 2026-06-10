@@ -10,9 +10,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    INCLUDES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -20,27 +20,30 @@
 #include <ws2tcpip.h>
 #include <sqlite3.h>
 
-#include "../../shared/constantes/include/constantes.h"
 #include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 
 
 
-/* ============================
-   ESTRUCTURAS
-   ============================ */
+/* ============================================================================================================================================
+   DEFINES
+   ============================================================================================================================================ */
 
 
 
 /**
- * \union t_buffersComunicacion
- * \brief  Contiene los buffers necesarios para establecer la comunicacion entre el cliente y el servidor.
+ * \def CANT_BUCKETS_TABLA_HASH
+ * \brief Cantidad de buckets que tiene la tabla hash de clientes autenticados.
  */
-typedef union
-{
-    char solicitud [MAX_BUFFER_SOLICITUD];              /**< Buffer que almacena una solicitud un clientes. */
-    char respuesta [MAX_BUFFER_RESPUESTA];              /**< Buffer que almacena una respuestas del servidor para enviar al cliente. */
-} t_buffersComunicacion;
+#define CANT_BUCKETS_TABLA_HASH 1000
+
+
+
+/* ============================================================================================================================================
+   ESTRUCTURAS
+   ============================================================================================================================================ */
+
+   
 
 /**
  * \struct t_cliente

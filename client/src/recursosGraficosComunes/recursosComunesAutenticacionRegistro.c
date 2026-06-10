@@ -2,9 +2,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    DECLARACIONES DE FUNCIONES COMPLEMENTARIAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -28,9 +28,9 @@ static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosCom
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES ESTRUCTURALES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -162,9 +162,9 @@ void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacio
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES LOGICAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -319,26 +319,18 @@ void activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosCo
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES COMPLEMENTARIAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
-/** \brief Establecer en NULL a todas las fuentes graficas comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- */
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     fuentes->cuerpo = NULL;
     fuentes->ui = NULL;
 }
 
-/** \brief Establecer en NULL a todos los textos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- */
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     textos->inputContrasenia.auxEscribirContrasenia = NULL;
@@ -351,10 +343,6 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (
     textos->tituloInterfaz = NULL;
 }
 
-/** \brief Establecer en NULL a todos los elementos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- */
 static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     elementos->barraEscribirContrasenia = NULL;
@@ -364,15 +352,7 @@ static void recursosComunesAutenticacionRegistro_inicializarValoresNulosElemento
     elementos->subrayadoTitulo = NULL;
 }
 
-/** \brief Inicializar los recursos graficos de fuentes comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * Crear todos los recursos graficos de fuentes. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
- *
- * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
- *
- */
+
 static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
@@ -393,15 +373,6 @@ static int recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosCo
     return EXITO;
 }
 
-/** \brief Inicializar los recursos graficos de textos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * Crear todos los recursos graficos de textos. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
- *
- * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
- *
- */
 static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     textos->inputContrasenia.auxEscribirContrasenia = sfText_create ();
@@ -464,15 +435,6 @@ static int recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosCom
     return EXITO;
 }
 
-/** \brief Inicializar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * Crear todos los recursos graficos de elementos. Si ocurre un error en la creacion, se muestra un mensaje de error correspondiente.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
- *
- */
 static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     elementos->barraEscribirContrasenia = sfRectangleShape_create ();
@@ -514,12 +476,7 @@ static int recursosComunesAutenticacionRegistro_inicializarElementos (t_recursos
     return EXITO;
 }
 
-/** \brief Configurar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficas de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
+
 static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     // auxEscribirContrasenia
@@ -565,11 +522,6 @@ static void recursosComunesAutenticacionRegistro_configurarTextos (t_recursosCom
     sfText_setUnicodeString (textos->tituloInterfaz, bufferTituloInterfaz);
 }
 
-/** \brief Configurar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
 static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
@@ -592,11 +544,7 @@ static void recursosComunesAutenticacionRegistro_configurarElementos (t_recursos
     sfRectangleShape_setFillColor (elementos->subrayadoTitulo, sfColor_fromRGB (43, 43, 43));
 }
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico comun (compartido) entre las interfaces de autenticacion y registro.
- *
- * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
+
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     // auxEscribirContrasenia
@@ -631,11 +579,6 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recurso
     sfText_setCharacterSize (textos->tituloInterfaz, 36);
 }
 
-/** \brief Establecer un tamanio y una posicion sobre la ventana a cada texto grafico comun (compartido) entre las interfaces de autenticacion y registro.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
 static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     // barraEscribirContrasenia
@@ -661,22 +604,13 @@ static void recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recu
     sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){260, 2.5});
 }
 
-/** \brief Liberar, de manera segura, todas las fuentes graficas comunes (compartidas) entre las interfaces de autenticacion y registro.
- *
- * \param fuentes Puntero a la estructura que contiene las variables de las fuentes graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
+
 static void recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
     DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);
     DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
 }
 
-/** \brief Liberar, de manera segura, todas los textos graficos comunes (compartidas) entre las interfaces de autenticacion y registro.
- *
- * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
 static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->inputContrasenia.auxEscribirContrasenia);
@@ -689,11 +623,6 @@ static void recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComune
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloInterfaz);
 }
 
-/** \brief Liberar, de manera segura, todas los elementos graficos comunes (compartidas) entre las interfaces de autenticacion y registro.
- *
- * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
- *
- */
 static void recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirContrasenia);

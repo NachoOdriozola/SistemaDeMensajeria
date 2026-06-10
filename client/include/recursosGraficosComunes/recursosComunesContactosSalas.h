@@ -10,15 +10,16 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    INCLUDES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../../external/csfml/include/SFML/System.h"
 #include "../../external/csfml/include/SFML/Window.h"
@@ -26,15 +27,13 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../utiles.h"
-#include "../../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
 #include "../../../shared/estructurasDeDatos/listaCircular/include/listaCircular.h"
-#include "../estructuras.h"
 
 
 
-/* ============================
+/* ============================================================================================================================================
    DEFINES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -79,9 +78,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    ESTRUCTURAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -100,16 +99,11 @@ typedef struct
  */
 typedef struct
 {
-    sfText *alertaNotificaciones;       /**< Signo de alerta cuando se recibe una nueva notificacion no leida. */
     sfText *auxEscribirMensaje;         /**< Muestra el mensaje que escribe el usuario. */
-    sfText *cerrarVentanaEmergente;     /**< Cruz para cerrar la ventana emergente. */
-    sfText *configuraciones;            /**< Boton para dirigirse a la interfaz de configuraciones. */
     sfText *proximaInterfaz;            /**< Muestra el nombre de la interfaz disponible para cambiar, esta ubicado sobre la solapaCambiarInterfaz. */
     sfText *nombreUsuario;              /**< Muestra el nombre del usuario. */
-    sfText *notificaciones;             /**< Boton para abrir la ventana emergente de notificaciones. */
     sfText *textoBotonEnviar;           /**< Texto encontrado dentro del boton para enviar mensaje. */
     sfText *tituloInterfaz;             /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
-    sfText *tituloVentanaEmergente;     /**< Titulo de la ventana emergente. */
 } t_recursosComunesContactosSalasTextos;
 
 /** \struct t_recursosComunesContactosSalasElementos
@@ -130,7 +124,6 @@ typedef struct
     sfRectangleShape *panelInterfaz;            /**< Panel principal de la interfaz ubicado a la izquierda de la ventana. */
     sfRectangleShape *puntoInsercion;           /**< Punto de insercion para escritura de texto. */
     sfRectangleShape *solapaCambiarInterfaz;    /**< Solapa para cambiar de interfaz encontrada en el panel. */
-    sfRectangleShape *ventanaEmergente;         /**< Rectangulo de la ventana emergente. */
 } t_recursosComunesContactosSalasElementos;
 
 /** \struct t_recursosComunesContactosSalasVistas
@@ -149,7 +142,6 @@ typedef enum
 {
     AREA_MENSAJES,                          /**< Indicar si el area de mensajes fue seleccionado/deseleccionado por el usuario. */
     ESCRIBIR_MENSAJE,                       /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir un mensaje. */
-    NOTIFICACIONES,                         /**< Abrir/cerrar la ventana emergente de notificaciones. */
     RCCS_NINGUNO                            /**< Ningun foco establecido. */
 } t_recursosComunesContactosSalasFoco;
 
@@ -175,21 +167,6 @@ typedef enum
     MENSAJE_REMOTO      /**< Mensaje recibido por otro usuario. */
 } t_origenMensaje;
 
-/**
- * \struct t_notificacion
- * \brief  Estructura que contiene los elementos de una notificacion.
- * \note Estructura NO ACTIVA en el Incremento 1.
- */
-typedef struct
-{
-    sfRectangleShape *recuadro;
-    sfRectangleShape *botonAceptar;
-    sfRectangleShape *botonRechazar;
-    sfText *textoNotificacion;
-    sfText *textoBotonAceptar;
-    sfText *textoBotonRechazar;
-} t_notificacion;
-
 /** \struct t_recursosComunesContactosSalas
  * \brief Estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  */
@@ -206,9 +183,9 @@ typedef struct
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES ESTRUCTURALES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -268,9 +245,9 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES LOGICAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -303,45 +280,21 @@ void activarInterfazSalas (t_recursosComunesContactosSalas *recursosComunesConta
  */
 void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Renderizar los recursos graficos de las notificaciones.
- *
- * Si se encuentra habilitada la ventana emergente de notificaciones, renderizar los elementos y textos graficos, y la lista de notificaciones.
- * No se limpia ni muestra la ventana, solo los renderiza.
- *
- * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- *
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- *
- */
-void renderizarNotificaciones (sfRenderWindow *renderizado, const t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
-/** \brief Posicionar y centrar el nombre de usuario.
+/** \brief Establecer el nombre de usuario en un texto grafico y posicionarlo sobre la interfaz.
  *
  * Si el nombre de usuario no entra dentro del area establecida, se achica el tamanio del texto hasta que quede centrado.
  *
- * \param nombre Puntero al texto del nombre sfText a posicionar.
- *
- */
-void posicionarNombreUsuario (sfText *nombre);
-
-/** \brief Preparar la aplicacion para iniciar la interfaz del menu principal.
- *
- * Seleccionar la interfaz de contactos como la interfaz del menu principal, establecer y posicionar el nombre de usuario en las interfaces y maximizar la ventana.
- *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos, buffers y habilitaciones comunes entre las interfaces de contactos y salas.
+ * \param nombreUsuario Puntero al nombre de usuario.
  *
  */
-void iniciarInterfazMenuPrincipal (t_contextoAplicacion *contextoAplicacion, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void establecerYPosicionarNombreUsuario (t_recursosComunesContactosSalas *recursosComunesContactosSalas, const char *nombreUsuario);
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES DE LISTA DE MENSAJES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -424,52 +377,9 @@ void insertarMensaje (t_contextoMensajes *contextoMensajes, const char *bufferMe
 
 
 
-/* ============================
-   FUNCIONES DE NOTIFICACIONES
-   ============================ */
-
-
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-int crearNotificacion (t_notificacion *notificacion);
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-void setupNotificacion (t_notificacion *notificacion, const t_recursosComunesContactosSalasFuentes *fuentes);
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-int agregarNotificacion (t_listaSimple *listaNotificaciones, char *bufferNotificacion, const t_recursosComunesContactosSalasFuentes *fuentes);
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-void liberarNotificacion (void *notificacion);
-
-/**
- * \note Funcionalidad NO ACTIVA en el Incremento 1.
- *
- * \warning No invocar desde produccion.
- */
-void renderizarListaNotificaciones (void *notificacion, void *renderizado);
-
-
-
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES MANEJADORAS DE EVENTOS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -484,6 +394,7 @@ void renderizarListaNotificaciones (void *notificacion, void *renderizado);
  *
  */
 void manejarRedimensionamientoVentanaContactosSalas (sfRenderWindow *renderizado, t_recursosComunesContactosSalasVistas *vistas, sfEvent eventoRedimensionamiento);
+
 
 /** \brief Manejar el evento de click en la barra para escribir mensaje.
  *
@@ -505,6 +416,7 @@ bool manejarClickEscribirMensaje (const sfRenderWindow *renderizado, t_recursosC
  */
 bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
+
 /** \brief Manejar el evento de escribir mensaje.
  *
  * Si se encuentra el foco en escribir mensaje, intenta agregar el caracter al buffer del mensaje.
@@ -519,6 +431,7 @@ bool manejarClickAreaMensajes (const sfRenderWindow *renderizado, t_recursosComu
  */
 bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas, sfEvent eventoChar);
 
+
 /** \brief Manejar el evento de pegar desde el portapapeles al buffer de escribir mensaje.
  *
  * Si se encuentra el foco en escribir mensaje, intenta agregar el caracter al buffer del mensaje.
@@ -531,6 +444,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
  *
  */
 bool manejarPegarPortapapelesEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 
 /** \brief Manejar el evento de desplazar arriba el area de mensajes.
  *
@@ -553,6 +467,7 @@ bool manejarDesplazarArribaAreaMensajes (t_recursosComunesContactosSalas *recurs
  *
  */
 bool manejarDesplazarAbajoAreaMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
 
 /** \brief Manejar el evento de scroll en el area de mensajes.
  *

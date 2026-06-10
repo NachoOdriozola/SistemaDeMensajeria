@@ -10,9 +10,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    INCLUDES
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -30,24 +30,11 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    DEFINES
-   ============================ */
+   ============================================================================================================================================ */
 
-
-
-/**
- * \def RECIBIO_RESPUESTA
- * \brief Codigo de retorno para indicar que se recibio una respuesta del servidor.
- */
-#define RECIBIO_RESPUESTA 1
-
-/**
- * \def NO_RECIBIO_RESPUESTA
- * \brief Codigo de retorno para indicar que no se recibio una respuesta del servidor.
- */
-#define NO_RECIBIO_RESPUESTA 0
-
+   
 
 /**
  * \def EVENTO_MANEJADO
@@ -83,9 +70,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    MACROS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -146,9 +133,9 @@
 
 
 
-/* ============================
+/* ============================================================================================================================================
    ESTRUCTURAS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -173,46 +160,9 @@ typedef struct
 
 
 
-/* ============================
-   FUNCIONES DE SOCKETS
-   ============================ */
-
-
-
-/** \brief Recibir una respuesta del servidor a traves del socket.
- *
- * Intentar leer datos disponibles en el socket especificado.
- * Si se recibe una respuesta, asegura terminar el bufferRespuesta con caracter nulo para que sea una cadena valida.
- * No bloquea el socket.
- *
- * \param sock Socket del usuario desde el cual se recibe la respuesta.
- * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
- * \param tamMaxBufferRespuesta Tamanio maximo del buffer que recibe la respuesta.
- *
- * \return RECIBIO_RESPUESTA en caso de que haya recibido respuesta, NO_RECIBIO_RESPUESTA en caso contrario.
- *
- */
-bool recibirRespuesta (SOCKET sock, char *bufferRespuesta, int tamMaxBufferRespuesta);
-
-/** \brief Enviar una solicitud al servidor y esperar a recibir su respuesta.
- *
- * Envia una solicitud almacenada en el bufferSolicitud y recibe una respuesta que se almacenara en el bufferRespuesa. Todo el proceso se comunica mediante el socket especificado.
- * Asegura terminar el bufferRespuesta con caracter nulo para que sea una cadena valida.
- * Cambiar temporalmente el modo del socket a bloqueante para asegurar que el envio y la recepcion se completen antes de continuar. Una vez realizado el proceso, se desbloquea.
- *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
- * \param bufferSolicitud Buffer que contiene la solicitud a enviar.
- * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
- * \param tamMaxBufferRespuesta Tamanio maximo del buffer que recibe la respuesta.
- *
- */
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud, char *bufferRespuesta, int tamMaxBufferRespuesta);
-
-
-
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES LOGICAS DE GRAFICOS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -261,9 +211,9 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES DE ESCRITURA
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -299,9 +249,9 @@ int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer);
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
-   ============================ */
+   ============================================================================================================================================ */
 
 
 

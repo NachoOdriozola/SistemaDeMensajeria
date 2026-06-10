@@ -2,47 +2,9 @@
 
 
 
-/* ============================
-   FUNCIONES DE SOCKETS
-   ============================ */
-
-
-
-bool recibirRespuesta (SOCKET sock, char *bufferRespuesta, int tamMaxBufferRespuesta)
-{
-    int bytesRecibidos;
-
-    bytesRecibidos = recv (sock, bufferRespuesta, tamMaxBufferRespuesta, 0);
-    if (bytesRecibidos > 0)
-    {
-        bufferRespuesta += bytesRecibidos;
-        *bufferRespuesta = '\0';
-        return RECIBIO_RESPUESTA;
-    }
-
-    return NO_RECIBIO_RESPUESTA;
-}
-
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *bufferSolicitud, char *bufferRespuesta, int tamMaxBufferRespuesta)
-{
-    u_long modoSocket = 0; //Socket modo bloqueante
-    int bytesRecibidos;
-
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-    send (sock, bufferSolicitud, strlen (bufferSolicitud), 0);
-    bytesRecibidos = recv (sock, bufferRespuesta, tamMaxBufferRespuesta, 0);
-    bufferRespuesta += bytesRecibidos;
-    *bufferRespuesta = '\0';
-    modoSocket = 1;     // Socket modo no bloqueante
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-}
-
-
-
-
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES LOGICAS DE GRAFICOS
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -107,9 +69,9 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES DE ESCRITURA
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
@@ -174,9 +136,9 @@ int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer)
 
 
 
-/* ============================
+/* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
-   ============================ */
+   ============================================================================================================================================ */
 
 
 
