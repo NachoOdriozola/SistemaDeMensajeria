@@ -834,6 +834,10 @@ static int recursosComunesContactosSalas_inicializarListaMensajes (t_contextoMen
 
 static void recursosComunesContactosSalas_configurarTextos (t_recursosComunesContactosSalasTextos *textos, const t_recursosComunesContactosSalasFuentes *fuentes)
 {
+    // auxEscribirMensaje
+    sfText_setFont (textos->auxEscribirMensaje, fuentes->cuerpo);
+    sfText_setFillColor (textos->auxEscribirMensaje, sfColor_fromRGB (53, 53, 53));
+
     // proximaInterfaz
     sfText_setFont (textos->proximaInterfaz, fuentes->ui);
     sfText_setString (textos->proximaInterfaz, "SALAS");

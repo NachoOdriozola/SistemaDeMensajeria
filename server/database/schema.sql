@@ -12,7 +12,6 @@ id integer primary key autoincrement,
 idEmisor integer not null,
 idReceptor integer not null,
 texto varchar(750) not null,
-fecha integer not null,
 foreign key (idEmisor) references usuarios (id),
 foreign key (idReceptor) references usuarios (id),
 check (idEmisor <> idReceptor)

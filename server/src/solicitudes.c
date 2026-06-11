@@ -137,7 +137,7 @@ int manejarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo *
 {
     // --------------- DECLARACION DE VARIABLES UTILIZADAS ---------------
 
-    int idEmisor, idReceptor, fecha = 0;
+    int idEmisor, idReceptor;
     char texto [MAX_BUFFER_MENSAJE];
 
     t_cliente cliente;
@@ -159,7 +159,7 @@ int manejarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo *
         return ERROR_OPERACION;
     }
 
-    strcpy (consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto, fecha) VALUES (?, ?, ?, ?);");
+    strcpy (consultaSQLITE, "INSERT INTO mensajes (idEmisor, idReceptor, texto) VALUES (?, ?, ?);");
     if (sqlite3_prepare_v2 (contextoServidor->baseDeDatos, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
     {
         printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (contextoServidor->baseDeDatos));
@@ -170,7 +170,6 @@ int manejarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodo *
     sqlite3_bind_int (sentencia, 1, idEmisor);
     sqlite3_bind_int (sentencia, 2, idReceptor);
     sqlite3_bind_text (sentencia, 3, texto, -1, SQLITE_STATIC);
-    sqlite3_bind_int (sentencia, 4, fecha);
 
     sqlite3_step (sentencia);
     sqlite3_finalize (sentencia);
