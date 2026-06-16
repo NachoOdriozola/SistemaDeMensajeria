@@ -1,6 +1,6 @@
 /**
  * \file   constantes.h
- * \brief  Contiene valores constantes globales de codigos de retorno, tamanios de buffers y identificadores.
+ * \brief  Contiene valores constantes globales de codigos de retorno, tamanios de datos e identificadores.
  */
 
 
@@ -16,40 +16,30 @@
 
 
 /**
- * \def EXITO
- * \brief Codigo de retorno para indicar que la funcion se ejecuto correctamente.
+ * \struct t_codigoRetorno
+ * \brief  Codigos de retorno segun el resultado de la ejecucion de la funcion.
  */
-#define EXITO 0
+typedef  enum
+{
+   EXITO,
+   ERROR_INICIALIZACION,
+   ERROR_CONFIGURACION,
+   ERROR_SIN_MEMORIA,
+   ERROR_OPERACION
+} t_codigoRetorno;
 
-/**
- * \def ERROR_INICIALIZACION
- * \brief Codigo de retorno para fallos en la inicializacion.
- */
-#define ERROR_INICIALIZACION -100
-
-/**
- * \def ERROR_SIN_MEMORIA
- * \brief Codigo de retorno para fallos en la asignacion de memoria.
- */
-#define ERROR_SIN_MEMORIA -101
-
-/**
- * \def ERROR_OPERACION
- * \brief Codigo de retorno para fallos en la operacion logica de la funcion.
- */
-#define ERROR_OPERACION -102
 
 
 /* ============================================================================================================================================
-   TAMANIOS DE BUFFERS
+   TAMANIOS DE DATOS
    ============================================================================================================================================ */
 
 
 /**
- * \def MAX_BUFFER_MENSAJE
+ * \def MAX_MENSAJE
  * \brief Longitud maxima para el mensaje escrito por el usuario. Incluye el '0'.
  */
-#define MAX_BUFFER_MENSAJE 751
+#define MAX_MENSAJE 751
 
 /**
  * \def MAX_NOMBRE_USUARIO
@@ -58,16 +48,16 @@
 #define MAX_NOMBRE_USUARIO 26
 
 /**
- * \def MAX_CONTRASENIA_USUARIO
+ * \def MAX_CONTRASENIA
  * \brief Longitud maxima para la contrasenia del usuario. Incluye el '0'.
  */
-#define MAX_CONTRASENIA_USUARIO 65
+#define MAX_CONTRASENIA 65
 
 /**
- * \def MAX_CORREO_USUARIO
+ * \def MAX_CORREO_ELECTRONICO
  * \brief Longitud maxima para el correo electronico del usuario. Incluye el '0'.
  */
-#define MAX_CORREO_USUARIO 129
+#define MAX_CORREO_ELECTRONICO 129
 
 
 /* ============================================================================================================================================

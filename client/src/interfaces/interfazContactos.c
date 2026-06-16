@@ -306,7 +306,7 @@ static void interfazContactos_renderizarVistaUI (sfRenderWindow *renderizado, co
 static void manejarReciboMensaje (t_contextoMensajes *contextoMensajes, char *bufferRespuesta, int idContactoSeleccionado)
 {
     int idEmisor;
-    char texto [MAX_BUFFER_MENSAJE];
+    char texto [MAX_MENSAJE];
 
     sscanf (&(bufferRespuesta[2]), "%d|%[^\n]", &idEmisor, texto);
     if (idEmisor == idContactoSeleccionado)
@@ -340,7 +340,7 @@ static bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion,
         if ((largoMensaje - 1 >= 3) && (largoMensaje  -1 < MAX_NOMBRE_USUARIO))
         {
                 respuestaSeleccionContacto = enviarSolicitudSeleccionarContacto (contextoAplicacion->sock, contextoAplicacion->usuario.nombre, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
-                if (respuestaSeleccionContacto.estado == RESPUESTA_EXITO)
+                if (respuestaSeleccionContacto.estado == SOLICITUD_EXITO)
                 {
                     interfazContactos->idContactoSeleccionado = respuestaSeleccionContacto.idUsuario;
                     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
@@ -351,7 +351,7 @@ static bool manejarClickEnviarMensaje (t_contextoAplicacion *contextoAplicacion,
     }
     else // Es un mensaje
     {
-        if (enviarSolicitudMensaje (contextoAplicacion->sock, contextoAplicacion->usuario.id, interfazContactos->idContactoSeleccionado, recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == RESPUESTA_EXITO)
+        if (enviarSolicitudMensaje (contextoAplicacion->sock, contextoAplicacion->usuario.id, interfazContactos->idContactoSeleccionado, recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == SOLICITUD_EXITO)
             insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
     }
 
@@ -399,7 +399,7 @@ static bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion,
         if ((largoMensaje - 1 >= 3) && (largoMensaje  -1 < MAX_NOMBRE_USUARIO))
         {
                 respuestaSeleccionContacto = enviarSolicitudSeleccionarContacto (contextoAplicacion->sock, contextoAplicacion->usuario.nombre, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
-                if (respuestaSeleccionContacto.estado == RESPUESTA_EXITO)
+                if (respuestaSeleccionContacto.estado == SOLICITUD_EXITO)
                 {
                     interfazContactos->idContactoSeleccionado = respuestaSeleccionContacto.idUsuario;
                     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, &(recursosComunesContactosSalas->contextoMensajes.bufferMensaje[1]));
@@ -410,7 +410,7 @@ static bool manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion,
     }
     else // Es un mensaje
     {
-        if (enviarSolicitudMensaje (contextoAplicacion->sock, contextoAplicacion->usuario.id, interfazContactos->idContactoSeleccionado, recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == RESPUESTA_EXITO)
+        if (enviarSolicitudMensaje (contextoAplicacion->sock, contextoAplicacion->usuario.id, interfazContactos->idContactoSeleccionado, recursosComunesContactosSalas->contextoMensajes.bufferMensaje) == SOLICITUD_EXITO)
             insertarMensaje (&(recursosComunesContactosSalas->contextoMensajes), recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MENSAJE_PROPIO);
     }
 

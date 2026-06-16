@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "../../listaSimple/include/listaSimple.h"
+#include "../../listaDoble/include/listaDoble.h"
 
 
 /* ============================================================================================================================================
@@ -31,7 +31,7 @@
  */
 typedef struct
 {
-    t_listaSimple *buckets;
+    t_listaDoble *buckets;
     unsigned short int cantBuckets;
 } t_tablaHash;
 
@@ -77,7 +77,7 @@ int insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionH
  * \param nodoAVincular Puntero al nodo a vincular.
  *
  */
-void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodo *nodoAVincular);
+void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodoListaDoble *nodoAVincular);
 
 /** \brief Busca una clave unica en la lista simple que pertenece al bucket de la clave.
  *
@@ -115,7 +115,6 @@ void eliminarTablaHashConAccion (t_tablaHash *tablaHash, void accion (void*));
 
 
 #endif // TABLAHASH_H_INCLUDED
-
 
 
 

@@ -129,9 +129,9 @@ typedef struct
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
     t_recursosComunesAutenticacionRegistroFoco estadoFoco;
-    t_habilitacion ingreso;                                                                         /**< Habilitar/deshabilitar la posibilidad de ingreso de usuario. */
+    t_habilitacion ingreso;                                                                          /**< Habilitar/deshabilitar la posibilidad de ingreso de usuario. */
     char bufferNombre [MAX_NOMBRE_USUARIO];                                 /**< Buffer donde se guarda el nombre que escribe el usuario. */
-    char bufferContrasenia [MAX_CONTRASENIA_USUARIO];                  /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
+    char bufferContrasenia [MAX_CONTRASENIA];                                   /**< Buffer donde se guarda la contrasenia que escribe el usuario. */
     t_puntoInsercion puntoInsercion;
 } t_recursosComunesAutenticacionRegistro;
 

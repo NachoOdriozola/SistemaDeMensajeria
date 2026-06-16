@@ -151,10 +151,10 @@ typedef enum
  */
 typedef struct
 {
-    t_listaCircular listaMensajes;               /**< Lista circular de mensajes. */
-    t_nodo *primerMensaje;                       /**< Puntero al primer mensaje de la lista circular de mensajes. */
-    t_nodo *ultimoMensaje;                       /**< Puntero al ultimo mensaje de la lista circular de mensajes. */
-    char bufferMensaje [MAX_BUFFER_MENSAJE];     /**< Buffer donde se guarda el mensaje escrito por el usuario. */
+    t_listaCircular listaMensajes;                          /**< Lista circular de mensajes. */
+    t_nodo *primerMensaje;                                /**< Puntero al primer mensaje de la lista circular de mensajes. */
+    t_nodo *ultimoMensaje;                                /**< Puntero al ultimo mensaje de la lista circular de mensajes. */
+    char bufferMensaje [MAX_MENSAJE];          /**< Buffer donde se guarda el mensaje escrito por el usuario. */
 } t_contextoMensajes;
 
 /**

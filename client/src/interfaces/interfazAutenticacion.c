@@ -321,19 +321,19 @@ static bool manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoApl
     respuestaAutenticacion = enviarSolicitudAutenticar (contextoAplicacion->sock, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia);
     switch (respuestaAutenticacion.estado)
     {
-        case RESPUESTA_EXITO:
+        case SOLICITUD_EXITO:
             contextoAplicacion->usuario.id = respuestaAutenticacion.idUsuario;
             strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
             contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
             break;
 
-        case RESPUESTA_ERROR_CREDENCIALES_INVALIDAS:
+        case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
             sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
             sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
             centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
             break;
 
-        case RESPUESTA_ERROR_OPERACION_INVALIDA:
+        case SOLICITUD_ERROR_OPERACION_INVALIDA:
 
             sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
             centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
@@ -385,7 +385,7 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar) == CARACTER_INVALIDO)
+    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA, eventoChar) == CARACTER_INVALIDO)
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro);
@@ -411,19 +411,19 @@ static bool manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoApl
     respuestaAutenticacion = enviarSolicitudAutenticar (contextoAplicacion->sock, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia);
     switch (respuestaAutenticacion.estado)
     {
-        case RESPUESTA_EXITO:
+        case SOLICITUD_EXITO:
             contextoAplicacion->usuario.id = respuestaAutenticacion.idUsuario;
             strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
             contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
             break;
 
-        case RESPUESTA_ERROR_CREDENCIALES_INVALIDAS:
+        case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
             sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
             sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
             centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
             break;
 
-        case RESPUESTA_ERROR_OPERACION_INVALIDA:
+        case SOLICITUD_ERROR_OPERACION_INVALIDA:
 
             sfText_setString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
             centrarTextoEnArea (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
@@ -459,7 +459,7 @@ static bool manejarPegarPortapapelesEscribirContrasenia (t_recursosComunesAutent
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO))
+    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro);
         limitarVisualizarTextoSobreBarra (recursosComunesAutenticacionRegistro->textos.inputContrasenia.auxEscribirContrasenia, recursosComunesAutenticacionRegistro->bufferContrasenia, 415);

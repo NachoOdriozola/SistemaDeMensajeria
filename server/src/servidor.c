@@ -2,92 +2,106 @@
 
 
 
-int inicializarBaseDatos(sqlite3 **bd)
+/** \brief Inicializar la base de datos.
+ *
+ * Intentar abrir la base de datos "database.db".
+ * Verificar si existen las tablas del disenio.
+ * En caso de que existan, la base de datos existe y conserva sus datos.
+ * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
+ * No cierra la base de datos en caso de fallas.
+ *
+ * \param db Doble puntero a la base de datos SQLite.
+ *
+ * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al preparar consultas, abrir archivos y asignar memoria.
+ *
+ */
+static t_codigoRetorno inicializarBaseDatos(sqlite3 **db)
 {
-    int resultado;
-    char *error = NULL;
-    char *consultaSQLITE, *pTemp;
-    long tamConsulta;
-    sqlite3_stmt *sentencia;
-    FILE *arch;
-
-
-    resultado = sqlite3_open ("../../../server/database/database.db", bd);
-    if (resultado != SQLITE_OK)
+    if (sqlite3_open ("../../../server/database/database.db", db) != SQLITE_OK)
     {
-        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*bd));
+        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
+        return ERROR_INICIALIZACION;
+    }
+    
+    switch (existeTablaUsuarios (*db))
+    {
+        case TABLA_EXISTE:
+            return EXITO;
+
+        case TABLA_NO_EXISTE:
+            if (crearEsquema(*db) != EXITO)
+                return ERROR_INICIALIZACION;
+            return EXITO;
+
+        default:
+            return ERROR_INICIALIZACION;
+    }
+}
+
+static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db)
+{
+    sqlite3_stmt *sentencia;
+    int resultado;
+
+    if (sqlite3_prepare_v2 (db, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';", -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return ERROR_PREPARACION_CONSULTA;
+    }
+
+    resultado = sqlite3_step (sentencia);
+    sqlite3_finalize(sentencia);
+
+    if (resultado == SQLITE_ROW)
+        return TABLA_EXISTE;
+    return TABLA_NO_EXISTE;
+}
+
+static t_codigoRetorno crearEsquema (sqlite3 *db)
+{
+    FILE *archEsquema;
+    long tamArchEsquema;
+    char *consulta;
+
+    archEsquema = fopen("../../../server/database/schema.sql", "rb");
+    if (!archEsquema)
+    {
+        perror ("\nERROR - Abrir archivo schema.sql.\n");
         return ERROR_INICIALIZACION;
     }
 
-    consultaSQLITE = malloc (MAX_BUFFER_CONSULTA_SQLITE);
-    if (!consultaSQLITE)
+    fseek (archEsquema, 0, SEEK_END);
+    tamArchEsquema = ftell (archEsquema);
+    rewind (archEsquema);
+
+    consulta = malloc (tamArchEsquema + 1); // +1 para el '\0'.
+    if (!consulta)
     {
         perror ("\nERROR - Sin memoria.\n");
+        fclose(archEsquema);
         return ERROR_SIN_MEMORIA;
     }
 
-    // Verificar si existe la tabla usuarios
-    strcpy (consultaSQLITE, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';");
-    if (sqlite3_prepare_v2(*bd, consultaSQLITE, -1, &sentencia, NULL) != SQLITE_OK)
+    fread (consulta, 1, tamArchEsquema, archEsquema);
+    consulta[tamArchEsquema] = '\0';
+
+    if (sqlite3_exec (db, consulta, 0, 0, NULL) != SQLITE_OK)
     {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (*bd));
-        free(consultaSQLITE);
-        return ERROR_INICIALIZACION;
+        perror ("\nERROR - Ejecutar schema.sql.\n");
+        fclose(archEsquema);
+        free (consulta);
+        return ERROR_OPERACION;
     }
 
-    resultado = (sqlite3_step (sentencia) == SQLITE_ROW);
-    sqlite3_finalize(sentencia);
-
-    // Si no existe, ejecutar schema.sql
-    if (!resultado)
-    {
-        arch = fopen("../../../server/database/schema.sql", "rb");
-        if (!arch)
-        {
-            perror ("\nERROR - Abrir archivo schema.sql.\n");
-            free(consultaSQLITE);
-            return ERROR_INICIALIZACION;
-        }
-
-        fseek (arch, 0, SEEK_END);
-        tamConsulta = ftell (arch);
-        rewind (arch);
-
-        if (tamConsulta >= MAX_BUFFER_CONSULTA_SQLITE)
-        {
-            pTemp = realloc (consultaSQLITE, tamConsulta + 1);
-            if (!pTemp)
-            {
-                perror ("\nERROR - Sin memoria.\n");
-                free(consultaSQLITE);
-                fclose(arch);
-                return ERROR_SIN_MEMORIA;
-            }
-            consultaSQLITE = pTemp;
-        }
-
-        fread (consultaSQLITE, 1, tamConsulta, arch);
-        consultaSQLITE[tamConsulta] = '\0';
-
-        resultado = sqlite3_exec (*bd, consultaSQLITE, 0, 0, &error);
-        if (resultado != SQLITE_OK)
-        {
-            printf ("\nERROR - Ejecutar schema.sql: %s\n", error);
-            sqlite3_free (error);
-            free(consultaSQLITE);
-            fclose(arch);
-            return ERROR_OPERACION;
-        }
-
-        fclose(arch);
-    }
-
-    free(consultaSQLITE);
+    fclose(archEsquema);
+    free (consulta);
 
     return EXITO;
 }
 
-int inicializarServidor (t_contextoServidor *contextoServidor)
+
+
+t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
 {
     printf ("-INICIALIZANDO LOS RECURSOS DEL SERVIDOR-\t");
 
@@ -103,12 +117,12 @@ int inicializarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- CREAR TABLA HASH DE CLIENTES ---------------
 
-    crearTablaHash (&(contextoServidor->tablaHashClientes), CANT_BUCKETS_TABLA_HASH);
+    crearTablaHash (&(contextoServidor->clientes), CANT_BUCKETS_TABLA_HASH);
 
 
-    // --------------- CREAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
+    // --------------- CREAR LISTA DOBLE DE CLIENTES NO AUTENTICADOS ---------------
 
-    crearListaSimple (&(contextoServidor->listaSimpleClientesNoAutenticados));
+    crearListaDoble (&(contextoServidor->clientesNoAutenticados));
 
 
     // --------------- INICIALIZAR WINSOCK API ---------------
@@ -136,7 +150,7 @@ int inicializarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- INICIALIZAR BASE DE DATOS ---------------
 
-    if (inicializarBaseDatos (&(contextoServidor->baseDeDatos)) != EXITO)
+    if (inicializarBaseDatos (&(contextoServidor->baseDeDatos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
 
@@ -144,10 +158,16 @@ int inicializarServidor (t_contextoServidor *contextoServidor)
     return EXITO;
 }
 
-int configurarServidor (t_contextoServidor *contextoServidor)
+t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DEL SERVIDOR-\t");
 
+
+    if (!SetConsoleCtrlHandler (manejadorConsola, TRUE))
+    {
+        printf ("\nERROR - Configurar el manejador de cierre de la consola.\n");
+        return ERROR_CONFIGURACION;
+    }
 
     // --------------- CONFIGURAR SOCKET DEL SERVIDOR ---------------
 
@@ -171,6 +191,9 @@ int configurarServidor (t_contextoServidor *contextoServidor)
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
+    printf ("Ctrl+C -> Apagar servidor\n");
+
+
     return EXITO;
 }
 
@@ -179,14 +202,14 @@ void liberarServidor (t_contextoServidor *contextoServidor)
     printf ("-LIBERANDO LOS RECURSOS DEL SERVIDOR-\t");
 
 
-    // --------------- LIBERAR LISTA SIMPLE DE CLIENTES NO AUTENTICADOS ---------------
+    // --------------- LIBERAR LISTA DOBLE DE CLIENTES NO AUTENTICADOS ---------------
 
-    vaciarListaSimpleConAccion (&(contextoServidor->listaSimpleClientesNoAutenticados), liberarCliente);
+    vaciarListaDobleConAccion (&(contextoServidor->clientesNoAutenticados), liberarCliente);
 
 
     // --------------- LIBERAR TABLA HASH ---------------
 
-    eliminarTablaHashConAccion (&(contextoServidor->tablaHashClientes), liberarCliente);
+    eliminarTablaHashConAccion (&(contextoServidor->clientes), liberarCliente);
 
 
     // --------------- CERRAR BASE DE DATOS ---------------
@@ -208,5 +231,26 @@ void liberarServidor (t_contextoServidor *contextoServidor)
 
 
     printf ("-LIBERACION EXITOSA-\n");
+
+    system ("pause");
 }
 
+
+BOOL servidorActivo = TRUE;
+
+BOOL WINAPI manejadorConsola(DWORD tipoEvento)
+{
+    switch (tipoEvento)
+    {
+        case CTRL_CLOSE_EVENT:
+        case CTRL_C_EVENT:
+        case CTRL_BREAK_EVENT:
+        case CTRL_SHUTDOWN_EVENT:
+            servidorActivo = FALSE;
+            return TRUE;
+
+        default:
+            break;
+    }
+    return FALSE;
+}

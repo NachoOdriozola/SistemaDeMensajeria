@@ -367,7 +367,7 @@ void establecerSaltoDeLineaMensaje(sfText *texto, const char *bufferMensaje, flo
     int largoPalabra, i;
     int largoActual;
     sfVector2f posUltimoCaracter;
-    char bufferTexto[MAX_BUFFER_MENSAJE + 100] = "";
+    char bufferTexto[MAX_MENSAJE + 100] = "";
 
     while (*bufferMensaje)
     {
@@ -486,7 +486,7 @@ bool manejarEscribirMensaje (t_recursosComunesContactosSalas *recursosComunesCon
     if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
-    if (ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE, eventoChar) != CARACTER_INVALIDO)
+    if (ingresarCaracterABuffer (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_MENSAJE, eventoChar) != CARACTER_INVALIDO)
     {
         limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);
@@ -504,7 +504,7 @@ bool manejarPegarPortapapelesEscribirMensaje (t_recursosComunesContactosSalas *r
     if (recursosComunesContactosSalas->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
-    if (!pegarDesdePortapapeles (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_BUFFER_MENSAJE))
+    if (!pegarDesdePortapapeles (recursosComunesContactosSalas->contextoMensajes.bufferMensaje, MAX_MENSAJE))
     {
         limitarVisualizarTextoSobreBarra (recursosComunesContactosSalas->textos.auxEscribirMensaje, recursosComunesContactosSalas->contextoMensajes.bufferMensaje, 1250);
         limiteTextoAux = sfText_getGlobalBounds (recursosComunesContactosSalas->textos.auxEscribirMensaje);

@@ -1,6 +1,6 @@
 /**
  * \file   protocolos.h
- * \brief  C
+ * \brief  Contiene el puerto de conexion, tamanios de buffers de comunicacion y codigos de comunicacion.
  */
 
 
@@ -45,20 +45,10 @@
    ============================================================================================================================================ */
 
 
-   
-/**
- * \union t_buffersComunicacion
- * \brief  Contiene los buffers necesarios para establecer la comunicacion entre el cliente y el servidor.
- */
-typedef union
-{
-    char solicitud [MAX_BUFFER_SOLICITUD];              /**< Buffer que almacena una solicitud un clientes. */
-    char respuesta [MAX_BUFFER_RESPUESTA];              /**< Buffer que almacena una respuestas del servidor para enviar al cliente. */
-} t_buffersComunicacion;
 
 /**
  * \enum t_tipoSolicitud
- * \brief Indice del tipo de solicitud enviado por el usuario hacia el servidor.
+ * \brief Indice del tipo de solicitud, enviado por el cliente hacia el servidor.
  */
 typedef enum
 {
@@ -69,27 +59,25 @@ typedef enum
 } t_tipoSolicitud;
 
 /**
+ * \enum t_estadoSolicitud
+ * \brief Indice sobre el estado de la solicitud, enviado por el servidor hacia el cliente.
+ */
+typedef enum
+{
+    SOLICITUD_EXITO = 'a',
+    SOLICITUD_ERROR_SERVIDOR = 'b',
+    SOLICITUD_ERROR_CREDENCIALES_INVALIDAS = 'c',
+    SOLICITUD_ERROR_OPERACION_INVALIDA = 'd'
+} t_estadoSolicitud;
+
+/**
  * \enum t_tipoRespuesta
- * \brief Indice del tipo de respuesta enviado por el servidor hacia el usuario.
+ * \brief Indice del tipo de respuesta, enviado por el servidor hacia el cliente.
  */
 typedef enum
 {
     RESPUESTA_MENSAJE = 'A',
 } t_tipoRespuesta;
-
-/**
- * \enum t_estadoRespuesta
- * \brief Indice de respuesta enviado por el servidor hacia el usuario sobre estado de la solicitud.
- */
-typedef enum
-{
-    RESPUESTA_EXITO = 'a',
-
-    RESPUESTA_ERROR_SERVIDOR = 'b',
-    RESPUESTA_ERROR_CREDENCIALES_INVALIDAS = 'c',
-    RESPUESTA_ERROR_USUARIO_NO_ENCONTRADO = 'd',
-    RESPUESTA_ERROR_OPERACION_INVALIDA = 'e'
-} t_estadoRespuesta;
 
 
 

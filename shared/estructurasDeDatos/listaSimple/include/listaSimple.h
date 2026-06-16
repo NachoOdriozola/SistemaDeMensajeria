@@ -1,6 +1,6 @@
 /**
  * \file   listaSimple.h
- * \brief  Contiene las funciones primitivas de lista simple.
+ * \brief  Contiene las funciones primitivas de lista simplemente enlazada.
  */
 
 
@@ -24,12 +24,7 @@
    DEFINES
    ============================================================================================================================================ */
 
-
-/** \def MINIMO
- * \brief Calcula el minimo entre dos valores. Util para verificaciones.
- */
-#define MINIMO(X, Y)    ((X > Y) ? (X) : (Y))
-
+   
 typedef t_nodo *t_listaSimple;
 
 
@@ -59,14 +54,6 @@ void crearListaSimple (t_listaSimple *pl);
  */
 int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned tamDato);
 
-/** \brief Vincula un nodo ya creado al inicio de la lista simple.
- *
- * \param pl Direccion de la lista simple.
- * \param nodoAVincular Puntero al nodo a vincular.
- *
- */
-void vincularNodoAlInicioListaSimple (t_listaSimple *pl, t_nodo *nodoAVincular);
-
 /** \brief Funcion map sobre la lista simple.
  *
  * \param pl Direccion de la lista simple.
@@ -86,7 +73,8 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
 
 /** \brief Buscar una clave unica en la lista simple.
  *
- * Verifica devolver en returnDato el tamanio minimo entre el parametro enviado y el tamanio almacenado en el nodo.
+ * Devolver en returnDato el dato si es encontrado por su clave en la lista simple.
+ * Verifica devolver en returnDato el tamanio minimo entre el argumento enviado y el tamanio almacenado en el nodo.
  * returnDato puede ser NULL si no se necesita almacenar el dato buscado.
  *
  * \param pl Direccion de la lista simple.
@@ -99,18 +87,6 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
  *
  */
 int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
-
-/** \brief Desvincular un nodo de la lista simple.
- *
- * No borra su dato ni el nodo, solo lo desliga de la lista simple.
- * Asegura mantener el orden de la lista simple.
- *
- * \param nodoADesvincular Doble puntero al nodo a desvincular.
- *
- * \return Puntero al nodo desvinculado.
- *
- */
-t_nodo* desvincularNodoDeListaSimple (t_nodo **nodoADesvincular);
 
 /** \brief Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista simple.
  *

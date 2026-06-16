@@ -1,8 +1,7 @@
 /**
  * \file   main.h
- * \brief  g
+ * \brief  Incluye las dependencias de la ejecucion principal del servidor.
  */
-
 
 
 #ifndef MAIN_H_INCLUDED
@@ -18,7 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <stdbool.h>
 #include <winsock2.h>
 #include <windows.h>
@@ -30,18 +28,6 @@
 #include "servidor.h"
 #include "clientes.h"
 #include "solicitudes.h"
-
-
-/* ============================================================================================================================================
-   DEFINES
-   ============================================================================================================================================ */
-
-
-/**
- * \def CARACTER_APAGAR_SERVIDOR
- * \brief Caracter que el usuario debe escribir en consola para apagar el servidor.
- */
-#define CARACTER_APAGAR_SERVIDOR 'S'
 
 
 

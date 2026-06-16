@@ -93,7 +93,7 @@ typedef struct
     t_interfazRegistroTextos textos;
     t_interfazRegistroElementos elementos;
     t_interfazRegistroFoco estadoFoco;
-    char bufferCorreo [MAX_CORREO_USUARIO];
+    char bufferCorreo [MAX_CORREO_ELECTRONICO];
 } t_interfazRegistro;
 
 

@@ -1,6 +1,6 @@
 /**
  * \file   servidor.h
- * \brief  g
+ * \brief  Contiene las funciones estructurales del servidor.
  */
 
 
@@ -15,7 +15,6 @@
    ============================================================================================================================================ */
 
 
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,11 +26,10 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
-#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
+#include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
-
 
 
 /* ============================================================================================================================================
@@ -39,68 +37,80 @@
    ============================================================================================================================================ */
 
 
-
-/**
- * \def ERROR_CONFIGURACION
- * \brief Codigo de retorno para fallos en la configuracion.
- */
-#define ERROR_CONFIGURACION -200
-
+/*
+* Variable para mantener activo o apagar el servidor. Es modificada en el manejador de la consola.
+*/
+extern BOOL servidorActivo;
 
 
 /* ============================================================================================================================================
-   FUNCIONES
+   ESTRUCTURAS
    ============================================================================================================================================ */
 
 
-
-/** \brief Inicializar la base de datos.
- *
- * Intentar abrir la base de datos "database.db".
- * Verificar si existen las tablas del disenio.
- * En caso de que existan, la base de datos existe y conserva sus datos.
- * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
- *
- * \param bd Doble puntero a la base de datos SQLite.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos, ERROR_SIN_MEMORIA en caso de no poder asignar memoria dinamica, y ERROR_OPERACION si el archivo "schema.sql" es invalido.
- *
+/**
+ * \struct t_respuestaInicializacionDB
+ * \brief  Codigos de retorno de la inicializacion de la base de datos.
  */
-int inicializarBaseDatos(sqlite3 **bd);
+typedef enum
+{
+   TABLA_EXISTE,
+   TABLA_NO_EXISTE,
+   ERROR_PREPARACION_CONSULTA
+} t_respuestaInicializacionDB;
+
+
+/* ============================================================================================================================================
+   FUNCIONES ESTRUCTURALES
+   ============================================================================================================================================ */
+
 
 /** \brief Inicializar los recursos del servidor.
  *
- * Iniciar la API de Winsock, inicializar la base de datos y crear el socket del servidor, la tabla hash de clientes y la lista simple de clientes
- * conectados pero no autenticados.
+ * Iniciar la API de Winsock, inicializar la base de datos, y crear el socket del servidor, la tabla hash de clientes y la lista doble de clientes no autenticados.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos.
  *
  */
-int inicializarServidor (t_contextoServidor *contextoServidor);
+t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Configurar los recursos del servidor.
  *
- * Configurar el socket del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado. Ademas, establecerlo como modo no bloqueante.
+ * Configurar el manejador de cierre de la consola.
+ * Configurar el socket del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado. 
+ * Lo establece como modo no bloqueante.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  * \return EXITO si se configuro correctamente, ERROR_CONFIGURACION en caso de error.
  *
  */
-int configurarServidor (t_contextoServidor *contextoServidor);
+t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Liberar los recursos del servidor.
  *
- * Vaciar la lista simple de clientes conectados pero no autenticados, vaciar y eliminar la tabla hash de clientes y cerrar el socket del servidor,
- * la base de datos y la API de Winsock.
+ * Vaciar la lista doble de clientes no autenticados, vaciar y eliminar la tabla hash de clientes y cerrar el socket del servidor, la base de datos y la API de Winsock.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
  */
 void liberarServidor (t_contextoServidor *contextoServidor);
 
+/** \brief Manejar eventos de cierre de la consola.
+ *
+ * Al recibir un evento de cierre de consola o interrupcion, modifica el valor de la variable global servidorActivo a FALSE para
+ * finalizar la ejecucion del servidor.
+ * No libera recursos directamente.
+ * Esta funcion es registrada en al configuracion del servidor y es invocada automaticamente por el sistema operativo.
+ *
+ * \param tipoEvento Tipo de evento de control recibido por la consola.
+ * 
+ * \return TRUE si el evento fue manejado, FALSE en caso contrario.
+ *
+ */
+BOOL WINAPI manejadorConsola(DWORD tipoEvento);
 
 
 #endif // SERVIDOR_H_INCLUDED

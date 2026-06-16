@@ -1,6 +1,6 @@
 /**
  * \file   clientes.h
- * \brief  g
+ * \brief  Contiene funciones de gestion de clientes.
  */
 
 
@@ -26,7 +26,7 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
-#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
+#include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
@@ -40,16 +40,16 @@
 
 
 /**
- * \def RECIBIO_SOLICITUD
+ * \def RECIBI_SOLICITUD
  * \brief Codigo de retorno que indica que se recibio una solicitud de un cliente.
  */
-#define RECIBIO_SOLICITUD 1
+#define RECIBI_SOLICITUD 1
 
 /**
- * \def NO_RECIBIO_SOLICITUD
- * \brief Codigo de retorno que indica que no se recibio ninguna solicitud.
+ * \def NO_RECIBI_SOLICITUD
+ * \brief Codigo de retorno que indica que no se recibio ninguna solicitud de un cliente.
  */
-#define NO_RECIBIO_SOLICITUD 0
+#define NO_RECIBI_SOLICITUD 0
 
 
 
@@ -59,47 +59,31 @@
 
 
 
-/** \brief Procesar a un nuevo cliente conectado e insertarlo en la lista simple de clientes conectados pero no autenticados.
+/** \brief Aceptar nuevas conexiones de clientes.
  *
- * Establecer el socket del cliente como no bloqueante, asignarle una ID invalida e insertarlo en la lista simple de clientes conectados pero no autenticados.
+ * Si hay una nueva conexion de un cliente, le establece el socket como no bloqueante, le asigna una ID invalida y lo inserta en la lista doble de clientes no autenticados.
  *
- * \param nuevoCliente Puntero al nuevo cliente conectado.
- * \param listaSimpleClientesNoAutenticados Puntero a la lista simple de clientes no autenticados.
- *
- */
-void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaSimple *listaSimpleClientesNoAutenticados);
-
-/** \brief Detectar si se recibio una solicitud de algun cliente en una lista simple.
- *
- * Recorrer la lista simple y preguntar a cada cliente si envio una solicitud.
- * Si un cliente envio una solicitud, se guarda su posicion y retorna.
- * Si un cliente perdio la conexion, lo desconectara automaticamente.
- *
- * \param listaSimple Puntero a la lista simple.
- * \param nodoDelCliente Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud.
- * \param bufferSolicitud Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.
- *
- * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
+ * \param sock Socket del servidor.
+ * \param clientesNoAutenticados Lista doble que contiene a los clientes conectados pero no autenticados.
  *
  */
-bool recibirSolicitudEnListaSimple (t_listaSimple *listaSimple, t_nodo ***nodoDelCliente, char *bufferSolicitud);
+void aceptarNuevosClientes (SOCKET sock, t_listaDoble *clientesNoAutenticados);
 
-/** \brief Detectar si se recibio una solicitud de algun cliente en una tabla hash.
+/** \brief Detectar si un cliente, autenticado o no, envio una solicitud.
  *
- * Recorrer todas las listas simples de cada bucket y preguntar a cada cliente si envio una solicitud.
- * Si un cliente envio una solicitud, se guarda su posicion y retorna.
- * Si un cliente perdio la conexi�n, lo desconectara automaticamente.
+ * Si un cliente de la lista doble de clientes conectados no autenticados o de la tabla hash de clientes autenticados envio una solicitud, se
+ * almacena y retorna la direccion del nodo del cliente y su solicitud para luego ser procesada.
+ * Si un cliente cerro o perdio la conexion, lo desconectara automaticamente.
  *
- * \param tablaHash Puntero a la tabla hash.
- * \param nodoDelCliente Direccion del doble puntero donde se guardara el nodo del cliente que envio la solicitud.
- * \param bufferSolicitud Buffer donde se almacenara la cadena de la solicitud enviada por el cliente.
+ * \param clientes Tabla hash que contiene a los clientes conectados y autenticados.
+ * \param clientesNoAutenticados Lista doble que contiene a los clientes conectados pero no autenticados.
+ * \param clienteAProcesar Puntero donde se retornara la direccion del nodo del cliente que envio la solicitud y se debe procesar.
+ * \param solicitud Puntero a donde se retornara la solicitud enviada por el cliente.
  *
- * \return RECIBIO_SOLICITUD si se recibio una solicitud, NO_RECIBIO_SOLICITUD en caso contrario.
- *
+ * \return RECIBI_SOLICITUD si se recibio una solicitud, NO_RECIBI SOLICITUD en caso contrario.
+ * 
  */
-bool recibirSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodo ***nodoDelCliente, char *bufferSolicitud);
-
-
+bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble**clienteAProcesar, char *solicitud);
 
 
 #endif // CLIENTES_H_INCLUDED

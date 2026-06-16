@@ -107,7 +107,7 @@ bool recibirRespuesta (SOCKET sock, char *bufferRespuesta, unsigned int tamMaxBu
  * \param tamMaxBufferRespuesta Tamanio maximo del buffer que recibe la respuesta.
  *
  */
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffersComunicacion);
+void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *solicitud, char *respuesta);
 
 /** \brief Intentar solicitud para autenticar el usuario.
  *

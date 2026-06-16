@@ -422,13 +422,13 @@ static bool manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicaci
         return EVENTO_MANEJADO;
 
     respuestaRegistro = enviarSolicitudRegistrar (contextoAplicacion->sock, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia, interfazRegistro->bufferCorreo);
-    if (respuestaRegistro.estado == RESPUESTA_EXITO)
+    if (respuestaRegistro.estado == SOLICITUD_EXITO)
     {
         contextoAplicacion->usuario.id = respuestaRegistro.idUsuario;
         strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
         contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
     }
-    else if (respuestaRegistro.estado == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    else if (respuestaRegistro.estado == SOLICITUD_ERROR_CREDENCIALES_INVALIDAS)
     {
         sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00F3, 'n', 'i', 'c', 'o', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
         sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
@@ -485,7 +485,7 @@ static bool manejarEscribirContrasenia (t_recursosComunesAutenticacionRegistro *
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO, eventoChar) == CARACTER_INVALIDO)
+    if (ingresarCaracterABuffer (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA, eventoChar) == CARACTER_INVALIDO)
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
@@ -508,7 +508,7 @@ static bool manejarEscribirCorreo (t_recursosComunesAutenticacionRegistro *recur
     if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO, eventoChar) == CARACTER_INVALIDO)
+    if (ingresarCaracterABuffer (interfazRegistro->bufferCorreo, MAX_CORREO_ELECTRONICO, eventoChar) == CARACTER_INVALIDO)
         return EVENTO_NO_MANEJADO;
 
     estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
@@ -541,13 +541,13 @@ static bool manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicaci
         return EVENTO_MANEJADO;
 
     respuestaRegistro = enviarSolicitudRegistrar (contextoAplicacion->sock, recursosComunesAutenticacionRegistro->bufferNombre, recursosComunesAutenticacionRegistro->bufferContrasenia, interfazRegistro->bufferCorreo);
-    if (respuestaRegistro.estado == RESPUESTA_EXITO)
+    if (respuestaRegistro.estado == SOLICITUD_EXITO)
     {
         contextoAplicacion->usuario.id = respuestaRegistro.idUsuario;
         strcpy (contextoAplicacion->usuario.nombre, recursosComunesAutenticacionRegistro->bufferNombre);
         contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
     }
-    else if (respuestaRegistro.estado == RESPUESTA_ERROR_CREDENCIALES_INVALIDAS)
+    else if (respuestaRegistro.estado == SOLICITUD_ERROR_CREDENCIALES_INVALIDAS)
     {
         sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00F3, 'n', 'i', 'c', 'o', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
         sfText_setUnicodeString (recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
@@ -588,7 +588,7 @@ static bool manejarPegarPortapapelesEscribirContrasenia (t_recursosComunesAutent
     if (recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA_USUARIO))
+    if (!pegarDesdePortapapeles (recursosComunesAutenticacionRegistro->bufferContrasenia, MAX_CONTRASENIA))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
         if (recursosComunesAutenticacionRegistro->textos.inputContrasenia.validez == INPUT_INVALIDO)
@@ -611,7 +611,7 @@ static bool manejarPegarPortapapelesEscribirCorreo (t_recursosComunesAutenticaci
     if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
-    if (!pegarDesdePortapapeles (interfazRegistro->bufferCorreo, MAX_CORREO_USUARIO))
+    if (!pegarDesdePortapapeles (interfazRegistro->bufferCorreo, MAX_CORREO_ELECTRONICO))
     {
         estadoHabilitarIngreso (recursosComunesAutenticacionRegistro, interfazRegistro);
         if (interfazRegistro->textos.inputCorreo.validez == INPUT_INVALIDO)

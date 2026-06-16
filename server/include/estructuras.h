@@ -4,7 +4,6 @@
  */
 
 
-
 #ifndef ESTRUCTURAS_H_INCLUDED
 #define ESTRUCTURAS_H_INCLUDED
 
@@ -20,7 +19,7 @@
 #include <ws2tcpip.h>
 #include <sqlite3.h>
 
-#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
+#include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 
 
@@ -51,8 +50,8 @@
  */
 typedef struct
 {
-    SOCKET sock; /**< Socket del cliente. */
-    int id;      /**< Identificador correspondiente del usuario. */
+    SOCKET sock;    /**< Socket del cliente. */
+    int id;                /**< Identificador correspondiente del usuario. */
 } t_cliente;
 
 /**
@@ -61,11 +60,11 @@ typedef struct
  */
 typedef struct
 {
-    bool estadoWinsock;                              /**< Estado de Winsock API */
-    SOCKET sock;                                     /**< Socket del servidor. */
-    sqlite3 *baseDeDatos;                            /**< Puntero a la base de datos. */
-    t_listaSimple listaSimpleClientesNoAutenticados; /**< Lista simple de clientes conectados pero no autenticados. */
-    t_tablaHash tablaHashClientes;                   /**< Tabla hash de clientes conectados y autenticados. */
+    bool estadoWinsock;                                /**< Estado de Winsock API */
+    SOCKET sock;                                           /**< Socket del servidor. */
+    sqlite3 *baseDeDatos;                              /**< Puntero a la base de datos. */
+    t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
+    t_tablaHash clientes;                                /**< Tabla hash que contiene a los clientes conectados y autenticados. */
 } t_contextoServidor;
 
 

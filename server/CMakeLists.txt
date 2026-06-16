@@ -8,4 +8,4 @@ add_executable(${PROJECT_NAME} ${SERVIDOR_SRC})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC nodo listaSimple tablaHash constantes protocolos ws2_32 sqlite3)
+target_link_libraries(${PROJECT_NAME} PUBLIC listaDoble tablaHash constantes protocolos ws2_32 sqlite3)

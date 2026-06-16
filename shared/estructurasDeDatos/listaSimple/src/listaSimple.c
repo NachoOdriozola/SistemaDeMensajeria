@@ -32,12 +32,6 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
     return 0;
 }
 
-void vincularNodoAlInicioListaSimple (t_listaSimple *pl, t_nodo *nodoAVincular)
-{
-    nodoAVincular->sig = *pl;
-    *pl = nodoAVincular;
-}
-
 void mapListaSimple (t_listaSimple *pl, void accion (void *dato))
 {
     while (*pl != NULL)
@@ -63,7 +57,7 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
         if (cmp ((*pl)->dato, key) == 0)
         {
             if (returnDato != NULL)
-                memcpy (returnDato, (*pl)->dato, MINIMO ((*pl)->tam, tamDato));
+                memcpy (returnDato, (*pl)->dato, ((tamDato < (*pl)->tam) ? tamDato : (*pl)->tam));
             return 1;
         }
         pl = &((*pl)->sig);
@@ -72,22 +66,14 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
     return 0;
 }
 
-t_nodo* desvincularNodoDeListaSimple (t_nodo **nodoADesvincular)
-{
-    t_nodo *nodo = *nodoADesvincular;
-
-    *nodoADesvincular = nodo->sig;
-
-    return nodo;
-}
-
 void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
 {
     t_nodo *nodoElim = *pl;
 
     *pl = nodoElim->sig;
     if (returnDato != NULL)
-        memcpy (returnDato, nodoElim->dato, MINIMO (nodoElim->tam, tamDato));
+        memcpy (returnDato, nodoElim->dato, ((tamDato < (*pl)->tam) ? tamDato : (*pl)->tam));
+        
     accion (nodoElim->dato);
     free (nodoElim->dato);
     free (nodoElim);
