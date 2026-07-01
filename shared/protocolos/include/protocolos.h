@@ -4,10 +4,8 @@
  */
 
 
-
 #ifndef PROTOCOLO_H_INCLUDED
 #define PROTOCOLO_H_INCLUDED
-
 
 
 /* ============================================================================================================================================
@@ -45,7 +43,6 @@
    ============================================================================================================================================ */
 
 
-
 /**
  * \enum t_tipoSolicitud
  * \brief Indice del tipo de solicitud, enviado por el cliente hacia el servidor.
@@ -54,8 +51,8 @@ typedef enum
 {
     SOLICITUD_AUTENTICACION = 'a',
     SOLICITUD_REGISTRO = 'b',
-    SOLICITUD_MENSAJE = 'c',
-    SOLICITUD_SELECCIONAR_CONTACTO = 'd',
+    SOLICITUD_ENVIO_MENSAJE = 'c',
+    SOLICITUD_SELECCION_CHAT = 'd',
 } t_tipoSolicitud;
 
 /**
@@ -76,25 +73,8 @@ typedef enum
  */
 typedef enum
 {
-    RESPUESTA_MENSAJE = 'A',
+    RESPUESTA_RECEPCION_MENSAJE = 'A',
 } t_tipoRespuesta;
 
 
-
 #endif // PROTOCOLO_H_INCLUDED
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

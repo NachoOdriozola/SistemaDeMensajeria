@@ -1,6 +1,56 @@
 #include "../include/solicitudes.h"
 
 
+/* ============================================================================================================================================
+   DECLARACION DE FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+
+
+/* ============================================================================================================================================
+   FUNCIONES PUBLICAS
+   ============================================================================================================================================ */
+
+
+void procesarSolicitud (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+{
+    t_tipoSolicitud tipoSolicitud = *solicitud;
+    const char *solicitudSinTipoSolicitud = &(solicitud[2]);
+
+    printf ("Solicitud recibida: %s\n", solicitud);
+
+    switch (tipoSolicitud)
+    {
+        case SOLICITUD_AUTENTICACION:
+            procesarSolicitudAutenticacion (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
+            break;
+
+        case SOLICITUD_REGISTRO:
+            procesarSolicitudRegistro (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
+            break;
+
+        case SOLICITUD_ENVIO_MENSAJE:
+            procesarSolicitudEnvioMensaje (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
+            break;
+
+        case SOLICITUD_SELECCION_CHAT:
+            procesarSolicitudSeleccionChat (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES LOGICAS COMUNES
+   ============================================================================================================================================ */
 
 
 static void conectarUsuario (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble *clienteAProcesar, int idUsuario)
@@ -15,10 +65,25 @@ static void conectarUsuario (t_tablaHash *clientes, t_listaDoble *clientesNoAute
 }
 
 
+/* ============================================================================================================================================
+   FUNCIONES AUTENTICACION
+   ============================================================================================================================================ */
+
 
 static void extraerDatosSolicitudAutenticacion (const char *solicitud, t_datosAutenticacionUsuario *datosAutenticacionUsuario)
 {
     sscanf (solicitud, "%[^|]|%[^\n]", datosAutenticacionUsuario->nombreUsuario, datosAutenticacionUsuario->contrasenia);
+}
+
+static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosAutenticacionUsuario *datosAutenticacionUsuario)
+{
+    if (strlen (datosAutenticacionUsuario->nombreUsuario) < 3)
+        return 1;
+    
+    if (strlen (datosAutenticacionUsuario->contrasenia) < 8)
+        return 1;
+
+    return 0;
 }
 
 /*
@@ -65,6 +130,9 @@ static t_estadoSolicitud autenticarCliente (t_contextoServidor *contextoServidor
     int idUsuario;
     t_estadoSolicitud estadoSolicitud;
 
+    if (sonDatosAutenticacionUsuarioInvalidos (datosAutenticacionUsuario))
+        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+
     estadoSolicitud = usuarioExiste (contextoServidor->baseDeDatos, datosAutenticacionUsuario, &idUsuario);
     if (estadoSolicitud == SOLICITUD_EXITO)
     {
@@ -77,7 +145,7 @@ static t_estadoSolicitud autenticarCliente (t_contextoServidor *contextoServidor
     return estadoSolicitud;
 }
 
-static void enviarRespuestaAutenticacion (t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
+static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
 {
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
     char respuesta [MAX_BUFFER_RESPUESTA];
@@ -115,10 +183,44 @@ static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor
 }
 
 
+/* ============================================================================================================================================
+   FUNCIONES REGISTRO
+   ============================================================================================================================================ */
+
 
 static void extraerDatosSolicitudRegistro (const char *solicitud, t_datosRegistroUsuario *datosRegistroUsuario)
 {
     sscanf (solicitud, "%[^|]|%[^|]|%[^\n]", datosRegistroUsuario->nombreUsuario, datosRegistroUsuario->contrasenia, datosRegistroUsuario->correoElectronico);
+}
+
+static bool esCorreoElectronicoInvalido (const char *correoElectronico)
+{
+    char *ptr = strchr (correoElectronico, '@'); // Se posiciona en el @
+
+    if ((ptr == NULL) ||                                // Si no tiene @
+        (ptr == correoElectronico) ||            // O empieza con @
+        (strchr (ptr, '.') == NULL) ||               // O no tiene un punto despues del @
+        (strchr (ptr + 1, '@') != NULL))         // O tiene 2 arrobas
+        return 1;
+
+    return 0;
+}
+
+static bool sonDatosRegistroUsuarioInvalidos (const t_datosRegistroUsuario *datosRegistroUsuario)
+{
+    int largoNombreUsuario = strlen (datosRegistroUsuario->nombreUsuario);
+    int largoContrasenia = strlen (datosRegistroUsuario->contrasenia);
+
+    if (strlen (datosRegistroUsuario->nombreUsuario) < 3)
+        return 1;
+    
+    if (strlen (datosRegistroUsuario->contrasenia) < 8)
+        return 1;
+
+    if (esCorreoElectronicoInvalido (datosRegistroUsuario->correoElectronico))
+        return 1;
+
+    return 0;
 }
 
 static t_estadoSolicitud usuarioYaRegistrado (sqlite3 *db, const t_datosRegistroUsuario *datosRegistroUsuario)
@@ -183,6 +285,9 @@ static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor,
     int idUsuario;
     t_estadoSolicitud estadoSolicitud;
 
+    if (sonDatosRegistroUsuarioInvalidos (datosRegistroUsuario))
+        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+
     estadoSolicitud = usuarioYaRegistrado (contextoServidor->baseDeDatos, datosRegistroUsuario);
     if (estadoSolicitud == SOLICITUD_ERROR_CREDENCIALES_INVALIDAS || estadoSolicitud == SOLICITUD_ERROR_SERVIDOR)
         return estadoSolicitud;
@@ -200,7 +305,7 @@ static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor,
     return SOLICITUD_EXITO;
 }
 
-static void enviarRespuestaRegistro (t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
+static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
 {
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
     char respuesta [MAX_BUFFER_RESPUESTA];
@@ -236,20 +341,29 @@ static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_n
 }
 
 
+/* ============================================================================================================================================
+   FUNCIONES ENVIO MENSAJES
+   ============================================================================================================================================ */
+
 
 static void extrarDatosSolicitudEnvioMensaje (const char *solicitud, t_datosEnvioMensaje *datosEnvioMensaje)
 {
     sscanf (solicitud, "%d|%d|%[^\n]", &(datosEnvioMensaje->idEmisor), &(datosEnvioMensaje->idReceptor), datosEnvioMensaje->texto);
 }
 
-static bool emisorOReceptorInvalidos (t_datosEnvioMensaje *datosEnvioMensaje)
+static bool sonEmisorOReceptorInvalidos (const t_datosEnvioMensaje *datosEnvioMensaje)
 {
     return ((datosEnvioMensaje->idEmisor == ID_INVALIDO) || (datosEnvioMensaje->idReceptor == ID_INVALIDO));
 }
 
-static bool elEmisorEsElReceptor (t_datosEnvioMensaje *datosEnvioMensaje)
+static bool elEmisorEsElReceptor (const t_datosEnvioMensaje *datosEnvioMensaje)
 {
     return (datosEnvioMensaje->idEmisor == datosEnvioMensaje->idReceptor);
+}
+
+static bool sonDatosEnvioMensajeInvalidos (const t_datosEnvioMensaje *datosEnvioMensaje)
+{
+    return ((datosEnvioMensaje->texto == NULL) || (sonEmisorOReceptorInvalidos (datosEnvioMensaje)) || (elEmisorEsElReceptor (datosEnvioMensaje)));
 }
 
 static t_estadoSolicitud almacenarMensaje (sqlite3 *db, t_datosEnvioMensaje *datosEnvioMensaje)
@@ -284,7 +398,7 @@ static void enviarMensajeAlReceptor (t_cliente *cliente, t_datosEnvioMensaje *da
 {
     char respuesta [MAX_BUFFER_RESPUESTA];
 
-    snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", RESPUESTA_MENSAJE, datosEnvioMensaje->idEmisor, datosEnvioMensaje->texto);
+    snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", RESPUESTA_RECEPCION_MENSAJE, datosEnvioMensaje->idEmisor, datosEnvioMensaje->texto);
     send (cliente->sock, respuesta, strlen (respuesta), 0);
     printf ("Respuesta enviada: %s\n", respuesta);
 }
@@ -292,12 +406,9 @@ static void enviarMensajeAlReceptor (t_cliente *cliente, t_datosEnvioMensaje *da
 static t_estadoSolicitud enviarMensaje (t_contextoServidor *contextoServidor, t_datosEnvioMensaje *datosEnvioMensaje)
 {
     t_cliente clienteReceptor;
-    t_estadoSolicitud estadoSolicitud;
+    t_estadoSolicitud estadoSolicitud = SOLICITUD_EXITO;
 
-    if (emisorOReceptorInvalidos (datosEnvioMensaje))
-        return SOLICITUD_ERROR_OPERACION_INVALIDA;
-
-    if (elEmisorEsElReceptor (datosEnvioMensaje))
+    if (sonDatosEnvioMensajeInvalidos (datosEnvioMensaje))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
     estadoSolicitud = almacenarMensaje (contextoServidor->baseDeDatos, datosEnvioMensaje);
@@ -308,7 +419,7 @@ static t_estadoSolicitud enviarMensaje (t_contextoServidor *contextoServidor, t_
     return estadoSolicitud;
 }
 
-static void enviarRespuestaEnvioMensaje (t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
+static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
 {
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
     char respuesta [MAX_BUFFER_RESPUESTA];
@@ -346,10 +457,19 @@ static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor,
 }
 
 
+/* ============================================================================================================================================
+   FUNCIONES SELECCION CHAT
+   ============================================================================================================================================ */
+
 
 static void extraerDatosSolicitudSeleccionChat (const char *solicitud, t_datosSeleccionChat *datosSeleccionChat)
 {
     sscanf (solicitud, "%[^\n]", datosSeleccionChat->nombreReceptor);
+}
+
+static bool sonDatosSeleccionChatInvalidos (const t_datosSeleccionChat *datosSeleccionChat)
+{
+    return (strlen (datosSeleccionChat->nombreReceptor) < 3);
 }
 
 /*
@@ -395,6 +515,9 @@ static t_estadoSolicitud seleccionarChat (t_contextoServidor *contextoServidor, 
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
     t_estadoSolicitud estadoSolicitud;
 
+    if (sonDatosSeleccionChatInvalidos (datosSeleccionChat))
+        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+
     estadoSolicitud = usuarioSeleccionadoExiste (contextoServidor->baseDeDatos, datosSeleccionChat, idUsuarioDelChatSeleccionado);
     if (estadoSolicitud == SOLICITUD_EXITO)
         if (usuarioSeleccionoSuPropioChat (cliente->id, *idUsuarioDelChatSeleccionado))
@@ -403,7 +526,7 @@ static t_estadoSolicitud seleccionarChat (t_contextoServidor *contextoServidor, 
     return estadoSolicitud;
 }
 
-static void enviarRespuestaSeleccionChat (t_nodoListaDoble *clienteAProcesar, t_respuestaSeleccionChat *respuestaSeleccionChat)
+static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProcesar, t_respuestaSeleccionChat *respuestaSeleccionChat)
 {
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
     char respuesta [MAX_BUFFER_RESPUESTA];
@@ -438,34 +561,3 @@ static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor
     enviarRespuestaSeleccionChat (clienteAProcesar, &respuestaSeleccionChat);
 }
 
-
-
-void procesarSolicitud (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
-{
-    t_tipoSolicitud tipoSolicitud = *solicitud;
-    const char *solicitudSinTipoSolicitud = &(solicitud[2]);
-
-    printf ("Solicitud recibida: %s\n", solicitud);
-
-    switch (tipoSolicitud)
-    {
-        case SOLICITUD_AUTENTICACION:
-            procesarSolicitudAutenticacion (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        case SOLICITUD_REGISTRO:
-            procesarSolicitudRegistro (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        case SOLICITUD_MENSAJE:
-            procesarSolicitudEnvioMensaje (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        case SOLICITUD_SELECCIONAR_CONTACTO:
-            procesarSolicitudSeleccionChat (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        default:
-            break;
-    }
-}

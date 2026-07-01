@@ -1,6 +1,55 @@
 #include "../include/clientes.h"
 
 
+/* ============================================================================================================================================
+   DECLARACION DE FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados);
+static bool recibiSolicitudEnListaDoble (t_listaDoble *listaDoble, t_nodoListaDoble **clienteAProcesar, char *solicitud);
+static bool recibiSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodoListaDoble **clienteAProcesar, char *solicitud);
+
+
+/* ============================================================================================================================================
+   FUNCIONES PUBLICAS
+   ============================================================================================================================================ */
+
+
+void aceptarNuevosClientes (SOCKET sock, t_listaDoble *clientesNoAutenticados)
+{
+    t_cliente nuevoCliente;
+    struct sockaddr_in dirNuevoCliente;
+    int tamNuevoCliente = sizeof (dirNuevoCliente);
+
+    nuevoCliente.sock = accept (sock, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
+    if (nuevoCliente.sock != INVALID_SOCKET)
+        procesarNuevoCliente (&nuevoCliente, clientesNoAutenticados);
+}
+
+bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble **clienteAProcesar, char *solicitud)
+{
+    return ((recibiSolicitudEnListaDoble (clientesNoAutenticados, clienteAProcesar, solicitud)) || (recibiSolicitudEnTablaHash (clientes, clienteAProcesar, solicitud)));
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados)
+{
+    u_long modoSocket = 1; // Establecer socket en modo NO bloqueante.
+
+    printf ("Nuevo cliente conectado.\n\n");
+    ioctlsocket (nuevoCliente->sock, FIONBIO, &modoSocket);
+    nuevoCliente->id = ID_INVALIDO; // Le asigna una ID invalida hasta que se autentifique.
+
+    insertarAlInicioListaDoble (clientesNoAutenticados, nuevoCliente, sizeof (t_cliente));
+}
+
+
 /*
 * Retorna la solicitud que envio el cliente a traves del argumento solicitud.
 * Retorna la cantidad de bytes recibidos que envio el cliente a traves del argumento bytesRecibidos.
@@ -73,34 +122,4 @@ static bool recibiSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodoListaDoble
     }
 
     return NO_RECIBI_SOLICITUD;
-}
-
-
-static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados)
-{
-    u_long modoSocket = 1; // Establecer socket en modo NO bloqueante.
-
-    printf ("Nuevo cliente conectado.\n\n");
-    ioctlsocket (nuevoCliente->sock, FIONBIO, &modoSocket);
-    nuevoCliente->id = ID_INVALIDO; // Le asigna una ID invalida hasta que se autentifique.
-
-    insertarAlInicioListaDoble (clientesNoAutenticados, nuevoCliente, sizeof (t_cliente));
-}
-
-
-
-void aceptarNuevosClientes (SOCKET sock, t_listaDoble *clientesNoAutenticados)
-{
-    t_cliente nuevoCliente;
-    struct sockaddr_in dirNuevoCliente;
-    int tamNuevoCliente = sizeof (dirNuevoCliente);
-
-    nuevoCliente.sock = accept (sock, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
-    if (nuevoCliente.sock != INVALID_SOCKET)
-        procesarNuevoCliente (&nuevoCliente, clientesNoAutenticados);
-}
-
-bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble **clienteAProcesar, char *solicitud)
-{
-    return ((recibiSolicitudEnListaDoble (clientesNoAutenticados, clienteAProcesar, solicitud)) || (recibiSolicitudEnTablaHash (clientes, clienteAProcesar, solicitud)));
 }

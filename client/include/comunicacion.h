@@ -1,13 +1,11 @@
 /**
  * \file   comunicacion.h
- * \brief  C
+ * \brief  Contiene funciones para realizar la comunicacion entre el cliente y el servidor.
  */
-
 
 
 #ifndef COMUNICACION_H_INCLUDED
 #define COMUNICACION_H_INCLUDED
-
 
 
 /* ============================================================================================================================================
@@ -15,7 +13,6 @@
    ============================================================================================================================================ */
 
    
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -27,11 +24,9 @@
 #include "../../shared/constantes/include/constantes.h"
 
 
-
 /* ============================================================================================================================================
    DEFINES
    ============================================================================================================================================ */
-
 
 
 /**
@@ -47,38 +42,57 @@
 #define NO_RECIBIO_RESPUESTA 0
 
 
-
 /* ============================================================================================================================================
    ESTRUCTURAS
    ============================================================================================================================================ */
 
 
+/**
+ * \enum t_buffersComunicacion
+ * \brief Almacena la solicitud y la respuesta del servidor. Se utiliza para no consumir mucha memoria debido a que no se necesitaran en simultaneo.
+ */
+typedef union
+{
+   char solicitud [MAX_BUFFER_SOLICITUD];
+   char respuesta [MAX_BUFFER_RESPUESTA];
+} t_buffersComunicacion;
 
+
+/**
+ * \enum t_respuestaAutenticacion
+ * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de autenticacion enviada.
+ */
 typedef struct
 {
    char estado;
    int idUsuario;
 } t_respuestaAutenticacion;
 
+/**
+ * \enum t_respuestaRegistro
+ * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de respuesta enviada.
+ */
 typedef struct
 {
    char estado;
    int idUsuario;
 } t_respuestaRegistro;
 
+/**
+ * \enum t_respuestaAutenticacion
+ * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de seleccion de chat enviada.
+ */
 typedef struct
 {
    char estado;
-   int idUsuario;
-} t_respuestaSeleccionContacto;
-
+   int idUsuarioChatSeleccionado;
+} t_respuestaSeleccionChat;
 
 
 /* ============================================================================================================================================
    FUNCIONES
    ============================================================================================================================================ */
 
-   
 
 /** \brief Recibir una respuesta del servidor a traves del socket.
  *
@@ -88,93 +102,93 @@ typedef struct
  *
  * \param sock Socket del usuario desde el cual se recibe la respuesta.
  * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
- * \param tamMaxBufferRespuesta Tamanio maximo del buffer que recibe la respuesta.
  *
  * \return RECIBIO_RESPUESTA en caso de que haya recibido respuesta, NO_RECIBIO_RESPUESTA en caso contrario.
  *
  */
-bool recibirRespuesta (SOCKET sock, char *bufferRespuesta, unsigned int tamMaxBufferRespuesta);
+bool recibioRespuesta (SOCKET sock, char *bufferRespuesta);
 
 /** \brief Enviar una solicitud al servidor y esperar a recibir su respuesta.
  *
- * Envia una solicitud almacenada en el bufferSolicitud y recibe una respuesta que se almacenara en el bufferRespuesa. Todo el proceso se comunica mediante el socket especificado.
- * Asegura terminar el bufferRespuesta con caracter nulo para que sea una cadena valida.
- * Cambiar temporalmente el modo del socket a bloqueante para asegurar que el envio y la recepcion se completen antes de continuar. Una vez realizado el proceso, se desbloquea.
+ * Enviar una solicitud y recibir una respuesta que se almacenara en buffersComunicacion. Todo el proceso se comunica mediante el socket especificado.
+ * Asegura terminar el buffer con caracter nulo para que sea una cadena valida.
+ * Cambia temporalmente el modo del socket a bloqueante para asegurar que el envio y la recepcion se completen antes de continuar. Una vez realizado el proceso, se desbloquea.
  *
  * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
- * \param bufferSolicitud Buffer que contiene la solicitud a enviar.
- * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
- * \param tamMaxBufferRespuesta Tamanio maximo del buffer que recibe la respuesta.
+ * \param buffersComunicacion Buffers donde se recibe la solicitud y se almacena la respuesta.
  *
  */
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *solicitud, char *respuesta);
+void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffersComunicacion);
 
-/** \brief Intentar solicitud para autenticar el usuario.
+/** \brief Enviar solicitud para autenticar usuario.
  *
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
  * SOLICITUD_AUTENTICACION|nombre de usuario|contrasenia del usuario
- * Envia la solicitud y espera la respuesta para saber su estado.
- * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario.
- * Se comunican a traves del socket de la aplicacion.
+ * 
+ * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param nombreUsuario Cadena que contiene el nombre que escribio el usuario.
+ * \param contrasenia Cadena que contiene la contrasenia que escribio el usuario.
  *
- * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ * \return t_respuestaAutenticacion que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaAutenticacion enviarSolicitudAutenticar (SOCKET sock, const char *nombreUsuario, const char *contrasenia);
+t_respuestaAutenticacion enviarSolicitudAutenticacion (SOCKET sock, const char *nombreUsuario, const char *contrasenia);
 
-/** \brief Intentar solicitud para registrar el usuario.
+/** \brief Enviar solicitud para registrar usuario.
  *
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
  * SOLICITUD_REGISTRO|nombre de usuario|contrasenia del usuario|correo electronico del usuario
- * Envia la solicitud y espera la respuesta para saber su estado.
- * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario.
- * Se comunican a traves del socket de la aplicacion.
+ * 
+ * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos, buffers y focos comunes entre las interfaces de autenticacion y registro.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de registro.
+ * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param nombreUsuario Cadena que contiene el nombre que escribio el usuario.
+ * \param contrasenia Cadena que contiene la contrasenia que escribio el usuario.
+ * \param correoElectronico Cadena que contiene el correo electronico que escribio el usuario.
  *
- * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ * \return t_respuestaRegistro que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaRegistro enviarSolicitudRegistrar (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
+t_respuestaRegistro enviarSolicitudRegistro (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
 
-/** \brief Intentar solicitud para enviar un mensaje a otro usuario.
+/** \brief Enviar solicitud para enviar un mensaje a otro usuario.
  *
- * Si no se tiene seleccionado un contacto para comunicarse (ID del receptor invalido), retorna.
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
  * SOLICITUD_MENSAJE|ID del emisor|ID del receptor|texto
- * Envia la solicitud y espera la respuesta para saber su estado.
- * Se comunican a traves del socket de la aplicacion.
+ * 
+ * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Verifica que el ID del receptor sea un ID valido y que no sea el mismo que el ID del usuario.
+ * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param idReceptor ID del contacto seleccionado para comunicarse.
+ * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param idUsuario ID del usuario que envia la solicitud y el mensaje.
+ * \param idReceptor ID del usuario que recibe el mensaje.
+ * \param mensaje Cadena que contiene el texto del mensaje.
  *
- * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ * \return char que contiene el estado de la respuesta recibida por el servidor.
  *
  */
-char enviarSolicitudMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje);
+char enviarSolicitudEnvioMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje);
 
-/** \brief Intentar solicitud para seleccionar un contacto para comunicarse.
+/** \brief Enviar solicitud para seleccionar un chat con un usuario para comunicarse.
  *
- * Verifica si el nombre del contacto seleccionado no es el propio nombre de usuario, en tal caso retorna.
  * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_SELECCIONAR_CONTACTO|nombre del contacto
- * Envia la solicitud y espera la respuesta para saber su estado.
- * Si el estado de la respuesta es RESPUESTA_EXITO, guarda el ID del usuario receptor.
- * Se comunican a traves del socket de la aplicacion.
+ * SOLICITUD_SELECCIONAR_CHAT|nombre del contacto
+ * 
+ * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Verifica si el nombre de usuario del chat seleccionado no es el propio nombre de usuario.
+ * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base que contiene contexto de los mensajes, focos y une todos los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos, buffers y focos de la interfaz de contactos.
+ * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param nombreUsuario Nombre del propio usuario que envia la solicitud.
+ * \param nombreUsuarioChatSeleccionado Nombre del usuario que se desea seleccionar el chat.
  *
- * \return Char del estado de respuesta del servidor de tipo t_estadoRespuesta.
+ * \return t_respuestaSeleccionChat que contiene los datos de la respuesta recibida por el servidor.
  *
  */
-t_respuestaSeleccionContacto enviarSolicitudSeleccionarContacto (SOCKET sock, const char *nombreUsuario, const char *nombreContacto);
-
+t_respuestaSeleccionChat enviarSolicitudSeleccionChat (SOCKET sock, const char *nombreUsuarioChatSeleccionado);
 
 
 #endif // COMUNICACION_H_INCLUDED

@@ -1,104 +1,17 @@
 #include "../include/servidor.h"
 
 
+/* ============================================================================================================================================
+   DECLARACION DE FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
 
-/** \brief Inicializar la base de datos.
- *
- * Intentar abrir la base de datos "database.db".
- * Verificar si existen las tablas del disenio.
- * En caso de que existan, la base de datos existe y conserva sus datos.
- * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
- * No cierra la base de datos en caso de fallas.
- *
- * \param db Doble puntero a la base de datos SQLite.
- *
- * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al preparar consultas, abrir archivos y asignar memoria.
- *
- */
-static t_codigoRetorno inicializarBaseDatos(sqlite3 **db)
-{
-    if (sqlite3_open ("../../../server/database/database.db", db) != SQLITE_OK)
-    {
-        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
-        return ERROR_INICIALIZACION;
-    }
-    
-    switch (existeTablaUsuarios (*db))
-    {
-        case TABLA_EXISTE:
-            return EXITO;
 
-        case TABLA_NO_EXISTE:
-            if (crearEsquema(*db) != EXITO)
-                return ERROR_INICIALIZACION;
-            return EXITO;
+static t_codigoRetorno inicializarBaseDatos(sqlite3 **db);
 
-        default:
-            return ERROR_INICIALIZACION;
-    }
-}
 
-static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db)
-{
-    sqlite3_stmt *sentencia;
-    int resultado;
-
-    if (sqlite3_prepare_v2 (db, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return ERROR_PREPARACION_CONSULTA;
-    }
-
-    resultado = sqlite3_step (sentencia);
-    sqlite3_finalize(sentencia);
-
-    if (resultado == SQLITE_ROW)
-        return TABLA_EXISTE;
-    return TABLA_NO_EXISTE;
-}
-
-static t_codigoRetorno crearEsquema (sqlite3 *db)
-{
-    FILE *archEsquema;
-    long tamArchEsquema;
-    char *consulta;
-
-    archEsquema = fopen("../../../server/database/schema.sql", "rb");
-    if (!archEsquema)
-    {
-        perror ("\nERROR - Abrir archivo schema.sql.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    fseek (archEsquema, 0, SEEK_END);
-    tamArchEsquema = ftell (archEsquema);
-    rewind (archEsquema);
-
-    consulta = malloc (tamArchEsquema + 1); // +1 para el '\0'.
-    if (!consulta)
-    {
-        perror ("\nERROR - Sin memoria.\n");
-        fclose(archEsquema);
-        return ERROR_SIN_MEMORIA;
-    }
-
-    fread (consulta, 1, tamArchEsquema, archEsquema);
-    consulta[tamArchEsquema] = '\0';
-
-    if (sqlite3_exec (db, consulta, 0, 0, NULL) != SQLITE_OK)
-    {
-        perror ("\nERROR - Ejecutar schema.sql.\n");
-        fclose(archEsquema);
-        free (consulta);
-        return ERROR_OPERACION;
-    }
-
-    fclose(archEsquema);
-    free (consulta);
-
-    return EXITO;
-}
-
+/* ============================================================================================================================================
+   FUNCIONES PUBLICAS
+   ============================================================================================================================================ */
 
 
 t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
@@ -189,10 +102,13 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
     }
     ioctlsocket (contextoServidor->sock, FIONBIO, &modoSocket);
 
+    // --------------- CONFIGURAR BASE DE DATOS ---------------
+
+    sqlite3_exec (contextoServidor->baseDeDatos, "PRAGMA journal_mode=WAL;", NULL, NULL, NULL);
+
 
     printf ("-CONFIGURACION EXITOSA-\n");
     printf ("Ctrl+C -> Apagar servidor\n");
-
 
     return EXITO;
 }
@@ -253,4 +169,101 @@ BOOL WINAPI manejadorConsola(DWORD tipoEvento)
             break;
     }
     return FALSE;
+}
+
+/* ============================================================================================================================================
+   FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db)
+{
+    sqlite3_stmt *sentencia;
+    int resultado;
+
+    if (sqlite3_prepare_v2 (db, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';", -1, &sentencia, NULL) != SQLITE_OK)
+    {
+        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        return ERROR_PREPARACION_CONSULTA;
+    }
+
+    resultado = sqlite3_step (sentencia);
+    sqlite3_finalize(sentencia);
+
+    if (resultado == SQLITE_ROW)
+        return TABLA_EXISTE;
+    return TABLA_NO_EXISTE;
+}
+
+static t_codigoRetorno crearEsquema (sqlite3 *db)
+{
+    FILE *archEsquema;
+    long tamArchEsquema;
+    char *consulta;
+
+    archEsquema = fopen("../../../server/database/schema.sql", "rb");
+    if (!archEsquema)
+    {
+        perror ("\nERROR - Abrir archivo schema.sql.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    fseek (archEsquema, 0, SEEK_END);
+    tamArchEsquema = ftell (archEsquema);
+    rewind (archEsquema);
+
+    consulta = malloc (tamArchEsquema + 1); // +1 para el '\0'.
+    if (!consulta)
+    {
+        perror ("\nERROR - Sin memoria.\n");
+        fclose(archEsquema);
+        return ERROR_SIN_MEMORIA;
+    }
+
+    fread (consulta, 1, tamArchEsquema, archEsquema);
+    consulta[tamArchEsquema] = '\0';
+
+    if (sqlite3_exec (db, consulta, 0, 0, NULL) != SQLITE_OK)
+    {
+        perror ("\nERROR - Ejecutar schema.sql.\n");
+        fclose(archEsquema);
+        free (consulta);
+        return ERROR_OPERACION;
+    }
+
+    fclose(archEsquema);
+    free (consulta);
+
+    return EXITO;
+}
+
+/*
+ * Intentar abrir la base de datos "database.db".
+ * Verificar si existen las tablas del disenio.
+ * En caso de que existan, la base de datos existe y conserva sus datos.
+ * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
+ * No cierra la base de datos en caso de fallas.
+ * Retorna EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al preparar consultas, abrir archivos y asignar memoria.
+ */
+static t_codigoRetorno inicializarBaseDatos(sqlite3 **db)
+{
+    if (sqlite3_open ("../../../server/database/database.db", db) != SQLITE_OK)
+    {
+        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
+        return ERROR_INICIALIZACION;
+    }
+    
+    switch (existeTablaUsuarios (*db))
+    {
+        case TABLA_EXISTE:
+            return EXITO;
+
+        case TABLA_NO_EXISTE:
+            if (crearEsquema(*db) != EXITO)
+                return ERROR_INICIALIZACION;
+            return EXITO;
+
+        default:
+            return ERROR_INICIALIZACION;
+    }
 }

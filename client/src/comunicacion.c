@@ -1,95 +1,82 @@
 #include "../include/comunicacion.h"
 
 
-
-bool recibirRespuesta (SOCKET sock, char *bufferRespuesta, unsigned int tamMaxBufferRespuesta)
+bool recibioRespuesta (SOCKET sock, char *bufferRespuesta)
 {
     int bytesRecibidos;
 
-    bytesRecibidos = recv (sock, bufferRespuesta, tamMaxBufferRespuesta, 0);
+    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
     if (bytesRecibidos > 0)
     {
         bufferRespuesta += bytesRecibidos;
         *bufferRespuesta = '\0';
+
+        bufferRespuesta -= bytesRecibidos; // Retroceder la cantidad de bytes avanzados para poder hacer el log.
+        printf ("\nRespuesta recibida: %s\n", bufferRespuesta);
         return RECIBIO_RESPUESTA;
     }
-
     return NO_RECIBIO_RESPUESTA;
 }
 
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, const char *solicitud, char *respuesta)
+void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffersComunicacion)
 {
     u_long modoSocket = 0; //Socket modo bloqueante
     int bytesRecibidos;
 
     ioctlsocket (sock, FIONBIO, &modoSocket);
-    send (sock, solicitud, strlen(solicitud), 0);
-    bytesRecibidos = recv (sock, respuesta, MAX_BUFFER_RESPUESTA, 0);
-    respuesta += bytesRecibidos;
-    *respuesta = '\0';
+    send (sock, buffersComunicacion->solicitud, strlen(buffersComunicacion->solicitud), 0);
+    printf ("\nSolicitud enviada: %s\n", buffersComunicacion->solicitud);
+    bytesRecibidos = recv (sock, buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, 0);
+    buffersComunicacion->respuesta[bytesRecibidos] = '\0';
+    printf ("Respuesta recibida: %s\n", buffersComunicacion->respuesta);
     modoSocket = 1; // Socket modo no bloqueante
     ioctlsocket (sock, FIONBIO, &modoSocket);
 }
 
-t_respuestaAutenticacion enviarSolicitudAutenticar (SOCKET sock, const char *nombreUsuario, const char *contrasenia)
+t_respuestaAutenticacion enviarSolicitudAutenticacion (SOCKET sock, const char *nombreUsuario, const char *contrasenia)
 {
-    char solicitud [MAX_BUFFER_SOLICITUD];
-    char respuesta [MAX_BUFFER_RESPUESTA];
+    t_buffersComunicacion buffersComunicacion;
     t_respuestaAutenticacion respuestaAutenticacion;
 
-    snprintf (solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s", SOLICITUD_AUTENTICACION, nombreUsuario, contrasenia);
-    enviarSolicitudYRecibirRespuesta (sock, solicitud, respuesta);
-    sscanf (respuesta, "%c|%d", &(respuestaAutenticacion.estado), &(respuestaAutenticacion.idUsuario));
+    snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s", SOLICITUD_AUTENTICACION, nombreUsuario, contrasenia);
+    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
+    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaAutenticacion.estado), &(respuestaAutenticacion.idUsuario));
 
     return respuestaAutenticacion;
 }
 
-t_respuestaRegistro enviarSolicitudRegistrar (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
+t_respuestaRegistro enviarSolicitudRegistro (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
 {
-    char solicitud [MAX_BUFFER_SOLICITUD];
-    char respuesta [MAX_BUFFER_RESPUESTA];
+    t_buffersComunicacion buffersComunicacion;
     t_respuestaRegistro respuestaRegistro;
 
-    snprintf (solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s|%s", SOLICITUD_REGISTRO, nombreUsuario, contrasenia, correoElectronico);
-    enviarSolicitudYRecibirRespuesta (sock, solicitud, respuesta);
-    sscanf (respuesta, "%c|%d", &(respuestaRegistro.estado), &(respuestaRegistro.idUsuario));
+    snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s|%s", SOLICITUD_REGISTRO, nombreUsuario, contrasenia, correoElectronico);
+    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
+    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaRegistro.estado), &(respuestaRegistro.idUsuario));
 
     return respuestaRegistro;
 }
 
-char enviarSolicitudMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje)
+char enviarSolicitudEnvioMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje)
 {
-    char solicitud [MAX_BUFFER_SOLICITUD];
-    char respuesta [MAX_BUFFER_RESPUESTA];
-    char estadoRespuesta;
+    t_buffersComunicacion buffersComunicacion;
+    char estadoSolicitud;
 
-    if ((idReceptor == ID_INVALIDO) || (idUsuario == idReceptor))
-        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+    snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", SOLICITUD_ENVIO_MENSAJE, idUsuario, idReceptor, mensaje);
+    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
+    sscanf (buffersComunicacion.respuesta, "%c", &estadoSolicitud);
 
-    snprintf (solicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", SOLICITUD_MENSAJE, idUsuario, idReceptor, mensaje);
-    enviarSolicitudYRecibirRespuesta (sock, solicitud, respuesta);
-    sscanf (respuesta, "%c", &estadoRespuesta);
-
-    return estadoRespuesta;
+    return estadoSolicitud;
 }
 
-t_respuestaSeleccionContacto enviarSolicitudSeleccionarContacto (SOCKET sock, const char *nombreUsuario, const char *nombreContacto)
+t_respuestaSeleccionChat enviarSolicitudSeleccionChat (SOCKET sock, const char *nombreUsuarioChatSeleccionado)
 {
-    char solicitud [MAX_BUFFER_SOLICITUD];
-    char respuesta [MAX_BUFFER_RESPUESTA];
-    t_respuestaSeleccionContacto respuestaSeleccionContacto;
+    t_buffersComunicacion buffersComunicacion;
+    t_respuestaSeleccionChat respuestaSeleccionChat;
 
-    if (strcmp (nombreUsuario, nombreContacto) == 0)
-    {
-        respuestaSeleccionContacto.estado = SOLICITUD_ERROR_OPERACION_INVALIDA;
-        respuestaSeleccionContacto.idUsuario = ID_INVALIDO;
-        return respuestaSeleccionContacto;
-    }
+    snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s", SOLICITUD_SELECCION_CHAT, nombreUsuarioChatSeleccionado);
+    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
+    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaSeleccionChat.estado), &(respuestaSeleccionChat.idUsuarioChatSeleccionado));
 
-    snprintf (solicitud, MAX_BUFFER_SOLICITUD, "%c|%s", SOLICITUD_SELECCIONAR_CONTACTO, nombreContacto);
-    enviarSolicitudYRecibirRespuesta (sock, solicitud, respuesta);
-    sscanf (respuesta, "%c|%d", &(respuestaSeleccionContacto.estado), &(respuestaSeleccionContacto.idUsuario));
-
-    return respuestaSeleccionContacto;
+    return respuestaSeleccionChat;
 }
-

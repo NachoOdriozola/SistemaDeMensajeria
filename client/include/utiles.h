@@ -1,19 +1,16 @@
 /**
  * \file   utiles.h
- * \brief  Contiene defines, macros, estructuras y funciones logicas utiles.
+ * \brief  Contiene constantes, macros, estructuras y funciones logicas utiles.
  */
-
 
 
 #ifndef UTILES_H_INCLUDED
 #define UTILES_H_INCLUDED
 
 
-
 /* ============================================================================================================================================
    INCLUDES
    ============================================================================================================================================ */
-
 
 
 #include <stdio.h>
@@ -28,12 +25,12 @@
 #include "../../external/csfml/include/SFML/Window.h"
 #include "../../external/csfml/include/SFML/Graphics.h"
 
+#include "../../shared/constantes/include/constantes.h"
 
 
 /* ============================================================================================================================================
    DEFINES
    ============================================================================================================================================ */
-
    
 
 /**
@@ -50,13 +47,6 @@
 
 
 /**
- * \def CARACTER_INVALIDO
- * \brief Codigo de retorno para indicar que el caracter es invalido (es un caracter de control).
- */
-#define CARACTER_INVALIDO -1
-
-
-/**
  * \def VELOCIDAD_PARPADEO_PUNTO_INSERCION
  * \brief Constante que determina la velocidad de parpadeo del punto de insercion.
  */
@@ -69,11 +59,9 @@
 #define REINICIAR_CONTADOR_PUNTO_INSERCION 0
 
 
-
 /* ============================================================================================================================================
    MACROS
    ============================================================================================================================================ */
-
 
 
 /**
@@ -132,11 +120,9 @@
 #define DESTRUCTOR_SEGURO_FUENTE(x) if(x) {sfFont_destroy(x); x = NULL;}
 
 
-
 /* ============================================================================================================================================
    ESTRUCTURAS
    ============================================================================================================================================ */
-
 
 
 /**
@@ -150,20 +136,18 @@ typedef enum
 } t_habilitacion;
 
 /** \struct t_puntoInsercion
- * \brief Gestiona el punto de insercion.
+ * \brief Gestiona el punto de insercion logicamente.
  */
 typedef struct
 {
-    t_habilitacion estado;              /**< Activar/desactivar el punto de insercion. */
+    t_habilitacion estado;                    /**< Activar/desactivar el punto de insercion. */
     unsigned short int contador;        /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
 } t_puntoInsercion;
-
 
 
 /* ============================================================================================================================================
    FUNCIONES LOGICAS DE GRAFICOS
    ============================================================================================================================================ */
-
 
 
 /** \brief Verificar si el usuario clickeo un rectangulo grafico en pantalla.
@@ -201,14 +185,20 @@ bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto);
  */
 void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea);
 
-/** \brief Limitar la visualizacion de texto ingresado por el usuario sobre la barra de escritura.
- *
+/** \brief Limitar la visualizacion de texto ingresado por el usuario en caso de que no entre sobre la barra de escritura.
+ * 
  * \param texto Puntero al texto sfText ingresado por el usuario.
- * \param bufferTexto Puntero al buffer que contiene el texto a mostrar.
- * \param anchoBarra Ancho de la barra de escritura.
+ * \param cadena Cadena que contiene el texto a mostrar.
+ * \param anchoBarraEscritura Ancho de la barra de escritura.
  */
-void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra);
+void limitarVisualizacionTextoSobreBarraEscritura (sfText *texto, const char *cadena, float anchoBarraEscritura);
 
+/** \brief Omitir eventos pendientes a procesar. Invocar cuando se necesite desactivar una interfaz y no procesar sus eventos pendientes.
+ *
+ * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
+ *
+ */
+void omitirEventosPendientes (sfRenderWindow *renderizado);
 
 
 /* ============================================================================================================================================
@@ -216,24 +206,23 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
    ============================================================================================================================================ */
 
 
-
 /** \brief Ingresar un caracter almacenado en un evento a un buffer.
  *
  * Si es un caracter de control, retorna.
- * Procesar el caracter y colocarlo en la posicion que corresponda dentro del buffer.
+ * Colocar el caracter en la posicion que corresponda dentro del buffer.
  * Acepta el caracter "Backspace" para borrado de texto.
- * Utiliza solo caracteres ASCII imprimibles (1 Byte).
+ * Verifica el uso de solo caracteres ASCII imprimibles (1 Byte).
  *
  * \param buffer Puntero al buffer donde se almacenara el caracter.
  * \param tamMaxBuffer Tamanio maximo del buffer. Es por como esta definido, ej: char buffer [5], el tamanio maximo es '5'.
  * \param eventoChar Variable de evento que contiene el caracter.
  *
- * \return CARACTER_INVALIDO en caso de que el caracter ingresado no sea valido (es un caracter de control), 0 en caso de exito.
+ * \return ERROR_OPERACION en caso de que el caracter ingresado no sea valido (es un caracter de control), EXITO en caso contrario.
  *
  */
-int ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
+t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
 
-/** \brief Pegar desde el portapapeles a un buffer.
+/** \brief Pegar texto desde el portapapeles a buffer.
  *
  * Verifica que el portapapeles no contenga caracteres invalidos (no ASCII imprimible (1 Byte)).
  * Verifica que el buffer tenga espacio suficiente para pegar el portapapeles.
@@ -242,17 +231,15 @@ int ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
  * \param buffer Puntero al buffer donde se almacenara la copia del portapapeles.
  * \param tamMaxBuffer Tamanio maximo del buffer. Es por como esta definido, ej: char buffer [5], el tamanio maximo es '5'.
  *
- * \return CARACTER_INVALIDO en caso de que el portapapeles contenga caracteres invalidos, 1 en caso de que el buffer no tenga espacio suficiente para pegar el portapapeles, y 0 en caso de exito.
+ * \return ERROR_OPERACION en caso de que el portapapeles contenga caracteres invalidos o en caso de que el buffer no tenga espacio suficiente para pegar el portapapeles, EXITO en caso contrario.
  *
  */
-int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer);
-
+t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer);
 
 
 /* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
    ============================================================================================================================================ */
-
 
 
 /** \brief Inicializar o resetear el punto de insercion.
@@ -284,32 +271,4 @@ bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion);
 void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion);
 
 
-
 #endif // UTILES_H_INCLUDED
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

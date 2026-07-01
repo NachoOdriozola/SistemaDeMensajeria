@@ -1,13 +1,11 @@
 /**
  * \file   estructuras.h
- * \brief  Define las estructuras principales de la aplicacion.
+ * \brief  Define las estructuras fundamentales de la aplicacion.
  */
-
 
 
 #ifndef ESTRUCTURAS_H_INCLUDED
 #define ESTRUCTURAS_H_INCLUDED
-
 
 
 /* ============================================================================================================================================
@@ -15,8 +13,6 @@
    ============================================================================================================================================ */
 
 
-
-#include <stdlib.h>
 #include <stdbool.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -28,11 +24,9 @@
 #include "../../shared/constantes/include/constantes.h"
 
 
-
 /* ============================================================================================================================================
    ESTRUCTURAS
    ============================================================================================================================================ */
-
 
 
 /**
@@ -54,9 +48,9 @@ typedef enum
  */
 typedef struct
 {
-    int id;                                     /**< Identificador correspondiente del usuario. */
-    char nombre [MAX_NOMBRE_USUARIO];           /**< Nombre correspondiente del usuario. */
-    t_interfaz interfazActual;                  /**< Interfaz sobre la cual se encuentra ubicado actualmente. */
+    int id;                                                                     /**< Identificador correspondiente del usuario. */
+    char nombre [MAX_NOMBRE_USUARIO];            /**< Nombre correspondiente del usuario. */
+    t_interfaz interfazActual;                                      /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
 } t_usuario;
 
 /**
@@ -65,37 +59,11 @@ typedef struct
  */
 typedef struct
 {
-    bool estadoWinsock;                 /**< Estado de Winsock API */
-    sfRenderWindow *renderizado;        /**< Renderizado de la ventana. */
-    SOCKET sock;                        /**< Socket del usuario. */
+    bool estadoWinsock;                          /**< Estado de Winsock API */
+    sfRenderWindow *renderizado;         /**< Renderizado de la ventana. */
+    SOCKET sock;                                     /**< Socket del usuario. */
     t_usuario usuario;
 } t_contextoAplicacion;
 
 
-
 #endif // ESTRUCTURAS_H_INCLUDED
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

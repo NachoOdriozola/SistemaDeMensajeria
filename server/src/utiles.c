@@ -1,7 +1,6 @@
 #include "../include/utiles.h"
 
 
-
 int funcionHash (const void *clave)
 {
     return *((int*)clave) % CANT_BUCKETS_TABLA_HASH;
@@ -21,3 +20,4 @@ void liberarCliente (void *cliente)
 {
     closesocket (((t_cliente*)cliente)->sock);
 }
+

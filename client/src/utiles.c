@@ -1,11 +1,9 @@
 #include "../include/utiles.h"
 
 
-
 /* ============================================================================================================================================
    FUNCIONES LOGICAS DE GRAFICOS
    ============================================================================================================================================ */
-
 
 
 bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo)
@@ -47,26 +45,30 @@ void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, fl
                         });
 }
 
-void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, float anchoBarra)
+static bool textoEntraEnBarraEscritura (sfText *texto, float anchoBarraEscritura)
+{
+    sfFloatRect limitesTexto = sfText_getLocalBounds(texto);
+
+    return (limitesTexto.width <= anchoBarraEscritura);
+}
+
+void limitarVisualizacionTextoSobreBarraEscritura (sfText *texto, const char *cadena, float anchoBarraEscritura)
 {
     unsigned short int i;
-    sfFloatRect limites;
 
-    sfText_setString(texto, bufferTexto);
-    limites = sfText_getLocalBounds(texto);
-
-    if (limites.width <= anchoBarra) // Si el texto entra en la barra de escritura.
-        return;
-
-    for (i = 1; i <= (strlen(bufferTexto)); i++)
+    for (i = 0; i <= (strlen(cadena)); i++)
     {
-        sfText_setString(texto, bufferTexto + i);
-        limites = sfText_getLocalBounds(texto);
-        if (limites.width <= anchoBarra)
+        sfText_setString(texto, cadena + i);
+        if (textoEntraEnBarraEscritura (texto, anchoBarraEscritura))
             return;
     }
 }
 
+void omitirEventosPendientes (sfRenderWindow *renderizado)
+{
+    sfEvent evento;
+    while (sfRenderWindow_pollEvent (renderizado, &evento)){continue;}
+}
 
 
 /* ============================================================================================================================================
@@ -74,55 +76,73 @@ void limitarVisualizarTextoSobreBarra (sfText *texto, const char *bufferTexto, f
    ============================================================================================================================================ */
 
 
+static bool noEsCaracterImprimible (char caracter)
+{
+    return ((caracter < 32) || (caracter > 126));
+}
 
-int ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
+static bool noEsBackspace (char caracter)
+{
+    return (caracter != 8);
+}
+
+static void agregarCaracterAlBuffer (char *buffer, char caracter, int largoBuffer)
+{
+    buffer [largoBuffer] = caracter;
+    buffer [largoBuffer + 1] = '\0';
+}
+
+static void eliminarUltimoCaracter (char *buffer, int largoBuffer)
+{
+    buffer [largoBuffer - 1] = '\0';
+}
+
+t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
 {
     int largoBuffer;
     char caracter = (char)eventoChar.text.unicode;
 
+    if (noEsCaracterImprimible (caracter) && noEsBackspace (caracter))
+        return ERROR_OPERACION;
 
-    if ((caracter != 8) && ((caracter < 32) || (caracter > 126))) // Si es un caracter de control, o que no sea ASCII 1 Byte o que no sea el "Backspace".
-        return CARACTER_INVALIDO;
-
+    // Se utiliza largoBuffer y se envia como argumento para evitar calcularlo multiples veces.
     largoBuffer = strlen (buffer);
 
-    if (caracter != 8) // Si el caracter no es "Backspace".
+    if (noEsBackspace (caracter))
     {
-        if (largoBuffer < tamMaxBuffer - 1)
-        {
-            buffer [largoBuffer] = caracter;
-            buffer [largoBuffer + 1] = '\0';
-        }
+        if (largoBuffer < tamMaxBuffer - 1) // tamMaxBuffer - 1 para asegurar el '\0' al final del buffer.
+            agregarCaracterAlBuffer (buffer, caracter, largoBuffer);
     }
     else if (largoBuffer > 0) // Si el caracter es "Backspace" y el buffer no esta vacio.
-        buffer [largoBuffer - 1] = '\0';
+        eliminarUltimoCaracter (buffer, largoBuffer);
 
-    return 0;
+    return EXITO;
 }
 
-int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer)
+t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer)
 {
     const sfUint32 *texto, *pTexto;
-    int largoTexto = 0, espacioDisponible;
+    int largoBuffer, espacioDisponibleEnBuffer, largoTextoPortapapeles = 0;
 
     texto = sfClipboard_getUnicodeString ();
     pTexto = texto;
 
-    espacioDisponible = tamMaxBuffer - 1 - strlen (buffer);
+    largoBuffer = strlen (buffer);
+    espacioDisponibleEnBuffer = tamMaxBuffer - largoBuffer - 1; // -1 para asegurar el '\0' al final del buffer.
 
     while (*pTexto != 0)
     {
-        if (*pTexto < 32 || *pTexto > 126)
-            return CARACTER_INVALIDO;
-        largoTexto ++;
+        if (noEsCaracterImprimible ((char)(*pTexto)))
+            return ERROR_OPERACION;
+        largoTextoPortapapeles ++;
         pTexto ++;
     }
 
-    if (largoTexto > espacioDisponible)
-        return 1;
+    if (largoTextoPortapapeles > espacioDisponibleEnBuffer)
+        return ERROR_OPERACION;
 
     pTexto = texto;
-    buffer = buffer + strlen (buffer);
+    buffer = buffer + largoBuffer;
     while (*pTexto != 0)
     {
         *buffer = (char)(*pTexto);
@@ -131,15 +151,13 @@ int pegarDesdePortapapeles (char *buffer, int tamMaxBuffer)
     }
     *buffer = '\0';
 
-    return 0;
+    return EXITO;
 }
-
 
 
 /* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
    ============================================================================================================================================ */
-
 
 
 void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion)
@@ -167,30 +185,3 @@ void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion)
             puntoInsercion->estado = DESHABILITADO;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
