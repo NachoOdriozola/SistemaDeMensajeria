@@ -28,18 +28,7 @@
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
-
-   
-/* ============================================================================================================================================
-   DEFINES
-   ============================================================================================================================================ */
-
-
-/**
- * \def ENCONTRO_UN_USUARIO
- * \brief Macro para saber si la base de datos devolvio que encontro un resultado de un usuario.
- */
-#define ENCONTRO_UN_USUARIO(x) ((x == SQLITE_ROW) ? (true) : (false))
+#include "baseDeDatos.h"
 
 
 /* ============================================================================================================================================

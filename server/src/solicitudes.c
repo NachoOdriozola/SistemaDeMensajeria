@@ -86,38 +86,14 @@ static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosAutenticacionUsu
     return 0;
 }
 
-/*
-* Si se encontro un usuario con tales datos de autenticacion, retorna en idUsuario su id correspondiente.
-* Sino, retorna en idUsuario un id invalido.
-*/
-static t_estadoSolicitud usuarioExiste (sqlite3 *db, const t_datosAutenticacionUsuario *datosAutenticacionUsuario, int *idUsuario)
+static bool usuarioNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYContrasenia, const t_datosAutenticacionUsuario *datosAutenticacionUsuario, int *returnIdUsuario)
 {
-    t_estadoSolicitud estadoSolicitud;
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosBuscarUsuarioPorNombreYContrasenia datosBuscarUsuarioPorNombreYContrasenia;
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE nombre = ? AND contrasenia = ?;", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_text (sentencia, 1, datosAutenticacionUsuario->nombreUsuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, datosAutenticacionUsuario->contrasenia, -1, SQLITE_STATIC);
+    strcpy (datosBuscarUsuarioPorNombreYContrasenia.nombreUsuario, datosAutenticacionUsuario->nombreUsuario);
+    strcpy (datosBuscarUsuarioPorNombreYContrasenia.contrasenia, datosAutenticacionUsuario->contrasenia);
 
-    resultadoConsulta = sqlite3_step (sentencia);
-    if (ENCONTRO_UN_USUARIO (resultadoConsulta))
-    {
-        *idUsuario = sqlite3_column_int (sentencia, 0);
-        estadoSolicitud = SOLICITUD_EXITO;
-    }
-    else
-    {
-        *idUsuario = ID_INVALIDO;
-        estadoSolicitud =  SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
-    }
-
-    sqlite3_finalize (sentencia);
-    return estadoSolicitud;
+    return (!buscarUsuarioPorNombreYContrasenia (sentenciaBuscarUsuarioPorNombreYContrasenia, &datosBuscarUsuarioPorNombreYContrasenia, returnIdUsuario));
 }
 
 static bool usuarioEstaConectado (t_tablaHash *clientes, int *idUsuario)
@@ -128,21 +104,19 @@ static bool usuarioEstaConectado (t_tablaHash *clientes, int *idUsuario)
 static t_estadoSolicitud autenticarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosAutenticacionUsuario *datosAutenticacionUsuario)
 {
     int idUsuario;
-    t_estadoSolicitud estadoSolicitud;
 
     if (sonDatosAutenticacionUsuarioInvalidos (datosAutenticacionUsuario))
         return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
-    estadoSolicitud = usuarioExiste (contextoServidor->baseDeDatos, datosAutenticacionUsuario, &idUsuario);
-    if (estadoSolicitud == SOLICITUD_EXITO)
-    {
-        if (usuarioEstaConectado (&(contextoServidor->clientes), &idUsuario))
-            return SOLICITUD_ERROR_OPERACION_INVALIDA;
-        else
-            conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, idUsuario);
-    }
-        
-    return estadoSolicitud;
+    if (usuarioNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombreYContrasenia, datosAutenticacionUsuario, &idUsuario))
+        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+    
+    if (usuarioEstaConectado (&(contextoServidor->clientes), &idUsuario))
+        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+            
+    conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, idUsuario);
+
+    return SOLICITUD_EXITO;
 }
 
 static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
@@ -168,7 +142,6 @@ static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProces
  * 
  * Posibles respuestas:
  * SOLICITUD_EXITO|ID del usuario
- * SOLICITUD_ERROR_SERVIDOR|ID invalido
  * SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido
  * SOLICITUD_ERROR_CREDENCIALES_INVALIDAS|ID invalido
  */
@@ -223,83 +196,48 @@ static bool sonDatosRegistroUsuarioInvalidos (const t_datosRegistroUsuario *dato
     return 0;
 }
 
-static t_estadoSolicitud usuarioYaRegistrado (sqlite3 *db, const t_datosRegistroUsuario *datosRegistroUsuario)
+static bool usuarioYaRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYCorreo, const t_datosRegistroUsuario *datosRegistroUsuario)
 {
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosBuscarUsuarioPorNombreYCorreo datosBuscarUsuarioPorNombreYCorreo;
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_text (sentencia, 1, datosRegistroUsuario->nombreUsuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, datosRegistroUsuario->correoElectronico, -1, SQLITE_STATIC);
+    strcpy (datosBuscarUsuarioPorNombreYCorreo.nombreUsuario, datosRegistroUsuario->nombreUsuario);
+    strcpy (datosBuscarUsuarioPorNombreYCorreo.correoElectronico, datosRegistroUsuario->correoElectronico);
 
-    resultadoConsulta = sqlite3_step (sentencia);
-    sqlite3_finalize (sentencia);
-    if (ENCONTRO_UN_USUARIO (resultadoConsulta))
-        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
-    return SOLICITUD_EXITO;
+    return (buscarUsuarioPorNombreYCorreo (sentenciaBuscarUsuarioPorNombreYCorreo, &datosBuscarUsuarioPorNombreYCorreo));
 }
 
-static t_estadoSolicitud registrarUsuario (sqlite3 *db, const t_datosRegistroUsuario *datosRegistroUsuario)
+static void registrarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosRegistroUsuario *datosRegistroUsuario)
 {
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosInsertarUsuario datosInsertarUsuario;
 
-    if (sqlite3_prepare_v2 (db, "INSERT INTO usuarios (nombre, contrasenia, correoElectronico) VALUES (?, ?, ?);", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_text (sentencia, 1, datosRegistroUsuario->nombreUsuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 2, datosRegistroUsuario->contrasenia, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentencia, 3, datosRegistroUsuario->correoElectronico, -1, SQLITE_STATIC);
+    strcpy (datosInsertarUsuario.nombreUsuario, datosRegistroUsuario->nombreUsuario);
+    strcpy (datosInsertarUsuario.contrasenia, datosRegistroUsuario->contrasenia);
+    strcpy (datosInsertarUsuario.correoElectronico, datosRegistroUsuario->correoElectronico);
 
-    resultadoConsulta = sqlite3_step (sentencia);
-    sqlite3_finalize (sentencia);
-    return SOLICITUD_EXITO;
+    insertarUsuario (sentenciaInsertarUsuario, &datosInsertarUsuario);
 }
 
-static t_estadoSolicitud recuperarIdUsuarioRegistrado (sqlite3 *db, const t_datosRegistroUsuario *datosRegistroUsuario, int *idUsuario)
+static void recuperarIdUsuarioRecienRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre, const t_datosRegistroUsuario *datosRegistroUsuario, int *returnIdUsuario)
 {
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE nombre = ?;", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_text (sentencia, 1, datosRegistroUsuario->nombreUsuario, -1, SQLITE_STATIC);
+    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosRegistroUsuario->nombreUsuario);
 
-    resultadoConsulta = sqlite3_step (sentencia);
-    *idUsuario = sqlite3_column_int (sentencia, 0);
-    sqlite3_finalize (sentencia);
-    return SOLICITUD_EXITO;
+    buscarUsuarioPorNombre (sentenciaBuscarUsuarioPorNombre, &datosBuscarUsuarioPorNombre, returnIdUsuario);
 }
 
 static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosRegistroUsuario *datosRegistroUsuario)
 {
     int idUsuario;
-    t_estadoSolicitud estadoSolicitud;
 
     if (sonDatosRegistroUsuarioInvalidos (datosRegistroUsuario))
-        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
-    estadoSolicitud = usuarioYaRegistrado (contextoServidor->baseDeDatos, datosRegistroUsuario);
-    if (estadoSolicitud == SOLICITUD_ERROR_CREDENCIALES_INVALIDAS || estadoSolicitud == SOLICITUD_ERROR_SERVIDOR)
-        return estadoSolicitud;
+    if (usuarioYaRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombreYCorreo, datosRegistroUsuario))
+        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
-    estadoSolicitud = registrarUsuario (contextoServidor->baseDeDatos, datosRegistroUsuario);
-    if (estadoSolicitud != SOLICITUD_EXITO)
-        return estadoSolicitud;
-
-    estadoSolicitud = recuperarIdUsuarioRegistrado (contextoServidor->baseDeDatos, datosRegistroUsuario, &idUsuario);
-    if (estadoSolicitud != SOLICITUD_EXITO)
-        return estadoSolicitud;
-
+    registrarUsuario (contextoServidor->sentenciasSqlite.insertarUsuario, datosRegistroUsuario);
+    recuperarIdUsuarioRecienRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre, datosRegistroUsuario, &idUsuario);
     conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, idUsuario);
 
     return SOLICITUD_EXITO;
@@ -327,7 +265,6 @@ static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t
  * 
  * Posibles respuestas:
  * SOLICITUD_EXITO|ID del usuario
- * SOLICITUD_ERROR_SERVIDOR|ID invalido
  * SOLICITUD_ERROR_CREDENCIALES_INVALIDAS|ID invalido
  */
 static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
@@ -366,35 +303,23 @@ static bool sonDatosEnvioMensajeInvalidos (const t_datosEnvioMensaje *datosEnvio
     return ((datosEnvioMensaje->texto == NULL) || (sonEmisorOReceptorInvalidos (datosEnvioMensaje)) || (elEmisorEsElReceptor (datosEnvioMensaje)));
 }
 
-static t_estadoSolicitud almacenarMensaje (sqlite3 *db, t_datosEnvioMensaje *datosEnvioMensaje)
+static void almacenarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosEnvioMensaje *datosEnvioMensaje)
 {
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosInsertarMensaje datosInsertarMensaje;
 
-    if (sqlite3_prepare_v2 (db, "INSERT INTO mensajes (idEmisor, idReceptor, texto) VALUES (?, ?, ?);", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_int (sentencia, 1, datosEnvioMensaje->idEmisor);
-    sqlite3_bind_int (sentencia, 2, datosEnvioMensaje->idReceptor);
-    sqlite3_bind_text (sentencia, 3, datosEnvioMensaje->texto, -1, SQLITE_STATIC);
+    datosInsertarMensaje.idEmisor = datosEnvioMensaje->idEmisor;
+    datosInsertarMensaje.idReceptor = datosEnvioMensaje->idReceptor;
+    strcpy (datosInsertarMensaje.texto, datosEnvioMensaje->texto);
 
-    sqlite3_step (sentencia);
-    sqlite3_finalize (sentencia);
-
-    return SOLICITUD_EXITO;
+    insertarMensaje (sentenciaInsertarMensaje, &datosInsertarMensaje);
 }
 
-/*
-* Retornar el dato del cliente a traves del argumento cliente si el receptor se encuentra conectado.
-*/
-static bool receptorEstaConectado (t_tablaHash *clientes, int *idReceptor, t_cliente *cliente)
+static bool receptorEstaConectado (t_tablaHash *clientes, const int *idReceptor, t_cliente *returnCliente)
 {
-    return buscarClaveUnicaEnTablaHash (clientes, idReceptor, funcionHash, cliente, sizeof (t_cliente), cmpIdCliente);
+    return buscarClaveUnicaEnTablaHash (clientes, idReceptor, funcionHash, returnCliente, sizeof (t_cliente), cmpIdCliente);
 }
 
-static void enviarMensajeAlReceptor (t_cliente *cliente, t_datosEnvioMensaje *datosEnvioMensaje)
+static void enviarMensajeAlReceptor (t_cliente *cliente, const t_datosEnvioMensaje *datosEnvioMensaje)
 {
     char respuesta [MAX_BUFFER_RESPUESTA];
 
@@ -403,20 +328,18 @@ static void enviarMensajeAlReceptor (t_cliente *cliente, t_datosEnvioMensaje *da
     printf ("Respuesta enviada: %s\n", respuesta);
 }
 
-static t_estadoSolicitud enviarMensaje (t_contextoServidor *contextoServidor, t_datosEnvioMensaje *datosEnvioMensaje)
+static t_estadoSolicitud enviarMensaje (t_contextoServidor *contextoServidor, const t_datosEnvioMensaje *datosEnvioMensaje)
 {
     t_cliente clienteReceptor;
-    t_estadoSolicitud estadoSolicitud = SOLICITUD_EXITO;
 
     if (sonDatosEnvioMensajeInvalidos (datosEnvioMensaje))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
-    estadoSolicitud = almacenarMensaje (contextoServidor->baseDeDatos, datosEnvioMensaje);
-    if (estadoSolicitud == SOLICITUD_EXITO)
-        if (receptorEstaConectado (&(contextoServidor->clientes), &(datosEnvioMensaje->idReceptor), &clienteReceptor))
-            enviarMensajeAlReceptor (&clienteReceptor, datosEnvioMensaje);
+    almacenarMensaje (contextoServidor->sentenciasSqlite.insertarMensaje, datosEnvioMensaje);
+    if (receptorEstaConectado (&(contextoServidor->clientes), &(datosEnvioMensaje->idReceptor), &clienteReceptor))
+        enviarMensajeAlReceptor (&clienteReceptor, datosEnvioMensaje);
 
-    return estadoSolicitud;
+    return SOLICITUD_EXITO;
 }
 
 static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesar, t_estadoSolicitud estadoSolicitud)
@@ -444,7 +367,6 @@ static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesa
  * Posibles respuestas:
  * SOLICITUD_EXITO
  * SOLICITUD_ERROR_OPERACION_INVALIDA
- * SOLICITUD_ERROR_SERVIDOR
  */
 static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
 {
@@ -472,37 +394,13 @@ static bool sonDatosSeleccionChatInvalidos (const t_datosSeleccionChat *datosSel
     return (strlen (datosSeleccionChat->nombreReceptor) < 3);
 }
 
-/*
-* Si se encontro un usuario con tal nombre de usuario, retorna en idUsuarioDelChatSeleccionado su id correspondiente.
-* Sino, retorna en idUsuarioDelChatSeleccionado un id invalido.
-*/
-static t_estadoSolicitud usuarioSeleccionadoExiste (sqlite3 *db, t_datosSeleccionChat *datosSeleccionChat, int *idUsuarioDelChatSeleccionado)
+static bool usuarioSeleccionadoNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre, const t_datosSeleccionChat *datosSeleccionChat, int *returnIdUsuarioDelChatSeleccinado)
 {
-    t_estadoSolicitud estadoSolicitud;
-    sqlite3_stmt *sentencia;
-    int resultadoConsulta;
+    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios where nombre = ?;", -1, &sentencia, NULL) != SQLITE_OK)
-    {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
-        return SOLICITUD_ERROR_SERVIDOR;
-    }
-    sqlite3_bind_text (sentencia, 1, datosSeleccionChat->nombreReceptor, -1, SQLITE_STATIC);
+    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosSeleccionChat->nombreReceptor);
 
-    resultadoConsulta = sqlite3_step (sentencia);
-    if (ENCONTRO_UN_USUARIO (resultadoConsulta))
-    {
-        *idUsuarioDelChatSeleccionado = sqlite3_column_int (sentencia, 0);
-        estadoSolicitud = SOLICITUD_EXITO;
-    }
-    else
-    {
-        *idUsuarioDelChatSeleccionado = ID_INVALIDO;
-        estadoSolicitud = SOLICITUD_ERROR_OPERACION_INVALIDA;
-    }
-    
-    sqlite3_finalize (sentencia);
-    return estadoSolicitud;
+    return (!buscarUsuarioPorNombre (sentenciaBuscarUsuarioPorNombre, &datosBuscarUsuarioPorNombre, returnIdUsuarioDelChatSeleccinado));
 }
 
 static bool usuarioSeleccionoSuPropioChat (int idCliente, int idUsuarioDelChatSeleccionado)
@@ -510,20 +408,20 @@ static bool usuarioSeleccionoSuPropioChat (int idCliente, int idUsuarioDelChatSe
     return (idCliente == idUsuarioDelChatSeleccionado);
 }
 
-static t_estadoSolicitud seleccionarChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, t_datosSeleccionChat *datosSeleccionChat, int *idUsuarioDelChatSeleccionado)
+static t_estadoSolicitud seleccionarChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosSeleccionChat *datosSeleccionChat, int *returnIdUsuarioDelChatSeleccionado)
 {
     t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
-    t_estadoSolicitud estadoSolicitud;
 
     if (sonDatosSeleccionChatInvalidos (datosSeleccionChat))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
-    estadoSolicitud = usuarioSeleccionadoExiste (contextoServidor->baseDeDatos, datosSeleccionChat, idUsuarioDelChatSeleccionado);
-    if (estadoSolicitud == SOLICITUD_EXITO)
-        if (usuarioSeleccionoSuPropioChat (cliente->id, *idUsuarioDelChatSeleccionado))
-            return SOLICITUD_ERROR_OPERACION_INVALIDA;
+    if (usuarioSeleccionadoNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre, datosSeleccionChat, returnIdUsuarioDelChatSeleccionado))
+        return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
-    return estadoSolicitud;
+    if (usuarioSeleccionoSuPropioChat (cliente->id, *returnIdUsuarioDelChatSeleccionado))
+        return SOLICITUD_ERROR_OPERACION_INVALIDA;
+
+    return SOLICITUD_EXITO;
 }
 
 static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProcesar, t_respuestaSeleccionChat *respuestaSeleccionChat)
@@ -549,7 +447,6 @@ static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProces
  * Posibles respuestas:
  * SOLICITUD_EXITO|ID del usuario del chat seleccionado
  * SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido
- * SOLICITUD_ERROR_SERVIDOR|ID invalido
  */
 static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
 {  

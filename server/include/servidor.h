@@ -28,6 +28,7 @@
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
+#include "baseDeDatos.h"
 
 
 /* ============================================================================================================================================
@@ -39,23 +40,6 @@
 * Variable para mantener activo o apagar el servidor. Es modificada en el manejador de la consola.
 */
 extern BOOL servidorActivo;
-
-
-/* ============================================================================================================================================
-   ESTRUCTURAS
-   ============================================================================================================================================ */
-
-
-/**
- * \struct t_respuestaInicializacionDB
- * \brief  Codigos de retorno de la inicializacion de la base de datos.
- */
-typedef enum
-{
-   TABLA_EXISTE,
-   TABLA_NO_EXISTE,
-   ERROR_PREPARACION_CONSULTA
-} t_respuestaInicializacionDB;
 
 
 /* ============================================================================================================================================

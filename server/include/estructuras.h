@@ -19,6 +19,7 @@
 
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
+#include "baseDeDatos.h"
 
 
 /* ============================================================================================================================================
@@ -54,11 +55,12 @@ typedef struct
  */
 typedef struct
 {
-    bool estadoWinsock;                                /**< Estado de Winsock API */
-    SOCKET sock;                                           /**< Socket del servidor. */
-    sqlite3 *baseDeDatos;                              /**< Puntero a la base de datos. */
-    t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
-    t_tablaHash clientes;                                /**< Tabla hash que contiene a los clientes conectados y autenticados. */
+   bool estadoWinsock;                                /**< Estado de Winsock API */
+   SOCKET sock;                                           /**< Socket del servidor. */
+   sqlite3 *baseDeDatos;                              /**< Puntero a la base de datos. */
+   t_sentenciasSqlite sentenciasSqlite;         /**< Cache de sentencias de consultas de base de datos. */
+   t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
+   t_tablaHash clientes;                                /**< Tabla hash que contiene a los clientes conectados y autenticados. */
 } t_contextoServidor;
 
 
