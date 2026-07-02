@@ -46,8 +46,8 @@ typedef enum
  */
 typedef struct
 {
-    sqlite3_stmt *buscarUsuarioPorNombre;
-    sqlite3_stmt *buscarUsuarioPorNombreYContrasenia;
+    sqlite3_stmt *buscarUsuarioPorNombre_recuperarId;
+    sqlite3_stmt *buscarUsuarioPorNombre_recuperarIdYContrasenia;
     sqlite3_stmt *buscarUsuarioPorNombreYCorreo;
     sqlite3_stmt *insertarUsuario;
     sqlite3_stmt *insertarMensaje;
@@ -62,16 +62,6 @@ typedef struct
 {
     char nombreUsuario [MAX_NOMBRE_USUARIO];
 } t_datosBuscarUsuarioPorNombre;
-
-/**
- * \struct t_datosBuscarUsuarioPorNombreYContrasenia
- * \brief  Estructura que contiene los datos necesarios para realizar la consulta de buscarUsuarioPorNombreYContrasenia.
- */
-typedef struct
-{
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
-    char contrasenia [MAX_CONTRASENIA];
-} t_datosBuscarUsuarioPorNombreYContrasenia;
 
 /**
  * \struct t_datosBuscarUsuarioPorNombreYCorreo
@@ -144,25 +134,26 @@ void liberarBaseDeDatos (sqlite3 *db, t_sentenciasSqlite *sentenciasSqlite);
 
 /** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID correspondiente.
  * 
- * \param sentenciaBuscarUsuarioPorNombre Puntero que contiene la sentencia para realizar la consulta en la base de datos.
+ * \param sentenciaBuscarUsuarioPorNombre_recuperarId Puntero que contiene la sentencia para realizar la consulta en la base de datos.
  * \param t_datosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta.
  * \param returnIdUsuario Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su ID correspondiente, sino retorna ID_INVALIDO.
  *
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool buscarUsuarioPorNombre (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario);
+bool buscarUsuarioPorNombre_recuperarId (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario);
 
-/** \brief Buscar un usuario en la base de datos por su nombre y contrasenia, y retornar su ID correspondiente.
+/** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID y contrasenia correspondiente.
  *
- * \param sentenciaBuscarUsuarioPorNombreYContrasenia Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param datosBuscarUsuarioPorNombreYContrasenia Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
+ * \param sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia Puntero que contiene la sentencia para realizar la consulta en la base de datos.
+ * \param datosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * \param returnIdUsuario Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su ID correspondiente, sino retorna ID_INVALIDO.
+ * \param returnContrasenia Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su contrasenia correspondiente, sino retorna NULL.
  *
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool buscarUsuarioPorNombreYContrasenia (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYContrasenia, const t_datosBuscarUsuarioPorNombreYContrasenia *datosBuscarUsuarioPorNombreYContrasenia, int *returnIdUsuario);
+bool buscarUsuarioPorNombre_recuperarIdYContrasenia (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia);
 
 /** \brief Buscar un usuario en la base de datos por su nombre y correo electronico.
  *

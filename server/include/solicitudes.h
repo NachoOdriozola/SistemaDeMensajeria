@@ -21,6 +21,7 @@
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <sqlite3.h>
+#include "../../external/libsodium/include/sodium.h"
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"

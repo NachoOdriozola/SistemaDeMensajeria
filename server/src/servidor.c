@@ -53,7 +53,15 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
     if (inicializarBaseDatos (&(contextoServidor->baseDeDatos), &(contextoServidor->sentenciasSqlite)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
+    // --------------- INICIALIZAR SODIUM ---------------
 
+    if (sodium_init () < 0)
+    {
+        perror ("\nERROR - Inicializar sodium.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    
     printf ("-INICIALIZACION EXITOSA-\n");
     return EXITO;
 }

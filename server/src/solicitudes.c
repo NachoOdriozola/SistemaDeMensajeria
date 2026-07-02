@@ -86,14 +86,18 @@ static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosAutenticacionUsu
     return 0;
 }
 
-static bool usuarioNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYContrasenia, const t_datosAutenticacionUsuario *datosAutenticacionUsuario, int *returnIdUsuario)
+static bool usuarioNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, const t_datosAutenticacionUsuario *datosAutenticacionUsuario, int *returnIdUsuario, char *returnContrasenia)
 {
-    t_datosBuscarUsuarioPorNombreYContrasenia datosBuscarUsuarioPorNombreYContrasenia;
+    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombreYContrasenia.nombreUsuario, datosAutenticacionUsuario->nombreUsuario);
-    strcpy (datosBuscarUsuarioPorNombreYContrasenia.contrasenia, datosAutenticacionUsuario->contrasenia);
+    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosAutenticacionUsuario->nombreUsuario);
 
-    return (!buscarUsuarioPorNombreYContrasenia (sentenciaBuscarUsuarioPorNombreYContrasenia, &datosBuscarUsuarioPorNombreYContrasenia, returnIdUsuario));
+    return (!buscarUsuarioPorNombre_recuperarIdYContrasenia (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, &datosBuscarUsuarioPorNombre, returnIdUsuario, returnContrasenia));
+}
+
+static bool contraseniaNoCoincide (const t_datosAutenticacionUsuario *datosAutenticacionUsuario, const char *hashContrasenia)
+{
+    return (crypto_pwhash_str_verify (hashContrasenia, datosAutenticacionUsuario->contrasenia, strlen (datosAutenticacionUsuario->contrasenia)));
 }
 
 static bool usuarioEstaConectado (t_tablaHash *clientes, int *idUsuario)
@@ -104,13 +108,17 @@ static bool usuarioEstaConectado (t_tablaHash *clientes, int *idUsuario)
 static t_estadoSolicitud autenticarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosAutenticacionUsuario *datosAutenticacionUsuario)
 {
     int idUsuario;
+    char hashContrasenia [MAX_CONTRASENIA];
 
     if (sonDatosAutenticacionUsuarioInvalidos (datosAutenticacionUsuario))
         return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
-    if (usuarioNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombreYContrasenia, datosAutenticacionUsuario, &idUsuario))
+    if (usuarioNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarIdYContrasenia, datosAutenticacionUsuario, &idUsuario, hashContrasenia))
         return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
     
+    if (contraseniaNoCoincide (datosAutenticacionUsuario, hashContrasenia))
+        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+
     if (usuarioEstaConectado (&(contextoServidor->clientes), &idUsuario))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
             
@@ -206,6 +214,18 @@ static bool usuarioYaRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYC
     return (buscarUsuarioPorNombreYCorreo (sentenciaBuscarUsuarioPorNombreYCorreo, &datosBuscarUsuarioPorNombreYCorreo));
 }
 
+static t_codigoRetorno hashearContrasenia (t_datosRegistroUsuario *datosRegistroUsuario)
+{
+    char contraseniaHasheada [crypto_pwhash_STRBYTES];
+
+    if (crypto_pwhash_str (contraseniaHasheada, datosRegistroUsuario->contrasenia, strlen (datosRegistroUsuario->contrasenia), 3, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0)
+        return SOLICITUD_ERROR_SERVIDOR;
+
+    strcpy (datosRegistroUsuario->contrasenia, contraseniaHasheada);
+    
+    return SOLICITUD_EXITO;
+}
+
 static void registrarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosRegistroUsuario *datosRegistroUsuario)
 {
     t_datosInsertarUsuario datosInsertarUsuario;
@@ -217,16 +237,16 @@ static void registrarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_da
     insertarUsuario (sentenciaInsertarUsuario, &datosInsertarUsuario);
 }
 
-static void recuperarIdUsuarioRecienRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre, const t_datosRegistroUsuario *datosRegistroUsuario, int *returnIdUsuario)
+static void recuperarIdUsuarioRecienRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosRegistroUsuario *datosRegistroUsuario, int *returnIdUsuario)
 {
     t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
     strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosRegistroUsuario->nombreUsuario);
 
-    buscarUsuarioPorNombre (sentenciaBuscarUsuarioPorNombre, &datosBuscarUsuarioPorNombre, returnIdUsuario);
+    buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, returnIdUsuario);
 }
 
-static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosRegistroUsuario *datosRegistroUsuario)
+static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, t_datosRegistroUsuario *datosRegistroUsuario)
 {
     int idUsuario;
 
@@ -236,8 +256,9 @@ static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor,
     if (usuarioYaRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombreYCorreo, datosRegistroUsuario))
         return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
+    hashearContrasenia (datosRegistroUsuario);
     registrarUsuario (contextoServidor->sentenciasSqlite.insertarUsuario, datosRegistroUsuario);
-    recuperarIdUsuarioRecienRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre, datosRegistroUsuario, &idUsuario);
+    recuperarIdUsuarioRecienRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosRegistroUsuario, &idUsuario);
     conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, idUsuario);
 
     return SOLICITUD_EXITO;
@@ -394,13 +415,13 @@ static bool sonDatosSeleccionChatInvalidos (const t_datosSeleccionChat *datosSel
     return (strlen (datosSeleccionChat->nombreReceptor) < 3);
 }
 
-static bool usuarioSeleccionadoNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre, const t_datosSeleccionChat *datosSeleccionChat, int *returnIdUsuarioDelChatSeleccinado)
+static bool usuarioSeleccionadoNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosSeleccionChat *datosSeleccionChat, int *returnIdUsuarioDelChatSeleccinado)
 {
     t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
     strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosSeleccionChat->nombreReceptor);
 
-    return (!buscarUsuarioPorNombre (sentenciaBuscarUsuarioPorNombre, &datosBuscarUsuarioPorNombre, returnIdUsuarioDelChatSeleccinado));
+    return (!buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, returnIdUsuarioDelChatSeleccinado));
 }
 
 static bool usuarioSeleccionoSuPropioChat (int idCliente, int idUsuarioDelChatSeleccionado)
@@ -415,7 +436,7 @@ static t_estadoSolicitud seleccionarChat (t_contextoServidor *contextoServidor, 
     if (sonDatosSeleccionChatInvalidos (datosSeleccionChat))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
-    if (usuarioSeleccionadoNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre, datosSeleccionChat, returnIdUsuarioDelChatSeleccionado))
+    if (usuarioSeleccionadoNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosSeleccionChat, returnIdUsuarioDelChatSeleccionado))
         return SOLICITUD_ERROR_OPERACION_INVALIDA;
 
     if (usuarioSeleccionoSuPropioChat (cliente->id, *returnIdUsuarioDelChatSeleccionado))

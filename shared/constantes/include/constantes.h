@@ -48,7 +48,7 @@ typedef  enum
  * \def MAX_CONTRASENIA
  * \brief Longitud maxima para la contrasenia del usuario. Incluye el '0'.
  */
-#define MAX_CONTRASENIA 65
+#define MAX_CONTRASENIA 129
 
 /**
  * \def MAX_CORREO_ELECTRONICO

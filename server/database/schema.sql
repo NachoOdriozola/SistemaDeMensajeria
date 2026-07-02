@@ -2,7 +2,7 @@ CREATE TABLE if not exists usuarios
 (
 id integer primary key autoincrement,
 nombre varchar(25) unique not null,
-contrasenia varchar(64) not null,
+hashContrasenia varchar(129) not null,
 correoElectronico varchar(128) unique not null
 );
 
