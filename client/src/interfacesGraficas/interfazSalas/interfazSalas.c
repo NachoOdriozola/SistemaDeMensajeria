@@ -136,7 +136,7 @@ static void actualizar (t_interfazSalas *interfazSalas)
  * Ademas, si se encuentra habilitado, renderiza el punto de insercion.
  * No se limpia ni muestra la pantalla, solo los renderiza.
  */
-static void interfazSalas_renderizarVistaUI (sfRenderWindow *renderizado, const t_interfazSalas *interfazSalas)
+static void interfazSalas_setearVistaUIYRenderizarUI (sfRenderWindow *renderizado, const t_interfazSalas *interfazSalas)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
     sfRenderWindow_setView (renderizado, interfazSalas->recursosComunesContactosSalas->vistas.ui);
@@ -168,7 +168,7 @@ static void renderizar (sfRenderWindow *renderizado, const t_interfazSalas *inte
     sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
     // --------------- RENDERIZAR VISTA DE UI ---------------
-    interfazSalas_renderizarVistaUI (renderizado, interfazSalas);
+    interfazSalas_setearVistaUIYRenderizarUI (renderizado, interfazSalas);
 
     // --------------- MOSTRAR VENTANA ---------------
     sfRenderWindow_display (renderizado);

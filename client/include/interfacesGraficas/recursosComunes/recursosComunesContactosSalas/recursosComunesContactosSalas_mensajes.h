@@ -1,6 +1,6 @@
 /**
- * \file  recursosComunesContactosSalas.h
- * \brief Declaracion de funciones y estructuras para recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
+ * \file  recursosComunesContactosSalas_mensajes.h
+ * \brief Contiene funciones que manejan el comportamiento de la lista de mensajes.
  */
 
 
@@ -12,101 +12,67 @@
    INCLUDE
    ============================================================================================================================================ */
 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
 #include "../../../../../external/csfml/include/SFML/System.h"
 #include "../../../../../external/csfml/include/SFML/Window.h"
 #include "../../../../../external/csfml/include/SFML/Graphics.h"
 
+#include "../../../../../shared/constantes/include/constantes.h"
+#include "../../../../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../../utiles.h"
-#include "../../../estructuras.h"
-#include "../../../../../shared/estructurasDeDatos/listaCircular/include/listaCircular.h"
 
 #include "recursosComunesContactosSalas_estructuras.h"
+
 
 /* ============================================================================================================================================
    FUNCIONES
    ============================================================================================================================================ */
 
 
-void _recursosComunesContactosSalas_configurarContextoMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
-/** \brief Configurar un mensaje.
- *
- * Establecerle un color y la fuente enviada como parametro.
- *
- * \param mensaje Doble puntero a mensaje sfText.
- * \param fuente Puntero a fuente sfFont.
- *
- */
-void configurarMensaje (void *mensaje, void *fuente);
-
-/** \brief Establecer un tamanio a un mensaje. Ademas, agrega un espaciado de linea.
- *
- * \param mensaje Doble puntero a mensaje sfText.
- *
- */
-void tamMensaje (void *mensaje);
-
-/** \brief Renderizar un mensaje.
- *
- * No se limpia ni muestra la ventana, solo lo renderiza.
- *
- * \param mensaje Doble puntero a mensaje sfText.
- * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
- *
- */
-void renderizarMensaje (void *mensaje, void *renderizado);
-
-/** \brief Vaciar (resetear) un mensaje sfText. Setear su string a "".
- *
- * \param mensaje Doble puntero a mensaje sfText.
- *
- */
-void vaciarMensaje (void *mensaje);
-
-/** \brief Liberar un mensaje sfText.
- *
- * \param mensaje Doble puntero a mensaje sfText.
- *
- */
-void liberarMensaje (void *mensaje);
-
-/** \brief Modificar la posicion de un mensaje.
- *
- * Unicamente modifica la posicion en Y del mensaje.
- *
- * \param mensaje Doble puntero a mensaje sfText.
- * \param desplazamientoY Puntero a la cantidad de desplazamiento en Y que se desea modificar.
- *
- */
-void modificarPosMensaje (void *mensaje, void *desplazamientoY);
-
-/** \brief Establecer los saltos de linea necesarios a un mensaje sfText.
- *
- * Establecer una cadena valida al texto sfText, con saltos de linea incorporados, que las lineas no sobrepasen el ancho maximo enviado como parametro.
- *
- * \param texto Puntero al mensaje sfText.
- * \param bufferMensaje Buffer que almacena el mensaje completo (sin saltos de linea).
- * \param anchoMax Ancho maximo que no debe sobrepasar los limites del mensaje.
- *
- */
-void establecerSaltoDeLineaMensaje (sfText *texto, const char *bufferMensaje, float anchoMax);
-
-/** \brief Insertar un mensaje a la lista circular de mensajes.
- *
- * Trabaja sobre el puntero al nodo del primer mensaje de la lista circular.
- * Establecer los saltos de linea necesarios para que el mensaje no sobrepase los limites establecidos.
- * Desplazar en Y a toda la lista circular de mensajes. El desplazamiento depende del alto del mensaje a insertar.
- * Dependiendo del origen del mensaje, se establece una posicion u otra al mismo.
- * Actualizar correspondientemente los punteros a nodo del primer y ultimo mensaje de la lista circular de mensajes.
+/** \brief Crear la lista doble de mensajes que contiene los mensajes sfText*.
  *
  * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
- * \param bufferMensaje Buffer que almacena el mensaje completo.
- * \param origen Origen de quien envio mensaje.
  *
  */
-void insertarMensaje (t_contextoMensajes *contextoMensajes, const char *bufferMensaje, t_origenMensaje origen);
+void _recursosComunesContactosSalas_crearListaMensajes (t_contextoMensajes *contextoMensajes);
 
-void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+/** \brief Insertar un nuevo mensaje a la lista de mensajes.
+ *
+ * Crea el mensaje sfText*, lo configura, le establece el texto del mensaje con saltos de linea, desplaza hacia arriba a todos los mensajes que hay en la lista de mensajes
+ * para hacer espacio para el nuevo mensaje entrante, le establece su posicion y lo inserta a la lista de mensajes.
+ * En caso de que sea el primer mensaje insertado a la lista, almacena su referencia en el contexto de mensajes.
+ *
+ * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
+ * \param mensaje Cadena que contiene el mensaje. Si bien la estructura contextoMensajes contiene la cadena del mensaje que escribe el usuario, este parametro es necesario para mensajes recibidos por otros usuarios.
+ * \param origenMensaje Origen de quien envio mensaje.
+ * \param fuentes Puntero a la estructura que contiene las fuentes de los textos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
+ * 
+ * \return EXITO en caso de que todo se ejecuto correctamente, ERROR_SIN_MEMORIA en caso de que no se pueda crear el mensaje.
+ *
+ */
+t_codigoRetorno recursosComunesContactosSalas_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_recursosComunesContactosSalasFuentes *fuentes);
+
+/** \brief Setear la vista de mensajes y renderizar la lista de mensajes.
+ *
+ * No se limpia ni muestra la ventana, solo los renderiza.
+ *
+ * \param renderizado renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de contactos y salas.
+ *
+ */
+void recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+/** \brief Vaciar la lista de mensajes, liberando los sfText* creados.
+ *
+ * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
+ *
+ */
+void recursosComunesContactosSalas_vaciarListaMensajes (t_contextoMensajes *contextoMensajes);
 
 
 #endif // RECURSOSCOMUNESCONTACTOSSALAS_MENSAJES_H_INCLUDED

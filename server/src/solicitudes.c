@@ -64,6 +64,19 @@ static void conectarUsuario (t_tablaHash *clientes, t_listaDoble *clientesNoAute
     vincularNodoATablaHash (clientes, &(cliente->id), funcionHash, clienteAProcesar);
 }
 
+static bool sonTodosEspacios (const char *mensaje)
+{
+    if (*mensaje == '\0')
+        return false;
+
+    while (*mensaje == ' ')
+        mensaje ++;
+
+    if (*mensaje == '\0')
+        return true;
+    return false;
+}
+
 
 /* ============================================================================================================================================
    FUNCIONES AUTENTICACION
@@ -77,10 +90,10 @@ static void extraerDatosSolicitudAutenticacion (const char *solicitud, t_datosAu
 
 static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosAutenticacionUsuario *datosAutenticacionUsuario)
 {
-    if (strlen (datosAutenticacionUsuario->nombreUsuario) < 3)
+    if ((strlen (datosAutenticacionUsuario->nombreUsuario) < 3) || (sonTodosEspacios (datosAutenticacionUsuario->nombreUsuario)))
         return 1;
     
-    if (strlen (datosAutenticacionUsuario->contrasenia) < 8)
+    if ((strlen (datosAutenticacionUsuario->contrasenia) < 8) || (sonTodosEspacios (datosAutenticacionUsuario->contrasenia)))
         return 1;
 
     return 0;
@@ -192,10 +205,10 @@ static bool sonDatosRegistroUsuarioInvalidos (const t_datosRegistroUsuario *dato
     int largoNombreUsuario = strlen (datosRegistroUsuario->nombreUsuario);
     int largoContrasenia = strlen (datosRegistroUsuario->contrasenia);
 
-    if (strlen (datosRegistroUsuario->nombreUsuario) < 3)
+    if ((strlen (datosRegistroUsuario->nombreUsuario) < 3) || sonTodosEspacios (datosRegistroUsuario->nombreUsuario))
         return 1;
     
-    if (strlen (datosRegistroUsuario->contrasenia) < 8)
+    if ((strlen (datosRegistroUsuario->contrasenia) < 8) || sonTodosEspacios (datosRegistroUsuario->contrasenia))
         return 1;
 
     if (esCorreoElectronicoInvalido (datosRegistroUsuario->correoElectronico))
@@ -321,7 +334,10 @@ static bool elEmisorEsElReceptor (const t_datosEnvioMensaje *datosEnvioMensaje)
 
 static bool sonDatosEnvioMensajeInvalidos (const t_datosEnvioMensaje *datosEnvioMensaje)
 {
-    return ((datosEnvioMensaje->texto == NULL) || (sonEmisorOReceptorInvalidos (datosEnvioMensaje)) || (elEmisorEsElReceptor (datosEnvioMensaje)));
+    return ((*(datosEnvioMensaje->texto) == '\0') || 
+                (sonTodosEspacios (datosEnvioMensaje->texto)) ||
+                (sonEmisorOReceptorInvalidos (datosEnvioMensaje)) || 
+                (elEmisorEsElReceptor (datosEnvioMensaje)));
 }
 
 static void almacenarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosEnvioMensaje *datosEnvioMensaje)
@@ -412,7 +428,7 @@ static void extraerDatosSolicitudSeleccionChat (const char *solicitud, t_datosSe
 
 static bool sonDatosSeleccionChatInvalidos (const t_datosSeleccionChat *datosSeleccionChat)
 {
-    return (strlen (datosSeleccionChat->nombreReceptor) < 3);
+    return ((strlen (datosSeleccionChat->nombreReceptor) < 3) || (sonTodosEspacios (datosSeleccionChat->nombreReceptor)));
 }
 
 static bool usuarioSeleccionadoNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosSeleccionChat *datosSeleccionChat, int *returnIdUsuarioDelChatSeleccinado)

@@ -48,6 +48,15 @@ void mapListaDoble (t_listaDoble *pl, void accion (void*))
     }
 }
 
+void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), void *complemento)
+{
+    while (*pl != NULL)
+    {
+        accion ((*pl)->dato, complemento);
+        pl = &((*pl)->sig);
+    }
+}
+
 int buscarClaveUnicaEnListaDoble (t_listaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
 {
     while (*pl != NULL)
@@ -118,3 +127,4 @@ void vaciarListaDobleConAccion (t_listaDoble *pl, void accion (void *dato))
         free (nodoElim);
     }
 }
+

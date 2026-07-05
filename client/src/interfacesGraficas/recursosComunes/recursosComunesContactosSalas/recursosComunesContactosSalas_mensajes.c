@@ -1,44 +1,160 @@
 #include "../../../../include/interfacesGraficas/recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas_mensajes.h"
 
 
-void _recursosComunesContactosSalas_configurarContextoMensajes (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    *(recursosComunesContactosSalas->logica.contextoMensajes.mensaje) = '\0';
-    recursosComunesContactosSalas->logica.contextoMensajes.primerMensaje = recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes;
-    recursosComunesContactosSalas->logica.contextoMensajes.ultimoMensaje = recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes;
+/* ============================================================================================================================================
+   DECLARACION DE FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
 
-    mapListaCircularConComplemento (&(recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes), recursosComunesContactosSalas->fuentes.cuerpo, configurarMensaje);
-    mapListaCircular (&(recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes), tamMensaje);
+
+static void configurarMensaje (sfText *mensaje, sfFont *fuente);
+static void establecerTextoConSaltosDeLineaAlMensaje (sfText *texto, const char *bufferMensaje, float anchoMax);
+static void desplazarHaciaArribaTodosLosMensajes (t_listaDoble *mensajes, float desplazamientoY);
+static void establecerPosicionMensajeSegunOrigen (sfText *mensaje, t_origenMensaje origenMensaje);
+static bool esElPrimerMensaje (t_contextoMensajes *contextoMensajes);
+static void guardarSuReferencia (t_contextoMensajes *contextoMensajes);
+static void renderizarMensaje (void *mensaje, void *renderizado);
+static void liberarMensaje (void *mensaje);
+
+
+/* ============================================================================================================================================
+   FUNCIONES PUBLICAS
+   ============================================================================================================================================ */
+
+
+void _recursosComunesContactosSalas_crearListaMensajes (t_contextoMensajes *contextoMensajes)
+{
+    crearListaDoble (&(contextoMensajes->mensajes));
+    contextoMensajes->ultimoMensaje = NULL;
 }
 
-void configurarMensaje (void *mensaje, void *fuente)
+t_codigoRetorno recursosComunesContactosSalas_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_recursosComunesContactosSalasFuentes *fuentes)
 {
-    sfText_setFont (*((sfText**)mensaje), (sfFont*)fuente);
-    sfText_setFillColor (*((sfText**)mensaje), sfColor_fromRGB (53, 53, 53));
+    sfText *mensajeGrafico;
+
+    mensajeGrafico = sfText_create ();
+    if (!mensajeGrafico)
+    {
+        perror ("\nERROR - Crear mensaje grafico.\n");
+        return ERROR_SIN_MEMORIA;
+    }
+    configurarMensaje (mensajeGrafico, fuentes->cuerpo);
+    establecerTextoConSaltosDeLineaAlMensaje (mensajeGrafico, mensaje, 700);
+    desplazarHaciaArribaTodosLosMensajes (&(contextoMensajes->mensajes), (sfText_getLocalBounds (mensajeGrafico)).height + 35);
+    establecerPosicionMensajeSegunOrigen (mensajeGrafico, origenMensaje);
+    if (insertarAlInicioListaDoble (&(contextoMensajes->mensajes), &mensajeGrafico, sizeof (sfText*)) != 0) // 0 es exito.
+        return ERROR_SIN_MEMORIA;
+    if (esElPrimerMensaje (contextoMensajes))
+        guardarSuReferencia (contextoMensajes);
+
+    return EXITO;
 }
 
-void tamMensaje (void *mensaje)
+void recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {
-    sfText_setCharacterSize (*((sfText**)mensaje), 22);
-    sfText_setLineSpacing (*((sfText**)mensaje), 1.3);
+    // --------------- SETEAR VISTA DE MENSAJES ---------------
+    sfRenderWindow_setView (renderizado, recursosComunesContactosSalas->vistas.mensajes);
+
+    // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
+    mapListaDobleConComplemento (&(recursosComunesContactosSalas->logica.contextoMensajes.mensajes), renderizarMensaje, renderizado);
 }
 
-void renderizarMensaje (void *mensaje, void *renderizado)
+void recursosComunesContactosSalas_vaciarListaMensajes (t_contextoMensajes *contextoMensajes)
 {
-    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
+    mapListaDoble (&(contextoMensajes->mensajes), liberarMensaje);
+    contextoMensajes->ultimoMensaje = NULL;
 }
 
-void vaciarMensaje (void *mensaje)
+
+/* ============================================================================================================================================
+   FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+/*
+ * Aun no establece la posicion ni el contenido del mensaje.
+*/
+static void configurarMensaje (sfText *mensajeGrafico, sfFont *fuente)
 {
-    sfText_setString (*((sfText**)mensaje), "");
+    sfText_setFont (mensajeGrafico, fuente);
+    sfText_setFillColor (mensajeGrafico, sfColor_fromRGB (53, 53, 53));
+    sfText_setCharacterSize (mensajeGrafico, 22);
+    sfText_setLineSpacing (mensajeGrafico, 1.3);
 }
 
-void liberarMensaje (void *mensaje)
+static int encontrarUnaPalabraYRetornarSuLargo (const char *cadena)
 {
-    DESTRUCTOR_SEGURO_TEXTO (*((sfText**)mensaje));
+    int largoPalabra = 0;
+
+    while ((cadena[largoPalabra] != '\0') && (cadena[largoPalabra] != ' '))
+        largoPalabra++;
+
+    return largoPalabra;
 }
 
-void modificarPosMensaje (void *mensaje, void *desplazamientoY)
+static bool palabraSobrepasoAnchoPermitido (sfVector2f posUltimoCaracter, float anchoMaxMensaje)
+{
+    return (posUltimoCaracter.x >= anchoMaxMensaje);
+}
+
+static void agregarSaltoDeLinea (char *cadena)
+{
+    strcat (cadena, "\n");
+}
+
+/*
+ * Si la palabra sobrepasa el ancho permitido, agrega un salto de linea.
+*/
+static void procesarPalabra (sfText *mensajeGrafico, const char *cadenaMensaje, char *auxCadenaMensaje, float anchoMaxMensaje, int largoPalabra)
+{
+    int largoAuxCadenaMensaje, i;
+    sfVector2f posUltimoCaracter;
+
+    for (i = 0; i < largoPalabra; i++)
+    {
+        largoAuxCadenaMensaje = strlen (auxCadenaMensaje);
+
+        auxCadenaMensaje[largoAuxCadenaMensaje] = cadenaMensaje[i];
+        auxCadenaMensaje[largoAuxCadenaMensaje + 1] = '\0';
+
+        sfText_setString (mensajeGrafico, auxCadenaMensaje);
+        posUltimoCaracter = sfText_findCharacterPos (mensajeGrafico, largoAuxCadenaMensaje + 1);
+
+        if (palabraSobrepasoAnchoPermitido (posUltimoCaracter, anchoMaxMensaje))
+            agregarSaltoDeLinea (auxCadenaMensaje);
+    }
+}
+
+static void encontrarPrimerCaracterProximaPalabra (const char **cadenaMensaje, char *auxCadenaMensaje, int largoUltimaPalabra)
+{
+    (*cadenaMensaje) += largoUltimaPalabra;
+    while (**cadenaMensaje == ' ')
+    {
+        strcat (auxCadenaMensaje, " ");
+        (*cadenaMensaje) ++;
+    }
+}
+
+/*
+* El ancho maximo del mensaje tiene que ser enviado en pixeles.
+*/
+static void establecerTextoConSaltosDeLineaAlMensaje (sfText *mensajeGrafico, const char *cadenaMensaje, float anchoMaxMensaje)
+{
+    char auxCadenaMensaje [MAX_MENSAJE + 100] = ""; // Almacena la cadena del mensaje mas los saltos de linea a agregar.
+    int largoPalabra;
+
+    sfText_setPosition (mensajeGrafico, (sfVector2f){0, 0}); // Establece una posicion ficticia al mensaje para que pueda ser procesado.
+
+    while (*cadenaMensaje != '\0')
+    {
+        largoPalabra = encontrarUnaPalabraYRetornarSuLargo (cadenaMensaje);
+        procesarPalabra (mensajeGrafico, cadenaMensaje, auxCadenaMensaje, anchoMaxMensaje, largoPalabra);
+        encontrarPrimerCaracterProximaPalabra (&cadenaMensaje, auxCadenaMensaje, largoPalabra);
+    }
+
+    sfText_setString(mensajeGrafico, auxCadenaMensaje);
+}
+
+static void modificarPosMensaje (void *mensaje, void *desplazamientoY)
 {
     sfVector2f pos;
 
@@ -47,78 +163,38 @@ void modificarPosMensaje (void *mensaje, void *desplazamientoY)
     sfText_setPosition (*((sfText**)mensaje), pos);
 }
 
-void establecerSaltoDeLineaMensaje(sfText *texto, const char *bufferMensaje, float anchoMax)
+static void desplazarHaciaArribaTodosLosMensajes (t_listaDoble *mensajes, float desplazamientoY)
 {
-    int largoPalabra, i;
-    int largoActual;
-    sfVector2f posUltimoCaracter;
-    char bufferTexto[MAX_MENSAJE + 100] = "";
-
-    while (*bufferMensaje)
-    {
-        // Establecer la longitud de la palabra.
-        largoPalabra = 0;
-        while ((bufferMensaje[largoPalabra] != '\0') && (bufferMensaje[largoPalabra] != ' '))
-            largoPalabra++;
-
-        // Procesar palabra caracter por caracter.
-        for (i = 0; i < largoPalabra; i++)
-        {
-            largoActual = strlen (bufferTexto);
-
-            bufferTexto[largoActual] = bufferMensaje[i];
-            bufferTexto[largoActual + 1] = '\0';
-
-            sfText_setString (texto, bufferTexto);
-            posUltimoCaracter = sfText_findCharacterPos (texto, strlen(bufferTexto));
-            if (posUltimoCaracter.x >= anchoMax)
-                strcat (bufferTexto, "\n"); // Agregar salto de linea si la palabra sobrepaso el ancho permitido.
-        }
-
-        bufferMensaje += largoPalabra;
-        if (*bufferMensaje == ' ')
-        {
-            strcat (bufferTexto, " ");
-            bufferMensaje++;
-        }
-    }
-    sfText_setString(texto, bufferTexto);
+    mapListaDobleConComplemento (mensajes, modificarPosMensaje, &desplazamientoY);
 }
 
-void insertarMensaje (t_contextoMensajes *contextoMensajes, const char *bufferMensaje, t_origenMensaje origen)
+static void establecerPosicionMensajeSegunOrigen (sfText *mensaje, t_origenMensaje origenMensaje)
 {
-    sfText *mensaje;
-    sfFloatRect limites;
-    float desplazamientoY;
+    sfFloatRect limitesMensaje = sfText_getLocalBounds (mensaje);
 
-    mensaje = *((sfText**)contextoMensajes->primerMensaje->dato);
-
-    sfText_setPosition (mensaje, (sfVector2f){0, 0});
-    establecerSaltoDeLineaMensaje (mensaje, bufferMensaje, 700);
-
-    limites = sfText_getLocalBounds (mensaje);
-    desplazamientoY = limites.height + 35;
-    mapListaCircularConComplemento (&(contextoMensajes->listaMensajes), &(desplazamientoY), modificarPosMensaje);
-
-    if (origen == MENSAJE_PROPIO)
-        sfText_setPosition (mensaje, (sfVector2f){1824 - limites.width - limites.left, 825 - limites.height});
+    if (origenMensaje == MENSAJE_PROPIO)
+        sfText_setPosition (mensaje, (sfVector2f){1824 - limitesMensaje.width - limitesMensaje.left, 825 - limitesMensaje.height});
     else
-        sfText_setPosition (mensaje, (sfVector2f){485, 825 - limites.height});
-
-    if (contextoMensajes->primerMensaje->sig == contextoMensajes->ultimoMensaje)
-        contextoMensajes->ultimoMensaje = contextoMensajes->ultimoMensaje->sig;
-    contextoMensajes->primerMensaje = contextoMensajes->primerMensaje->sig;
+        sfText_setPosition (mensaje, (sfVector2f){485, 825 - limitesMensaje.height});
 }
 
-void renderizarVistaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+static bool esElPrimerMensaje (t_contextoMensajes *contextoMensajes)
 {
-    // --------------- ESTABLECER VISTA DE MENSAJES ---------------
+    return (contextoMensajes->ultimoMensaje == NULL);
+}
 
-    sfRenderWindow_setView (renderizado, recursosComunesContactosSalas->vistas.mensajes);
+static void guardarSuReferencia (t_contextoMensajes *contextoMensajes)
+{
+    contextoMensajes->ultimoMensaje = contextoMensajes->mensajes;
+}
 
+static void renderizarMensaje (void *mensaje, void *renderizado)
+{
+    sfRenderWindow_drawText ((sfRenderWindow*)renderizado, *((sfText**)mensaje), NULL);
+}
 
-    // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
-
-    mapListaCircularConComplemento (&(recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes), renderizado, renderizarMensaje);
+static void liberarMensaje (void *mensaje)
+{
+    DESTRUCTOR_SEGURO_TEXTO (*((sfText**)mensaje));
 }
 

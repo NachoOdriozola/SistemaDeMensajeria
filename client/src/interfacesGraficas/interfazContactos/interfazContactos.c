@@ -173,7 +173,7 @@ static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazCont
  * Ademas, si se encuentra habilitado, renderiza el punto de insercion.
  * No se limpia ni muestra la pantalla, solo los renderiza.
  */
-static void interfazContactos_renderizarVistaUI (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos)
+static void interfazContactos_setearVistaUIYRenderizarUI (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
     sfRenderWindow_setView (renderizado, interfazContactos->recursosComunesContactosSalas->vistas.ui);
@@ -203,10 +203,10 @@ static void renderizar (sfRenderWindow *renderizado, const t_interfazContactos *
     sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
     // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
-    renderizarVistaMensajes (renderizado, interfazContactos->recursosComunesContactosSalas);
+    recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (renderizado, interfazContactos->recursosComunesContactosSalas);
 
     // --------------- RENDERIZAR VISTA DE UI ---------------
-    interfazContactos_renderizarVistaUI (renderizado, interfazContactos);
+    interfazContactos_setearVistaUIYRenderizarUI (renderizado, interfazContactos);
 
     // --------------- MOSTRAR VENTANA ---------------
     sfRenderWindow_display (renderizado);

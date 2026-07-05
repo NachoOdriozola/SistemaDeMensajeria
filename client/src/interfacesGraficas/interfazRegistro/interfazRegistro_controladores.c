@@ -269,24 +269,37 @@ static void posicionarPuntoInsercionBarraEscrituraCorreo (t_interfazRegistro *in
 }
 
 
+static bool sonTodosEspacios (const char *mensaje)
+{
+    if (*mensaje == '\0')
+        return false;
+
+    while (*mensaje == ' ')
+        mensaje ++;
+
+    if (*mensaje == '\0')
+        return true;
+    return false;
+}
+
 static bool noEsNombreValido (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if (strlen (recursosComunesAutenticacionRegistro->logica.nombreUsuario) < 3)
+    if ((strlen (recursosComunesAutenticacionRegistro->logica.nombreUsuario) < 3) || (sonTodosEspacios (recursosComunesAutenticacionRegistro->logica.nombreUsuario)))
     {
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 static bool noEsContraseniaValida (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
-    if (strlen (recursosComunesAutenticacionRegistro->logica.contrasenia) < 8)
+    if ((strlen (recursosComunesAutenticacionRegistro->logica.contrasenia) < 8) || (sonTodosEspacios (recursosComunesAutenticacionRegistro->logica.contrasenia)))
     {
         sfText_setColor (recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 static bool noEsCorreoElectronicoValido (t_interfazRegistro *interfazRegistro)
@@ -299,9 +312,9 @@ static bool noEsCorreoElectronicoValido (t_interfazRegistro *interfazRegistro)
         (strchr (ptr + 1, '@') != NULL))                                             // O tiene 2 arrobas
     {
         sfText_setColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 /*
@@ -309,16 +322,16 @@ static bool noEsCorreoElectronicoValido (t_interfazRegistro *interfazRegistro)
  */
 static bool sonDatosRegistroUsuarioValidos (t_interfazRegistro *interfazRegistro)
 {
-    bool flag = 1;
+    bool flag = true;
 
     if (noEsNombreValido (interfazRegistro->recursosComunesAutenticacionRegistro))
-        flag = 0;
+        flag = false;
 
     if (noEsContraseniaValida (interfazRegistro->recursosComunesAutenticacionRegistro))    
-        flag = 0;
+        flag = false;
 
     if (noEsCorreoElectronicoValido (interfazRegistro))
-        flag = 0;
+        flag = false;
     
     return flag;
 }

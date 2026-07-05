@@ -23,7 +23,7 @@
 
 #include "../../../../../shared/constantes/include/constantes.h"
 #include "../../../utiles.h"
-#include "../../../../../shared/estructurasDeDatos/listaCircular/include/listaCircular.h"
+#include "../../../../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 
 #include "recursosComunesContactosSalas_estructuras.h"
 #include "recursosComunesContactosSalas_recursos.h"
@@ -43,7 +43,7 @@
  */
 void recursosComunesContactosSalas_inicializarValoresNulos (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 
-/** \brief Inicializar los recursos graficos, la lista de mensajes y vistas comunes (compartidos) entre las interfaces de contactos y salas.
+/** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de contactos y salas.
  *
  * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de contactos y salas.
  * 

@@ -18,7 +18,7 @@
 #include "../../../../../external/csfml/include/SFML/Graphics.h"
 
 #include "../../../../../shared/constantes/include/constantes.h"
-#include "../../../../../shared/estructurasDeDatos/listaCircular/include/listaCircular.h"
+#include "../../../../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../../utiles.h"
 
 
@@ -105,10 +105,9 @@ typedef enum
  */
 typedef struct
 {
-    t_listaCircular listaMensajes;                          /**< Lista circular de mensajes. */
-    t_nodo *primerMensaje;                                /**< Puntero al primer mensaje de la lista circular de mensajes. */
-    t_nodo *ultimoMensaje;                                /**< Puntero al ultimo mensaje de la lista circular de mensajes. */
+    t_listaDoble mensajes;                                   /**< Lista doble que contiene los mensajes sfText. */
     char mensaje [MAX_MENSAJE];                    /**< Cadena donde se guarda el mensaje escrito por el usuario. */
+    t_nodoListaDoble *ultimoMensaje;               /**< Puntero que apunta al ultimo mensaje de la lista */
 } t_contextoMensajes;
 
 /**

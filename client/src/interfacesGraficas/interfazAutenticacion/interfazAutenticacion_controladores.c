@@ -197,12 +197,28 @@ static void posicionarPuntoInsercionBarraEscrituraContrasenia (t_recursosComunes
 }
 
 
+static bool noSonTodosEspacios (const char *mensaje)
+{
+    if (*mensaje == '\0')
+        return true;
+
+    while (*mensaje == ' ')
+        mensaje ++;
+
+    if (*mensaje == '\0')
+        return false;
+    return true;
+}
+
 /*
  * Si los datos de autenticacion que envio el usuario son validos segun las restricciones del dominio.
 */
 static bool sonDatosAutenticacionUsuarioValidos (const char *nombreUsuario, const char *contrasenia)
 {
-    return ((strlen (nombreUsuario) >= 3) && (strlen (contrasenia) >= 8));
+    return ((strlen (nombreUsuario) >= 3) && 
+                (strlen (contrasenia) >= 8) &&
+                (noSonTodosEspacios (nombreUsuario)) &&
+                (noSonTodosEspacios (contrasenia)));
 }
 
 /*

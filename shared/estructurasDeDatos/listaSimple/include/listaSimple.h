@@ -17,15 +17,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../nodo/include/nodo.h"
-
 
 /* ============================================================================================================================================
    DEFINES
    ============================================================================================================================================ */
 
    
-typedef t_nodo *t_listaSimple;
+/** \struct t_nodoListaSimple
+ * \brief Define la estructura base de un nodo de una lista doblemente enlazada. Utiliza el s_nodoListaSimple como recursivo.
+ */
+typedef struct s_nodoListaSimple
+{
+    void *dato;
+    unsigned tam;
+    struct s_nodoListaSimple *sig;
+} t_nodoListaSimple;
+
+typedef t_nodoListaSimple *t_listaSimple;
 
 
 /* ============================================================================================================================================

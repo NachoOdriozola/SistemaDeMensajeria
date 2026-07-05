@@ -218,29 +218,6 @@ t_codigoRetorno _recursosComunesContactosSalas_inicializarVistas (t_recursosComu
     return EXITO;
 }
 
-t_codigoRetorno _recursosComunesContactosSalas_inicializarListaMensajes (t_contextoMensajes *contextoMensajes)
-{
-    sfText *vecMensajes [MAX_MENSAJES_MEMORIA];
-    unsigned short int i;
-
-    for (i = 0; i < MAX_MENSAJES_MEMORIA; i ++)
-        vecMensajes[i] = NULL;
-
-    for (i = 0; i < MAX_MENSAJES_MEMORIA; i ++)
-    {
-        vecMensajes[i] = sfText_create ();
-        if (!(vecMensajes[i]))
-        {
-            printf ("\nERROR - No se pudo crear el mensaje[%u].\n", i);
-            return ERROR_INICIALIZACION;
-        }
-        insertarSegundoCircular (&(contextoMensajes->listaMensajes), &(vecMensajes[i]), sizeof (sfText*));
-    }
-
-
-    return EXITO;
-}
-
 
 void _recursosComunesContactosSalas_configurarInterfaz (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
 {

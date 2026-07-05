@@ -8,10 +8,8 @@ add_compile_options(/utf-8)
 
 add_subdirectory(shared/constantes)
 add_subdirectory(shared/protocolos)
-add_subdirectory(shared/estructurasDeDatos/nodo)
 add_subdirectory(shared/estructurasDeDatos/listaSimple)
 add_subdirectory(shared/estructurasDeDatos/listaDoble)
-add_subdirectory(shared/estructurasDeDatos/listaCircular)
 add_subdirectory(shared/estructurasDeDatos/tablaHash)
 
 add_subdirectory(external/csfml)

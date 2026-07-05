@@ -8,9 +8,9 @@ void crearListaSimple (t_listaSimple *pl)
 
 int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned tamDato)
 {
-    t_nodo *nuevoNodo;
+    t_nodoListaSimple *nuevoNodo;
 
-    nuevoNodo = malloc (sizeof (t_nodo));
+    nuevoNodo = malloc (sizeof (t_nodoListaSimple));
     if (!nuevoNodo)
     {
         perror ("ERROR - Sin memoria.\n");
@@ -68,7 +68,7 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
 
 void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
 {
-    t_nodo *nodoElim = *pl;
+    t_nodoListaSimple *nodoElim = *pl;
 
     *pl = nodoElim->sig;
     if (returnDato != NULL)
@@ -81,7 +81,7 @@ void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsi
 
 void vaciarListaSimpleConAccion (t_listaSimple *pl, void accion (void *dato))
 {
-    t_nodo *nodoElim;
+    t_nodoListaSimple *nodoElim;
 
     while (*pl != NULL)
     {
@@ -92,35 +92,4 @@ void vaciarListaSimpleConAccion (t_listaSimple *pl, void accion (void *dato))
         free (nodoElim);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

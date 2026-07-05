@@ -63,13 +63,6 @@
 #define VELOCIDAD_SCROLL 35.0f
 
 
-/**
- * \def MAX_MENSAJES_MEMORIA
- * \brief Cantidad maxima de mensajes que se guardan en memoria en la lista circular de mensajes.
- */
-#define MAX_MENSAJES_MEMORIA 25
-
-
 /* ============================================================================================================================================
    FUNCIONES
    ============================================================================================================================================ */
@@ -84,7 +77,6 @@ t_codigoRetorno _recursosComunesContactosSalas_inicializarFuentes (t_recursosCom
 t_codigoRetorno _recursosComunesContactosSalas_inicializarTextos (t_recursosComunesContactosSalasTextos *textos);
 t_codigoRetorno _recursosComunesContactosSalas_inicializarElementos (t_recursosComunesContactosSalasElementos *elementos);
 t_codigoRetorno _recursosComunesContactosSalas_inicializarVistas (t_recursosComunesContactosSalasVistas *vistas);
-t_codigoRetorno _recursosComunesContactosSalas_inicializarListaMensajes (t_contextoMensajes *contextoMensajes);
 
 void _recursosComunesContactosSalas_configurarInterfaz (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
 void _recursosComunesContactosSalas_configurarTextos (t_recursosComunesContactosSalasTextos *textos, const t_recursosComunesContactosSalasFuentes *fuentes);

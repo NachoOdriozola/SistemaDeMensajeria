@@ -145,7 +145,7 @@ bool recursosComunesContactosSalas_manejarDesplazarArribaAreaMensajes (t_recurso
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
     posCentroVista = sfView_getCenter (recursosComunesContactosSalas->vistas.mensajes);
-    posUltimoMensaje = sfText_getPosition (*((sfText**)recursosComunesContactosSalas->logica.contextoMensajes.ultimoMensaje->dato));
+    posUltimoMensaje = sfText_getPosition (*((sfText**)(recursosComunesContactosSalas->logica.contextoMensajes.ultimoMensaje->dato)));
 
     if (posCentroVista.y - tamVista.y / 2.f > posUltimoMensaje.y)
         sfView_move (recursosComunesContactosSalas->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
@@ -183,7 +183,7 @@ bool recursosComunesContactosSalas_manejarScrollAreaMensajes (t_recursosComunesC
 
     tamVista = sfView_getSize (recursosComunesContactosSalas->vistas.mensajes);
     posCentro = sfView_getCenter (recursosComunesContactosSalas->vistas.mensajes);
-    posUltimoMensaje = sfText_getPosition (*((sfText**)recursosComunesContactosSalas->logica.contextoMensajes.ultimoMensaje->dato));
+    posUltimoMensaje = sfText_getPosition (*((sfText**)(recursosComunesContactosSalas->logica.contextoMensajes.ultimoMensaje->dato)));
 
     desplazamientoY = -eventoScroll.mouseWheelScroll.delta * VELOCIDAD_SCROLL;
 

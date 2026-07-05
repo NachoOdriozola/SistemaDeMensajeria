@@ -108,6 +108,19 @@ static bool esUnComando (const char *mensaje)
     return  (*mensaje == '/');
 }
 
+static bool noSonTodosEspacios (const char *mensaje)
+{
+    if (*mensaje == '\0')
+        return true;
+
+    while (*mensaje == ' ')
+        mensaje ++;
+
+    if (*mensaje == '\0')
+        return false;
+    return true;
+}
+
 
 static bool esNombreValido (const char *nombreUsuarioChatSeleccionado)
 {
@@ -134,6 +147,7 @@ static bool sonDatosSeleccionChatValidos (t_interfazContactos *interfazContactos
     char *nombreUsuarioChatSeleccionadoSinBarraDeComando = &(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje[1]);
 
     return ((esNombreValido (nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
+                (noSonTodosEspacios (nombreUsuarioChatSeleccionadoSinBarraDeComando)) && 
                 (usuarioNoSeleccionoSuPropioChat (nombreUsuarioPropio, nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
                 (noEsChatYaSeleccionado (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, nombreUsuarioChatSeleccionadoSinBarraDeComando)));
 }
@@ -157,7 +171,7 @@ static void setearNuevoChatGraficamente (t_interfazContactos *interfazContactos)
 {
     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
     centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
-    mapListaCircular (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes), vaciarMensaje);
+    recursosComunesContactosSalas_vaciarListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes));
 }
 
 static void procesarSegunRespuestaSeleccionChat (t_interfazContactos *interfazContactos, t_respuestaSeleccionChat *respuestaSeleccionChat)
@@ -185,7 +199,7 @@ static void realizarSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_i
 
 static bool noEsMensajeVacio (const char *mensaje)
 {
-    return (mensaje != NULL);
+    return (*mensaje != '\0');
 }
 
 static bool sonEmisorYReceptorValidos (int idEmisor, int idReceptor)
@@ -203,13 +217,16 @@ static bool elEmisorNoEsElReceptor (int idEmisor, int idReceptor)
 */
 static bool sonDatosEnvioMensajeValidos (int idUsuario, int idUsuarioDelChatSeleccionado, const char *mensaje)
 {
-    return ((noEsMensajeVacio (mensaje)) && (sonEmisorYReceptorValidos (idUsuario, idUsuarioDelChatSeleccionado)) && (elEmisorNoEsElReceptor (idUsuario, idUsuarioDelChatSeleccionado)));
+    return ((noEsMensajeVacio (mensaje)) && 
+                (noSonTodosEspacios (mensaje)) && 
+                (sonEmisorYReceptorValidos (idUsuario, idUsuarioDelChatSeleccionado)) && 
+                (elEmisorNoEsElReceptor (idUsuario, idUsuarioDelChatSeleccionado)));
 }
 
 static void procesarSegunRespuestaEnvioMensaje (t_interfazContactos *interfazContactos, char *estadoRespuestaEnvioMensaje)
 {
     if (*estadoRespuestaEnvioMensaje == SOLICITUD_EXITO)
-        insertarMensaje (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje, MENSAJE_PROPIO);
+        recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
 }
 
 static void realizarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)

@@ -79,6 +79,15 @@ void vincularNodoAlInicioListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoAVi
  */
 void mapListaDoble (t_listaDoble *pl, void accion (void*));
 
+/** \brief Funcion map con un complemento sobre la lista doble.
+ *
+ * \param pl Direccion de la lista doble.
+ * \param accion Funcion de accion a realizar sobre la lista doble.
+ * \param complemento Complemento que se utilizara en la funcion de accion.
+ *
+ */
+void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), void *complemento);
+
 /** \brief Buscar una clave unica en la lista doble.
  *
  * Devolver en returnDato el dato si es encontrado por su clave en la lista doble.

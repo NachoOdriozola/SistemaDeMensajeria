@@ -49,7 +49,7 @@ static bool elUsuarioDelChatSeleccionadoEsElEmisor (int idUsuarioEmisor, int idU
 static void procesarMensaje (t_interfazContactos *interfazContactos, t_datosRecepcionMensaje *datosRecepcionMensaje)
 {
     if (elUsuarioDelChatSeleccionadoEsElEmisor (datosRecepcionMensaje->idUsuarioEmisor, interfazContactos->logica.idUsuarioDelChatSeleccionado))
-        insertarMensaje (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), datosRecepcionMensaje->mensaje, MENSAJE_REMOTO);
+        recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), datosRecepcionMensaje->mensaje, MENSAJE_REMOTO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
 }
 
 /*

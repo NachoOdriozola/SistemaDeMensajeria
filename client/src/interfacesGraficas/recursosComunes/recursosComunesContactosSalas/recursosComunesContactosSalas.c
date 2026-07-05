@@ -14,9 +14,6 @@ void recursosComunesContactosSalas_inicializarValoresNulos (t_recursosComunesCon
 
     // VISTAS
     _recursosComunesContactosSalas_inicializarValoresNulosVistas (&(recursosComunesContactosSalas->vistas));
-
-    // LISTA DE MENSAJES
-    crearListaCircular (&(recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes));
 }
 
 t_codigoRetorno recursosComunesContactosSalas_inicializar (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
@@ -38,8 +35,7 @@ t_codigoRetorno recursosComunesContactosSalas_inicializar (t_recursosComunesCont
         return ERROR_INICIALIZACION;
 
     // LISTA DE MENSAJES
-    if (_recursosComunesContactosSalas_inicializarListaMensajes (&(recursosComunesContactosSalas->logica.contextoMensajes)) == ERROR_INICIALIZACION)
-        return ERROR_INICIALIZACION;
+    _recursosComunesContactosSalas_crearListaMensajes (&(recursosComunesContactosSalas->logica.contextoMensajes));
 
     return EXITO;
 }
@@ -65,9 +61,6 @@ void recursosComunesContactosSalas_configurar (t_recursosComunesContactosSalas *
 
     // VISTAS
     _recursosComunesContactosSalas_tamVistas (&(recursosComunesContactosSalas->vistas));
-
-    // --------------- CONFIGURAR CONTEXTO DE MENSAJES ---------------
-    _recursosComunesContactosSalas_configurarContextoMensajes (recursosComunesContactosSalas);
 }
 
 void recursosComunesContactosSalas_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesContactosSalasTextos *textos)
@@ -110,5 +103,5 @@ void recursosComunesContactosSalas_liberar (t_recursosComunesContactosSalas *rec
     _recursosComunesContactosSalas_liberarVistas (&(recursosComunesContactosSalas->vistas));
 
     // LISTA DE MENSAJES
-    mapListaCircular (&(recursosComunesContactosSalas->logica.contextoMensajes.listaMensajes), liberarMensaje);
+    recursosComunesContactosSalas_vaciarListaMensajes (&(recursosComunesContactosSalas->logica.contextoMensajes));
 }
