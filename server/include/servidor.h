@@ -17,9 +17,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 #include <sqlite3.h>
 #include "../../external/libsodium/include/sodium.h"
 
@@ -30,6 +27,7 @@
 #include "estructuras.h"
 #include "utiles.h"
 #include "baseDeDatos.h"
+#include "sockets.h"
 
 
 /* ============================================================================================================================================
@@ -50,7 +48,7 @@ extern BOOL servidorActivo;
 
 /** \brief Inicializar los recursos del servidor.
  *
- * Iniciar la API de Winsock, inicializar la base de datos, y crear el socket del servidor, la tabla hash de clientes y la lista doble de clientes no autenticados.
+ * Inicializar el socket del servidor, la base de datos, y crear la tabla hash de clientes y la lista doble de clientes no autenticados.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
@@ -61,9 +59,8 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Configurar los recursos del servidor.
  *
- * Configurar el manejador de cierre de la consola.
- * Configurar el socket del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado. 
- * Lo establece como modo no bloqueante.
+ * Configurar el manejador de cierre de la consola, el socket del del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado y establecerlo como modo no bloqueante,
+ * y la base de datos.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
@@ -74,7 +71,7 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor);
 
 /** \brief Liberar los recursos del servidor.
  *
- * Vaciar la lista doble de clientes no autenticados, vaciar y eliminar la tabla hash de clientes y cerrar el socket del servidor, la base de datos y la API de Winsock.
+ * Vaciar la lista doble de clientes no autenticados y la tabla hash de clientes, y cerrar y finalizar el socket del servidor y la base de datos.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *

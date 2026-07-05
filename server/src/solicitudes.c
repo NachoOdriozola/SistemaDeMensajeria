@@ -146,7 +146,7 @@ static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProces
     char respuesta [MAX_BUFFER_RESPUESTA];
 
     snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", estadoSolicitud, cliente->id);
-    send (cliente->sock, respuesta, strlen (respuesta), 0);
+    socket_enviar (cliente->sock, respuesta);
     printf ("Respuesta enviada: %s\n\n", respuesta);
 }
 
@@ -283,7 +283,7 @@ static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t
     char respuesta [MAX_BUFFER_RESPUESTA];
 
     snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", estadoSolicitud, cliente->id);
-    send (cliente->sock, respuesta, strlen (respuesta), 0);
+    socket_enviar (cliente->sock, respuesta);
     printf ("Respuesta enviada: %s\n\n", respuesta);
 }
 
@@ -361,7 +361,7 @@ static void enviarMensajeAlReceptor (t_cliente *cliente, const t_datosEnvioMensa
     char respuesta [MAX_BUFFER_RESPUESTA];
 
     snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d|%s", RESPUESTA_RECEPCION_MENSAJE, datosEnvioMensaje->idEmisor, datosEnvioMensaje->texto);
-    send (cliente->sock, respuesta, strlen (respuesta), 0);
+    socket_enviar (cliente->sock, respuesta);
     printf ("Respuesta enviada: %s\n", respuesta);
 }
 
@@ -385,7 +385,7 @@ static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesa
     char respuesta [MAX_BUFFER_RESPUESTA];
 
     snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c", estadoSolicitud);
-    send (cliente->sock, respuesta, strlen (respuesta), 0);
+    socket_enviar (cliente->sock, respuesta);
     printf ("Respuesta enviada: %s\n\n", respuesta);
 }
 
@@ -467,7 +467,7 @@ static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProces
     char respuesta [MAX_BUFFER_RESPUESTA];
 
     snprintf (respuesta, MAX_BUFFER_RESPUESTA, "%c|%d", respuestaSeleccionChat->estadoSolicitud, respuestaSeleccionChat->idUsuarioDelChatSeleccionado);
-    send (cliente->sock, respuesta, strlen (respuesta), 0);
+    socket_enviar (cliente->sock, respuesta);
     printf ("Respuesta enviada: %s\n\n", respuesta);
 }
 

@@ -18,9 +18,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
@@ -28,6 +25,7 @@
 #include "servidor.h"
 #include "clientes.h"
 #include "solicitudes.h"
+#include "sockets.h"
 
 
 

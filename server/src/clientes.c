@@ -16,14 +16,12 @@ static bool recibiSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodoListaDoble
    ============================================================================================================================================ */
 
 
-void aceptarNuevosClientes (SOCKET sock, t_listaDoble *clientesNoAutenticados)
+void aceptarNuevosClientes (t_socket sockServidor, t_listaDoble *clientesNoAutenticados)
 {
     t_cliente nuevoCliente;
-    struct sockaddr_in dirNuevoCliente;
-    int tamNuevoCliente = sizeof (dirNuevoCliente);
-
-    nuevoCliente.sock = accept (sock, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
-    if (nuevoCliente.sock != INVALID_SOCKET)
+    
+    nuevoCliente.sock = socket_aceptarNuevoCliente (sockServidor);
+    if (nuevoCliente.sock != SOCKET_INVALIDO)
         procesarNuevoCliente (&nuevoCliente, clientesNoAutenticados);
 }
 
@@ -40,10 +38,8 @@ bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticado
 
 static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados)
 {
-    u_long modoSocket = 1; // Establecer socket en modo NO bloqueante.
-
     printf ("Nuevo cliente conectado.\n\n");
-    ioctlsocket (nuevoCliente->sock, FIONBIO, &modoSocket);
+    socket_establecerModoNoBloqueante (&(nuevoCliente->sock));
     nuevoCliente->id = ID_INVALIDO; // Le asigna una ID invalida hasta que se autentifique.
 
     insertarAlInicioListaDoble (clientesNoAutenticados, nuevoCliente, sizeof (t_cliente));
@@ -56,21 +52,15 @@ static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *cliente
 */
 static bool clienteEnvioSolicitud (t_cliente *cliente, char *solicitud, int *bytesRecibidos)
 {
-    *bytesRecibidos = recv (cliente->sock, solicitud, MAX_BUFFER_SOLICITUD, 0);
+    *bytesRecibidos = socket_recibir (cliente->sock, solicitud);
     if (*bytesRecibidos > 0) // Si se recibio una solicitud.
     {
         // Asegura el caracter nulo al final de la solicitud.
         solicitud += *bytesRecibidos;
         *solicitud = '\0';
-        return 1;
+        return true;
     }
-    return 0;
-}
-
-static bool clientePerdioConexion (int bytesRecibidos)
-{
-    return ((bytesRecibidos == 0) || // Si el cliente cerro la conexion de forma ordenada.
-                ((bytesRecibidos == SOCKET_ERROR) && (WSAGetLastError() == WSAECONNRESET))); // O si cerro la conexion de forma abrupta.
+    return false;
 }
 
 static void desconectarCliente (t_listaDoble *listaDoble, int idCliente)
@@ -98,7 +88,7 @@ static bool recibiSolicitudEnListaDoble (t_listaDoble *listaDoble, t_nodoListaDo
             return RECIBI_SOLICITUD;
         }
 
-        if (clientePerdioConexion (bytesRecibidos))
+        if (socket_perdioConexion (cliente->sock, bytesRecibidos))
             desconectarCliente (listaDoble, cliente->id);
         else
             listaDoble = &((*listaDoble)->sig);

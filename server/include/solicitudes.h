@@ -17,9 +17,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 #include <sqlite3.h>
 #include "../../external/libsodium/include/sodium.h"
 
@@ -30,6 +27,7 @@
 #include "estructuras.h"
 #include "utiles.h"
 #include "baseDeDatos.h"
+#include "sockets.h"
 
 
 /* ============================================================================================================================================

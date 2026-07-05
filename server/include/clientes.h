@@ -17,9 +17,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
@@ -27,6 +24,7 @@
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
+#include "sockets.h"
 
    
 /* ============================================================================================================================================
@@ -60,7 +58,7 @@
  * \param clientesNoAutenticados Lista doble que contiene a los clientes conectados pero no autenticados.
  *
  */
-void aceptarNuevosClientes (SOCKET sock, t_listaDoble *clientesNoAutenticados);
+void aceptarNuevosClientes (t_socket sockServidor, t_listaDoble *clientesNoAutenticados);
 
 /** \brief Detectar si un cliente, autenticado o no, envio una solicitud.
  *

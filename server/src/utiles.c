@@ -18,6 +18,6 @@ void mostrarCliente (void *cliente)
 
 void liberarCliente (void *cliente)
 {
-    closesocket (((t_cliente*)cliente)->sock);
+    socket_cerrar (&(((t_cliente*)cliente)->sock));
 }
 

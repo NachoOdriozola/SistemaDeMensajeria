@@ -19,11 +19,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 
 #include "estructuras.h"
+#include "sockets.h"
 
 
 /* ============================================================================================================================================

@@ -13,13 +13,12 @@
    ============================================================================================================================================ */
 
 
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <sqlite3.h>
 
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "baseDeDatos.h"
+#include "sockets.h"
 
 
 /* ============================================================================================================================================
@@ -45,7 +44,7 @@
  */
 typedef struct
 {
-    SOCKET sock;    /**< Socket del cliente. */
+    t_socket sock;    /**< Socket del cliente. */
     int id;                /**< Identificador correspondiente del usuario. */
 } t_cliente;
 
@@ -55,8 +54,7 @@ typedef struct
  */
 typedef struct
 {
-   bool estadoWinsock;                                /**< Estado de Winsock API */
-   SOCKET sock;                                           /**< Socket del servidor. */
+   t_socket sock;                                           /**< Socket del servidor. */
    sqlite3 *baseDeDatos;                              /**< Puntero a la base de datos. */
    t_sentenciasSqlite sentenciasSqlite;         /**< Cache de sentencias de consultas de base de datos. */
    t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
