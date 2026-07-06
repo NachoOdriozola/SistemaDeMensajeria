@@ -30,7 +30,8 @@
  */
 typedef struct
 {
-    sfText *auxContactoSeleccionado;            /**< Nombre del contacto que el usuario selecciono para comunicar. */
+    sfText *auxContactoSeleccionado;                     /**< Nombre del contacto que el usuario selecciono para comunicar. */
+    sfText *textoInformativoSeleccionChat;             /**< Texto informativo que le indica al usuario que debe seleccionar un chat con un usuario. */
 } t_interfazContactosTextos;
 
 /** \struct t_interfazContactosElementos

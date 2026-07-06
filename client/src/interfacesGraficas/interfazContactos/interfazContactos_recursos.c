@@ -4,6 +4,7 @@
 void _interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos *textos)
 {
     textos->auxContactoSeleccionado = NULL;
+    textos->textoInformativoSeleccionChat = NULL;
 }
 
 void _interfazContactos_inicializarValoresNulosElementos (t_interfazContactosElementos *elementos)
@@ -18,6 +19,13 @@ t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos 
     if (!textos->auxContactoSeleccionado)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto auxContactoSeleccionado.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    textos->textoInformativoSeleccionChat = sfText_create ();
+    if (!textos->textoInformativoSeleccionChat)
+    {
+        perror ("\nERROR - Interfaz de contactos, crear texto textoInformativoSeleccionChat.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -59,6 +67,12 @@ void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos, con
     // auxContactoSeleccionado
     sfText_setFont (textos->auxContactoSeleccionado, fuentes->cuerpo);
     sfText_setFillColor (textos->auxContactoSeleccionado, sfColor_fromRGB (94, 91, 87));
+
+    // textoInformativoSeleccionChat
+    sfText_setFont (textos->textoInformativoSeleccionChat, fuentes->ui);
+    sfText_setFillColor (textos->textoInformativoSeleccionChat, sfColor_fromRGBA (94, 91, 87, 191));
+    sfText_setString (textos->textoInformativoSeleccionChat, "Seleccione un chat con un usuario");
+
 }
 
 void _interfazContactos_configurarElementos (t_interfazContactosElementos *elementos)
@@ -74,6 +88,10 @@ void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
     // auxContactoSeleccionado
     sfText_setCharacterSize (textos->auxContactoSeleccionado, 24);
     centrarTextoEnArea (textos->auxContactoSeleccionado, 852, 25, 600, 40);
+
+    // textoInformativoSeleccionChat
+    sfText_setCharacterSize (textos->textoInformativoSeleccionChat, 30);
+    centrarTextoEnArea (textos->textoInformativoSeleccionChat, 442, 90, 1420, 780);
 }
 
 void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos)
@@ -88,6 +106,8 @@ void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *e
 void _interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->auxContactoSeleccionado, NULL);
+    if (textos->textoInformativoSeleccionChat != NULL)
+        sfRenderWindow_drawText (renderizado, textos->textoInformativoSeleccionChat, NULL);
 }
 
 void _interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos)
@@ -99,6 +119,7 @@ void _interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const 
 void _interfazContactos_liberarTextos (t_interfazContactosTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxContactoSeleccionado);
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoSeleccionChat);
 }
 
 void _interfazContactos_liberarElementos (t_interfazContactosElementos *elementos)

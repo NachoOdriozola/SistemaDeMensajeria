@@ -20,7 +20,6 @@
 #include <sqlite3.h>
 
 #include "../../shared/constantes/include/constantes.h"
-#include "../../shared/protocolos/include/protocolos.h"
 
 
 /* ============================================================================================================================================

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(AplicacionDeMensajes LANGUAGES C)
+project(SistemaDeMensajeria LANGUAGES C)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 

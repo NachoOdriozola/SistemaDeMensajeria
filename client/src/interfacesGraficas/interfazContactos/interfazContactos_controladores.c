@@ -172,6 +172,7 @@ static void setearNuevoChatGraficamente (t_interfazContactos *interfazContactos)
     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
     centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
     recursosComunesContactosSalas_vaciarListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes));
+    DESTRUCTOR_SEGURO_TEXTO (interfazContactos->textos.textoInformativoSeleccionChat);
 }
 
 static void procesarSegunRespuestaSeleccionChat (t_interfazContactos *interfazContactos, t_respuestaSeleccionChat *respuestaSeleccionChat)
