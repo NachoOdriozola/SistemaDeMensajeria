@@ -4,8 +4,6 @@
 int main ()
 {
     t_contextoServidor contextoServidor;
-    t_nodoListaDoble *clienteAProcesar;
-    char solicitud [MAX_BUFFER_SOLICITUD];
 
     if (inicializarServidor (&contextoServidor) == ERROR_INICIALIZACION)
     {
@@ -22,46 +20,11 @@ int main ()
     while (servidorActivo)
     {
         aceptarNuevosClientes (contextoServidor.sock, &(contextoServidor.clientesNoAutenticados));
-        if (recibiSolicitud (&(contextoServidor.clientes), &(contextoServidor.clientesNoAutenticados), &clienteAProcesar, solicitud))
-            procesarSolicitud (&contextoServidor, clienteAProcesar, solicitud);
+        recibirSolicitudes (&contextoServidor);
+        procesarSolicitudes (&contextoServidor);
         Sleep (5); // Pausa para evitar ciclos innecesarios.
     }
 
     liberarServidor (&contextoServidor);
     return EXITO;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -15,6 +15,7 @@
 
 #include <sqlite3.h>
 
+#include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "baseDeDatos.h"
@@ -37,7 +38,17 @@
    ESTRUCTURAS
    ============================================================================================================================================ */
 
-   
+
+/**
+ * \struct t_solicitudCliente
+ * \brief  Almacena un cliente con la solicitud que envio para ser procesada.
+ */
+typedef struct
+{
+   t_nodoListaDoble *clienteAProcesar;               /**< Direccion del nodo del cliente que envio la solicitud a procesar. */
+   char solicitud [MAX_BUFFER_SOLICITUD];       /**< Cadena que contiene la solicitud enviada por el cliente. */
+} t_solicitudCliente;
+
 /**
  * \struct t_cliente
  * \brief  Representa un cliente.
@@ -59,6 +70,7 @@ typedef struct
    t_sentenciasSqlite sentenciasSqlite;         /**< Cache de sentencias de consultas de base de datos. */
    t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
    t_tablaHash clientes;                                /**< Tabla hash que contiene a los clientes conectados y autenticados. */
+   t_cola solicitudes;                                     /**< Cola que almacena las solicitudes enviadas por los clientes. */
 } t_contextoServidor;
 
 

@@ -6,10 +6,10 @@
    ============================================================================================================================================ */
 
 
-static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
-static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
-static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
-static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
+static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
+static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
+static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
 
 
 /* ============================================================================================================================================
@@ -17,33 +17,38 @@ static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor
    ============================================================================================================================================ */
 
 
-void procesarSolicitud (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+void procesarSolicitudes (t_contextoServidor *contextoServidor)
 {
-    t_tipoSolicitud tipoSolicitud = *solicitud;
-    const char *solicitudSinTipoSolicitud = &(solicitud[2]);
+    t_solicitudCliente solicitudCliente;
+    t_tipoSolicitud tipoSolicitud;
 
-    printf ("Solicitud recibida: %s\n", solicitud);
-
-    switch (tipoSolicitud)
+    while (noEsColaVacia (&(contextoServidor->solicitudes)))
     {
-        case SOLICITUD_AUTENTICACION:
-            procesarSolicitudAutenticacion (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
+        desacolar (&(contextoServidor->solicitudes), &solicitudCliente, sizeof (t_solicitudCliente));
+        printf ("Solicitud recibida: %s\n", solicitudCliente.solicitud);
 
-        case SOLICITUD_REGISTRO:
-            procesarSolicitudRegistro (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        case SOLICITUD_ENVIO_MENSAJE:
-            procesarSolicitudEnvioMensaje (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        case SOLICITUD_SELECCION_CHAT:
-            procesarSolicitudSeleccionChat (contextoServidor, clienteAProcesar, solicitudSinTipoSolicitud);
-            break;
-
-        default:
-            break;
+        tipoSolicitud = *(solicitudCliente.solicitud);
+        switch (tipoSolicitud)
+        {
+            case SOLICITUD_AUTENTICACION:
+                procesarSolicitudAutenticacion (contextoServidor, &solicitudCliente);
+                break;
+    
+            case SOLICITUD_REGISTRO:
+                procesarSolicitudRegistro (contextoServidor, &solicitudCliente);
+                break;
+    
+            case SOLICITUD_ENVIO_MENSAJE:
+                procesarSolicitudEnvioMensaje (contextoServidor, &solicitudCliente);
+                break;
+    
+            case SOLICITUD_SELECCION_CHAT:
+                procesarSolicitudSeleccionChat (contextoServidor, &solicitudCliente);
+                break;
+    
+            default:
+                break;
+        }
     }
 }
 
@@ -83,9 +88,10 @@ static bool sonTodosEspacios (const char *mensaje)
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudAutenticacion (const char *solicitud, t_datosAutenticacionUsuario *datosAutenticacionUsuario)
+static void extraerDatosSolicitudAutenticacion (const char *solicitud, t_datosAutenticacionUsuario *returnDatosAutenticacionUsuario)
 {
-    sscanf (solicitud, "%[^|]|%[^\n]", datosAutenticacionUsuario->nombreUsuario, datosAutenticacionUsuario->contrasenia);
+    char tipoSolicitud;
+    sscanf (solicitud, "%c|%[^|]|%[^\n]", &tipoSolicitud, returnDatosAutenticacionUsuario->nombreUsuario, returnDatosAutenticacionUsuario->contrasenia);
 }
 
 static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosAutenticacionUsuario *datosAutenticacionUsuario)
@@ -152,7 +158,7 @@ static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProces
 
 /*
  * Recibe los datos del usuario que envio la solicitud de la siguiente manera:
- * nombre de usuario|contrasenia
+ * SOLICITUD_AUTENTICACION|nombre de usuario|contrasenia
  * 
  * Consultar en la base de datos si las credenciales del usuario existen y son validas.
  * Verificar que el usuario no se encuentre conectado.
@@ -166,14 +172,14 @@ static void enviarRespuestaAutenticacion (const t_nodoListaDoble *clienteAProces
  * SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido
  * SOLICITUD_ERROR_CREDENCIALES_INVALIDAS|ID invalido
  */
-static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
 {
     t_datosAutenticacionUsuario datosAutenticacionUsuario;
     t_estadoSolicitud estadoSolicitud;
 
-    extraerDatosSolicitudAutenticacion (solicitud, &datosAutenticacionUsuario);
-    estadoSolicitud = autenticarCliente (contextoServidor, clienteAProcesar, &datosAutenticacionUsuario);
-    enviarRespuestaAutenticacion (clienteAProcesar, estadoSolicitud);
+    extraerDatosSolicitudAutenticacion (solicitudCliente->solicitud, &datosAutenticacionUsuario);
+    estadoSolicitud = autenticarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosAutenticacionUsuario);
+    enviarRespuestaAutenticacion (solicitudCliente->clienteAProcesar, estadoSolicitud);
 }
 
 
@@ -182,9 +188,10 @@ static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudRegistro (const char *solicitud, t_datosRegistroUsuario *datosRegistroUsuario)
+static void extraerDatosSolicitudRegistro (const char *solicitud, t_datosRegistroUsuario *returnDatosRegistroUsuario)
 {
-    sscanf (solicitud, "%[^|]|%[^|]|%[^\n]", datosRegistroUsuario->nombreUsuario, datosRegistroUsuario->contrasenia, datosRegistroUsuario->correoElectronico);
+    char tipoSolicitud;
+    sscanf (solicitud, "%c|%[^|]|%[^|]|%[^\n]", &tipoSolicitud, returnDatosRegistroUsuario->nombreUsuario, returnDatosRegistroUsuario->contrasenia, returnDatosRegistroUsuario->correoElectronico);
 }
 
 static bool esCorreoElectronicoInvalido (const char *correoElectronico)
@@ -300,7 +307,7 @@ static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t
 
 /*
  * Recibe los datos del usuario que envio la solicitud de la siguiente manera:
- * nombre de usuario|contrasenia|correo electronico
+ * SOLICITUD_REGISTRO|nombre de usuario|contrasenia|correo electronico
  * 
  * Verificar en la base de datos si ya existe un usuario registrado con el mismo nombre de usuario o correo electronico.
  * Si el usuario se puede registrar, lo conecta mediante recuperar su ID, guardarlo en el nodo del cliente y moverlo de la lista doble de clientes no autenticados a la tabla hash de clientes autenticados.
@@ -314,14 +321,14 @@ static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t
  * SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE|ID invalido
  * SOLICITUD_ERROR_CORREO_YA_EXISTENTE|ID invalido
  */
-static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
 {
     t_datosRegistroUsuario datosRegistroUsuario;
     t_estadoSolicitud estadoSolicitud;
 
-    extraerDatosSolicitudRegistro (solicitud, &datosRegistroUsuario);
-    estadoSolicitud = registrarCliente (contextoServidor, clienteAProcesar, &datosRegistroUsuario);
-    enviarRespuestaRegistro (clienteAProcesar, estadoSolicitud);
+    extraerDatosSolicitudRegistro (solicitudCliente->solicitud, &datosRegistroUsuario);
+    estadoSolicitud = registrarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosRegistroUsuario);
+    enviarRespuestaRegistro (solicitudCliente->clienteAProcesar, estadoSolicitud);
 }
 
 
@@ -330,9 +337,10 @@ static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_n
    ============================================================================================================================================ */
 
 
-static void extrarDatosSolicitudEnvioMensaje (const char *solicitud, t_datosEnvioMensaje *datosEnvioMensaje)
+static void extrarDatosSolicitudEnvioMensaje (const char *solicitud, t_datosEnvioMensaje *returnDatosEnvioMensaje)
 {
-    sscanf (solicitud, "%d|%d|%[^\n]", &(datosEnvioMensaje->idEmisor), &(datosEnvioMensaje->idReceptor), datosEnvioMensaje->texto);
+    char tipoSolicitud;
+    sscanf (solicitud, "%c|%d|%d|%[^\n]", &tipoSolicitud, &(returnDatosEnvioMensaje->idEmisor), &(returnDatosEnvioMensaje->idReceptor), returnDatosEnvioMensaje->texto);
 }
 
 static bool sonEmisorOReceptorInvalidos (const t_datosEnvioMensaje *datosEnvioMensaje)
@@ -404,7 +412,7 @@ static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesa
 
 /*
  * Recibe los datos del usuario que envio la solicitud de la siguiente manera:
- * id del emisor|id del receptor|texto del mensaje
+ * SOLICITUD_ENVIO_MENSAJE|id del emisor|id del receptor|texto del mensaje
  * 
  * Antes de enviar el mensaje, verifica que el ID del emisor o del receptor sean validos y que no sean los mismos.
  * El mensaje es almacenado en la base de datos antes de ser reenviado al receptor.
@@ -418,14 +426,14 @@ static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesa
  * SOLICITUD_EXITO
  * SOLICITUD_ERROR_OPERACION_INVALIDA
  */
-static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
 {
     t_datosEnvioMensaje datosEnvioMensaje;
     t_estadoSolicitud estadoSolicitud;
 
-    extrarDatosSolicitudEnvioMensaje (solicitud, &datosEnvioMensaje);
+    extrarDatosSolicitudEnvioMensaje (solicitudCliente->solicitud, &datosEnvioMensaje);
     estadoSolicitud = enviarMensaje (contextoServidor, &datosEnvioMensaje);
-    enviarRespuestaEnvioMensaje (clienteAProcesar, estadoSolicitud);
+    enviarRespuestaEnvioMensaje (solicitudCliente->clienteAProcesar, estadoSolicitud);
 }
 
 
@@ -434,9 +442,10 @@ static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor,
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudSeleccionChat (const char *solicitud, t_datosSeleccionChat *datosSeleccionChat)
+static void extraerDatosSolicitudSeleccionChat (const char *solicitud, t_datosSeleccionChat *returnDatosSeleccionChat)
 {
-    sscanf (solicitud, "%[^\n]", datosSeleccionChat->nombreReceptor);
+    char tipoSolicitud;
+    sscanf (solicitud, "%c|%[^\n]", &tipoSolicitud, returnDatosSeleccionChat->nombreReceptor);
 }
 
 static bool sonDatosSeleccionChatInvalidos (const t_datosSeleccionChat *datosSeleccionChat)
@@ -486,7 +495,7 @@ static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProces
 
 /*
  * Recibe los datos del usuario que envio la solicitud de la siguiente manera:
- * nombre del usuario del chat seleccionado
+ * SOLICITUD_SELECCION_CHAT|nombre del usuario del chat seleccionado
  *
  * Verificar que el usuario seleccionado existe.
  * Verificar que el usuario no haya seleccionado su propio chat.
@@ -498,13 +507,13 @@ static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProces
  * SOLICITUD_EXITO|ID del usuario del chat seleccionado
  * SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido
  */
-static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
+static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
 {  
     t_datosSeleccionChat datosSeleccionChat;
     t_respuestaSeleccionChat respuestaSeleccionChat;
 
-    extraerDatosSolicitudSeleccionChat (solicitud, &datosSeleccionChat);
-    respuestaSeleccionChat.estadoSolicitud = seleccionarChat (contextoServidor, clienteAProcesar, &datosSeleccionChat, &(respuestaSeleccionChat.idUsuarioDelChatSeleccionado));
-    enviarRespuestaSeleccionChat (clienteAProcesar, &respuestaSeleccionChat);
+    extraerDatosSolicitudSeleccionChat (solicitudCliente->solicitud, &datosSeleccionChat);
+    respuestaSeleccionChat.estadoSolicitud = seleccionarChat (contextoServidor, solicitudCliente->clienteAProcesar, &datosSeleccionChat, &(respuestaSeleccionChat.idUsuarioDelChatSeleccionado));
+    enviarRespuestaSeleccionChat (solicitudCliente->clienteAProcesar, &respuestaSeleccionChat);
 }
 

@@ -22,6 +22,7 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
+#include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
@@ -48,7 +49,7 @@ extern BOOL servidorActivo;
 
 /** \brief Inicializar los recursos del servidor.
  *
- * Inicializar el socket del servidor, la base de datos, y crear la tabla hash de clientes y la lista doble de clientes no autenticados.
+ * Inicializar el socket del servidor, la base de datos, y crear la tabla hash de clientes, la lista doble de clientes no autenticados y la cola de solicitudes.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *
@@ -72,6 +73,7 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor);
 /** \brief Liberar los recursos del servidor.
  *
  * Vaciar la lista doble de clientes no autenticados y la tabla hash de clientes, y cerrar y finalizar el socket del servidor y la base de datos.
+ * No vacia la cola de solicitudes debido a que no es necesario, siempre se encontraria vacia al ejecutar esta fucion.
  *
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  *

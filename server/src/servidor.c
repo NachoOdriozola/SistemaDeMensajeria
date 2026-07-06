@@ -21,6 +21,10 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
 
     crearListaDoble (&(contextoServidor->clientesNoAutenticados));
 
+    // --------------- CREAR COLA DE SOLICITUDES ---------------
+
+    crearCola (&(contextoServidor->solicitudes));
+
     // --------------- INICIALIZAR SOCKET ---------------
 
     if (socket_inicializarServidor (&(contextoServidor->sock)))

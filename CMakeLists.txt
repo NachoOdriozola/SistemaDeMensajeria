@@ -10,6 +10,7 @@ add_subdirectory(shared/constantes)
 add_subdirectory(shared/protocolos)
 add_subdirectory(shared/estructurasDeDatos/listaSimple)
 add_subdirectory(shared/estructurasDeDatos/listaDoble)
+add_subdirectory(shared/estructurasDeDatos/cola)
 add_subdirectory(shared/estructurasDeDatos/tablaHash)
 
 add_subdirectory(external/csfml)

@@ -7,8 +7,8 @@
 
 
 static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados);
-static bool recibiSolicitudEnListaDoble (t_listaDoble *listaDoble, t_nodoListaDoble **clienteAProcesar, char *solicitud);
-static bool recibiSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodoListaDoble **clienteAProcesar, char *solicitud);
+void recibirSolicitudesEnListaDoble (t_listaDoble *listaDoble, t_cola *solicitudes);
+void recibirSolicitudesEnTablaHash (t_tablaHash *tablaHash, t_cola *solicitudes);
 
 
 /* ============================================================================================================================================
@@ -25,9 +25,10 @@ void aceptarNuevosClientes (t_socket sockServidor, t_listaDoble *clientesNoAuten
         procesarNuevoCliente (&nuevoCliente, clientesNoAutenticados);
 }
 
-bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble **clienteAProcesar, char *solicitud)
+void recibirSolicitudes (t_contextoServidor *contextoServidor)
 {
-    return ((recibiSolicitudEnListaDoble (clientesNoAutenticados, clienteAProcesar, solicitud)) || (recibiSolicitudEnTablaHash (clientes, clienteAProcesar, solicitud)));
+    recibirSolicitudesEnListaDoble (&(contextoServidor->clientesNoAutenticados), &(contextoServidor->solicitudes));
+    recibirSolicitudesEnTablaHash (&(contextoServidor->clientes), &(contextoServidor->solicitudes));
 }
 
 
@@ -47,17 +48,17 @@ static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *cliente
 
 
 /*
-* Retorna la solicitud que envio el cliente a traves del argumento solicitud.
-* Retorna la cantidad de bytes recibidos que envio el cliente a traves del argumento bytesRecibidos.
+* Retorna la solicitud que envio el cliente a traves del parametro returnSolicitud.
+* Retorna la cantidad de bytes recibidos que envio el cliente a traves del argumento returnBytesRecibidos.
 */
-static bool clienteEnvioSolicitud (t_cliente *cliente, char *solicitud, int *bytesRecibidos)
+static bool clienteEnvioSolicitud (t_cliente *cliente, char *returnSolicitud, int *returnBytesRecibidos)
 {
-    *bytesRecibidos = socket_recibir (cliente->sock, solicitud);
-    if (*bytesRecibidos > 0) // Si se recibio una solicitud.
+    *returnBytesRecibidos = socket_recibir (cliente->sock, returnSolicitud);
+    if (*returnBytesRecibidos > 0) // Si se recibio una solicitud.
     {
         // Asegura el caracter nulo al final de la solicitud.
-        solicitud += *bytesRecibidos;
-        *solicitud = '\0';
+        returnSolicitud += *returnBytesRecibidos;
+        *returnSolicitud = '\0';
         return true;
     }
     return false;
@@ -69,23 +70,19 @@ static void desconectarCliente (t_listaDoble *listaDoble, int idCliente)
     eliminarNodoConAccionListaDoble (listaDoble, NULL, 0, liberarCliente); // Elimina el cliente desconectado de la lista simple.
 }
 
-/*
-* Guarda la direccion del nodo del cliente a procesar a traves del argumento clienteAProcesar.
-* Retorna la solicitud que envio el cliente a traves del argumento solicitud.
-*/
-static bool recibiSolicitudEnListaDoble (t_listaDoble *listaDoble, t_nodoListaDoble **clienteAProcesar, char *solicitud)
+void recibirSolicitudesEnListaDoble (t_listaDoble *listaDoble, t_cola *solicitudes)
 {
     t_cliente *cliente;
+    t_solicitudCliente solicitudCliente;
     int bytesRecibidos;
 
     while (*listaDoble != NULL) // Mientras haya clientes en la lista doble.
     {
         cliente = (t_cliente*)((*listaDoble)->dato);
-
-        if (clienteEnvioSolicitud (cliente, solicitud, &bytesRecibidos))
+        if (clienteEnvioSolicitud (cliente, solicitudCliente.solicitud, &bytesRecibidos))
         {
-            *clienteAProcesar = *listaDoble; // Guarda la direccion del nodo del cliente que envio la solicitud.
-            return RECIBI_SOLICITUD;
+            solicitudCliente.clienteAProcesar = *listaDoble;
+            insertarACola (solicitudes, &solicitudCliente, sizeof (t_solicitudCliente));
         }
 
         if (socket_perdioConexion (cliente->sock, bytesRecibidos))
@@ -93,23 +90,12 @@ static bool recibiSolicitudEnListaDoble (t_listaDoble *listaDoble, t_nodoListaDo
         else
             listaDoble = &((*listaDoble)->sig);
     }
-
-    return NO_RECIBI_SOLICITUD;
 }
 
-/*
-* Guarda la direccion del nodo del cliente a procesar a traves del argumento clienteAProcesar.
-* Retorna la solicitud que envio el cliente a traves del argumento solicitud.
-*/
-static bool recibiSolicitudEnTablaHash (t_tablaHash *tablaHash, t_nodoListaDoble **clienteAProcesar, char *solicitud)
+void recibirSolicitudesEnTablaHash (t_tablaHash *tablaHash, t_cola *solicitudes)
 {
     int i;
 
     for (i = 0; i < tablaHash->cantBuckets; i++) // Por cada bucket de la tabla hash.
-    {
-        if (recibiSolicitudEnListaDoble (&(tablaHash->buckets[i]), clienteAProcesar, solicitud)) // Si recibio una solicitud en su lista simple.
-            return RECIBI_SOLICITUD;
-    }
-
-    return NO_RECIBI_SOLICITUD;
+        recibirSolicitudesEnListaDoble (&(tablaHash->buckets[i]), solicitudes); // Recibir solicitudes en su lista doble.
 }

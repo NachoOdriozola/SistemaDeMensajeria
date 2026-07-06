@@ -22,6 +22,7 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
+#include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
@@ -93,14 +94,12 @@ typedef struct
    ============================================================================================================================================ */
 
 
-/** \brief Procesar la solicitud enviada por el cliente y enviarle una respuesta.
- *
+/** \brief Procesar las solicitudes enviada por los cliente y enviarles una respuesta. Procesa toda la cola de solicitudes y finalmente las elimina.
+ * 
  * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
- * \param clienteAProcesar Direccion del nodo del cliente que envio la solicitud y se debe procesar.
- * \param solicitud Contiene la solicitud a procesar enviada por el cliente.
  *
  */
-void procesarSolicitud (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud);
+void procesarSolicitudes (t_contextoServidor *contextoServidor);
 
 
 

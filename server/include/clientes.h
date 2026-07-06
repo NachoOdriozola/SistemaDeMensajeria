@@ -20,29 +20,12 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
+#include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "estructuras.h"
 #include "utiles.h"
 #include "sockets.h"
-
-   
-/* ============================================================================================================================================
-   DEFINES
-   ============================================================================================================================================ */
-
-
-/**
- * \def RECIBI_SOLICITUD
- * \brief Codigo de retorno que indica que se recibio una solicitud de un cliente.
- */
-#define RECIBI_SOLICITUD 1
-
-/**
- * \def NO_RECIBI_SOLICITUD
- * \brief Codigo de retorno que indica que no se recibio ninguna solicitud de un cliente.
- */
-#define NO_RECIBI_SOLICITUD 0
 
 
 /* ============================================================================================================================================
@@ -60,21 +43,16 @@
  */
 void aceptarNuevosClientes (t_socket sockServidor, t_listaDoble *clientesNoAutenticados);
 
-/** \brief Detectar si un cliente, autenticado o no, envio una solicitud.
+/** \brief Recibir solicitudes de los clientes y almacenarlas en la cola de solicitudes.
  *
  * Si un cliente de la lista doble de clientes conectados no autenticados o de la tabla hash de clientes autenticados envio una solicitud, se
- * almacena y retorna la direccion del nodo del cliente y su solicitud para luego ser procesada.
+ * almacena la direccion del cliente y su solicitud en la cola de solicitudes para luego ser procesada.
  * Si un cliente cerro o perdio la conexion, lo desconectara automaticamente.
  *
- * \param clientes Tabla hash que contiene a los clientes conectados y autenticados.
- * \param clientesNoAutenticados Lista doble que contiene a los clientes conectados pero no autenticados.
- * \param clienteAProcesar Puntero donde se retornara la direccion del nodo del cliente que envio la solicitud y se debe procesar.
- * \param solicitud Puntero a donde se retornara la solicitud enviada por el cliente.
- *
- * \return RECIBI_SOLICITUD si se recibio una solicitud, NO_RECIBI SOLICITUD en caso contrario.
+ * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
  * 
  */
-bool recibiSolicitud (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble**clienteAProcesar, char *solicitud);
+void recibirSolicitudes (t_contextoServidor *contextoServidor);
 
 
 #endif // CLIENTES_H_INCLUDED
