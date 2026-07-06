@@ -217,14 +217,22 @@ static bool sonDatosRegistroUsuarioInvalidos (const t_datosRegistroUsuario *dato
     return 0;
 }
 
-static bool usuarioYaRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYCorreo, const t_datosRegistroUsuario *datosRegistroUsuario)
+static nombreYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosRegistroUsuario *datosRegistroUsuario)
 {
-    t_datosBuscarUsuarioPorNombreYCorreo datosBuscarUsuarioPorNombreYCorreo;
+    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombreYCorreo.nombreUsuario, datosRegistroUsuario->nombreUsuario);
-    strcpy (datosBuscarUsuarioPorNombreYCorreo.correoElectronico, datosRegistroUsuario->correoElectronico);
+    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosRegistroUsuario->nombreUsuario);
 
-    return (buscarUsuarioPorNombreYCorreo (sentenciaBuscarUsuarioPorNombreYCorreo, &datosBuscarUsuarioPorNombreYCorreo));
+    return (buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, NULL));
+}
+
+static correoYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosRegistroUsuario *datosRegistroUsuario)
+{
+    t_datosBuscarUsuarioPorCorreo datosBuscarUsuarioPorCorreo;
+
+    strcpy (datosBuscarUsuarioPorCorreo.correoElectronico, datosRegistroUsuario->correoElectronico);
+
+    return (buscarUsuarioPorCorreo (sentenciaBuscarUsuarioPorCorreo, &datosBuscarUsuarioPorCorreo));
 }
 
 static t_codigoRetorno hashearContrasenia (t_datosRegistroUsuario *datosRegistroUsuario)
@@ -266,8 +274,11 @@ static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor,
     if (sonDatosRegistroUsuarioInvalidos (datosRegistroUsuario))
         return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
 
-    if (usuarioYaRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombreYCorreo, datosRegistroUsuario))
-        return SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+    if (nombreYaExistente (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosRegistroUsuario))
+        return SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE;
+
+    if (correoYaExistente (contextoServidor->sentenciasSqlite.buscarUsuarioPorCorreo, datosRegistroUsuario))
+        return SOLICITUD_ERROR_CORREO_YA_EXISTENTE;
 
     hashearContrasenia (datosRegistroUsuario);
     registrarUsuario (contextoServidor->sentenciasSqlite.insertarUsuario, datosRegistroUsuario);
@@ -300,6 +311,8 @@ static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t
  * Posibles respuestas:
  * SOLICITUD_EXITO|ID del usuario
  * SOLICITUD_ERROR_CREDENCIALES_INVALIDAS|ID invalido
+ * SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE|ID invalido
+ * SOLICITUD_ERROR_CORREO_YA_EXISTENTE|ID invalido
  */
 static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const char *solicitud)
 {

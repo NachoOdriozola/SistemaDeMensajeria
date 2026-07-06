@@ -70,12 +70,14 @@ bool buscarUsuarioPorNombre_recuperarId (sqlite3_stmt *sentenciaBuscarUsuarioPor
     resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorNombre_recuperarId);
     if (encontroUnUsuario (resultadoConsulta))
     {
-        *returnIdUsuario = sqlite3_column_int (sentenciaBuscarUsuarioPorNombre_recuperarId, 0);
+        if (returnIdUsuario != NULL)
+            *returnIdUsuario = sqlite3_column_int (sentenciaBuscarUsuarioPorNombre_recuperarId, 0);
         return true;
     }
     else
     {
-        *returnIdUsuario = ID_INVALIDO;
+        if (returnIdUsuario != NULL)
+            *returnIdUsuario = ID_INVALIDO;
         return false;
     }
 }
@@ -106,17 +108,16 @@ bool buscarUsuarioPorNombre_recuperarIdYContrasenia (sqlite3_stmt *sentenciaBusc
     }
 }
 
-bool buscarUsuarioPorNombreYCorreo (sqlite3_stmt *sentenciaBuscarUsuarioPorNombreYCorreo, const t_datosBuscarUsuarioPorNombreYCorreo *datosBuscarUsuarioPorNombreYCorreo)
+bool buscarUsuarioPorCorreo (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosBuscarUsuarioPorCorreo *datosBuscarUsuarioPorCorreo)
 {
     int resultadoConsulta;
 
-    sqlite3_reset (sentenciaBuscarUsuarioPorNombreYCorreo);                   // Limpia el estado de la ejecucion anterior.
-    sqlite3_clear_bindings (sentenciaBuscarUsuarioPorNombreYCorreo);    // Limpia bindings previos.
+    sqlite3_reset (sentenciaBuscarUsuarioPorCorreo);                   // Limpia el estado de la ejecucion anterior.
+    sqlite3_clear_bindings (sentenciaBuscarUsuarioPorCorreo);    // Limpia bindings previos.
 
-    sqlite3_bind_text (sentenciaBuscarUsuarioPorNombreYCorreo, 1, datosBuscarUsuarioPorNombreYCorreo->nombreUsuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentenciaBuscarUsuarioPorNombreYCorreo, 2, datosBuscarUsuarioPorNombreYCorreo->correoElectronico, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaBuscarUsuarioPorCorreo, 1, datosBuscarUsuarioPorCorreo->correoElectronico, -1, SQLITE_STATIC);
 
-    resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorNombreYCorreo);
+    resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorCorreo);
     if (encontroUnUsuario (resultadoConsulta))
         return true;
     return false;
@@ -227,9 +228,9 @@ static t_codigoRetorno inicializarSentenciasSqlite (sqlite3 *db, t_sentenciasSql
         return ERROR_INICIALIZACION;
     }
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE nombre = ? or correoElectronico = ?;", -1, &(sentencias->buscarUsuarioPorNombreYCorreo), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE correoElectronico = ?;", -1, &(sentencias->buscarUsuarioPorCorreo), NULL) != SQLITE_OK)
     {
-        perror ("\nERROR - Preparando consulta buscarUsuarioPorNombreYCorreo.\n");
+        perror ("\nERROR - Preparando consulta buscarUsuarioPorCorreo.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -252,7 +253,7 @@ static void liberarSentenciasSqlite (t_sentenciasSqlite *sentencias)
 {
     sqlite3_finalize (sentencias->buscarUsuarioPorNombre_recuperarId);
     sqlite3_finalize (sentencias->buscarUsuarioPorNombre_recuperarIdYContrasenia);
-    sqlite3_finalize (sentencias->buscarUsuarioPorNombreYCorreo);
+    sqlite3_finalize (sentencias->buscarUsuarioPorCorreo);
     sqlite3_finalize (sentencias->insertarUsuario);
     sqlite3_finalize (sentencias->insertarMensaje);
 }

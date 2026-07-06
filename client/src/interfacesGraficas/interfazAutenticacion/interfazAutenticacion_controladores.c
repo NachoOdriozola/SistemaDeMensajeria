@@ -250,6 +250,9 @@ static void procesarSegunRespuestaAutenticacion (t_contextoAplicacion *contextoA
             sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
             centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
             break;
+
+        default:
+            break;
     }
 }
 

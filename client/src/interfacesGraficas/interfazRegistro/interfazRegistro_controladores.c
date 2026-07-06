@@ -347,17 +347,33 @@ static  t_respuestaRegistro fabricarRespuestaRegistroInvalida ()
 
 static void procesarSegunRespuestaRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const t_respuestaRegistro *respuestaRegistro)
 {
-    if (respuestaRegistro->estado == SOLICITUD_EXITO)
+    switch (respuestaRegistro->estado)
     {
-        contextoAplicacion->usuario.id = respuestaRegistro->idUsuario;
-        strcpy (contextoAplicacion->usuario.nombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
-        contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-    }
-    else if (respuestaRegistro->estado == SOLICITUD_ERROR_CREDENCIALES_INVALIDAS)
-    {
-        sfUint32 bufferIngresoIncorrecto [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00F3, 'n', 'i', 'c', 'o', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-        sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferIngresoIncorrecto);
-        centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+        case SOLICITUD_EXITO:
+            contextoAplicacion->usuario.id = respuestaRegistro->idUsuario;
+            strcpy (contextoAplicacion->usuario.nombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
+            contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+            break;
+
+        case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
+            sfUint32 bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
+            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferDatosInvalidos);
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            break;
+
+        case SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE:
+            sfText_setString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre de usuario ya existente");
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            break;
+
+        case SOLICITUD_ERROR_CORREO_YA_EXISTENTE:
+            sfUint32 bufferCorreoYaExistente [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', ' ', 'y', 'a', ' ', 'e', 'x', 'i', 's', 't', 'e', 'n', 't', 'e', 0};
+            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferCorreoYaExistente);
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            break;
+
+        default:
+            break;
     }
 }
 
