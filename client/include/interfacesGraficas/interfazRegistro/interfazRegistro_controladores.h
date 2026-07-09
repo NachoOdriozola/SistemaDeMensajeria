@@ -36,7 +36,16 @@
    ============================================================================================================================================ */
 
 
+/** \brief Resetear la interfaz de registro.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ *
+ */
+void interfazRegistro_resetear (sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
+
 void _interfazRegistro_deshabilitarFocos (t_interfazRegistro *interfazRegistro);
+
 
 /*
  * Establecer el foco en escribir nombre y posiciona el punto de insercion.
@@ -54,9 +63,10 @@ bool _interfazRegistro_manejarClickEscribirContrasenia (const sfRenderWindow *re
 bool _interfazRegistro_manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
 
 /*
- * Verificar que la habilitacion de posibilidad de ingreso se encuentre habilitada.
- * Envia la solicitud de registro y procesa la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID y el nombre de usuario en el contexto de la aplicacion, y selecciona la interfaz de contactos.
+ * Verificar que los datos de registro del usuario sean validos.
+ * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
+ * Enviar la solicitud de registro y procesar la respuesta segun su estado.
+ * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
 */
 bool _interfazRegistro_manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
@@ -90,9 +100,10 @@ bool _interfazRegistro_manejarEscribirCorreo (t_interfazRegistro *interfazRegist
 
 
 /*
- * Verificar que la habilitacion de posibilidad de ingreso se encuentre habilitada.
- * Envia la solicitud de registro y procesa la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID y el nombre de usuario en el contexto de la aplicacion, y selecciona la interfaz de contactos.
+ * Verificar que los datos de registro del usuario sean validos.
+ * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
+ * Enviar la solicitud de registro y procesar la respuesta segun su estado.
+ * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
 */
 bool _interfazRegistro_manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 

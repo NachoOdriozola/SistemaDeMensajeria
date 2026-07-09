@@ -8,6 +8,7 @@ add_compile_options(/utf-8)
 
 add_subdirectory(shared/constantes)
 add_subdirectory(shared/protocolos)
+add_subdirectory(shared/sockets)
 add_subdirectory(shared/estructurasDeDatos/listaSimple)
 add_subdirectory(shared/estructurasDeDatos/listaDoble)
 add_subdirectory(shared/estructurasDeDatos/cola)

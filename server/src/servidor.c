@@ -27,7 +27,10 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- INICIALIZAR SOCKET ---------------
 
-    if (socket_inicializarServidor (&(contextoServidor->sock)))
+    if (socket_inicializar ())
+        return ERROR_INICIALIZACION;
+
+    if (socket_crear (&(contextoServidor->sock)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // --------------- INICIALIZAR BASE DE DATOS ---------------
@@ -63,8 +66,11 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- CONFIGURAR SOCKET ---------------
 
-    if (socket_configurarServidor (&(contextoServidor->sock)) == ERROR_CONFIGURACION)
+    if (socket_conectarServidor (&(contextoServidor->sock)) == ERROR_CONFIGURACION)
         return ERROR_CONFIGURACION;
+        
+    socket_establecerModoNoBloqueante (&(contextoServidor->sock));
+    socket_establecerKeepAlive (&(contextoServidor->sock));
 
     // --------------- CONFIGURAR BASE DE DATOS ---------------
 
@@ -72,7 +78,7 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
-    printf ("Ctrl+C -> Apagar servidor\n");
+    printf ("\nCtrl+C -> Apagar servidor\n\n");
 
     return EXITO;
 }

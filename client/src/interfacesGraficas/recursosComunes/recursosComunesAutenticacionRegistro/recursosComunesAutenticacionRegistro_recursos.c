@@ -28,6 +28,11 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_r
     elementos->subrayadoTitulo = NULL;
 }
 
+void _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+{
+    vistas->ui = NULL;
+}
+
 
 t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
@@ -148,6 +153,18 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarElementos (t_re
         return ERROR_INICIALIZACION;
     }
 
+
+    return EXITO;
+}
+
+t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+{
+    vistas->ui = sfView_create ();
+    if (!vistas->ui)
+    {
+        perror ("\nERROR - Recursos comunes contactos-salas, crear vista de UI.\n");
+        return ERROR_INICIALIZACION;
+    }
 
     return EXITO;
 }
@@ -291,6 +308,13 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosCo
     sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){260, 2.5});
 }
 
+void _recursosComunesAutenticacionRegistro_tamVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+{
+    // UI
+    sfView_setSize (vistas->ui, (sfVector2f){500, 620});
+    sfView_setCenter (vistas->ui, (sfVector2f){500 / 2.0f, 620 / 2.0f});
+}
+
 
 void _recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
@@ -319,4 +343,7 @@ void _recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAu
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->subrayadoTitulo);
 }
 
-
+void _recursosComunesAutenticacionRegistro_liberarVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+{
+    DESTRUCTOR_SEGURO_VISTA (vistas->ui);
+}

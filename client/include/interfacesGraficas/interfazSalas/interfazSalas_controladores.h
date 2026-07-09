@@ -33,7 +33,16 @@
    ============================================================================================================================================ */
 
 
+/** \brief Resetear la interfaz de salas.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param interfazSalas Puntero a la estructura base de los recursos graficos y logica de la interfaz de salas.
+ *
+ */
+void interfazSalas_resetear (sfRenderWindow *renderizado, t_interfazSalas *interfazSalas);
+
 void _interfazSalas_deshabilitarFocos (t_interfazSalas *interfazSalas);
+
 
 /*
  * Omite los eventos pendientes de la interfaz de salas, desactiva los recursos de la interfaz de salas, activa los recursos de la interfaz de contactos, y selecciona la interfaz de contactos.

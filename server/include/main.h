@@ -20,11 +20,12 @@
 
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/protocolos/include/protocolos.h"
+#include "../../shared/sockets/include/sockets.h"
+
 #include "estructuras.h"
 #include "servidor.h"
 #include "clientes.h"
 #include "solicitudes.h"
-#include "sockets.h"
 
 
 #endif // SERVIDOR_H_INCLUDED

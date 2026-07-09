@@ -60,7 +60,7 @@ void recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (
 
 void recursosComunesContactosSalas_vaciarListaMensajes (t_contextoMensajes *contextoMensajes)
 {
-    mapListaDoble (&(contextoMensajes->mensajes), liberarMensaje);
+    vaciarListaDobleConAccion (&(contextoMensajes->mensajes), liberarMensaje);
     contextoMensajes->ultimoMensaje = NULL;
 }
 

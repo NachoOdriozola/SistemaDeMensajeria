@@ -20,8 +20,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "../../shared/sockets/include/sockets.h"
+
 #include "estructuras.h"
-#include "sockets.h"
 
 
 /* ============================================================================================================================================

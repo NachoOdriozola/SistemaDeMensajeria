@@ -14,13 +14,30 @@ static void posicionarPuntoInsercionBarraEscrituraCorreo (t_interfazRegistro *in
 
 static bool sonDatosRegistroUsuarioValidos (t_interfazRegistro *interfazRegistro);
 static  t_respuestaRegistro fabricarRespuestaRegistroInvalida ();
-static void procesarSegunRespuestaRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const t_respuestaRegistro *respuestaRegistro);
+static t_respuestaRegistro fabricarRespuestaErrorConexion ();
+static void procesarRespuestaSegunEstadoRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const t_respuestaRegistro *respuestaRegistro);
 
 
 /* ============================================================================================================================================
    FUNCIONES PUBLICAS
    ============================================================================================================================================ */
 
+
+void interfazRegistro_resetear (sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro)
+{
+    // --------------- RESETEAR INTERFAZ ---------------
+
+    omitirEventosPendientes (renderizado);
+    _interfazRegistro_deshabilitarFocos (interfazRegistro);
+
+    // Setear cadenas vacias.
+    *(interfazRegistro->logica.correoElectronico) = '\0';
+
+    // --------------- RESETEAR TEXTOS ---------------
+
+    sfText_setString (interfazRegistro->textos.auxEscribirCorreo, "");
+    sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+}
 
 void _interfazRegistro_deshabilitarFocos (t_interfazRegistro *interfazRegistro)
 {
@@ -71,13 +88,19 @@ bool _interfazRegistro_manejarClickIntentarRegistro (t_contextoAplicacion *conte
 
     if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
+    _interfazRegistro_deshabilitarFocos (interfazRegistro);
 
     if (sonDatosRegistroUsuarioValidos (interfazRegistro))
-        respuestaRegistro = enviarSolicitudRegistro (contextoAplicacion->sock, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, interfazRegistro->logica.correoElectronico);
+    {
+        if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_EXITO)
+            respuestaRegistro = enviarSolicitudRegistro (contextoAplicacion->sock, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, interfazRegistro->logica.correoElectronico);
+        else
+            respuestaRegistro = fabricarRespuestaErrorConexion ();
+    }
     else
         respuestaRegistro = fabricarRespuestaRegistroInvalida ();
 
-    procesarSegunRespuestaRegistro (contextoAplicacion, interfazRegistro, &respuestaRegistro);
+    procesarRespuestaSegunEstadoRegistro (contextoAplicacion, interfazRegistro, &respuestaRegistro);
 
     return EVENTO_MANEJADO;
 }
@@ -87,8 +110,7 @@ bool _interfazRegistro_manejarClickCambiarAInterfazAutenticacion (t_contextoApli
     if (!clickEnTexto (contextoAplicacion->renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    omitirEventosPendientes (contextoAplicacion->renderizado);
-    desactivarRecursosInterfazRegistro (interfazRegistro);
+    interfazRegistro_resetear (contextoAplicacion->renderizado, interfazRegistro);
     recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (interfazRegistro->recursosComunesAutenticacionRegistro);
     contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
 
@@ -152,11 +174,16 @@ bool _interfazRegistro_manejarEnterIntentarRegistro (t_contextoAplicacion *conte
         return EVENTO_NO_MANEJADO;
 
     if (sonDatosRegistroUsuarioValidos (interfazRegistro))
-        respuestaRegistro = enviarSolicitudRegistro (contextoAplicacion->sock, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, interfazRegistro->logica.correoElectronico);
+    {
+        if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_EXITO)
+            respuestaRegistro = enviarSolicitudRegistro (contextoAplicacion->sock, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, interfazRegistro->logica.correoElectronico);
+        else
+            respuestaRegistro = fabricarRespuestaErrorConexion ();
+    }
     else
         respuestaRegistro = fabricarRespuestaRegistroInvalida ();
 
-    procesarSegunRespuestaRegistro (contextoAplicacion, interfazRegistro, &respuestaRegistro);
+    procesarRespuestaSegunEstadoRegistro (contextoAplicacion, interfazRegistro, &respuestaRegistro);
     
     return EVENTO_NO_MANEJADO;
 }
@@ -215,33 +242,6 @@ bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirCorreo (t_inte
 /* ============================================================================================================================================
    FUNCIONES PRIVADAS
    ============================================================================================================================================ */
-
-
-static void resetearInterfaz (t_interfazRegistro *interfazRegistro)
-{
-    // Deshabilitar foco.
-    interfazRegistro->estadoFoco = IR_NINGUNO;
-
-    // Setear cadenas vacias.
-    *(interfazRegistro->logica.correoElectronico) = '\0';
-}
-
-static void desactivarTextosInterfazRegistro (t_interfazRegistroTextos *textos)
-{
-    // auxEscribirCorreo
-    sfText_setString (textos->auxEscribirCorreo, "");
-    sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
-}
-
-static void desactivarRecursosInterfazRegistro (t_interfazRegistro *interfazRegistro)
-{
-    // --------------- CONFIGURAR INTERFAZ ---------------
-    resetearInterfaz (interfazRegistro);
-
-    // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
-    // TEXTO
-    desactivarTextosInterfazRegistro (&(interfazRegistro->textos));
-}
 
 
 static void posicionarPuntoInsercionBarraEscrituraNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
@@ -345,7 +345,16 @@ static  t_respuestaRegistro fabricarRespuestaRegistroInvalida ()
     return respuestaRegistroInvalida;
 }
 
-static void procesarSegunRespuestaRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const t_respuestaRegistro *respuestaRegistro)
+/*
+ * Fabricar una respuesta de error de conexion en caso de perder la conexion con el servidor.
+*/
+static t_respuestaRegistro fabricarRespuestaErrorConexion ()
+{
+    t_respuestaRegistro respuestaErrorConexion = {SOLICITUD_ERROR_CONEXION, ID_INVALIDO};
+    return respuestaErrorConexion;
+}
+
+static void procesarRespuestaSegunEstadoRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const t_respuestaRegistro *respuestaRegistro)
 {
     switch (respuestaRegistro->estado)
     {
@@ -369,6 +378,13 @@ static void procesarSegunRespuestaRegistro (t_contextoAplicacion *contextoAplica
         case SOLICITUD_ERROR_CORREO_YA_EXISTENTE:
             sfUint32 bufferCorreoYaExistente [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', ' ', 'y', 'a', ' ', 'e', 'x', 'i', 's', 't', 'e', 'n', 't', 'e', 0};
             sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferCorreoYaExistente);
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            break;
+
+        case SOLICITUD_ERROR_CONEXION:
+            socket_cerrar (&(contextoAplicacion->sock));
+            sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorConexion);
             centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
             break;
 

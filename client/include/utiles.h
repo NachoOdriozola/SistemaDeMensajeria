@@ -17,8 +17,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <stdbool.h>
 
 #include "../../external/csfml/include/SFML/System.h"

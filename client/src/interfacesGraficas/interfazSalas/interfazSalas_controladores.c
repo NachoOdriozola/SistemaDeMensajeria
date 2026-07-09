@@ -6,13 +6,19 @@
    ============================================================================================================================================ */
 
 
-static void desactivarRecursosInterfazSalas (t_interfazSalas *interfazSalas);
-
 
 /* ============================================================================================================================================
    FUNCIONES PUBLICAS
    ============================================================================================================================================ */
 
+
+void interfazSalas_resetear (sfRenderWindow *renderizado, t_interfazSalas *interfazSalas)
+{
+    // --------------- RESETEAR INTERFAZ ---------------
+
+    omitirEventosPendientes (renderizado);
+    _interfazSalas_deshabilitarFocos (interfazSalas);
+}
 
 void _interfazSalas_deshabilitarFocos (t_interfazSalas *interfazSalas)
 {
@@ -26,8 +32,7 @@ bool _interfazSalas_manejarClickCambiarAInterfazContactos (t_contextoAplicacion 
     if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazSalas->recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    omitirEventosPendientes (contextoAplicacion->renderizado);
-    desactivarRecursosInterfazSalas (interfazSalas);
+    interfazSalas_resetear (contextoAplicacion->renderizado, interfazSalas);
     recursosComunesContactosSalas_activarInterfazContactos (interfazSalas->recursosComunesContactosSalas);
     contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
 
@@ -40,18 +45,4 @@ bool _interfazSalas_manejarClickCambiarAInterfazContactos (t_contextoAplicacion 
    ============================================================================================================================================ */
 
 
-static void resetearInterfaz (t_interfazSalas *interfazSalas)
-{
-    // Deshabilitar focos.
-    interfazSalas->estadoFoco = IS_NINGUNO;
-}
-
-/*
- * Desactivar y resetear los recursos de la interfaz de salas en situaciones que la interfaz no continue con su actividad.
- */
-static void desactivarRecursosInterfazSalas (t_interfazSalas *interfazSalas)
-{
-    // --------------- CONFIGURAR INTERFAZ ---------------
-    resetearInterfaz (interfazSalas);
-}
 

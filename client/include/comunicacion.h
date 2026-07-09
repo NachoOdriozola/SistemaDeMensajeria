@@ -16,30 +16,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 #include <stdbool.h>
 
 #include "../../shared/protocolos/include/protocolos.h"
 #include "../../shared/constantes/include/constantes.h"
-
-
-/* ============================================================================================================================================
-   DEFINES
-   ============================================================================================================================================ */
-
-
-/**
- * \def RECIBIO_RESPUESTA
- * \brief Codigo de retorno para indicar que se recibio una respuesta del servidor.
- */
-#define RECIBIO_RESPUESTA 1
-
-/**
- * \def NO_RECIBIO_RESPUESTA
- * \brief Codigo de retorno para indicar que no se recibio una respuesta del servidor.
- */
-#define NO_RECIBIO_RESPUESTA 0
+#include "../../shared/sockets/include/sockets.h"
 
 
 /* ============================================================================================================================================
@@ -94,31 +75,29 @@ typedef struct
    ============================================================================================================================================ */
 
 
+/** \brief Crear el socket y configurarlo como cliente para conectarse al servidor. Ademas, le establece un timeout.
+ *
+ * Si falla la conexion con el servidor, elimina el socket creado.
+ * 
+ * \param returnSock Puntero al socket del cliente donde se retornara el socket creado y conectado al servidor.
+ *
+ * \return SOLICITUD_EXITO en caso de poder crear el socket y conectarlo con el servidor correctamente, SOLICITUD_ERROR_CONEXION en caso contrario.
+ *
+ */
+t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock);
+
 /** \brief Recibir una respuesta del servidor a traves del socket.
  *
  * Intentar leer datos disponibles en el socket especificado.
  * Si se recibe una respuesta, asegura terminar el bufferRespuesta con caracter nulo para que sea una cadena valida.
- * No bloquea el socket.
  *
  * \param sock Socket del usuario desde el cual se recibe la respuesta.
  * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
  *
- * \return RECIBIO_RESPUESTA en caso de que haya recibido respuesta, NO_RECIBIO_RESPUESTA en caso contrario.
+ * \return true en caso de que haya recibido respuesta, false en caso contrario.
  *
  */
-bool recibioRespuesta (SOCKET sock, char *bufferRespuesta);
-
-/** \brief Enviar una solicitud al servidor y esperar a recibir su respuesta.
- *
- * Enviar una solicitud y recibir una respuesta que se almacenara en buffersComunicacion. Todo el proceso se comunica mediante el socket especificado.
- * Asegura terminar el buffer con caracter nulo para que sea una cadena valida.
- * Cambia temporalmente el modo del socket a bloqueante para asegurar que el envio y la recepcion se completen antes de continuar. Una vez realizado el proceso, se desbloquea.
- *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
- * \param buffersComunicacion Buffers donde se recibe la solicitud y se almacena la respuesta.
- *
- */
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffersComunicacion);
+bool recibioRespuesta (t_socket sock, char *bufferRespuesta);
 
 /** \brief Enviar solicitud para autenticar usuario.
  *
@@ -134,7 +113,7 @@ void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffe
  *
  * \return t_respuestaAutenticacion que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaAutenticacion enviarSolicitudAutenticacion (SOCKET sock, const char *nombreUsuario, const char *contrasenia);
+t_respuestaAutenticacion enviarSolicitudAutenticacion (t_socket sock, const char *nombreUsuario, const char *contrasenia);
 
 /** \brief Enviar solicitud para registrar usuario.
  *
@@ -151,7 +130,7 @@ t_respuestaAutenticacion enviarSolicitudAutenticacion (SOCKET sock, const char *
  *
  * \return t_respuestaRegistro que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaRegistro enviarSolicitudRegistro (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
+t_respuestaRegistro enviarSolicitudRegistro (t_socket sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
 
 /** \brief Enviar solicitud para enviar un mensaje a otro usuario.
  *
@@ -170,7 +149,7 @@ t_respuestaRegistro enviarSolicitudRegistro (SOCKET sock, const char *nombreUsua
  * \return char que contiene el estado de la respuesta recibida por el servidor.
  *
  */
-char enviarSolicitudEnvioMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje);
+char enviarSolicitudEnvioMensaje (t_socket sock, int idUsuario, int idReceptor, const char* mensaje);
 
 /** \brief Enviar solicitud para seleccionar un chat con un usuario para comunicarse.
  *
@@ -188,7 +167,7 @@ char enviarSolicitudEnvioMensaje (SOCKET sock, int idUsuario, int idReceptor, co
  * \return t_respuestaSeleccionChat que contiene los datos de la respuesta recibida por el servidor.
  *
  */
-t_respuestaSeleccionChat enviarSolicitudSeleccionChat (SOCKET sock, const char *nombreUsuarioChatSeleccionado);
+t_respuestaSeleccionChat enviarSolicitudSeleccionChat (t_socket sock, const char *nombreUsuarioChatSeleccionado);
 
 
 #endif // COMUNICACION_H_INCLUDED

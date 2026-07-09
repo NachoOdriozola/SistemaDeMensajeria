@@ -17,5 +17,5 @@ add_executable(${PROJECT_NAME} ${CLIENT_SRC} ${INTERFAZAUTENTICACION_SRC} ${INTE
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazAutenticacion ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazConfig ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazContactos ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazRegistro ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazSalas  ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/recursosComunes/recursosComunesAutenticacionRegistro ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/recursosComunes/recursosComunesContactosSalas ${CMAKE_CURRENT_SOURCE_DIR}/../external/csfml/include)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC listaDoble constantes protocolos ws2_32 csfml-system csfml-window csfml-graphics)
+target_link_libraries(${PROJECT_NAME} PUBLIC sockets listaDoble constantes protocolos ws2_32 csfml-system csfml-window csfml-graphics)
 

@@ -23,9 +23,10 @@
 #include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
+#include "../../shared/sockets/include/sockets.h"
+
 #include "estructuras.h"
 #include "utiles.h"
-#include "sockets.h"
 
 
 /* ============================================================================================================================================

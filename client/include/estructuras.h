@@ -14,14 +14,13 @@
 
 
 #include <stdbool.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
 
 #include "../../external/csfml/include/SFML/System.h"
 #include "../../external/csfml/include/SFML/Window.h"
 #include "../../external/csfml/include/SFML/Graphics.h"
 
 #include "../../shared/constantes/include/constantes.h"
+#include "../../shared/sockets/include/sockets.h"
 
 
 /* ============================================================================================================================================
@@ -59,9 +58,8 @@ typedef struct
  */
 typedef struct
 {
-    bool estadoWinsock;                          /**< Estado de Winsock API */
     sfRenderWindow *renderizado;         /**< Renderizado de la ventana. */
-    SOCKET sock;                                     /**< Socket del usuario. */
+    t_socket sock;                                     /**< Socket del usuario. */
     t_usuario usuario;
 } t_contextoAplicacion;
 

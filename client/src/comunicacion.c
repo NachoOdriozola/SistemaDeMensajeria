@@ -1,11 +1,38 @@
 #include "../include/comunicacion.h"
 
 
-bool recibioRespuesta (SOCKET sock, char *bufferRespuesta)
+static bool socketConectado;
+
+t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
+{
+    if (*returnSock == SOCKET_INVALIDO)
+    {
+        if (socket_crear (returnSock) == ERROR_INICIALIZACION)
+            return SOLICITUD_ERROR_CONEXION;
+        socketConectado = false;
+    }
+    
+    if (!socketConectado)
+    {
+        if (socket_conectarCliente (returnSock) == EXITO)
+            socketConectado = true;
+        else
+        {
+            socket_cerrar (returnSock);
+            return SOLICITUD_ERROR_CONEXION;
+        }
+    }
+
+    socket_establecerTimeout (returnSock, 5000);
+
+    return SOLICITUD_EXITO;
+}
+
+bool recibioRespuesta (t_socket sock, char *bufferRespuesta)
 {
     int bytesRecibidos;
 
-    bytesRecibidos = recv (sock, bufferRespuesta, MAX_BUFFER_RESPUESTA, 0);
+    bytesRecibidos = socket_recibir (sock, bufferRespuesta);
     if (bytesRecibidos > 0)
     {
         bufferRespuesta += bytesRecibidos;
@@ -13,70 +40,130 @@ bool recibioRespuesta (SOCKET sock, char *bufferRespuesta)
 
         bufferRespuesta -= bytesRecibidos; // Retroceder la cantidad de bytes avanzados para poder hacer el log.
         printf ("\nRespuesta recibida: %s\n", bufferRespuesta);
-        return RECIBIO_RESPUESTA;
+        return true;
     }
-    return NO_RECIBIO_RESPUESTA;
+    return false;
 }
 
-void enviarSolicitudYRecibirRespuesta (SOCKET sock, t_buffersComunicacion *buffersComunicacion)
-{
-    u_long modoSocket = 0; //Socket modo bloqueante
-    int bytesRecibidos;
-
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-    send (sock, buffersComunicacion->solicitud, strlen(buffersComunicacion->solicitud), 0);
-    printf ("\nSolicitud enviada: %s\n", buffersComunicacion->solicitud);
-    bytesRecibidos = recv (sock, buffersComunicacion->respuesta, MAX_BUFFER_RESPUESTA, 0);
-    buffersComunicacion->respuesta[bytesRecibidos] = '\0';
-    printf ("Respuesta recibida: %s\n", buffersComunicacion->respuesta);
-    modoSocket = 1; // Socket modo no bloqueante
-    ioctlsocket (sock, FIONBIO, &modoSocket);
-}
-
-t_respuestaAutenticacion enviarSolicitudAutenticacion (SOCKET sock, const char *nombreUsuario, const char *contrasenia)
+t_respuestaAutenticacion enviarSolicitudAutenticacion (t_socket sock, const char *nombreUsuario, const char *contrasenia)
 {
     t_buffersComunicacion buffersComunicacion;
     t_respuestaAutenticacion respuestaAutenticacion;
+    int bytesRecibidos;
+
+    socket_establecerModoBloqueante (&sock);
 
     snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s", SOLICITUD_AUTENTICACION, nombreUsuario, contrasenia);
-    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
-    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaAutenticacion.estado), &(respuestaAutenticacion.idUsuario));
+    socket_enviar (sock, buffersComunicacion.solicitud);
+    printf ("\nSolicitud enviada: %s\n", buffersComunicacion.solicitud);
+
+    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
+    if (socket_perdioConexion (sock, bytesRecibidos))
+    {
+        respuestaAutenticacion.estado = SOLICITUD_ERROR_CONEXION;
+        respuestaAutenticacion.idUsuario = ID_INVALIDO;
+        puts ("Se perdio la conexion con el servidor.");
+    }
+    else
+    {
+        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
+        sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaAutenticacion.estado), &(respuestaAutenticacion.idUsuario));
+        printf ("Respuesta recibida: %s\n", buffersComunicacion.respuesta);
+    }
+
+    socket_establecerModoNoBloqueante (&sock);
 
     return respuestaAutenticacion;
 }
 
-t_respuestaRegistro enviarSolicitudRegistro (SOCKET sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
+t_respuestaRegistro enviarSolicitudRegistro (t_socket sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
 {
     t_buffersComunicacion buffersComunicacion;
     t_respuestaRegistro respuestaRegistro;
+    int bytesRecibidos;
+    
+    socket_establecerModoBloqueante (&sock);
 
     snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s|%s|%s", SOLICITUD_REGISTRO, nombreUsuario, contrasenia, correoElectronico);
-    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
-    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaRegistro.estado), &(respuestaRegistro.idUsuario));
+    socket_enviar (sock, buffersComunicacion.solicitud);
+    printf ("\nSolicitud enviada: %s\n", buffersComunicacion.solicitud);
+
+    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
+    if (socket_perdioConexion (sock, bytesRecibidos))
+    {
+        respuestaRegistro.estado = SOLICITUD_ERROR_CONEXION;
+        respuestaRegistro.idUsuario = ID_INVALIDO;
+        puts ("Se perdio la conexion con el servidor.\n");
+    }
+    else
+    {
+        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
+        sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaRegistro.estado), &(respuestaRegistro.idUsuario));
+        printf ("Respuesta recibida: %s\n", buffersComunicacion.respuesta);
+    }
+
+    socket_establecerModoNoBloqueante (&sock);
 
     return respuestaRegistro;
 }
 
-char enviarSolicitudEnvioMensaje (SOCKET sock, int idUsuario, int idReceptor, const char* mensaje)
+char enviarSolicitudEnvioMensaje (t_socket sock, int idUsuario, int idReceptor, const char* mensaje)
 {
     t_buffersComunicacion buffersComunicacion;
     char estadoSolicitud;
+    int bytesRecibidos;
+    
+    socket_establecerModoBloqueante (&sock);
 
     snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%d|%d|%s", SOLICITUD_ENVIO_MENSAJE, idUsuario, idReceptor, mensaje);
-    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
-    sscanf (buffersComunicacion.respuesta, "%c", &estadoSolicitud);
+    socket_enviar (sock, buffersComunicacion.solicitud);
+    printf ("\nSolicitud enviada: %s\n", buffersComunicacion.solicitud);
+
+    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
+    if (socket_perdioConexion (sock, bytesRecibidos))
+    {
+        estadoSolicitud = SOLICITUD_ERROR_CONEXION;
+        puts ("Se perdio la conexion con el servidor.");
+    }
+    else
+    {
+        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
+        sscanf (buffersComunicacion.respuesta, "%c", &estadoSolicitud);
+        printf ("Respuesta recibida: %s\n", buffersComunicacion.respuesta);
+    }
+
+    socket_establecerModoNoBloqueante (&sock);
 
     return estadoSolicitud;
 }
 
-t_respuestaSeleccionChat enviarSolicitudSeleccionChat (SOCKET sock, const char *nombreUsuarioChatSeleccionado)
+t_respuestaSeleccionChat enviarSolicitudSeleccionChat (t_socket sock, const char *nombreUsuarioChatSeleccionado)
 {
     t_buffersComunicacion buffersComunicacion;
     t_respuestaSeleccionChat respuestaSeleccionChat;
+    int bytesRecibidos;
+    
+    socket_establecerModoBloqueante (&sock);
 
     snprintf (buffersComunicacion.solicitud, MAX_BUFFER_SOLICITUD, "%c|%s", SOLICITUD_SELECCION_CHAT, nombreUsuarioChatSeleccionado);
-    enviarSolicitudYRecibirRespuesta (sock, &buffersComunicacion);
-    sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaSeleccionChat.estado), &(respuestaSeleccionChat.idUsuarioChatSeleccionado));
+    socket_enviar (sock, buffersComunicacion.solicitud);
+    printf ("\nSolicitud enviada: %s\n", buffersComunicacion.solicitud);
+
+    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
+    if (socket_perdioConexion (sock, bytesRecibidos))
+    {
+        respuestaSeleccionChat.estado = SOLICITUD_ERROR_CONEXION;
+        respuestaSeleccionChat.idUsuarioChatSeleccionado = ID_INVALIDO;
+        puts ("Se perdio la conexion con el servidor.");
+    }
+    else
+    {
+        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
+        sscanf (buffersComunicacion.respuesta, "%c|%d", &(respuestaSeleccionChat.estado), &(respuestaSeleccionChat.idUsuarioChatSeleccionado));
+        printf ("Respuesta recibida: %s\n", buffersComunicacion.respuesta);
+    }
+
+    socket_establecerModoNoBloqueante (&sock);
 
     return respuestaSeleccionChat;
 }

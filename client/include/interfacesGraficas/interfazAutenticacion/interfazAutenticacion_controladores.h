@@ -36,7 +36,16 @@
    ============================================================================================================================================ */
 
 
+/** \brief Resetear la interfaz de autenticacion.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ *
+ */
+void interfazAutenticacion_resetear (sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
+
 void _interfazAutenticacion_deshabilitarFocos (t_interfazAutenticacion *interfazAutenticacion);
+
 
 /*
  * Establecer el foco en escribir nombre y posiciona el punto de insercion.
@@ -49,9 +58,10 @@ bool _interfazAutenticacion_manejarClickEscribirNombre (const sfRenderWindow *re
 bool _interfazAutenticacion_manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
 
 /*
- * Verificar que la habilitacion de posibilidad de ingreso se encuentre habilitada.
- * Envia la solicitud de autenticacion y procesa la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID y el nombre de usuario en el contexto de la aplicacion, y selecciona la interfaz de contactos.
+ * Verificar que los datos de autenticacion del usuario sean validos.
+ * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
+ * Enviar la solicitud de autenticacion y procesar la respuesta segun su estado.
+ * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
 */
 bool _interfazAutenticacion_manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 
@@ -78,9 +88,10 @@ bool _interfazAutenticacion_manejarEscribirContrasenia (t_interfazAutenticacion 
 
 
 /*
- * Verificar que la habilitacion de posibilidad de ingreso se encuentre habilitada.
- * Envia la solicitud de autenticacion y procesa la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID y el nombre de usuario en el contexto de la aplicacion, y selecciona la interfaz de contactos.
+ * Verificar que los datos de autenticacion del usuario sean validos.
+ * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
+ * Enviar la solicitud de autenticacion y procesar la respuesta segun su estado.
+ * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
 */
 bool _interfazAutenticacion_manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 

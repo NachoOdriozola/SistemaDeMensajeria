@@ -18,8 +18,9 @@
 #include "../../shared/estructurasDeDatos/cola/include/cola.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
+#include "../../shared/sockets/include/sockets.h"
+
 #include "baseDeDatos.h"
-#include "sockets.h"
 
 
 /* ============================================================================================================================================

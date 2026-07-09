@@ -35,7 +35,7 @@
  * \def PUERTO
  * \brief Puerto en el que se comunicaran los sockets.
  */
-#define PUERTO 8080
+#define PUERTO 8070
 
 
 /* ============================================================================================================================================
@@ -63,10 +63,11 @@ typedef enum
 {
     SOLICITUD_EXITO = 'a',
     SOLICITUD_ERROR_SERVIDOR = 'b',
-    SOLICITUD_ERROR_CREDENCIALES_INVALIDAS = 'c',
-    SOLICITUD_ERROR_OPERACION_INVALIDA = 'd',
-    SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE = 'e',
-    SOLICITUD_ERROR_CORREO_YA_EXISTENTE = 'f'
+    SOLICITUD_ERROR_CONEXION = 'c',
+    SOLICITUD_ERROR_CREDENCIALES_INVALIDAS = 'd',
+    SOLICITUD_ERROR_OPERACION_INVALIDA = 'e',
+    SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE = 'f',
+    SOLICITUD_ERROR_CORREO_YA_EXISTENTE = 'g'
 } t_estadoSolicitud;
 
 /**

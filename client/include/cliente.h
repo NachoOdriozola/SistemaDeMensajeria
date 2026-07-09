@@ -18,9 +18,6 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <stdbool.h>
-#include <winsock2.h>
-#include <windows.h>
-#include <ws2tcpip.h>
 
 #include "../../external/csfml/include/SFML/System.h"
 #include "../../external/csfml/include/SFML/Window.h"
@@ -28,6 +25,7 @@
 
 #include "../../shared/protocolos/include/protocolos.h"
 #include "../../shared/constantes/include/constantes.h"
+#include "../../shared/sockets/include/sockets.h"
 #include "estructuras.h"
 
 #include "interfacesGraficas/recursosComunes/recursosComunesAutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
@@ -76,7 +74,7 @@ typedef struct
 
 /** \brief Inicializar los recursos de la aplicacion.
  *
- * Crear: la API de Winsock, el renderizado de la ventana, el socket del usuario y conectarlo con el servidor, los recursos graficos comunes y las interfaces graficas.
+ * Inicializar el Winsock API y crear: el renderizado de la ventana, los recursos graficos comunes y las interfaces graficas.
  * Antes de crear cada recurso, los inicializa en NULL para facilitar la liberacion de los mismos en caso de errores.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
@@ -87,10 +85,12 @@ typedef struct
  */
 t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
 
-/** \brief Configurar los recursos de la aplicacion, los recursos comunes, y las interfaces graficas.
+/** \brief Configurar los recursos de la aplicacion, los recursos comunes, las interfaces graficas.
  *
  * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfacesGraficas Puntero a la estructura unificadora de interfaces graficas.
+ * 
+ * \return EXITO si se inicializo correctamente, ERROR_CONFIGURACION en caso de error.
  *
  */
 void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);

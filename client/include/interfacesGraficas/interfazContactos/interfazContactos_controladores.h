@@ -35,6 +35,14 @@
    ============================================================================================================================================ */
 
 
+/** \brief Resetear la interfaz de contactos.
+ *
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ *
+ */
+void interfazContactos_resetear (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
+
 void _interfazContactos_deshabilitarFocos (t_interfazContactos *interfazContactos);
 
 

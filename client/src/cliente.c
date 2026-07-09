@@ -9,12 +9,12 @@
 static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
 
 static bool usuarioSeAutentico (t_contextoAplicacion *contextoAplicacion);
-static bool usuarioQuiereAbrirConfiguraciones (t_contextoAplicacion *contextoAplicacion);
-static bool usuarioQuiereSalirConfiguraciones (t_contextoAplicacion *contextoAplicacion);
-
 static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
-static void cambiarAInterfazConfig (t_interfazConfig *interfazConfig);
-static void salirInterfazConfig (t_interfazConfig *interfazConfig);
+
+static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion);
+static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
+
+static bool usuarioQuiereSalirDeConfiguraciones (t_contextoAplicacion *contextoAplicacion);
 
 
 /* ============================================================================================================================================
@@ -31,18 +31,10 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
 
     inicializarValoresNulosAplicacion (contextoAplicacion, interfacesGraficas);
 
-    // --------------- INICIALIZAR WINSOCK API ---------------
+    // --------------- INICIALIZAR SOCKET ---------------
 
-    WSADATA wsaData;
-    int resultado;
-
-    resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
-    if (resultado != 0)
-    {
-        printf ("\nERROR - Inicializar Winsock: %d.\n", resultado);
+    if (socket_inicializar () == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
-    }
-    contextoAplicacion->estadoWinsock = true;
 
     // --------------- INICIALIZAR RENDERIZADO ---------------
 
@@ -52,29 +44,6 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
         perror ("\nERROR - Crear renderizado.\n");
         return ERROR_INICIALIZACION;
     }
-
-    // --------------- INICIALIZAR SOCKET DE LA APLICACION ---------------
-
-    struct sockaddr_in dirCliente;
-    u_long modoSocket = 0; // Establecer socket en modo NO bloqueante.
-
-    contextoAplicacion->sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (contextoAplicacion->sock == INVALID_SOCKET)
-    {
-        printf ("\nERROR - Crear el socket: %d.\n", WSAGetLastError ());
-        return ERROR_INICIALIZACION;
-    }
-
-    dirCliente.sin_family = AF_INET;
-    dirCliente.sin_port = htons (PUERTO); // Escuchar en el puerto asignado.
-    dirCliente.sin_addr.s_addr = inet_addr ("127.0.0.1"); // Aceptar conexiones de cualquier direccion IP.
-    if (connect (contextoAplicacion->sock, (struct sockaddr*)&(dirCliente), sizeof (dirCliente)) == SOCKET_ERROR)
-    {
-        printf ("\nERROR - Conectarse con el servidor: %d.\n", WSAGetLastError ());
-        return ERROR_INICIALIZACION;
-    }
-    ioctlsocket (contextoAplicacion->sock, FIONBIO, &modoSocket);
-    printf ("-CONECTADO CON EL SERVIDOR-\t");
 
     // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES ---------------
 
@@ -166,20 +135,20 @@ void ejecutarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesG
 
         case INTERFAZ_CONTACTOS:
             ejecutarInterfazContactos (contextoAplicacion, &(interfacesGraficas->contactos));
-            if (usuarioQuiereAbrirConfiguraciones (contextoAplicacion))
-                cambiarAInterfazConfig (&(interfacesGraficas->config));
+            if (usuarioSalioDelMenuPrincipal (contextoAplicacion))
+                cambiarDeInterfaz (contextoAplicacion, interfacesGraficas);
             break;
 
         case INTERFAZ_SALAS:
             ejecutarInterfazSalas (contextoAplicacion, &(interfacesGraficas->salas));
-            if (usuarioQuiereAbrirConfiguraciones (contextoAplicacion))
-                cambiarAInterfazConfig (&(interfacesGraficas->config));
+            if (usuarioSalioDelMenuPrincipal (contextoAplicacion))
+                cambiarDeInterfaz (contextoAplicacion, interfacesGraficas);
             break;
 
         case INTERFAZ_CONFIG:
             ejecutarInterfazConfig (contextoAplicacion, &(interfacesGraficas->config));
-            if (usuarioQuiereSalirConfiguraciones (contextoAplicacion))
-                salirInterfazConfig (&(interfacesGraficas->config));
+            if (usuarioQuiereSalirDeConfiguraciones (contextoAplicacion))
+                interfazConfig_liberar (&(interfacesGraficas->config));
             break;
         }
 }
@@ -201,20 +170,15 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGr
     recursosComunesContactosSalas_liberar (&(interfacesGraficas->recursosComunesContactosSalas));
     recursosComunesAutenticacionRegistro_liberar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
-    // --------------- LIBERAR SOCKET DE LA APLICACION ---------------
+    // --------------- LIBERAR SOCKET ---------------
 
-    if (contextoAplicacion->sock != INVALID_SOCKET)
-        closesocket (contextoAplicacion->sock);
+    socket_cerrar (&(contextoAplicacion->sock));
+    socket_finalizar ();
 
     // --------------- LIBERAR RENDERIZADO ---------------
 
     if (contextoAplicacion->renderizado != NULL)
         sfRenderWindow_destroy (contextoAplicacion->renderizado);
-
-    // --------------- LIBERAR WINSOCK API ---------------
-
-    if (contextoAplicacion->estadoWinsock == true)
-        WSACleanup ();
 
 
     system ("pause"); // Evita que la ventana de la consola se cierre inmediatamente.
@@ -234,7 +198,6 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGr
 static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
 {
     // --------------- CONTEXTO DE LA APLICACION ---------------
-    contextoAplicacion->estadoWinsock = false;
     contextoAplicacion->renderizado = NULL;
     contextoAplicacion->sock = INVALID_SOCKET;
 
@@ -254,17 +217,6 @@ static bool usuarioSeAutentico (t_contextoAplicacion *contextoAplicacion)
 {
     return (contextoAplicacion->usuario.interfazActual == INTERFAZ_CONTACTOS);
 }
-
-static bool usuarioQuiereAbrirConfiguraciones (t_contextoAplicacion *contextoAplicacion)
-{
-    return (contextoAplicacion->usuario.interfazActual == INTERFAZ_CONFIG);
-}
-
-static bool usuarioQuiereSalirConfiguraciones (t_contextoAplicacion *contextoAplicacion)
-{
-    return (contextoAplicacion->usuario.interfazActual != INTERFAZ_CONFIG);
-}
-
 
 static void liberarRecursosGraficosAutenticacion (t_interfacesGraficas *interfacesGraficas)
 {
@@ -286,13 +238,49 @@ static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion,
     prepararInterfazContactos (contextoAplicacion, interfacesGraficas);
 }
 
-static void cambiarAInterfazConfig (t_interfazConfig *interfazConfig)
+
+static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion)
+{
+    return (contextoAplicacion->usuario.interfazActual != INTERFAZ_CONTACTOS);
+}
+
+static void prepararInterfazConfig (t_interfazConfig *interfazConfig)
 {
     interfazConfig_inicializar (interfazConfig);
     interfazConfig_configurar (interfazConfig);
 }
 
-static void salirInterfazConfig (t_interfazConfig *interfazConfig)
+static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_interfacesGraficas *interfacesGraficas)
 {
-    interfazConfig_liberar (interfazConfig);
+    sfRenderWindow_setSize (renderizado, (sfVector2u){500, 620});
+
+    recursosComunesAutenticacionRegistro_inicializar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion));
+    interfazRegistro_inicializar (&(interfacesGraficas->registro));
+
+    recursosComunesAutenticacionRegistro_configurar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazRegistro_configurar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+
+    sfRenderWindow_setView (renderizado, interfacesGraficas->recursosComunesAutenticacionRegistro.vistas.ui);
+
+    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    sfText_setUnicodeString (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.ingresoIncorrecto, bufferErrorConexion);
+    centrarTextoEnArea (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.ingresoIncorrecto, 0, 440, 500, 130);
 }
+
+static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+{
+    if (contextoAplicacion->usuario.interfazActual == INTERFAZ_CONFIG)
+        prepararInterfazConfig (&(interfacesGraficas->config));
+
+    if (contextoAplicacion->usuario.interfazActual == INTERFAZ_AUTENTICACION)
+        prepararInterfacesAutenticacion (contextoAplicacion->renderizado, interfacesGraficas);
+}
+
+
+static bool usuarioQuiereSalirDeConfiguraciones (t_contextoAplicacion *contextoAplicacion)
+{
+    return (contextoAplicacion->usuario.interfazActual != INTERFAZ_CONFIG);
+}
+

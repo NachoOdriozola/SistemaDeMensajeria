@@ -63,6 +63,14 @@ typedef struct
     sfRectangleShape *subrayadoTitulo;                               /**< Barra decorativa para subrayar el titulo de la interfaz. */
 } t_recursosComunesAutenticacionRegistroElementos;
 
+/** \struct t_recursosComunesAutenticacionRegistroVistas
+ * \brief Contiene todas las vistas comunes (compartidas) entre las interfaces de autenticacion y registro.
+ */
+typedef struct
+{
+    sfView *ui;
+} t_recursosComunesAutenticacionRegistroVistas;
+
 /** \enum t_recursosComunesAutenticacionRegistroFoco
  * \brief Contiene todos los estados de foco comunes (compartidas) entre las interfaces de autenticacion y registro.
  */
@@ -91,6 +99,7 @@ typedef struct
     t_recursosComunesAutenticacionRegistroFuentes fuentes;
     t_recursosComunesAutenticacionRegistroTextos textos;
     t_recursosComunesAutenticacionRegistroElementos elementos;
+    t_recursosComunesAutenticacionRegistroVistas vistas;
     t_recursosComunesAutenticacionRegistroFoco estadoFoco;
     t_recursosComunesAutenticacionRegistroLogica logica;
 } t_recursosComunesAutenticacionRegistro;

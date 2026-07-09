@@ -11,6 +11,9 @@ void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosCom
 
     // ELEMENTOS
     _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (&(recursosComunesAutenticacionRegistro->elementos));
+
+    //VISTAS
+    _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (&(recursosComunesAutenticacionRegistro->vistas));
 }
 
 t_codigoRetorno recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
@@ -25,6 +28,10 @@ t_codigoRetorno recursosComunesAutenticacionRegistro_inicializar (t_recursosComu
 
     // ELEMENTOS
     if (_recursosComunesAutenticacionRegistro_inicializarElementos (&(recursosComunesAutenticacionRegistro->elementos)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+    //VISTAS
+    if (_recursosComunesAutenticacionRegistro_inicializarVistas (&(recursosComunesAutenticacionRegistro->vistas)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     return EXITO;
@@ -48,6 +55,9 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
 
     // ELEMENTO
     _recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (&(recursosComunesAutenticacionRegistro->elementos));
+
+    //VISTAS
+    _recursosComunesAutenticacionRegistro_tamVistas (&(recursosComunesAutenticacionRegistro->vistas));
 }
 
 void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos)
@@ -80,5 +90,8 @@ void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacio
 
     // ELEMENTOS
     _recursosComunesAutenticacionRegistro_liberarElementos (&(recursosComunesAutenticacionRegistro->elementos));
+
+    //VISTAS
+    _recursosComunesAutenticacionRegistro_liberarVistas (&(recursosComunesAutenticacionRegistro->vistas));
 }
 
