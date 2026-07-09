@@ -3,6 +3,8 @@
 
 # Base de datos
 *.db
+server/database/database.db-shm
+server/database/database.db-wal
 
 # Doxygen
 docs/html
