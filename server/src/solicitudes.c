@@ -247,11 +247,11 @@ static t_codigoRetorno hashearContrasenia (t_datosRegistroUsuario *datosRegistro
     char contraseniaHasheada [crypto_pwhash_STRBYTES];
 
     if (crypto_pwhash_str (contraseniaHasheada, datosRegistroUsuario->contrasenia, strlen (datosRegistroUsuario->contrasenia), 3, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0)
-        return SOLICITUD_ERROR_SERVIDOR;
+        return ERROR_INICIALIZACION;
 
     strcpy (datosRegistroUsuario->contrasenia, contraseniaHasheada);
     
-    return SOLICITUD_EXITO;
+    return EXITO;
 }
 
 static void registrarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosRegistroUsuario *datosRegistroUsuario)
@@ -287,7 +287,9 @@ static t_estadoSolicitud registrarCliente (t_contextoServidor *contextoServidor,
     if (correoYaExistente (contextoServidor->sentenciasSqlite.buscarUsuarioPorCorreo, datosRegistroUsuario))
         return SOLICITUD_ERROR_CORREO_YA_EXISTENTE;
 
-    hashearContrasenia (datosRegistroUsuario);
+    if (hashearContrasenia (datosRegistroUsuario) == ERROR_INICIALIZACION)
+        return SOLICITUD_ERROR_SERVIDOR;
+
     registrarUsuario (contextoServidor->sentenciasSqlite.insertarUsuario, datosRegistroUsuario);
     recuperarIdUsuarioRecienRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosRegistroUsuario, &idUsuario);
     conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, idUsuario);
