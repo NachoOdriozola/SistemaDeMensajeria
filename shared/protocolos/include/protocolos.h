@@ -1,11 +1,19 @@
 /**
  * \file   protocolos.h
- * \brief  Contiene el puerto de conexion, tamanios de buffers de comunicacion y codigos de comunicacion.
+ * \brief  Contiene el puerto de conexion, tamanios de buffers de comunicacion, codigos y estructuras de comunicacion.
  */
 
 
 #ifndef PROTOCOLO_H_INCLUDED
 #define PROTOCOLO_H_INCLUDED
+
+
+/* ============================================================================================================================================
+   INCLUDES
+   ============================================================================================================================================ */
+
+
+#include "../../constantes/include/constantes.h"
 
 
 /* ============================================================================================================================================
@@ -76,8 +84,122 @@ typedef enum
  */
 typedef enum
 {
-    RESPUESTA_RECEPCION_MENSAJE = 'A',
+    RESPUESTA_SOLICITUD_AUTENTICACION = 'A',
+    RESPUESTA_SOLICITUD_REGISTRO = 'B',
+    RESPUESTA_SOLICITUD_ENVIO_MENSAJE = 'C',
+    RESPUESTA_SOLICITUD_SELECCION_CHAT = 'D',
+    RESPUESTA_RECEPCION_MENSAJE = 'E',
 } t_tipoRespuesta;
+
+
+/* ============================================================================================================================================
+   ESTRUCTURAS DE ENVIO DE DATOS DE SOLICITUDES
+   ============================================================================================================================================ */
+
+
+/**
+ * \enum t_datosEnvioSolicitudAutenticacion
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    char headerTipoSolicitud;
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    char contrasenia [MAX_CONTRASENIA];
+} t_datosEnvioSolicitudAutenticacion;
+
+/**
+ * \enum t_datosEnvioSolicitudRegistro
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    char headerTipoSolicitud;
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    char contrasenia [MAX_CONTRASENIA];
+    char correoElectronico [MAX_CORREO_ELECTRONICO];
+} t_datosEnvioSolicitudRegistro;
+
+/**
+ * \enum t_datosEnvioSolicitudEnvioMensaje
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    char headerTipoSolicitud;
+    int idEmisor, idReceptor;
+    char texto [MAX_MENSAJE];
+} t_datosEnvioSolicitudEnvioMensaje;
+
+/**
+ * \enum t_datosEnvioSolicitudSeleccionChat
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    char headerTipoSolicitud;
+    char nombreUsuarioChatSeleccionado [MAX_NOMBRE_USUARIO];
+} t_datosEnvioSolicitudSeleccionChat;
+
+
+/* ============================================================================================================================================
+   ESTRUCTURAS DE DATOS DE RESPUESTAS DE SOLICITUDES
+   ============================================================================================================================================ */
+
+
+/**
+ * \enum t_datosRespuestaSolicitudAutenticacion
+ * \brief Datos de respuesta de la solicitud a enviar al cliente.
+ */
+typedef struct
+{
+    char headerTipoRespuesta;
+    char estadoSolicitud;
+    int idUsuario;
+} t_datosRespuestaSolicitudAutenticacion;
+
+/**
+ * \enum t_datosRespuestaSolicitudRegistro
+ * \brief Datos de respuesta de la solicitud a enviar al cliente.
+ */
+typedef struct
+{
+    char headerTipoRespuesta;
+    char estadoSolicitud;
+    int idUsuario;
+} t_datosRespuestaSolicitudRegistro;
+
+/**
+ * \enum t_datosRespuestaSolicitudEnvioMensaje
+ * \brief Datos de respuesta de la solicitud a enviar al cliente.
+ */
+typedef struct
+{
+    char headerTipoRespuesta;
+    char estadoSolicitud;
+} t_datosRespuestaSolicitudEnvioMensaje;
+
+/**
+ * \enum t_datosRespuestaSolicitudRegistro
+ * \brief Datos de respuesta a enviar al cliente.
+ */
+typedef struct
+{
+    char headerTipoRespuesta;
+    int idEmisor;
+    char texto [MAX_MENSAJE];
+} t_datosRespuestaRecepcionMensaje;
+
+/**
+ * \enum t_datosRespuestaSolicitudSeleccionChat
+ * \brief Datos de respuesta de la solicitud a enviar al cliente.
+ */
+typedef struct
+{
+    char headerTipoRespuesta;
+    char estadoSolicitud;
+    int idUsuarioDelChatSeleccionado;
+} t_datosRespuestaSolicitudSeleccionChat;
 
 
 #endif // PROTOCOLO_H_INCLUDED

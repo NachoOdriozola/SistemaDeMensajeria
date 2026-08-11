@@ -33,64 +33,6 @@
 
 
 /* ============================================================================================================================================
-   ESTRUCTURAS
-   ============================================================================================================================================ */
-
-
-/**
- * \struct t_datosAutenticacionUsuario
- * \brief  Almacena los datos recibidos de autenticacion del usuario.
- */
-typedef struct 
-{
-   char nombreUsuario [MAX_NOMBRE_USUARIO];
-   char contrasenia [MAX_CONTRASENIA];
-} t_datosAutenticacionUsuario;
-
-/**
- * \struct t_datosRegistroUsuario
- * \brief  Almacena los datos recibidos de registro del usuario.
- */
-typedef struct
-{
-   char nombreUsuario [MAX_NOMBRE_USUARIO];
-   char contrasenia [MAX_CONTRASENIA];
-   char correoElectronico [MAX_CORREO_ELECTRONICO];
-} t_datosRegistroUsuario;
-
-/**
- * \struct t_datosEnvioMensaje
- * \brief  Almacena los datos recibidos de envio de mensaje del usuario.
- */
-typedef struct
-{
-   int idEmisor;
-   int idReceptor;
-   char texto [MAX_MENSAJE];
-} t_datosEnvioMensaje;
-
-/**
- * \struct t_datosSeleccionChat
- * \brief  Almacena los datos recibidos de seleccion de chat del usuario.
- */
-typedef struct
-{
-   char nombreReceptor [MAX_NOMBRE_USUARIO];
-} t_datosSeleccionChat;
-
-
-/**
- * \struct t_respuestaSeleccionChat
- * \brief  Almacena los datos a responder de seleccion de chat del usuario.
- */
-typedef struct
-{
-   t_estadoSolicitud estadoSolicitud;
-   int idUsuarioDelChatSeleccionado;
-} t_respuestaSeleccionChat;
-
-
-/* ============================================================================================================================================
    FUNCIONES
    ============================================================================================================================================ */
 

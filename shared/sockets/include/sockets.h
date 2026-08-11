@@ -117,11 +117,12 @@ t_socket socket_aceptarNuevoCliente (t_socket sockServidor);
  *
  * \param sock Socket que realiza el envio
  * \param buffer Cadena que contiene el buffer a enviar.
+ * \param tamBuffer Tamanio del buffer.
  *
  * \return Resultado en bytes del envio.
  * 
  */
-int socket_enviar (t_socket sock, const char *buffer);
+int socket_enviar (t_socket sock, const char *buffer, size_t tamBuffer);
 
 /** \brief Recibir un buffer del socket.
  *

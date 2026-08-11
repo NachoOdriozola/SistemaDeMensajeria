@@ -16,13 +16,13 @@ static void procesarRecepcionMensaje (t_interfazContactos *interfazContactos, co
 
 void _interfazContactos_procesarRespuesta (t_interfazContactos *interfazContactos, const char *respuesta)
 {
-    t_tipoRespuesta tipoRespuesta = *respuesta;
-    const char *respuesaSinTipoRespuesta = &(respuesta[2]);
+    char headerTipoRespuesta;
 
-    switch (tipoRespuesta)
+    headerTipoRespuesta = *respuesta;
+    switch (headerTipoRespuesta)
         {
         case RESPUESTA_RECEPCION_MENSAJE:
-            procesarRecepcionMensaje (interfazContactos, respuesaSinTipoRespuesta);
+            procesarRecepcionMensaje (interfazContactos, respuesta);
             break;
 
         default:
@@ -36,9 +36,9 @@ void _interfazContactos_procesarRespuesta (t_interfazContactos *interfazContacto
    ============================================================================================================================================ */
 
 
-static void extraerDatosRecepcionMensaje (const char *respuesta, t_datosRecepcionMensaje *datosRecepcionMensaje)
+static void extraerDatosRecepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *returnDatosRespuestaRecepcionMensaje)
 {
-    sscanf (respuesta, "%d|%[^\n]", &(datosRecepcionMensaje->idUsuarioEmisor), datosRecepcionMensaje->mensaje);
+    memcpy (returnDatosRespuestaRecepcionMensaje, respuesta, sizeof (t_datosRespuestaRecepcionMensaje));
 }
 
 static bool elUsuarioDelChatSeleccionadoEsElEmisor (int idUsuarioEmisor, int idUsuarioDelChatSeleccionado)
@@ -46,10 +46,10 @@ static bool elUsuarioDelChatSeleccionadoEsElEmisor (int idUsuarioEmisor, int idU
     return (idUsuarioEmisor == idUsuarioDelChatSeleccionado);
 }
 
-static void procesarMensaje (t_interfazContactos *interfazContactos, t_datosRecepcionMensaje *datosRecepcionMensaje)
+static void procesarMensaje (t_interfazContactos *interfazContactos, t_datosRespuestaRecepcionMensaje *datosRespuestaRecepcionMensaje)
 {
-    if (elUsuarioDelChatSeleccionadoEsElEmisor (datosRecepcionMensaje->idUsuarioEmisor, interfazContactos->logica.idUsuarioDelChatSeleccionado))
-        recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), datosRecepcionMensaje->mensaje, MENSAJE_REMOTO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
+    if (elUsuarioDelChatSeleccionadoEsElEmisor (datosRespuestaRecepcionMensaje->idEmisor, interfazContactos->logica.idUsuarioDelChatSeleccionado))
+        recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), datosRespuestaRecepcionMensaje->texto, MENSAJE_REMOTO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
 }
 
 /*
@@ -58,9 +58,10 @@ static void procesarMensaje (t_interfazContactos *interfazContactos, t_datosRece
 */
 static void procesarRecepcionMensaje (t_interfazContactos *interfazContactos, const char *respuesta)
 {
-    t_datosRecepcionMensaje datosRecepcionMensaje;
+    t_datosRespuestaRecepcionMensaje datosRespuestaRecepcionMensaje;
 
-    extraerDatosRecepcionMensaje (respuesta, &datosRecepcionMensaje);
-    procesarMensaje (interfazContactos, &datosRecepcionMensaje);
+    extraerDatosRecepcionMensaje (respuesta, &datosRespuestaRecepcionMensaje);
+    printf ("\nRespuesta recibida: %c|%d|%s\n", datosRespuestaRecepcionMensaje.headerTipoRespuesta, datosRespuestaRecepcionMensaje.idEmisor, datosRespuestaRecepcionMensaje.texto);
+    procesarMensaje (interfazContactos, &datosRespuestaRecepcionMensaje);
 }
 

@@ -118,9 +118,9 @@ t_socket socket_aceptarNuevoCliente (t_socket sockServidor)
     return sockCliente;
 }
 
-int socket_enviar (t_socket sock, const char *buffer)
+int socket_enviar (t_socket sock, const char *buffer, size_t tamBuffer)
 {
-    return (send (sock, buffer, strlen (buffer), 0));
+    return (send (sock, buffer, tamBuffer, 0));
 }
 
 int socket_recibir (t_socket sock, char *returnBuffer)
