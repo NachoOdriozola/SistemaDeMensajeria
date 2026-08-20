@@ -29,6 +29,7 @@
 #include "interfazRegistro_estructuras.h"
 #include "interfazRegistro_recursos.h"
 #include "interfazRegistro_controladores.h"
+#include "interfazRegistro_actualizaciones.h"
 
 
 /* ============================================================================================================================================

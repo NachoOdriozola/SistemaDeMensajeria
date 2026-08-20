@@ -128,6 +128,12 @@ int socket_recibir (t_socket sock, char *returnBuffer)
     return (recv (sock, returnBuffer, MAX_BUFFER_SOLICITUD, 0));
 }
 
+bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos)
+{
+    return ((bytesRecibidos == ERROR_SOCKET) && 
+                ((WSAGetLastError() == WSAEWOULDBLOCK) || (WSAGetLastError() == WSAENOTSOCK)));
+}
+
 bool socket_perdioConexion (t_socket sock, int bytesRecibidos)
 {
     if (bytesRecibidos == 0) // Si el cliente cerro la conexion de forma ordenada.

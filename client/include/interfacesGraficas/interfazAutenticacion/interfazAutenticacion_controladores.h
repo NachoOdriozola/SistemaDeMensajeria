@@ -111,4 +111,10 @@ bool _interfazAutenticacion_manejarPegarTextoDesdePortapapelesAEscribirNombre (t
 bool _interfazAutenticacion_manejarPegarTextoDesdePortapapelesAEscribirContrasenia (t_interfazAutenticacion *interfazAutenticacion);
 
 
+/*
+ * Manejar el error de conexion para cualquier tipo de solicitud enviada de la interfaz de autenticacion.
+*/
+void _interfazAutenticacion_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+
+
 #endif // INTERFAZAUTENTICACION_CONTROLADORES_H_INCLUDED

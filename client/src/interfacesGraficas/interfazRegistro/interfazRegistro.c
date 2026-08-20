@@ -7,7 +7,7 @@
 
 
 static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-static void actualizar (t_interfazRegistro *interfazRegistro);
+static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 static void renderizar (sfRenderWindow *renderizado, const t_interfazRegistro *interfazRegistro);
 
 
@@ -61,7 +61,7 @@ void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, t_recurs
 void ejecutarInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
 {
     accion (contextoAplicacion, interfazRegistro);
-    actualizar (interfazRegistro);
+    actualizar (contextoAplicacion, interfazRegistro);
     renderizar (contextoAplicacion->renderizado, interfazRegistro);
 }
 
@@ -144,12 +144,25 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro
 }
 
 /*
-*Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc).
+*Capturar y manejar los eventos no generados por el usuario directamente.
 * Cada evento se desarrolla en una funcion particular manejadora de eventos.
 */
-static void actualizar (t_interfazRegistro *interfazRegistro)
+static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
 {
+    // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
+
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
+
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+    if (resultadoRecepcion != RECEPCION_NO_RECIBIO_DATOS)
+    {
+        _interfazRegistro_procesarRespuesta (contextoAplicacion, interfazRegistro, bufferRespuesta, resultadoRecepcion);
+        contextoAplicacion->solicitudEnCurso = false;
+    }
+
     // --------------- PUNTO DE INSERCION ---------------
+
     if ((interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
         (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA ||
          interfazRegistro->estadoFoco == ESCRIBIR_CORREO))

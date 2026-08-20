@@ -34,7 +34,7 @@ bool _interfazSalas_manejarClickCambiarAInterfazContactos (t_contextoAplicacion 
 
     interfazSalas_resetear (contextoAplicacion->renderizado, interfazSalas);
     recursosComunesContactosSalas_activarInterfazContactos (interfazSalas->recursosComunesContactosSalas);
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+    contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
 
     return EVENTO_MANEJADO;
 }

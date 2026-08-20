@@ -111,7 +111,7 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazConfig *
             if (evento.mouseButton.button == sfMouseLeft)
             {
                 if (clickEnRectangulo (contextoAplicacion->renderizado, interfazConfig->elementos.rectanguloVolver))
-                    contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
+                    contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
             }
             break;
 

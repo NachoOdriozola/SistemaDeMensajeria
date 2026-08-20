@@ -24,6 +24,7 @@
 #include "../../../../shared/constantes/include/constantes.h"
 #include "../../utiles.h"
 #include "../../estructuras.h"
+#include "../../comunicacion.h"
 
 #include "../recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas.h"
 #include "interfazContactos_estructuras.h"

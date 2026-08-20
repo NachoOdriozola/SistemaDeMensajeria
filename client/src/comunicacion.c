@@ -24,175 +24,98 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
     }
 
     socket_establecerTimeout (returnSock, 5000);
+    socket_establecerModoNoBloqueante (returnSock);
 
     return SOLICITUD_EXITO;
 }
 
-bool recibioRespuesta (t_socket sock, char *bufferRespuesta)
+t_resultadoRecepcion recibirRespuesta (t_socket sock, char *bufferRespuesta)
 {
     int bytesRecibidos;
 
     bytesRecibidos = socket_recibir (sock, bufferRespuesta);
-    if (bytesRecibidos > 0)
-    {
-        bufferRespuesta += bytesRecibidos;
-        *bufferRespuesta = '\0';
 
-        bufferRespuesta -= bytesRecibidos; // Retroceder la cantidad de bytes avanzados para poder hacer el log.
-        return true;
-    }
-    return false;
+    if (socket_noRecibioDatos (sock, bytesRecibidos))
+        return RECEPCION_NO_RECIBIO_DATOS;
+
+    if (socket_perdioConexion (sock, bytesRecibidos))
+        return RECEPCION_ERROR_CONEXION;
+
+    bufferRespuesta += bytesRecibidos;
+    *bufferRespuesta = '\0';
+    
+    return RECEPCION_RECIBIO_DATOS;
 }
 
-t_respuestaAutenticacion enviarSolicitudAutenticacion (t_socket sock, const char *nombreUsuario, const char *contrasenia)
+void enviarSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia)
 {
     t_datosEnvioSolicitudAutenticacion datosEnvioSolicitudAutenticacion;
-    t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;
-    t_buffersComunicacion buffersComunicacion;
-    int bytesRecibidos;
-    t_respuestaAutenticacion respuestaAutenticacion;
-
-    socket_establecerModoBloqueante (&sock);
 
     datosEnvioSolicitudAutenticacion.headerTipoSolicitud = SOLICITUD_AUTENTICACION;
     strcpy (datosEnvioSolicitudAutenticacion.nombreUsuario, nombreUsuario);
     strcpy (datosEnvioSolicitudAutenticacion.contrasenia, contrasenia);
 
-    socket_enviar (sock, (char*)(&datosEnvioSolicitudAutenticacion), sizeof (t_datosEnvioSolicitudAutenticacion));
-    printf ("\nSolicitud enviada: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.headerTipoSolicitud, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
-
-    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
-    if (socket_perdioConexion (sock, bytesRecibidos))
+    if (!(contextoAplicacion->solicitudEnCurso))
     {
-        datosRespuestaSolicitudAutenticacion.estadoSolicitud = SOLICITUD_ERROR_CONEXION;
-        datosRespuestaSolicitudAutenticacion.idUsuario = ID_INVALIDO;
-        puts ("Se perdio la conexion con el servidor.");
+        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudAutenticacion), sizeof (t_datosEnvioSolicitudAutenticacion));
+        printf ("\nSolicitud enviada: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.headerTipoSolicitud, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
+        contextoAplicacion->solicitudEnCurso = true;
     }
     else
-    {
-        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
-        memcpy (&datosRespuestaSolicitudAutenticacion, buffersComunicacion.respuesta, sizeof (t_datosRespuestaSolicitudAutenticacion));
-        printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudAutenticacion.headerTipoRespuesta, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
-        
-        respuestaAutenticacion.estado = datosRespuestaSolicitudAutenticacion.estadoSolicitud;
-        respuestaAutenticacion.idUsuario = datosRespuestaSolicitudAutenticacion.idUsuario;
-    }
-
-    socket_establecerModoNoBloqueante (&sock);
-
-    return respuestaAutenticacion;
+        printf ("\nYa hay una solicitud en curso.\n");
 }
 
-t_respuestaRegistro enviarSolicitudRegistro (t_socket sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
+void enviarSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
 {
     t_datosEnvioSolicitudRegistro datosEnvioSolicitudRegistro;
-    t_datosRespuestaSolicitudRegistro datosRespuestaSolicitudRegistro;
-    t_respuestaRegistro respuestaRegistro;
-    t_buffersComunicacion buffersComunicacion;
-    int bytesRecibidos;
-    
-    socket_establecerModoBloqueante (&sock);
 
     datosEnvioSolicitudRegistro.headerTipoSolicitud = SOLICITUD_REGISTRO;
     strcpy (datosEnvioSolicitudRegistro.nombreUsuario, nombreUsuario);
     strcpy (datosEnvioSolicitudRegistro.contrasenia, contrasenia);
     strcpy (datosEnvioSolicitudRegistro.correoElectronico, correoElectronico);
 
-    socket_enviar (sock, (char*)(&datosEnvioSolicitudRegistro), sizeof (t_datosEnvioSolicitudRegistro));
-    printf ("\nSolicitud enviada: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.headerTipoSolicitud, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
-
-    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
-    if (socket_perdioConexion (sock, bytesRecibidos))
+    if (!(contextoAplicacion->solicitudEnCurso))
     {
-        respuestaRegistro.estado = SOLICITUD_ERROR_CONEXION;
-        respuestaRegistro.idUsuario = ID_INVALIDO;
-        puts ("Se perdio la conexion con el servidor.\n");
+        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudRegistro), sizeof (t_datosEnvioSolicitudRegistro));
+        printf ("\nSolicitud enviada: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.headerTipoSolicitud, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
+        contextoAplicacion->solicitudEnCurso = true;
     }
     else
-    {
-        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
-        memcpy (&datosRespuestaSolicitudRegistro, buffersComunicacion.respuesta, sizeof (t_datosRespuestaSolicitudRegistro));
-        printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudRegistro.headerTipoRespuesta, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
-
-        respuestaRegistro.estado = datosRespuestaSolicitudRegistro.estadoSolicitud;
-        respuestaRegistro.idUsuario = datosRespuestaSolicitudRegistro.idUsuario;
-    }
-
-    socket_establecerModoNoBloqueante (&sock);
-
-
-    return respuestaRegistro;
+        printf ("\nYa hay una solicitud en curso.\n");
 }
 
-char enviarSolicitudEnvioMensaje (t_socket sock, int idUsuario, int idReceptor, const char* mensaje)
+void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int idUsuario, int idReceptor, const char* mensaje)
 {
     t_datosEnvioSolicitudEnvioMensaje datosEnvioSolicitudEnvioMensaje;
-    t_datosRespuestaSolicitudEnvioMensaje datosRespuestaSolicitudEnvioMensaje;
-    t_buffersComunicacion buffersComunicacion;
-    int bytesRecibidos;
-    
-    socket_establecerModoBloqueante (&sock);
 
     datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud = SOLICITUD_ENVIO_MENSAJE;
     datosEnvioSolicitudEnvioMensaje.idEmisor = idUsuario;
     datosEnvioSolicitudEnvioMensaje.idReceptor = idReceptor;
     strcpy (datosEnvioSolicitudEnvioMensaje.texto, mensaje);
     
-    socket_enviar (sock, (char*)(&datosEnvioSolicitudEnvioMensaje), sizeof (t_datosEnvioSolicitudEnvioMensaje));
-    printf ("\nSolicitud enviada: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
-
-    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
-    if (socket_perdioConexion (sock, bytesRecibidos))
+    if (!(contextoAplicacion->solicitudEnCurso))
     {
-        datosRespuestaSolicitudEnvioMensaje.estadoSolicitud = SOLICITUD_ERROR_CONEXION;
-        puts ("Se perdio la conexion con el servidor.");
+        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudEnvioMensaje), sizeof (t_datosEnvioSolicitudEnvioMensaje));
+        printf ("\nSolicitud enviada: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
+        contextoAplicacion->solicitudEnCurso = true;
     }
     else
-    {
-        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
-        memcpy (&datosRespuestaSolicitudEnvioMensaje, buffersComunicacion.respuesta, sizeof (t_datosRespuestaSolicitudEnvioMensaje));
-        printf ("Respuesta recibida: %c|%c\n", datosRespuestaSolicitudEnvioMensaje.headerTipoRespuesta, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
-    }
-
-    socket_establecerModoNoBloqueante (&sock);
-
-    return datosRespuestaSolicitudEnvioMensaje.estadoSolicitud;
+        puts ("\nYa hay una solicitud en curso.");
 }
 
-t_respuestaSeleccionChat enviarSolicitudSeleccionChat (t_socket sock, const char *nombreUsuarioChatSeleccionado)
+void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuarioChatSeleccionado)
 {
     t_datosEnvioSolicitudSeleccionChat datosEnvioSolicitudSeleccionChat;
-    t_datosRespuestaSolicitudSeleccionChat datosRespuestaSolicitudSeleccionChat;
-    t_respuestaSeleccionChat respuestaSeleccionChat;
-    t_buffersComunicacion buffersComunicacion;
-    int bytesRecibidos;
-    
-    socket_establecerModoBloqueante (&sock);
 
     datosEnvioSolicitudSeleccionChat.headerTipoSolicitud = SOLICITUD_SELECCION_CHAT;
     strcpy (datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado, nombreUsuarioChatSeleccionado);
 
-    socket_enviar (sock, (char*)(&datosEnvioSolicitudSeleccionChat), sizeof (t_datosEnvioSolicitudSeleccionChat));
-    printf ("\nSolicitud enviada: %c|%s\n", datosEnvioSolicitudSeleccionChat.headerTipoSolicitud, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
-
-    bytesRecibidos = socket_recibir (sock, buffersComunicacion.respuesta);
-    if (socket_perdioConexion (sock, bytesRecibidos))
+    if (!(contextoAplicacion->solicitudEnCurso))
     {
-        respuestaSeleccionChat.estado = SOLICITUD_ERROR_CONEXION;
-        respuestaSeleccionChat.idUsuarioChatSeleccionado = ID_INVALIDO;
-        puts ("Se perdio la conexion con el servidor.");
+        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudSeleccionChat), sizeof (t_datosEnvioSolicitudSeleccionChat));
+        printf ("\nSolicitud enviada: %c|%s\n", datosEnvioSolicitudSeleccionChat.headerTipoSolicitud, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
+        contextoAplicacion->solicitudEnCurso = true;
     }
     else
-    {
-        buffersComunicacion.respuesta[bytesRecibidos] = '\0';
-        memcpy (&datosRespuestaSolicitudSeleccionChat, buffersComunicacion.respuesta, sizeof (t_datosRespuestaSolicitudSeleccionChat));
-        printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudSeleccionChat.headerTipoRespuesta, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
-        
-        respuestaSeleccionChat.estado = datosRespuestaSolicitudSeleccionChat.estadoSolicitud;
-        respuestaSeleccionChat.idUsuarioChatSeleccionado = datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado;
-    }
-
-    socket_establecerModoNoBloqueante (&sock);
-
-    return respuestaSeleccionChat;
+        printf ("\nYa hay una solicitud en curso.\n");
 }

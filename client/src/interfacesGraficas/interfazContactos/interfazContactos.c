@@ -148,7 +148,7 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazContacto
 }
 
 /*
-*Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc).
+*Capturar y manejar los eventos no generados por el usuario directamente.
 * Cada evento se desarrolla en una funcion particular manejadora de eventos.
 */
 static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
@@ -156,9 +156,14 @@ static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazCont
     // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
 
     char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
 
-    if (recibioRespuesta (contextoAplicacion->sock, bufferRespuesta))
-        _interfazContactos_procesarRespuesta (interfazContactos, bufferRespuesta);
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+    if (resultadoRecepcion != RECEPCION_NO_RECIBIO_DATOS)
+    {
+        _interfazContactos_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta, resultadoRecepcion);
+        contextoAplicacion->solicitudEnCurso = false;
+    }
 
     // --------------- PUNTO DE INSERCION ---------------
 

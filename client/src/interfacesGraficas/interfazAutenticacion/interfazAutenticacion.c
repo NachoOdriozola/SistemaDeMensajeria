@@ -7,7 +7,7 @@
 
 
 static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-static void actualizar (t_interfazAutenticacion *interfazAutenticacion);
+static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 static void renderizar (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion);
 
 
@@ -61,7 +61,7 @@ void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutentic
 void ejecutarInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
     accion (contextoAplicacion, interfazAutenticacion);
-    actualizar (interfazAutenticacion);
+    actualizar (contextoAplicacion, interfazAutenticacion);
     renderizar (contextoAplicacion->renderizado, interfazAutenticacion);
 }
 
@@ -140,12 +140,25 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazAutentic
 }
 
 /*
-*Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc).
+*Capturar y manejar los eventos no generados por el usuario directamente.
 * Cada evento se desarrolla en una funcion particular manejadora de eventos.
 */
-static void actualizar (t_interfazAutenticacion *interfazAutenticacion)
+static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
+    // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
+
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
+
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+    if (resultadoRecepcion != RECEPCION_NO_RECIBIO_DATOS)
+    {
+        _interfazAutenticacion_procesarRespuesta (contextoAplicacion, interfazAutenticacion, bufferRespuesta, resultadoRecepcion);
+        contextoAplicacion->solicitudEnCurso = false;
+    }
+
     // --------------- PUNTO DE INSERCION ---------------
+
     if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
         (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA))
         actualizarPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));

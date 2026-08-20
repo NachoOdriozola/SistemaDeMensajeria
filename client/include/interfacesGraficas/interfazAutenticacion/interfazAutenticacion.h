@@ -29,6 +29,7 @@
 #include "interfazAutenticacion_estructuras.h"
 #include "interfazAutenticacion_recursos.h"
 #include "interfazAutenticacion_controladores.h"
+#include "interfazAutenticacion_actualizaciones.h"
 
 
 /* ============================================================================================================================================

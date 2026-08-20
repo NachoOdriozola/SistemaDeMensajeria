@@ -134,6 +134,16 @@ int socket_enviar (t_socket sock, const char *buffer, size_t tamBuffer);
  */
 int socket_recibir (t_socket sock, char *returnBuffer);
 
+/** \brief Preguntar si el socket no recibio datos en modo no bloqueante. Ademas, asegura que no haya recibido datos en caso de que el socket no se haya inicializado.
+ *
+ * \param sock Socket a procesar.
+ * \param bytesRecibidos Bytes recibidos al intentar recibir datos del socket (recv()).
+ *
+ * \return true si no recibio datos, false en caso contrario.
+ * 
+ */
+bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos);
+
 /** \brief Preguntar si el socket perdio la conexion.
  *
  * \param sock Socket a procesar.

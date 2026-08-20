@@ -70,4 +70,13 @@ bool _interfazContactos_manejarClickCambiarInterfazSalas (t_contextoAplicacion *
 bool _interfazContactos_manejarEnterEnviarMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 
+void _interfazContactos_resetearBarraDeEscritura (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+
+
+/*
+ * Manejar el error de conexion para cualquier tipo de solicitud enviada de la interfaz de contactos.
+*/
+void _interfazContactos_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+
+
 #endif // INTERFAZCONTACTOS_CONTROLADORES_H_INCLUDED

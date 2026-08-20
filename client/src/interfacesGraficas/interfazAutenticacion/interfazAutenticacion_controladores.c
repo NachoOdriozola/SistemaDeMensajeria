@@ -6,15 +6,12 @@
    ============================================================================================================================================ */
 
 
-static void desactivarRecursosInterfazAutenticacion (t_interfazAutenticacion *interfazAutenticacion);
-
 static void posicionarPuntoInsercionBarraEscrituraNombre (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 static void posicionarPuntoInsercionBarraEscrituraContrasenia (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 static bool sonDatosAutenticacionUsuarioValidos (const char *nombreUsuario, const char *contrasenia);
-static t_respuestaAutenticacion fabricarRespuestaAutenticacionInvalida ();
-static t_respuestaAutenticacion fabricarRespuestaErrorConexion ();
-static void procesarRespuestaSegunEstadoAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const t_respuestaAutenticacion *respuestaAutenticacion);
+
+static void procesarRespuestaCredencialesInvalidasSolicitudAutenticacion (t_interfazAutenticacion *interfazAutenticacion);
 
 
 /* ============================================================================================================================================
@@ -61,8 +58,6 @@ bool _interfazAutenticacion_manejarClickEscribirContrasenia (const sfRenderWindo
 
 bool _interfazAutenticacion_manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    t_respuestaAutenticacion respuestaAutenticacion;
-
     if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
     _interfazAutenticacion_deshabilitarFocos (interfazAutenticacion);
@@ -70,14 +65,12 @@ bool _interfazAutenticacion_manejarClickIntentarAutenticacion (t_contextoAplicac
     if (sonDatosAutenticacionUsuarioValidos (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia))
     {
         if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_EXITO)
-            respuestaAutenticacion = enviarSolicitudAutenticacion (contextoAplicacion->sock, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
+            enviarSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
         else
-            respuestaAutenticacion = fabricarRespuestaErrorConexion ();
+            _interfazAutenticacion_manejarErrorConexion (contextoAplicacion, interfazAutenticacion);
     }
     else
-        respuestaAutenticacion = fabricarRespuestaAutenticacionInvalida ();
-
-    procesarRespuestaSegunEstadoAutenticacion (contextoAplicacion, interfazAutenticacion, &respuestaAutenticacion);
+        procesarRespuestaCredencialesInvalidasSolicitudAutenticacion (interfazAutenticacion);
 
     return EVENTO_MANEJADO;
 }
@@ -87,9 +80,17 @@ bool _interfazAutenticacion_manejarClickCambiarAInterfazRegistro (t_contextoApli
     if (!clickEnTexto (contextoAplicacion->renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.textoCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    interfazAutenticacion_resetear (contextoAplicacion->renderizado, interfazAutenticacion);
-    recursosComunesAutenticacionRegistro_activarInterfazRegistro (interfazAutenticacion->recursosComunesAutenticacionRegistro);
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_REGISTRO;
+    if (contextoAplicacion->solicitudEnCurso)
+    {
+        sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "No se puede cambiar de interfaz, hay una solicitud en curso . . .");
+        centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+    }
+    else
+    {
+        interfazAutenticacion_resetear (contextoAplicacion->renderizado, interfazAutenticacion);
+        recursosComunesAutenticacionRegistro_activarInterfazRegistro (interfazAutenticacion->recursosComunesAutenticacionRegistro);
+        contextoAplicacion->interfazActual = INTERFAZ_REGISTRO;
+    }
 
     return EVENTO_MANEJADO;
 }
@@ -126,8 +127,6 @@ bool _interfazAutenticacion_manejarEscribirContrasenia (t_interfazAutenticacion 
 
 bool _interfazAutenticacion_manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    t_respuestaAutenticacion respuestaAutenticacion;
-
     if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE) &&
         (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA))
         return EVENTO_NO_MANEJADO;
@@ -135,14 +134,12 @@ bool _interfazAutenticacion_manejarEnterIntentarAutenticacion (t_contextoAplicac
     if (sonDatosAutenticacionUsuarioValidos (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia))
     {
         if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_EXITO)
-            respuestaAutenticacion = enviarSolicitudAutenticacion (contextoAplicacion->sock, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
+            enviarSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
         else
-            respuestaAutenticacion = fabricarRespuestaErrorConexion ();
+            _interfazAutenticacion_manejarErrorConexion (contextoAplicacion, interfazAutenticacion);
     }
     else
-        respuestaAutenticacion = fabricarRespuestaAutenticacionInvalida ();
-
-    procesarRespuestaSegunEstadoAutenticacion (contextoAplicacion, interfazAutenticacion, &respuestaAutenticacion);
+        procesarRespuestaCredencialesInvalidasSolicitudAutenticacion (interfazAutenticacion);
 
     return EVENTO_MANEJADO;
 }
@@ -175,6 +172,15 @@ bool _interfazAutenticacion_manejarPegarTextoDesdePortapapelesAEscribirContrasen
     }
 
     return EVENTO_MANEJADO;
+}
+
+
+void _interfazAutenticacion_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+{
+    socket_cerrar (&(contextoAplicacion->sock));
+    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorConexion);
+    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
 }
 
 
@@ -224,55 +230,13 @@ static bool sonDatosAutenticacionUsuarioValidos (const char *nombreUsuario, cons
                 (noSonTodosEspacios (contrasenia)));
 }
 
-/*
- * Fabricar una respuesta de autenticacion invalida en caso de no tener que enviar una solicitud al servidor por la invalidez de los datos.
-*/
-static t_respuestaAutenticacion fabricarRespuestaAutenticacionInvalida ()
-{
-    t_respuestaAutenticacion respuestaAutenticacionInvalida = {SOLICITUD_ERROR_CREDENCIALES_INVALIDAS, ID_INVALIDO};
-    return respuestaAutenticacionInvalida;
-}
 
 /*
- * Fabricar una respuesta de error de conexion en caso de perder la conexion con el servidor.
+ * Procesa la respuesta de la solicitud de autenticacion como estado de credenciales invalidas debido a verificaciones anteriores para evitar enviar solicitudes innecesarias.
 */
-static t_respuestaAutenticacion fabricarRespuestaErrorConexion ()
+static void procesarRespuestaCredencialesInvalidasSolicitudAutenticacion (t_interfazAutenticacion *interfazAutenticacion)
 {
-    t_respuestaAutenticacion respuestaErrorConexion = {SOLICITUD_ERROR_CONEXION, ID_INVALIDO};
-    return respuestaErrorConexion;
+    sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
+    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorCredenciales);
+    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
 }
-
-static void procesarRespuestaSegunEstadoAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const t_respuestaAutenticacion *respuestaAutenticacion)
-{
-    switch (respuestaAutenticacion->estado)
-    {
-        case SOLICITUD_EXITO:
-            contextoAplicacion->usuario.id = respuestaAutenticacion->idUsuario;
-            strcpy (contextoAplicacion->usuario.nombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
-            contextoAplicacion->usuario.interfazActual = INTERFAZ_CONTACTOS;
-            break;
-
-        case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
-            sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-            sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorCredenciales);
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
-            break;
-
-        case SOLICITUD_ERROR_OPERACION_INVALIDA:
-            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
-            break;
-
-        case SOLICITUD_ERROR_CONEXION:
-            socket_cerrar (&(contextoAplicacion->sock));
-            sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-            sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorConexion);
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
-            break;
-
-        default:
-            break;
-    }
-}
-
-

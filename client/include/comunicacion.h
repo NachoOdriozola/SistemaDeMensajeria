@@ -22,6 +22,8 @@
 #include "../../shared/constantes/include/constantes.h"
 #include "../../shared/sockets/include/sockets.h"
 
+#include "estructuras.h"
+
 
 /* ============================================================================================================================================
    ESTRUCTURAS
@@ -29,45 +31,15 @@
 
 
 /**
- * \enum t_buffersComunicacion
- * \brief Almacena la solicitud y la respuesta del servidor. Se utiliza para no consumir mucha memoria debido a que no se necesitaran en simultaneo.
+ * \struct t_resultadoRecepcion
+ * \brief Informa el resultado de la recepcion de datos.
  */
-typedef union
+typedef enum
 {
-   char solicitud [MAX_BUFFER_SOLICITUD];
-   char respuesta [MAX_BUFFER_RESPUESTA];
-} t_buffersComunicacion;
-
-
-/**
- * \enum t_respuestaAutenticacion
- * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de autenticacion enviada.
- */
-typedef struct
-{
-   char estado;
-   int idUsuario;
-} t_respuestaAutenticacion;
-
-/**
- * \enum t_respuestaRegistro
- * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de respuesta enviada.
- */
-typedef struct
-{
-   char estado;
-   int idUsuario;
-} t_respuestaRegistro;
-
-/**
- * \enum t_respuestaAutenticacion
- * \brief Contiene los datos de la respuesta recibida por el servidor a la solicitud de seleccion de chat enviada.
- */
-typedef struct
-{
-   char estado;
-   int idUsuarioChatSeleccionado;
-} t_respuestaSeleccionChat;
+   RECEPCION_RECIBIO_DATOS,
+   RECEPCION_NO_RECIBIO_DATOS,
+   RECEPCION_ERROR_CONEXION
+} t_resultadoRecepcion;
 
 
 /* ============================================================================================================================================
@@ -75,7 +47,7 @@ typedef struct
    ============================================================================================================================================ */
 
 
-/** \brief Crear el socket y configurarlo como cliente para conectarse al servidor. Ademas, le establece un timeout.
+/** \brief Crear el socket y configurarlo como cliente para conectarse al servidor. Ademas, le establece un timeout y lo configura como modo no bloqueante.
  *
  * Si falla la conexion con el servidor, elimina el socket creado.
  * 
@@ -94,80 +66,67 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock);
  * \param sock Socket del usuario desde el cual se recibe la respuesta.
  * \param bufferRespuesta Buffer donde se almacenara la respuesta recibida.
  *
- * \return true en caso de que haya recibido respuesta, false en caso contrario.
+ * \return RECEPCION_RECIBIO_DATOS en caso de recibir datos correctamente, RECEPCION_NO_RECIBIO_DATOS en caso de no recibirlos considerando el socket no bloqueante, y RECEPCION_ERROR_CONEXION 
+ * si el socket perdio la conexion.
  *
  */
-bool recibioRespuesta (t_socket sock, char *bufferRespuesta);
+t_resultadoRecepcion recibirRespuesta (t_socket sock, char *bufferRespuesta);
 
 /** \brief Enviar solicitud para autenticar usuario.
  *
- * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_AUTENTICACION|nombre de usuario|contrasenia del usuario
- * 
- * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Envia los datos del usuario necesarios para realizar la solicitud con la estructura t_datosEnvioSolicitudAutenticacion.
+ * Se comunican a traves del socket del contexto de la aplicacion.
  * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
+ * No realiza el envio de la solicitud si ya hay una solicitud en curso.
  *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param nombreUsuario Cadena que contiene el nombre que escribio el usuario.
  * \param contrasenia Cadena que contiene la contrasenia que escribio el usuario.
- *
- * \return t_respuestaAutenticacion que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaAutenticacion enviarSolicitudAutenticacion (t_socket sock, const char *nombreUsuario, const char *contrasenia);
+void enviarSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia);
 
 /** \brief Enviar solicitud para registrar usuario.
  *
- * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_REGISTRO|nombre de usuario|contrasenia del usuario|correo electronico del usuario
- * 
- * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
+ * Envia los datos del usuario necesarios para realizar la solicitud con la estructura t_datosEnvioSolicitudRegistro.
+ * Se comunican a traves del socket del contexto de la aplicacion.
  * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
+ * No realiza el envio de la solicitud si ya hay una solicitud en curso.
  *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param nombreUsuario Cadena que contiene el nombre que escribio el usuario.
  * \param contrasenia Cadena que contiene la contrasenia que escribio el usuario.
  * \param correoElectronico Cadena que contiene el correo electronico que escribio el usuario.
- *
- * \return t_respuestaRegistro que contiene los datos de la respuesta recibida por el servidor.
  */
-t_respuestaRegistro enviarSolicitudRegistro (t_socket sock, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
+void enviarSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico);
 
 /** \brief Enviar solicitud para enviar un mensaje a otro usuario.
  *
- * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_MENSAJE|ID del emisor|ID del receptor|texto
- * 
- * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
- * Verifica que el ID del receptor sea un ID valido y que no sea el mismo que el ID del usuario.
+ * Envia los datos del usuario necesarios para realizar la solicitud con la estructura t_datosEnvioSolicitudEnvioMensaje.
+ * Se comunican a traves del socket del contexto de la aplicacion.
  * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
+ * No realiza el envio de la solicitud si ya hay una solicitud en curso.
  *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param idUsuario ID del usuario que envia la solicitud y el mensaje.
  * \param idReceptor ID del usuario que recibe el mensaje.
  * \param mensaje Cadena que contiene el texto del mensaje.
  *
- * \return char que contiene el estado de la respuesta recibida por el servidor.
- *
  */
-char enviarSolicitudEnvioMensaje (t_socket sock, int idUsuario, int idReceptor, const char* mensaje);
+void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int idUsuario, int idReceptor, const char* mensaje);
 
 /** \brief Enviar solicitud para seleccionar un chat con un usuario para comunicarse.
  *
- * Genera una cadena de solicitud valida compuesta de la siguiente manera:
- * SOLICITUD_SELECCIONAR_CHAT|nombre del contacto
- * 
- * Envia la solicitud y espera la respuesta para saber su estado antes de continuar. Se comunican a traves del socket especificado.
- * Verifica si el nombre de usuario del chat seleccionado no es el propio nombre de usuario.
+ * Envia los datos del usuario necesarios para realizar la solicitud con la estructura t_datosEnvioSolicitudSeleccionChat.
+ * Se comunican a traves del socket del contexto de la aplicacion.
  * Se espera que los datos enviados para la solicitud YA sean validados por las restricciones del dominio previamente debido a que no se validan antes de enviar.
+ * No realiza el envio de la solicitud si ya hay una solicitud en curso.
  *
- * \param sock Socket del usuario desde el cual se realizara la comunicacion (envio y recepcion).
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param nombreUsuario Nombre del propio usuario que envia la solicitud.
  * \param nombreUsuarioChatSeleccionado Nombre del usuario que se desea seleccionar el chat.
  *
- * \return t_respuestaSeleccionChat que contiene los datos de la respuesta recibida por el servidor.
- *
  */
-t_respuestaSeleccionChat enviarSolicitudSeleccionChat (t_socket sock, const char *nombreUsuarioChatSeleccionado);
+void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuarioChatSeleccionado);
 
 
 #endif // COMUNICACION_H_INCLUDED

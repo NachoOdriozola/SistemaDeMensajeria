@@ -69,6 +69,7 @@ void recursosComunesContactosSalas_renderizarTextos (sfRenderWindow *renderizado
     sfRenderWindow_drawText (renderizado, textos->proximaInterfaz, NULL);
     sfRenderWindow_drawText (renderizado, textos->nombreUsuario, NULL);
     sfRenderWindow_drawText (renderizado, textos->textoBotonEnviar, NULL);
+    sfRenderWindow_drawText (renderizado, textos->textoFeedbackUsuario, NULL);
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 

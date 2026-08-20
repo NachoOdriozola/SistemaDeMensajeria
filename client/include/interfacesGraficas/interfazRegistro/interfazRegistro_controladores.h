@@ -130,4 +130,10 @@ bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirContrasenia (t
 bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirCorreo (t_interfazRegistro *interfazRegistro);
 
 
+/*
+ * Manejar el error de conexion para cualquier tipo de solicitud enviada de la interfaz de registro.
+*/
+void _interfazRegistro_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+
+
 #endif // INTERFAZREGISTRO_CONTROLADORES_H_INCLUDED

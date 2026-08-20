@@ -12,8 +12,6 @@ static void realizarSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_i
 
 static void realizarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
-static void resetearBarraDeEscritura (t_recursosComunesContactosSalas *recursosComunesContactosSalas);
-
 
 /* ============================================================================================================================================
    FUNCIONES PUBLICAS
@@ -56,8 +54,6 @@ bool _interfazContactos_manejarClickEnviarMensaje (t_contextoAplicacion *context
     else
         realizarEnvioMensaje (contextoAplicacion, interfazContactos);
 
-    resetearBarraDeEscritura (interfazContactos->recursosComunesContactosSalas);
-
     return EVENTO_MANEJADO;
 }
 
@@ -68,9 +64,14 @@ bool _interfazContactos_manejarClickCambiarInterfazSalas (t_contextoAplicacion *
     if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazContactos->recursosComunesContactosSalas->elementos.solapaCambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    interfazContactos_resetear (contextoAplicacion->renderizado, interfazContactos);
-    recursosComunesContactosSalas_activarInterfazSalas (interfazContactos->recursosComunesContactosSalas);
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_SALAS;
+    if (contextoAplicacion->solicitudEnCurso)
+        sfText_setString (interfazContactos->recursosComunesContactosSalas->textos.textoFeedbackUsuario, "No se puede cambiar de interfaz, hay una solicitud en curso . . .");
+    else
+    {
+        interfazContactos_resetear (contextoAplicacion->renderizado, interfazContactos);
+        recursosComunesContactosSalas_activarInterfazSalas (interfazContactos->recursosComunesContactosSalas);
+        contextoAplicacion->interfazActual = INTERFAZ_SALAS;
+    }
 
     return EVENTO_MANEJADO;
 }
@@ -86,9 +87,24 @@ bool _interfazContactos_manejarEnterEnviarMensaje (t_contextoAplicacion *context
     else
         realizarEnvioMensaje (contextoAplicacion, interfazContactos);
 
-    resetearBarraDeEscritura (interfazContactos->recursosComunesContactosSalas);
-
     return EVENTO_MANEJADO;
+}
+
+
+void _interfazContactos_resetearBarraDeEscritura (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+{
+    *(recursosComunesContactosSalas->logica.contextoMensajes.mensaje) = '\0';
+    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
+    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+}
+
+
+void _interfazContactos_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+{
+    interfazContactos_resetear (contextoAplicacion->renderizado, interfazContactos);
+    //resetear los rc tambien
+    socket_cerrar (&(contextoAplicacion->sock));
+    contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
 }
 
 
@@ -146,60 +162,12 @@ static bool sonDatosSeleccionChatValidos (t_interfazContactos *interfazContactos
                 (noEsChatYaSeleccionado (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, nombreUsuarioChatSeleccionadoSinBarraDeComando)));
 }
 
-/*
- * Fabricar una respuesta de seleccion de chat invalida en caso de no tener que enviar una solicitud al servidor por la invalidez de los datos.
-*/
-static t_respuestaSeleccionChat fabricarRespuestaSeleccionChatInvalida ()
-{
-    t_respuestaSeleccionChat respuestaSeleccionChatInvalida = {SOLICITUD_ERROR_OPERACION_INVALIDA, ID_INVALIDO};
-    return respuestaSeleccionChatInvalida;
-}
-
-static void setearNuevoChatLogicamente (t_interfazContactos *interfazContactos, const t_respuestaSeleccionChat *respuestaSeleccionChat)
-{
-    interfazContactos->logica.idUsuarioDelChatSeleccionado = respuestaSeleccionChat->idUsuarioChatSeleccionado;
-    strcpy (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, &(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje[1]));
-}
-
-static void setearNuevoChatGraficamente (t_interfazContactos *interfazContactos)
-{
-    sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
-    centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
-    recursosComunesContactosSalas_vaciarListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes));
-    sfText_setString (interfazContactos->textos.textoInformativoSeleccionChat, "");
-}
-
-static void procesarRespuestaSegunEstadoSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, t_respuestaSeleccionChat *respuestaSeleccionChat)
-{
-    switch (respuestaSeleccionChat->estado)
-    {
-        case SOLICITUD_EXITO:
-            setearNuevoChatLogicamente (interfazContactos, respuestaSeleccionChat);
-            setearNuevoChatGraficamente (interfazContactos);
-            break;
-
-        case SOLICITUD_ERROR_CONEXION:
-            interfazContactos_resetear (contextoAplicacion->renderizado, interfazContactos);
-            socket_cerrar (&(contextoAplicacion->sock));
-            contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
-            break;
-
-        default:
-            break;
-    }
-}
-
 static void realizarSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
-    t_respuestaSeleccionChat respuestaSeleccionChat;
     char *nombreUsuarioChatSeleccionadoSinBarraDeComando = &(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje[1]);
 
     if (sonDatosSeleccionChatValidos (interfazContactos, contextoAplicacion->usuario.nombre))
-        respuestaSeleccionChat = enviarSolicitudSeleccionChat (contextoAplicacion->sock, nombreUsuarioChatSeleccionadoSinBarraDeComando);
-    else
-        respuestaSeleccionChat = fabricarRespuestaSeleccionChatInvalida ();
-
-    procesarRespuestaSegunEstadoSeleccionChat (contextoAplicacion, interfazContactos, &respuestaSeleccionChat);
+        enviarSolicitudSeleccionChat (contextoAplicacion, nombreUsuarioChatSeleccionadoSinBarraDeComando);
 }
 
 
@@ -229,42 +197,9 @@ static bool sonDatosEnvioMensajeValidos (int idUsuario, int idUsuarioDelChatSele
                 (elEmisorNoEsElReceptor (idUsuario, idUsuarioDelChatSeleccionado)));
 }
 
-static void procesarRespuestaSegunEstadoEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, char *estadoRespuestaEnvioMensaje)
-{
-    switch (*estadoRespuestaEnvioMensaje)
-    {
-        case SOLICITUD_EXITO:
-            recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
-            break;
-
-        case SOLICITUD_ERROR_CONEXION:
-            interfazContactos_resetear (contextoAplicacion->renderizado, interfazContactos);
-            socket_cerrar (&(contextoAplicacion->sock));
-            contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
-            break;
-
-        default:
-            break;
-    }
-}
-
 static void realizarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
-    char estadoRespuestaEnvioMensaje;
-
     if (sonDatosEnvioMensajeValidos (contextoAplicacion->usuario.id, interfazContactos->logica.idUsuarioDelChatSeleccionado, interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje))
-        estadoRespuestaEnvioMensaje = enviarSolicitudEnvioMensaje (contextoAplicacion->sock, contextoAplicacion->usuario.id, interfazContactos->logica.idUsuarioDelChatSeleccionado, interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje);
-    else
-        estadoRespuestaEnvioMensaje = SOLICITUD_ERROR_OPERACION_INVALIDA;
-
-    procesarRespuestaSegunEstadoEnvioMensaje (contextoAplicacion, interfazContactos, &estadoRespuestaEnvioMensaje);
-}
-
-
-static void resetearBarraDeEscritura (t_recursosComunesContactosSalas *recursosComunesContactosSalas)
-{
-    *(recursosComunesContactosSalas->logica.contextoMensajes.mensaje) = '\0';
-    sfText_setString (recursosComunesContactosSalas->textos.auxEscribirMensaje, "");
-    sfRectangleShape_setPosition (recursosComunesContactosSalas->elementos.puntoInsercion, (sfVector2f){451, 942});
+        enviarSolicitudEnvioMensaje (contextoAplicacion, contextoAplicacion->usuario.id, interfazContactos->logica.idUsuarioDelChatSeleccionado, interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje);
 }
 

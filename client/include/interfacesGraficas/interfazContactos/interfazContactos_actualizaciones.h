@@ -21,8 +21,12 @@
 #include "../../../../shared/constantes/include/constantes.h"
 #include "../../../../shared/protocolos/include/protocolos.h"
 
+#include "../../estructuras.h"
+#include "../../comunicacion.h"
+
 #include "../recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas.h"
 #include "interfazContactos_estructuras.h"
+#include "interfazContactos_controladores.h"
 
 
 /* ============================================================================================================================================
@@ -33,7 +37,7 @@
 /*
  * Procesar las diferentes posibles respuestas que se recibio del servidor.
 */
-void _interfazContactos_procesarRespuesta (t_interfazContactos *interfazContactos, const char *respuesta);
+void _interfazContactos_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta, t_resultadoRecepcion resultadoRecepcion);
 
 
 #endif // INTERFAZCONTACTOS_ACTUALIZACIONES_H_INCLUDED

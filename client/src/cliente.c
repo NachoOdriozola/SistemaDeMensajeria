@@ -98,7 +98,8 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     // --------------- CONFIGURAR APLICACION ---------------
 
     sfRenderWindow_setFramerateLimit (contextoAplicacion->renderizado, 60);
-    contextoAplicacion->usuario.interfazActual = INTERFAZ_AUTENTICACION;
+    contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
+    contextoAplicacion->solicitudEnCurso = false;
     omitirEventosPendientes (contextoAplicacion->renderizado);
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS COMUNES ---------------
@@ -119,7 +120,7 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
 void ejecutarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
 {
-    switch (contextoAplicacion->usuario.interfazActual)
+    switch (contextoAplicacion->interfazActual)
         {
         case INTERFAZ_AUTENTICACION:
             ejecutarInterfazAutenticacion (contextoAplicacion, &(interfacesGraficas->autenticacion));
@@ -215,7 +216,7 @@ static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoApl
 
 static bool usuarioSeAutentico (t_contextoAplicacion *contextoAplicacion)
 {
-    return (contextoAplicacion->usuario.interfazActual == INTERFAZ_CONTACTOS);
+    return (contextoAplicacion->interfazActual == INTERFAZ_CONTACTOS);
 }
 
 static void liberarRecursosGraficosAutenticacion (t_interfacesGraficas *interfacesGraficas)
@@ -241,7 +242,7 @@ static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion,
 
 static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion)
 {
-    return (contextoAplicacion->usuario.interfazActual != INTERFAZ_CONTACTOS);
+    return (contextoAplicacion->interfazActual != INTERFAZ_CONTACTOS);
 }
 
 static void prepararInterfazConfig (t_interfazConfig *interfazConfig)
@@ -271,16 +272,16 @@ static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_inte
 
 static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
 {
-    if (contextoAplicacion->usuario.interfazActual == INTERFAZ_CONFIG)
+    if (contextoAplicacion->interfazActual == INTERFAZ_CONFIG)
         prepararInterfazConfig (&(interfacesGraficas->config));
 
-    if (contextoAplicacion->usuario.interfazActual == INTERFAZ_AUTENTICACION)
+    if (contextoAplicacion->interfazActual == INTERFAZ_AUTENTICACION)
         prepararInterfacesAutenticacion (contextoAplicacion->renderizado, interfacesGraficas);
 }
 
 
 static bool usuarioQuiereSalirDeConfiguraciones (t_contextoAplicacion *contextoAplicacion)
 {
-    return (contextoAplicacion->usuario.interfazActual != INTERFAZ_CONFIG);
+    return (contextoAplicacion->interfazActual != INTERFAZ_CONFIG);
 }
 

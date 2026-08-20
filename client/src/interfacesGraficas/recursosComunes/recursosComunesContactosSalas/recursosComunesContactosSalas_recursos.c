@@ -10,6 +10,7 @@ void _recursosComunesContactosSalas_inicializarValoresNulosFuentes (t_recursosCo
 void _recursosComunesContactosSalas_inicializarValoresNulosTextos (t_recursosComunesContactosSalasTextos *textos)
 {
     textos->auxEscribirMensaje = NULL;
+    textos->textoFeedbackUsuario = NULL;
     textos->proximaInterfaz = NULL;
     textos->nombreUsuario = NULL;
     textos->textoBotonEnviar = NULL;
@@ -87,6 +88,13 @@ t_codigoRetorno _recursosComunesContactosSalas_inicializarTextos (t_recursosComu
     if (!textos->textoBotonEnviar)
     {
         perror ("\nERROR - Recursos comunes contactos-salas, crear texto textoBotonEnviar.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    textos->textoFeedbackUsuario = sfText_create ();
+    if (!textos->textoFeedbackUsuario)
+    {
+        perror ("\nERROR - Recursos comunes contactos-salas, crear texto textoFeedbackUsuario.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -252,6 +260,10 @@ void _recursosComunesContactosSalas_configurarTextos (t_recursosComunesContactos
     sfText_setString (textos->textoBotonEnviar, "ENVIAR");
     sfText_setFillColor (textos->textoBotonEnviar, sfColor_fromRGB (94, 91, 87));
 
+    // textoFeedbackUsuario
+    sfText_setFont (textos->textoFeedbackUsuario, fuentes->ui);
+    sfText_setFillColor (textos->textoFeedbackUsuario, sfColor_fromRGB (94, 91, 87));
+
     // tituloInterfaz
     sfText_setFont (textos->tituloInterfaz, fuentes->ui);
     sfText_setString (textos->tituloInterfaz, "CONTACTOS");
@@ -326,6 +338,10 @@ void _recursosComunesContactosSalas_tamYPosVentanaTextos (t_recursosComunesConta
     // textoBotonEnviar
     sfText_setCharacterSize (textos->textoBotonEnviar, 22);
     centrarTextoEnArea (textos->textoBotonEnviar, 1747, 909, 115, 35);
+
+    // textoFeedbackUsuario
+    sfText_setCharacterSize (textos->textoFeedbackUsuario, 22);
+    sfText_setPosition (textos->textoFeedbackUsuario, (sfVector2f){442, 958});
 
     // tituloInterfaz
     sfText_setCharacterSize (textos->tituloInterfaz, 36);
@@ -421,6 +437,7 @@ void _recursosComunesContactosSalas_liberarTextos (t_recursosComunesContactosSal
     DESTRUCTOR_SEGURO_TEXTO (textos->proximaInterfaz);
     DESTRUCTOR_SEGURO_TEXTO (textos->nombreUsuario);
     DESTRUCTOR_SEGURO_TEXTO (textos->textoBotonEnviar);
+    DESTRUCTOR_SEGURO_TEXTO (textos->textoFeedbackUsuario);
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloInterfaz);
 }
 

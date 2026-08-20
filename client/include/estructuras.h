@@ -49,7 +49,6 @@ typedef struct
 {
     int id;                                                                     /**< Identificador correspondiente del usuario. */
     char nombre [MAX_NOMBRE_USUARIO];            /**< Nombre correspondiente del usuario. */
-    t_interfaz interfazActual;                                      /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
 } t_usuario;
 
 /**
@@ -61,6 +60,8 @@ typedef struct
     sfRenderWindow *renderizado;         /**< Renderizado de la ventana. */
     t_socket sock;                                     /**< Socket del usuario. */
     t_usuario usuario;
+    t_interfaz interfazActual;                                      /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
+    bool solicitudEnCurso;                       /**< Informar si hay una solicitud enviada en curso para no enviar otra. */
 } t_contextoAplicacion;
 
 

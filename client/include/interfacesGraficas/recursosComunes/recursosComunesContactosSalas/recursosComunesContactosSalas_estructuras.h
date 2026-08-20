@@ -57,6 +57,7 @@ typedef struct
     sfText *proximaInterfaz;                                  /**< Muestra el nombre de la interfaz disponible para cambiar, esta ubicado sobre la solapaCambiarInterfaz. */
     sfText *nombreUsuario;                                  /**< Muestra el nombre del usuario. */
     sfText *textoBotonEnviar;                               /**< Texto encontrado dentro del boton para enviar mensaje. */
+    sfText *textoFeedbackUsuario;                        /**< Texto que muestra informacion util sobre el estado de los procedimientos que se encuentra realizando la aplicacion. */
     sfText *tituloInterfaz;                                      /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
 } t_recursosComunesContactosSalasTextos;
 
