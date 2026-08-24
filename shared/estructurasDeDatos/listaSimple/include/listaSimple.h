@@ -96,6 +96,17 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
  */
 int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
 
+/** \brief Eliminar el nodo, apuntado por la lista simple.
+ *
+ * Verifica que returnDato sea distinto de NULL, sino no copiara el dato.
+ *
+ * \param pl Direccion de la lista simple.
+ * \param returnDato Puntero donde se guardara el dato antes de eliminarse.
+ * \param tamDato tamanio en bytes del dato.
+ *
+ */
+void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato);
+
 /** \brief Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista simple.
  *
  * Verifica que returnDato sea distinto de NULL, sino no copiara el dato.
@@ -107,6 +118,15 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
  *
  */
 void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato));
+
+/** \brief Vaciar la lista simple.
+ *
+ * Libera la memoria dinamica creada para el dato y para el nodo.
+ *
+ * \param pl Direccion de la lista simple.
+ *
+ */
+void vaciarListaSimple (t_listaSimple *pl);
 
 /** \brief Vaciar la lista simple, realizando una accion sobre los datos previamente.
  *

@@ -16,7 +16,7 @@ static void procesarRespuestaSolicitudRegistro (t_contextoAplicacion *contextoAp
 
 void _interfazRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta, t_resultadoRecepcion resultadoRecepcion)
 {
-    char headerTipoRespuesta;
+    t_header header;
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
@@ -25,8 +25,8 @@ void _interfazRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicaci
         return;
     }
 
-    headerTipoRespuesta = *respuesta;
-    switch (headerTipoRespuesta)
+    memcpy (&header, respuesta, sizeof (t_header));
+    switch (header.tipo)
     {
         case RESPUESTA_SOLICITUD_REGISTRO:
             procesarRespuestaSolicitudRegistro (contextoAplicacion, interfazRegistro, respuesta);
@@ -88,7 +88,8 @@ static void procesarRespuestaSolicitudRegistro (t_contextoAplicacion *contextoAp
     t_datosRespuestaSolicitudRegistro datosRespuestaSolicitudRegistro;
 
     extraerDatosRespuestaSolicitudRegistro (respuesta, &datosRespuestaSolicitudRegistro);
-    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudRegistro.headerTipoRespuesta, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
+    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudRegistro.header.tipo, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
     procesarRespuestaSegunEstadoSolicitudRegistro (contextoAplicacion, interfazRegistro, &datosRespuestaSolicitudRegistro);
+    contextoAplicacion->solicitudEnCurso = false;
 }
 

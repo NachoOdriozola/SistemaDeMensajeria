@@ -81,8 +81,17 @@ void desacolar (t_cola *c, void *returnDato, unsigned tamDato);
  *
  * \param c Direccion de la cola.
  *
+ * \return True si la cola no esta vacia, False en caso contrario.
+ * 
  */
 bool noEsColaVacia (t_cola *c);
+
+/** \brief Vaciar la cola. Asegura que la cola apunte a NULL.
+ *
+ * \param c Direccion de la cola.
+ *
+ */
+void vaciarCola (t_cola *c);
 
 
 #endif // COLA_H_INCLUDED

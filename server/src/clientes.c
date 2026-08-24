@@ -31,6 +31,22 @@ void recibirSolicitudes (t_contextoServidor *contextoServidor)
     recibirSolicitudesEnTablaHash (&(contextoServidor->clientes), &(contextoServidor->solicitudes));
 }
 
+t_resultadoEnvio enviarRespuestaACliente (t_contextoServidor *contextoServidor, t_respuestaCliente *respuestaCliente)
+{
+    t_resultadoEnvio resultadoEnvio;
+
+    resultadoEnvio = socket_enviarTodo (respuestaCliente->clienteAResponder->sock, respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
+    if (resultadoEnvio == ENVIO_BUFFER_LLENO)
+        insertarAlInicioListaSimple (&(contextoServidor->respuestasPendientes), respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
+
+    return resultadoEnvio;
+}
+
+t_resultadoEnvio intentarEnviarRespuestaPendienteACliente (t_respuestaCliente *respuestaPendienteACliente)
+{
+    return (socket_enviarTodo (respuestaPendienteACliente->clienteAResponder->sock, respuestaPendienteACliente->datosAEnviar, respuestaPendienteACliente->tamDatosAEnviar));
+}
+
 
 /* ============================================================================================================================================
    FUNCIONES PRIVADAS
@@ -47,23 +63,6 @@ static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *cliente
 }
 
 
-/*
-* Retorna la solicitud que envio el cliente a traves del parametro returnSolicitud.
-* Retorna la cantidad de bytes recibidos que envio el cliente a traves del argumento returnBytesRecibidos.
-*/
-static bool clienteEnvioSolicitud (t_cliente *cliente, char *returnSolicitud, int *returnBytesRecibidos)
-{
-    *returnBytesRecibidos = socket_recibir (cliente->sock, returnSolicitud);
-    if (*returnBytesRecibidos > 0) // Si se recibio una solicitud.
-    {
-        // Asegura el caracter nulo al final de la solicitud.
-        returnSolicitud += *returnBytesRecibidos;
-        *returnSolicitud = '\0';
-        return true;
-    }
-    return false;
-}
-
 static void desconectarCliente (t_listaDoble *listaDoble, int idCliente)
 {
     printf ("Cliente ID: %d desconectado.\n\n", idCliente);
@@ -74,18 +73,19 @@ void recibirSolicitudesEnListaDoble (t_listaDoble *listaDoble, t_cola *solicitud
 {
     t_cliente *cliente;
     t_solicitudCliente solicitudCliente;
-    int bytesRecibidos;
+    t_resultadoRecepcion resultadoRecepcion;
 
     while (*listaDoble != NULL) // Mientras haya clientes en la lista doble.
     {
         cliente = (t_cliente*)((*listaDoble)->dato);
-        if (clienteEnvioSolicitud (cliente, solicitudCliente.solicitud, &bytesRecibidos))
+        resultadoRecepcion = socket_recibirTodo (cliente->sock, solicitudCliente.solicitud);
+        if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
         {
             solicitudCliente.clienteAProcesar = *listaDoble;
             insertarACola (solicitudes, &solicitudCliente, sizeof (t_solicitudCliente));
         }
-
-        if (socket_perdioConexion (cliente->sock, bytesRecibidos))
+        
+        if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
             desconectarCliente (listaDoble, cliente->id);
         else
             listaDoble = &((*listaDoble)->sig);

@@ -118,14 +118,62 @@ t_socket socket_aceptarNuevoCliente (t_socket sockServidor)
     return sockCliente;
 }
 
-int socket_enviar (t_socket sock, const char *buffer, size_t tamBuffer)
+t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t tamBuffer)
 {
-    return (send (sock, buffer, tamBuffer, 0));
+    int bytesEnviadosTotales = 0, bytesEnviadosParciales;
+
+    do
+    {
+        bytesEnviadosParciales = send (sock, buffer + bytesEnviadosTotales, tamBuffer - bytesEnviadosTotales, 0);
+        if (bytesEnviadosParciales == ERROR_SOCKET)
+        {
+            if (WSAGetLastError() == WSAEWOULDBLOCK)
+                return ENVIO_BUFFER_LLENO;
+            else
+                return ENVIO_ERROR_CONEXION;
+        }
+        bytesEnviadosTotales += bytesEnviadosParciales;
+    } while (bytesEnviadosTotales < tamBuffer);
+
+    return ENVIO_COMPLETO;
 }
 
-int socket_recibir (t_socket sock, char *returnBuffer)
+t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer)
 {
-    return (recv (sock, returnBuffer, MAX_BUFFER_SOLICITUD, 0));
+    t_header header;
+    int bytesRecibidosTotales = 0, bytesRecibidosParciales;
+
+    do
+    {
+        bytesRecibidosParciales = recv (sock, (char*)(&header), sizeof (t_header), 0);
+    
+        if (socket_noRecibioDatos (sock, bytesRecibidosParciales))
+            return RECEPCION_NO_RECIBIO_DATOS;
+    
+        if (socket_perdioConexion (sock, bytesRecibidosParciales))
+            return RECEPCION_ERROR_CONEXION;
+
+        bytesRecibidosTotales += bytesRecibidosParciales;
+    } while (bytesRecibidosTotales < sizeof (t_header));
+
+    memcpy (returnBuffer, &header, sizeof (t_header));
+    returnBuffer += bytesRecibidosTotales;
+    
+    bytesRecibidosTotales = 0;
+    do
+    {
+        bytesRecibidosParciales = recv (sock, returnBuffer, header.bytesTransmitidos - sizeof (t_header), 0);
+    
+        if (socket_perdioConexion (sock, bytesRecibidosParciales))
+            return RECEPCION_ERROR_CONEXION;
+
+        bytesRecibidosTotales += bytesRecibidosParciales;
+    } while (bytesRecibidosTotales < header.bytesTransmitidos - sizeof (t_header));
+
+    returnBuffer += bytesRecibidosTotales;
+    *returnBuffer = '\0';
+
+    return RECEPCION_RECIBIO_DATOS;
 }
 
 bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos)

@@ -56,3 +56,17 @@ bool noEsColaVacia (t_cola *c)
 {
     return (c->pri != NULL);
 }
+
+void vaciarCola (t_cola *c)
+{
+    t_nodoCola *nodoElim;
+
+    while (c->pri != NULL)
+    {
+        nodoElim = c->pri;
+        c->pri = nodoElim->sig;
+        free (nodoElim->dato);
+        free (nodoElim);
+    }
+    c->ult = NULL;
+}

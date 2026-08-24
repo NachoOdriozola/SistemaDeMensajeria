@@ -37,6 +37,34 @@
 
 
 /* ============================================================================================================================================
+   ESTRUCTURAS
+   ============================================================================================================================================ */
+
+
+/**
+ * \struct t_resultadoEnvio
+ * \brief Informa el resultado del envio de datos.
+ */
+typedef enum
+{
+    ENVIO_COMPLETO,
+    ENVIO_ERROR_CONEXION,
+    ENVIO_BUFFER_LLENO
+} t_resultadoEnvio;
+
+/**
+ * \struct t_resultadoRecepcion
+ * \brief Informa el resultado de la recepcion de datos.
+ */
+typedef enum
+{
+   RECEPCION_RECIBIO_DATOS,
+   RECEPCION_NO_RECIBIO_DATOS,
+   RECEPCION_ERROR_CONEXION
+} t_resultadoRecepcion;
+
+
+/* ============================================================================================================================================
    FUNCIONES
    ============================================================================================================================================ */
 
@@ -113,26 +141,28 @@ t_codigoRetorno socket_establecerKeepAlive (t_socket *sock);
  */
 t_socket socket_aceptarNuevoCliente (t_socket sockServidor);
 
-/** \brief Enviar al socket un buffer.
- *
+/** \brief Enviar al socket un buffer. Iterar hasta enviar todos los datos.
+ * 
  * \param sock Socket que realiza el envio
  * \param buffer Cadena que contiene el buffer a enviar.
  * \param tamBuffer Tamanio del buffer.
  *
- * \return Resultado en bytes del envio.
+ * \return ENVIO_COMPLETO si pudo enviar todos los datos correctamente, ENVIO_BUFFER_LLENO si el buffer del socket se encuentra agotado y no se pueden cargar mas datos, ENVIO_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-int socket_enviar (t_socket sock, const char *buffer, size_t tamBuffer);
+t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t tamBuffer);
 
-/** \brief Recibir un buffer del socket.
+/** \brief Recibir un buffer del socket. Iterar hasta recibir todos los datos.
  *
+ * Primero recibe el header, y luego recibe la cadena con la cantidad de bytes asigandos en el header.
+ * 
  * \param sock Socket que realiza el recibo.
- * \param returnBuffer Cadena que contiene recibe el buffer.
+ * \param returnBuffer Cadena que retorna el contenido del buffer.
  *
- * \return Resultado en bytes del recibo.
+ * \return RECEPCION_RECIBIO_DATOS en caso de haber recibido datos, RECEPCION_NO_RECIBIO_DATOS en caso contrario, y RECEPCION_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-int socket_recibir (t_socket sock, char *returnBuffer);
+t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer);
 
 /** \brief Preguntar si el socket no recibio datos en modo no bloqueante. Ademas, asegura que no haya recibido datos en caso de que el socket no se haya inicializado.
  *

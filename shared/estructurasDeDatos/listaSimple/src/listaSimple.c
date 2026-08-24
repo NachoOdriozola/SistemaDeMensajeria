@@ -66,6 +66,18 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
     return 0;
 }
 
+void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato)
+{
+    t_nodoListaSimple *nodoElim = *pl;
+
+    *pl = nodoElim->sig;
+    if (returnDato != NULL)
+        memcpy (returnDato, nodoElim->dato, ((tamDato < (*pl)->tam) ? tamDato : (*pl)->tam));
+        
+    free (nodoElim->dato);
+    free (nodoElim);
+}
+
 void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
 {
     t_nodoListaSimple *nodoElim = *pl;
@@ -77,6 +89,19 @@ void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsi
     accion (nodoElim->dato);
     free (nodoElim->dato);
     free (nodoElim);
+}
+
+void vaciarListaSimple (t_listaSimple *pl)
+{
+    t_nodoListaSimple *nodoElim;
+
+    while (*pl != NULL)
+    {
+        nodoElim = *pl;
+        *pl = nodoElim->sig;
+        free (nodoElim->dato);
+        free (nodoElim);
+    }
 }
 
 void vaciarListaSimpleConAccion (t_listaSimple *pl, void accion (void *dato))

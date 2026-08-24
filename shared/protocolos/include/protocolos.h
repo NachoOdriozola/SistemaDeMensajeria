@@ -98,12 +98,23 @@ typedef enum
 
 
 /**
+ * \enum t_header
+ * \brief Header que contiene los datos del paquete a transmitir.
+ */
+typedef struct
+{
+    char tipo;
+    short int bytesTransmitidos;
+} t_header;
+
+
+/**
  * \enum t_datosEnvioSolicitudAutenticacion
  * \brief Datos enviados por el cliente para realizar la solicitud.
  */
 typedef struct
 {
-    char headerTipoSolicitud;
+    t_header header;
     char nombreUsuario [MAX_NOMBRE_USUARIO];
     char contrasenia [MAX_CONTRASENIA];
 } t_datosEnvioSolicitudAutenticacion;
@@ -114,7 +125,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoSolicitud;
+    t_header header;
     char nombreUsuario [MAX_NOMBRE_USUARIO];
     char contrasenia [MAX_CONTRASENIA];
     char correoElectronico [MAX_CORREO_ELECTRONICO];
@@ -126,7 +137,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoSolicitud;
+    t_header header;
     int idEmisor, idReceptor;
     char texto [MAX_MENSAJE];
 } t_datosEnvioSolicitudEnvioMensaje;
@@ -137,7 +148,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoSolicitud;
+    t_header header;
     char nombreUsuarioChatSeleccionado [MAX_NOMBRE_USUARIO];
 } t_datosEnvioSolicitudSeleccionChat;
 
@@ -153,7 +164,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoRespuesta;
+    t_header header;
     char estadoSolicitud;
     int idUsuario;
 } t_datosRespuestaSolicitudAutenticacion;
@@ -164,7 +175,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoRespuesta;
+    t_header header;
     char estadoSolicitud;
     int idUsuario;
 } t_datosRespuestaSolicitudRegistro;
@@ -175,7 +186,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoRespuesta;
+    t_header header;
     char estadoSolicitud;
 } t_datosRespuestaSolicitudEnvioMensaje;
 
@@ -185,7 +196,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoRespuesta;
+    t_header header;
     int idEmisor;
     char texto [MAX_MENSAJE];
 } t_datosRespuestaRecepcionMensaje;
@@ -196,7 +207,7 @@ typedef struct
  */
 typedef struct
 {
-    char headerTipoRespuesta;
+    t_header header;
     char estadoSolicitud;
     int idUsuarioDelChatSeleccionado;
 } t_datosRespuestaSolicitudSeleccionChat;

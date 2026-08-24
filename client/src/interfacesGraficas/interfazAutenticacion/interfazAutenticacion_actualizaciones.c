@@ -16,7 +16,7 @@ static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *conte
 
 void _interfazAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta, t_resultadoRecepcion resultadoRecepcion)
 {
-    char headerTipoRespuesta;
+    t_header header;
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
@@ -25,8 +25,8 @@ void _interfazAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoApl
         return;
     }
 
-    headerTipoRespuesta = *respuesta;
-    switch (headerTipoRespuesta)
+    memcpy (&header, respuesta, sizeof (t_header));
+    switch (header.tipo)
     {
         case RESPUESTA_SOLICITUD_AUTENTICACION:
             procesarRespuestaSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion, respuesta);
@@ -82,7 +82,8 @@ static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *conte
     t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;
 
     extraerDatosRespuestaSolicitudAutenticacion (respuesta, &datosRespuestaSolicitudAutenticacion);
-    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudAutenticacion.headerTipoRespuesta, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
+    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudAutenticacion.header.tipo, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
     procesarRespuestaSegunEstadoSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion, &datosRespuestaSolicitudAutenticacion);
+    contextoAplicacion->solicitudEnCurso = false;
 }
 

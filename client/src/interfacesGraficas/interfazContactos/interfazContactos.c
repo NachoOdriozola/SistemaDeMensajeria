@@ -160,10 +160,7 @@ static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazCont
 
     resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
     if (resultadoRecepcion != RECEPCION_NO_RECIBIO_DATOS)
-    {
         _interfazContactos_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta, resultadoRecepcion);
-        contextoAplicacion->solicitudEnCurso = false;
-    }
 
     // --------------- PUNTO DE INSERCION ---------------
 

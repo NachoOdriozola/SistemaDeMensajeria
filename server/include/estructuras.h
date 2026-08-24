@@ -16,6 +16,7 @@
 #include <sqlite3.h>
 
 #include "../../shared/estructurasDeDatos/cola/include/cola.h"
+#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
 #include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
 #include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
 #include "../../shared/sockets/include/sockets.h"
@@ -61,6 +62,17 @@ typedef struct
 } t_cliente;
 
 /**
+ * \struct t_respuestaCliente
+ * \brief  Almacena los datos de una respuesta para ser enviada a su respectivo cliente.
+ */
+typedef struct
+{
+   t_cliente *clienteAResponder;
+   char *datosAEnviar;
+   int tamDatosAEnviar;
+} t_respuestaCliente;
+
+/**
  * \struct t_contextoServidor
  * \brief  Contexto (estados y recursos) global del servidor.
  */
@@ -72,6 +84,7 @@ typedef struct
    t_listaDoble clientesNoAutenticados;      /**< Lista doble que contiene a los clientes conectados pero no autenticados. */
    t_tablaHash clientes;                                /**< Tabla hash que contiene a los clientes conectados y autenticados. */
    t_cola solicitudes;                                     /**< Cola que almacena las solicitudes enviadas por los clientes. */
+   t_listaSimple respuestasPendientes;        /**< Lista que almacena las respuestas que no se pudieron enviar en el momento para que puedan ser enviadas luego. */
 } t_contextoServidor;
 
 

@@ -11,6 +11,8 @@ static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_s
 static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
 static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
 
+static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServidor);
+
 
 /* ============================================================================================================================================
    FUNCIONES PUBLICAS
@@ -48,12 +50,34 @@ void procesarSolicitudes (t_contextoServidor *contextoServidor)
                 break;
         }
     }
+    intentarEnviarRespuestasPendientes (contextoServidor);
 }
 
 
 /* ============================================================================================================================================
-   FUNCIONES LOGICAS COMUNES
+   FUNCIONES LOGICAS
    ============================================================================================================================================ */
+
+
+static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServidor)
+{
+    t_listaSimple *pl = &(contextoServidor->respuestasPendientes);
+    t_respuestaCliente *respuestaPendienteACliente;
+    t_resultadoEnvio resultadoEnvio;
+
+    while (*pl != NULL)
+    {
+        respuestaPendienteACliente = (t_respuestaCliente*)((*pl)->dato);
+        resultadoEnvio = intentarEnviarRespuestaPendienteACliente (respuestaPendienteACliente);
+        if ((resultadoEnvio == ENVIO_COMPLETO) || (resultadoEnvio == ENVIO_ERROR_CONEXION))
+        {
+            printf ("\nSe envio respuesta pendiente a cliente: %d\n", respuestaPendienteACliente->clienteAResponder->id);
+            eliminarNodoListaSimple (pl, NULL, 0);
+        }
+        else
+            pl = &((*pl)->sig); // Si todavia no se puede enviar la respuesta al cliente por buffer lleno, lo mantiene en la lista hasta que se pueda enviar.
+    }
+}
 
 
 static void conectarUsuario (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble *clienteAProcesar, int idUsuario)
@@ -146,11 +170,16 @@ static void autenticarCliente (t_contextoServidor *contextoServidor, t_nodoLista
     returnDatosRespuestaSolicitudAutenticacion->estadoSolicitud = SOLICITUD_EXITO;
 }
 
-static void enviarRespuestaSolicitudAutenticacion (const t_nodoListaDoble *clienteAProcesar, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion)
+static void fabricarRespuestaSolicitudAutenticacion (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
 
-    socket_enviar (cliente->sock, (char*)datosRespuestaSolicitudAutenticacion, sizeof (t_datosRespuestaSolicitudAutenticacion));
+    datosRespuestaSolicitudAutenticacion->header.tipo = RESPUESTA_SOLICITUD_AUTENTICACION;
+    datosRespuestaSolicitudAutenticacion->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudAutenticacion);
+
+    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudAutenticacion);
+    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudAutenticacion);
+    respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
@@ -171,13 +200,14 @@ static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor
 {
     t_datosEnvioSolicitudAutenticacion datosEnvioSolicitudAutenticacion;
     t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;
+    t_respuestaCliente respuestaCliente;
 
     extraerDatosSolicitudAutenticacion (solicitudCliente->solicitud, &datosEnvioSolicitudAutenticacion);
-    printf ("Solicitud recibida: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.headerTipoSolicitud, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
+    printf ("Solicitud recibida: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.header.tipo, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
     autenticarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudAutenticacion, &datosRespuestaSolicitudAutenticacion);
-    datosRespuestaSolicitudAutenticacion.headerTipoRespuesta = RESPUESTA_SOLICITUD_AUTENTICACION;
-    enviarRespuestaSolicitudAutenticacion (solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudAutenticacion);
-    printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudAutenticacion.headerTipoRespuesta, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
+    fabricarRespuestaSolicitudAutenticacion (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudAutenticacion);
+    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudAutenticacion.header.tipo, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
 }
 
 
@@ -303,11 +333,16 @@ static void registrarCliente (t_contextoServidor *contextoServidor, t_nodoListaD
     datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_EXITO;
 }
 
-static void enviarRespuestaRegistro (const t_nodoListaDoble *clienteAProcesar, t_datosRespuestaSolicitudRegistro *datosRespuestaSolicitudRegistro)
+static void fabricarRespuestaSolicitudRegistro (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudRegistro *datosRespuestaSolicitudRegistro)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
 
-    socket_enviar (cliente->sock, (char*)datosRespuestaSolicitudRegistro, sizeof (t_datosRespuestaSolicitudRegistro));
+    datosRespuestaSolicitudRegistro->header.tipo = RESPUESTA_SOLICITUD_REGISTRO;
+    datosRespuestaSolicitudRegistro->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudRegistro);
+
+    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudRegistro);
+    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudRegistro);
+    respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
@@ -329,13 +364,14 @@ static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_s
 {
     t_datosEnvioSolicitudRegistro datosEnvioSolicitudRegistro;
     t_datosRespuestaSolicitudRegistro datosRespuestaSolicitudRegistro;
+    t_respuestaCliente respuestaCliente;
 
     extraerDatosSolicitudRegistro (solicitudCliente->solicitud, &datosEnvioSolicitudRegistro);
-    printf ("Solicitud recibida: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.headerTipoSolicitud, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
+    printf ("Solicitud recibida: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.header.tipo, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
     registrarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudRegistro, &datosRespuestaSolicitudRegistro);
-    datosRespuestaSolicitudRegistro.headerTipoRespuesta = RESPUESTA_SOLICITUD_REGISTRO;
-    enviarRespuestaRegistro (solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudRegistro);
-    printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudRegistro.headerTipoRespuesta, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
+    fabricarRespuestaSolicitudRegistro (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudRegistro);
+    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudRegistro.header.tipo, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
 }
 
 
@@ -383,16 +419,28 @@ static bool receptorEstaConectado (t_tablaHash *clientes, const int *idReceptor,
     return buscarClaveUnicaEnTablaHash (clientes, idReceptor, funcionHash, returnCliente, sizeof (t_cliente), cmpIdCliente);
 }
 
-static void enviarMensajeAlReceptor (t_cliente *cliente, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static void fabricarRespuestaRecepcionMensaje (t_respuestaCliente *respuestaCliente, t_cliente *cliente, t_datosRespuestaRecepcionMensaje *datosRespuestaRecepcionMensaje, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+{
+    datosRespuestaRecepcionMensaje->header.tipo = RESPUESTA_RECEPCION_MENSAJE;
+    datosRespuestaRecepcionMensaje->header.bytesTransmitidos = sizeof (t_datosRespuestaRecepcionMensaje);
+
+    datosRespuestaRecepcionMensaje->idEmisor = datosEnvioSolicitudEnvioMensaje->idEmisor;
+    strcpy (datosRespuestaRecepcionMensaje->texto, datosEnvioSolicitudEnvioMensaje->texto);
+
+    respuestaCliente->datosAEnviar = (char*)(datosRespuestaRecepcionMensaje);
+    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaRecepcionMensaje);
+    respuestaCliente->clienteAResponder = cliente;
+}
+
+static void enviarMensajeAlReceptor (t_contextoServidor *contextoServidor, t_cliente *cliente, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
 {
     t_datosRespuestaRecepcionMensaje datosRespuestaRecepcionMensaje;
+    t_respuestaCliente respuestaCliente;
 
-    datosRespuestaRecepcionMensaje.headerTipoRespuesta = RESPUESTA_RECEPCION_MENSAJE;
-    datosRespuestaRecepcionMensaje.idEmisor = datosEnvioSolicitudEnvioMensaje->idEmisor;
-    strcpy (datosRespuestaRecepcionMensaje.texto, datosEnvioSolicitudEnvioMensaje->texto);
+    fabricarRespuestaRecepcionMensaje (&respuestaCliente, cliente, &datosRespuestaRecepcionMensaje, datosEnvioSolicitudEnvioMensaje);
 
-    socket_enviar (cliente->sock, (char*)(&datosRespuestaRecepcionMensaje), sizeof (t_datosRespuestaRecepcionMensaje));
-    printf ("Respuesta enviada: %c|%d\n", datosRespuestaRecepcionMensaje.headerTipoRespuesta, datosRespuestaRecepcionMensaje.idEmisor);
+    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%d\n", datosRespuestaRecepcionMensaje.header.tipo, datosRespuestaRecepcionMensaje.idEmisor);
 }
 
 static void enviarMensaje (t_contextoServidor *contextoServidor, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)
@@ -407,16 +455,21 @@ static void enviarMensaje (t_contextoServidor *contextoServidor, const t_datosEn
 
     almacenarMensaje (contextoServidor->sentenciasSqlite.insertarMensaje, datosEnvioSolicitudEnvioMensaje);
     if (receptorEstaConectado (&(contextoServidor->clientes), &(datosEnvioSolicitudEnvioMensaje->idReceptor), &clienteReceptor))
-        enviarMensajeAlReceptor (&clienteReceptor, datosEnvioSolicitudEnvioMensaje);
+        enviarMensajeAlReceptor (contextoServidor, &clienteReceptor, datosEnvioSolicitudEnvioMensaje);
 
     datosRespuestaSolicitudEnvioMensaje->estadoSolicitud = SOLICITUD_EXITO;
 }
 
-static void enviarRespuestaEnvioMensaje (const t_nodoListaDoble *clienteAProcesar, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)
+static void fabricarRespuestaSolicitudEnvioMensaje (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
 
-    socket_enviar (cliente->sock, (char*)datosRespuestaSolicitudEnvioMensaje, sizeof (t_datosRespuestaSolicitudEnvioMensaje));
+    datosRespuestaSolicitudEnvioMensaje->header.tipo = RESPUESTA_SOLICITUD_ENVIO_MENSAJE;
+    datosRespuestaSolicitudEnvioMensaje->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudEnvioMensaje);
+
+    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudEnvioMensaje);
+    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudEnvioMensaje);
+    respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
@@ -437,13 +490,14 @@ static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor,
 {
     t_datosEnvioSolicitudEnvioMensaje datosEnvioSolicitudEnvioMensaje;
     t_datosRespuestaSolicitudEnvioMensaje datosRespuestaSolicitudEnvioMensaje;
+    t_respuestaCliente respuestaCliente;
 
     extrarDatosSolicitudEnvioMensaje (solicitudCliente->solicitud, &datosEnvioSolicitudEnvioMensaje);
-    printf("Solicitud recibida: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
+    printf("Solicitud recibida: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.header.tipo, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
     enviarMensaje (contextoServidor, &datosEnvioSolicitudEnvioMensaje, &datosRespuestaSolicitudEnvioMensaje);
-    datosRespuestaSolicitudEnvioMensaje.headerTipoRespuesta = RESPUESTA_SOLICITUD_ENVIO_MENSAJE;
-    enviarRespuestaEnvioMensaje (solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudEnvioMensaje);
-    printf ("Respuesta enviada: %c|%c\n\n", datosRespuestaSolicitudEnvioMensaje.headerTipoRespuesta, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
+    fabricarRespuestaSolicitudEnvioMensaje (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudEnvioMensaje);
+    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c\n\n", datosRespuestaSolicitudEnvioMensaje.header.tipo, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
 }
 
 
@@ -492,11 +546,16 @@ static void seleccionarChat (t_contextoServidor *contextoServidor, t_nodoListaDo
     datosRespuestaSolicitudSeleccionChat->estadoSolicitud = SOLICITUD_EXITO;
 }
 
-static void enviarRespuestaSeleccionChat (const t_nodoListaDoble *clienteAProcesar, t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
+static void fabricarRespuestaSolicitudSeleccionChat (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
 
-    socket_enviar (cliente->sock, (char*)datosRespuestaSolicitudSeleccionChat, sizeof (t_datosRespuestaSolicitudSeleccionChat));
+    datosRespuestaSolicitudSeleccionChat->header.tipo = RESPUESTA_SOLICITUD_SELECCION_CHAT;
+    datosRespuestaSolicitudSeleccionChat->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudSeleccionChat);
+
+    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudSeleccionChat);
+    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudSeleccionChat);
+    respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
@@ -515,12 +574,13 @@ static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor
 {  
     t_datosEnvioSolicitudSeleccionChat datosEnvioSolicitudSeleccionChat;
     t_datosRespuestaSolicitudSeleccionChat datosRespuestaSolicitudSeleccionChat;
+    t_respuestaCliente respuestaCliente;
 
     extraerDatosSolicitudSeleccionChat (solicitudCliente->solicitud, &datosEnvioSolicitudSeleccionChat);
-    printf ("Solicitud recibida: %c|%s\n", datosEnvioSolicitudSeleccionChat.headerTipoSolicitud, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
+    printf ("Solicitud recibida: %c|%s\n", datosEnvioSolicitudSeleccionChat.header.tipo, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
     seleccionarChat (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudSeleccionChat, &datosRespuestaSolicitudSeleccionChat);
-    datosRespuestaSolicitudSeleccionChat.headerTipoRespuesta = RESPUESTA_SOLICITUD_SELECCION_CHAT;
-    enviarRespuestaSeleccionChat (solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudSeleccionChat);
-    printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudSeleccionChat.headerTipoRespuesta, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
+    fabricarRespuestaSolicitudSeleccionChat (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudSeleccionChat);
+    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudSeleccionChat.header.tipo, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
 }
 

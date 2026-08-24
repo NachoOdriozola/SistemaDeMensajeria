@@ -18,8 +18,7 @@ static void procesarRespuestaRecepcionMensaje (t_interfazContactos *interfazCont
 
 void _interfazContactos_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta, t_resultadoRecepcion resultadoRecepcion)
 {
-    char headerTipoRespuesta;
-
+    t_header header;
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
         _interfazContactos_manejarErrorConexion (contextoAplicacion, interfazContactos);
@@ -27,8 +26,8 @@ void _interfazContactos_procesarRespuesta (t_contextoAplicacion *contextoAplicac
         return;
     }
 
-    headerTipoRespuesta = *respuesta;
-    switch (headerTipoRespuesta)
+    memcpy (&header, respuesta, sizeof (t_header));
+    switch (header.tipo)
     {
         case RESPUESTA_SOLICITUD_ENVIO_MENSAJE:
             procesarRespuestaSolicitudEnvioMensaje (contextoAplicacion, interfazContactos, respuesta);
@@ -86,8 +85,9 @@ static void procesarRespuestaSolicitudEnvioMensaje (t_contextoAplicacion *contex
     t_datosRespuestaSolicitudEnvioMensaje datosRespuestaSolicitudEnvioMensaje;
 
     extraerDatosRespuestaSolicitudEnvioMensaje (respuesta, &datosRespuestaSolicitudEnvioMensaje);
-    printf ("Respuesta recibida: %c|%c\n", datosRespuestaSolicitudEnvioMensaje.headerTipoRespuesta, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
+    printf ("Respuesta recibida: %c|%c\n", datosRespuestaSolicitudEnvioMensaje.header.tipo, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
     procesarRespuestaSegunEstadoSolicitudEnvioMensaje (contextoAplicacion, interfazContactos, &datosRespuestaSolicitudEnvioMensaje);
+    contextoAplicacion->solicitudEnCurso = false;
 }
 
 
@@ -139,8 +139,9 @@ static void procesarRespuestaSolicitudSeleccionChat (t_contextoAplicacion *conte
     t_datosRespuestaSolicitudSeleccionChat datosRespuestaSolicitudSeleccionChat;
 
     extraerDatosRespuestaSolicitudSeleccionChat (respuesta, &datosRespuestaSolicitudSeleccionChat);
-    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudSeleccionChat.headerTipoRespuesta, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
+    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudSeleccionChat.header.tipo, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
     procesarRespuestaSegunEstadoSolicitudSeleccionChat (contextoAplicacion, interfazContactos, &datosRespuestaSolicitudSeleccionChat);
+    contextoAplicacion->solicitudEnCurso = false;
 }
 
 
@@ -173,7 +174,7 @@ static void procesarRespuestaRecepcionMensaje (t_interfazContactos *interfazCont
     t_datosRespuestaRecepcionMensaje datosRespuestaRecepcionMensaje;
 
     extraerDatosRespuestaRecepcionMensaje (respuesta, &datosRespuestaRecepcionMensaje);
-    printf ("\nRespuesta recibida: %c|%d|%s\n", datosRespuestaRecepcionMensaje.headerTipoRespuesta, datosRespuestaRecepcionMensaje.idEmisor, datosRespuestaRecepcionMensaje.texto);
+    printf ("\nRespuesta recibida: %c|%d|%s\n", datosRespuestaRecepcionMensaje.header.tipo, datosRespuestaRecepcionMensaje.idEmisor, datosRespuestaRecepcionMensaje.texto);
     procesarRespuestaSegunEstadoRecepcionMensaje (interfazContactos, &datosRespuestaRecepcionMensaje);
 }
 

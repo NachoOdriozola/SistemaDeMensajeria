@@ -31,35 +31,26 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
 
 t_resultadoRecepcion recibirRespuesta (t_socket sock, char *bufferRespuesta)
 {
-    int bytesRecibidos;
-
-    bytesRecibidos = socket_recibir (sock, bufferRespuesta);
-
-    if (socket_noRecibioDatos (sock, bytesRecibidos))
-        return RECEPCION_NO_RECIBIO_DATOS;
-
-    if (socket_perdioConexion (sock, bytesRecibidos))
-        return RECEPCION_ERROR_CONEXION;
-
-    bufferRespuesta += bytesRecibidos;
-    *bufferRespuesta = '\0';
-    
-    return RECEPCION_RECIBIO_DATOS;
+    return (socket_recibirTodo (sock, bufferRespuesta));
 }
 
 void enviarSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia)
 {
     t_datosEnvioSolicitudAutenticacion datosEnvioSolicitudAutenticacion;
 
-    datosEnvioSolicitudAutenticacion.headerTipoSolicitud = SOLICITUD_AUTENTICACION;
+    datosEnvioSolicitudAutenticacion.header.tipo = SOLICITUD_AUTENTICACION;
+    datosEnvioSolicitudAutenticacion.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudAutenticacion);
+
     strcpy (datosEnvioSolicitudAutenticacion.nombreUsuario, nombreUsuario);
     strcpy (datosEnvioSolicitudAutenticacion.contrasenia, contrasenia);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudAutenticacion), sizeof (t_datosEnvioSolicitudAutenticacion));
-        printf ("\nSolicitud enviada: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.headerTipoSolicitud, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
-        contextoAplicacion->solicitudEnCurso = true;
+        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudAutenticacion), sizeof (t_datosEnvioSolicitudAutenticacion)) == ENVIO_COMPLETO)
+        {
+            printf ("\nSolicitud enviada: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.header.tipo, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
+            contextoAplicacion->solicitudEnCurso = true;
+        }
     }
     else
         printf ("\nYa hay una solicitud en curso.\n");
@@ -69,16 +60,20 @@ void enviarSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, const ch
 {
     t_datosEnvioSolicitudRegistro datosEnvioSolicitudRegistro;
 
-    datosEnvioSolicitudRegistro.headerTipoSolicitud = SOLICITUD_REGISTRO;
+    datosEnvioSolicitudRegistro.header.tipo = SOLICITUD_REGISTRO;
+    datosEnvioSolicitudRegistro.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudRegistro);
+
     strcpy (datosEnvioSolicitudRegistro.nombreUsuario, nombreUsuario);
     strcpy (datosEnvioSolicitudRegistro.contrasenia, contrasenia);
     strcpy (datosEnvioSolicitudRegistro.correoElectronico, correoElectronico);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudRegistro), sizeof (t_datosEnvioSolicitudRegistro));
-        printf ("\nSolicitud enviada: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.headerTipoSolicitud, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
-        contextoAplicacion->solicitudEnCurso = true;
+        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudRegistro), sizeof (t_datosEnvioSolicitudRegistro)) == ENVIO_COMPLETO)
+        {
+            printf ("\nSolicitud enviada: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.header.tipo, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
+            contextoAplicacion->solicitudEnCurso = true;
+        }
     }
     else
         printf ("\nYa hay una solicitud en curso.\n");
@@ -88,16 +83,20 @@ void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int 
 {
     t_datosEnvioSolicitudEnvioMensaje datosEnvioSolicitudEnvioMensaje;
 
-    datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud = SOLICITUD_ENVIO_MENSAJE;
+    datosEnvioSolicitudEnvioMensaje.header.tipo = SOLICITUD_ENVIO_MENSAJE;
+    datosEnvioSolicitudEnvioMensaje.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudEnvioMensaje);
+
     datosEnvioSolicitudEnvioMensaje.idEmisor = idUsuario;
     datosEnvioSolicitudEnvioMensaje.idReceptor = idReceptor;
     strcpy (datosEnvioSolicitudEnvioMensaje.texto, mensaje);
     
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudEnvioMensaje), sizeof (t_datosEnvioSolicitudEnvioMensaje));
-        printf ("\nSolicitud enviada: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.headerTipoSolicitud, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
-        contextoAplicacion->solicitudEnCurso = true;
+        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudEnvioMensaje), sizeof (t_datosEnvioSolicitudEnvioMensaje)) == ENVIO_COMPLETO)
+        {
+            printf ("\nSolicitud enviada: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.header.tipo, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
+            contextoAplicacion->solicitudEnCurso = true;
+        }
     }
     else
         puts ("\nYa hay una solicitud en curso.");
@@ -107,14 +106,18 @@ void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, con
 {
     t_datosEnvioSolicitudSeleccionChat datosEnvioSolicitudSeleccionChat;
 
-    datosEnvioSolicitudSeleccionChat.headerTipoSolicitud = SOLICITUD_SELECCION_CHAT;
+    datosEnvioSolicitudSeleccionChat.header.tipo = SOLICITUD_SELECCION_CHAT;
+    datosEnvioSolicitudSeleccionChat.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudSeleccionChat);
+
     strcpy (datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado, nombreUsuarioChatSeleccionado);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        socket_enviar (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudSeleccionChat), sizeof (t_datosEnvioSolicitudSeleccionChat));
-        printf ("\nSolicitud enviada: %c|%s\n", datosEnvioSolicitudSeleccionChat.headerTipoSolicitud, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
-        contextoAplicacion->solicitudEnCurso = true;
+        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudSeleccionChat), sizeof (t_datosEnvioSolicitudSeleccionChat)) == ENVIO_COMPLETO)
+        {
+            printf ("\nSolicitud enviada: %c|%s\n", datosEnvioSolicitudSeleccionChat.header.tipo, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
+            contextoAplicacion->solicitudEnCurso = true;
+        }
     }
     else
         printf ("\nYa hay una solicitud en curso.\n");

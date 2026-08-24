@@ -25,6 +25,10 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
 
     crearCola (&(contextoServidor->solicitudes));
 
+    // --------------- CREAR LISTA SIMPLE DE RESPUESTAS PENDIENTES ---------------
+
+    crearListaSimple (&(contextoServidor->respuestasPendientes));
+
     // --------------- INICIALIZAR SOCKET ---------------
 
     if (socket_inicializar ())
@@ -87,6 +91,14 @@ void liberarServidor (t_contextoServidor *contextoServidor)
 {
     printf ("-LIBERANDO LOS RECURSOS DEL SERVIDOR-\t");
 
+
+    // --------------- LIBERAR COLA DE SOLICITUDES ---------------
+
+    vaciarCola (&(contextoServidor->solicitudes));
+
+    // --------------- LIBERAR LISTA SIMPLE DE RESPUESTAS PENDIENTES ---------------
+
+    vaciarListaSimple (&(contextoServidor->respuestasPendientes));
 
     // --------------- LIBERAR LISTA DOBLE DE CLIENTES NO AUTENTICADOS ---------------
 
