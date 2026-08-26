@@ -8,7 +8,7 @@
 
 static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
-static void renderizar (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos);
+static void renderizar (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
 
 
 /* ============================================================================================================================================
@@ -18,15 +18,25 @@ static void renderizar (sfRenderWindow *renderizado, const t_interfazContactos *
 
 void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazContactos)
 {
+    //FUENTES
+    _interfazContactos_inicializarValoresNulosFuentes (&(interfazContactos->fuentes));
+
     // TEXTOS
     _interfazContactos_inicializarValoresNulosTextos (&(interfazContactos->textos));
 
     // ELEMENTOS
     _interfazContactos_inicializarValoresNulosElementos (&(interfazContactos->elementos));
+
+    //VISTAS
+    _interfazContactos_inicializarValoresNulosVistas (&(interfazContactos->vistas));
 }
 
 t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazContactos)
 {
+    //FUENTES
+    if (_interfazContactos_inicializarFuentes (&(interfazContactos->fuentes)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
     // TEXTOS
     if (_interfazContactos_inicializarTextos (&(interfazContactos->textos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
@@ -35,17 +45,24 @@ t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazCont
     if (_interfazContactos_inicializarElementos (&(interfazContactos->elementos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
+    //VISTAS
+    if (_interfazContactos_inicializarVistas (&(interfazContactos->vistas)) == ERROR_INICIALIZACION)
+        return ERROR_INICIALIZACION;
+
+    //LISTA DE MENSAJES
+    interfazContactos_crearListaMensajes (&(interfazContactos->logica.contextoMensajes));
+
     return EXITO;
 }
 
-void interfazContactos_configurar (t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazContactos_configurar (t_interfazContactos *interfazContactos)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazContactos_configurarInterfaz (interfazContactos, recursosComunesContactosSalas);
+    _interfazContactos_configurarInterfaz (interfazContactos);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazContactos_configurarTextos (&(interfazContactos->textos), &(interfazContactos->recursosComunesContactosSalas->fuentes));
+    _interfazContactos_configurarTextos (&(interfazContactos->textos), &(interfazContactos->fuentes));
 
     // ELEMENTOS
     _interfazContactos_configurarElementos (&(interfazContactos->elementos));
@@ -56,6 +73,9 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos, t_rec
 
     // ELEMENTOS
     _interfazContactos_tamYPosVentanaElementos (&(interfazContactos->elementos));
+
+    //VISTAS
+    _interfazContactos_tamVistas (&(interfazContactos->vistas));
 }
 
 void ejecutarInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
@@ -67,11 +87,17 @@ void ejecutarInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_inte
 
 void interfazContactos_liberar (t_interfazContactos *interfazContactos)
 {
+    //FUENTES
+    _interfazContactos_liberarFuentes (&(interfazContactos->fuentes));
+
     // TEXTOS
     _interfazContactos_liberarTextos (&(interfazContactos->textos));
 
     // ELEMENTOS
     _interfazContactos_liberarElementos (&(interfazContactos->elementos));
+
+    //VISTAS
+    _interfazContactos_liberarVistas (&(interfazContactos->vistas));
 }
 
 
@@ -99,16 +125,15 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazContacto
 
 
         case sfEvtResized:
-            recursosComunesContactosSalas_manejarRedimensionamientoVentana (contextoAplicacion->renderizado, &(interfazContactos->recursosComunesContactosSalas->vistas), evento);
+            _interfazContactos_manejarRedimensionamientoVentana (contextoAplicacion->renderizado, &(interfazContactos->vistas), evento);
             break;
 
 
         case sfEvtMouseButtonPressed:
             if (evento.mouseButton.button == sfMouseLeft)
             {
-                if (recursosComunesContactosSalas_manejarClickEscribirMensaje (contextoAplicacion->renderizado, interfazContactos->recursosComunesContactosSalas)) break;
-                if (_interfazContactos_manejarClickCambiarInterfazSalas (contextoAplicacion, interfazContactos)) break;
-                if (recursosComunesContactosSalas_manejarClickAreaMensajes (contextoAplicacion->renderizado, interfazContactos->recursosComunesContactosSalas)) break;
+                if (_interfazContactos_manejarClickEscribirMensaje (contextoAplicacion->renderizado, interfazContactos)) break;
+                if (_interfazContactos_manejarClickAreaMensajes (contextoAplicacion->renderizado, interfazContactos)) break;
                 if (_interfazContactos_manejarClickEnviarMensaje (contextoAplicacion, interfazContactos)) break;
                 _interfazContactos_deshabilitarFocos (interfazContactos);
             }
@@ -116,7 +141,7 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazContacto
 
 
         case sfEvtTextEntered:
-            if (recursosComunesContactosSalas_manejarEscribirMensaje (interfazContactos->recursosComunesContactosSalas, evento)) break;
+            if (_interfazContactos_manejarEscribirMensaje (interfazContactos, evento)) break;
             break;
 
 
@@ -125,19 +150,19 @@ static void accion (t_contextoAplicacion *contextoAplicacion, t_interfazContacto
                 if (_interfazContactos_manejarEnterEnviarMensaje (contextoAplicacion, interfazContactos)) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
-                if (recursosComunesContactosSalas_manejarPegarTextoDesdePortapapelesAEscribirMensaje (interfazContactos->recursosComunesContactosSalas)) break;
+                if (_interfazContactos_manejarPegarTextoDesdePortapapelesAEscribirMensaje (interfazContactos)) break;
 
             if (evento.key.code == sfKeyUp)
-                if (recursosComunesContactosSalas_manejarDesplazarArribaAreaMensajes (interfazContactos->recursosComunesContactosSalas)) break;
+                if (_interfazContactos_manejarDesplazarArribaAreaMensajes (interfazContactos)) break;
 
             if (evento.key.code == sfKeyDown)
-                if (recursosComunesContactosSalas_manejarDesplazarAbajoAreaMensajes (interfazContactos->recursosComunesContactosSalas)) break;
+                if (_interfazContactos_manejarDesplazarAbajoAreaMensajes (interfazContactos)) break;
 
             break;
 
 
         case sfEvtMouseWheelScrolled:
-            if (recursosComunesContactosSalas_manejarScrollAreaMensajes (interfazContactos->recursosComunesContactosSalas, evento)) break;
+            if (_interfazContactos_manejarScrollAreaMensajes (interfazContactos, evento)) break;
             break;
 
 
@@ -164,10 +189,10 @@ static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazCont
 
     // --------------- PUNTO DE INSERCION ---------------
 
-    if (interfazContactos->recursosComunesContactosSalas->estadoFoco == ESCRIBIR_MENSAJE)
-        actualizarPuntoInsercion (&(interfazContactos->recursosComunesContactosSalas->logica.puntoInsercion));
-    else if (puntoInsercionHabilitado (&(interfazContactos->recursosComunesContactosSalas->logica.puntoInsercion)))
-        resetearPuntoInsercion (&(interfazContactos->recursosComunesContactosSalas->logica.puntoInsercion));
+    if (interfazContactos->estadoFoco == ESCRIBIR_MENSAJE)
+        actualizarPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
+    else if (puntoInsercionHabilitado (&(interfazContactos->logica.puntoInsercion)))
+        resetearPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
 }
 
 /*
@@ -178,20 +203,18 @@ static void actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazCont
 static void interfazContactos_setearVistaUIYRenderizarUI (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos)
 {
     // --------------- ESTABLECER VISTA DE UI ---------------
-    sfRenderWindow_setView (renderizado, interfazContactos->recursosComunesContactosSalas->vistas.ui);
+    sfRenderWindow_setView (renderizado, interfazContactos->vistas.ui);
 
     // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
     // ELEMENTOS
-    recursosComunesContactosSalas_renderizarElementos (renderizado, &(interfazContactos->recursosComunesContactosSalas->elementos));
     _interfazContactos_renderizarElementos (renderizado, &(interfazContactos->elementos));
 
     // TEXTOS
-    recursosComunesContactosSalas_renderizarTextos (renderizado, &(interfazContactos->recursosComunesContactosSalas->textos));
     _interfazContactos_renderizarTextos (renderizado, &(interfazContactos->textos));
 
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
-    if (puntoInsercionHabilitado (&(interfazContactos->recursosComunesContactosSalas->logica.puntoInsercion)))
-        sfRenderWindow_drawRectangleShape (renderizado, interfazContactos->recursosComunesContactosSalas->elementos.puntoInsercion, NULL);
+    if (puntoInsercionHabilitado (&(interfazContactos->logica.puntoInsercion)))
+        sfRenderWindow_drawRectangleShape (renderizado, interfazContactos->elementos.puntoInsercion, NULL);
 }
 
 /*
@@ -199,13 +222,13 @@ static void interfazContactos_setearVistaUIYRenderizarUI (sfRenderWindow *render
  * Primero renderiza las vistas moviles y luego la vista inmovil.
  * Procurar el orden de los renderizados para que no se superpongan.
 */
-static void renderizar (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos)
+static void renderizar (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
 {
     // --------------- LIMPIAR VENTANA ---------------
     sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
     // --------------- RENDERIZAR VISTA DE MENSAJES ---------------
-    recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (renderizado, interfazContactos->recursosComunesContactosSalas);
+    interfazContactos_setearVistaMensajesYRenderizarListaMensajes (renderizado, interfazContactos);
 
     // --------------- RENDERIZAR VISTA DE UI ---------------
     interfazContactos_setearVistaUIYRenderizarUI (renderizado, interfazContactos);

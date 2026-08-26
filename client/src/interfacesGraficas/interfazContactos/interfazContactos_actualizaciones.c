@@ -67,9 +67,9 @@ static void procesarRespuestaSegunEstadoSolicitudEnvioMensaje (t_contextoAplicac
     switch (datosRespuestaSolicitudEnvioMensaje->estadoSolicitud)
     {
         case SOLICITUD_EXITO:
-            recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
-            _interfazContactos_resetearBarraDeEscritura (interfazContactos->recursosComunesContactosSalas);
-            sfText_setString (interfazContactos->recursosComunesContactosSalas->textos.textoFeedbackUsuario, "");
+            interfazContactos_insertarMensajeAListaMensajes (&(interfazContactos->logica.contextoMensajes), interfazContactos->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(interfazContactos->fuentes));
+            _interfazContactos_resetearBarraDeEscritura (interfazContactos);
+            sfText_setString (interfazContactos->textos.feedbackUsuario, "");
             break;
 
         default:
@@ -104,15 +104,15 @@ static void extraerDatosRespuestaSolicitudSeleccionChat (const char *respuesta, 
 static void setearNuevoChatLogicamente (t_interfazContactos *interfazContactos, const t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
 {
     interfazContactos->logica.idUsuarioDelChatSeleccionado = datosRespuestaSolicitudSeleccionChat->idUsuarioDelChatSeleccionado;
-    strcpy (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, &(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes.mensaje[1]));
+    strcpy (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, &(interfazContactos->logica.contextoMensajes.mensaje[1]));
 }
 
 static void setearNuevoChatGraficamente (t_interfazContactos *interfazContactos)
 {
     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
     centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
-    recursosComunesContactosSalas_vaciarListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes));
-    sfText_setString (interfazContactos->textos.textoInformativoSeleccionChat, "");
+    interfazContactos_vaciarListaMensajes (&(interfazContactos->logica.contextoMensajes));
+    sfText_setString (interfazContactos->textos.informacionSeleccionChat, "");
 }
 
 static void procesarRespuestaSegunEstadoSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
@@ -122,8 +122,8 @@ static void procesarRespuestaSegunEstadoSolicitudSeleccionChat (t_contextoAplica
         case SOLICITUD_EXITO:
             setearNuevoChatLogicamente (interfazContactos, datosRespuestaSolicitudSeleccionChat);
             setearNuevoChatGraficamente (interfazContactos);
-            _interfazContactos_resetearBarraDeEscritura (interfazContactos->recursosComunesContactosSalas);
-            sfText_setString (interfazContactos->recursosComunesContactosSalas->textos.textoFeedbackUsuario, "");
+            _interfazContactos_resetearBarraDeEscritura (interfazContactos);
+            sfText_setString (interfazContactos->textos.feedbackUsuario, "");
             break;
 
         default:
@@ -163,7 +163,7 @@ static bool elUsuarioDelChatSeleccionadoEsElEmisor (int idUsuarioEmisor, int idU
 static void procesarRespuestaSegunEstadoRecepcionMensaje (t_interfazContactos *interfazContactos, t_datosRespuestaRecepcionMensaje *datosRespuestaRecepcionMensaje)
 {
     if (elUsuarioDelChatSeleccionadoEsElEmisor (datosRespuestaRecepcionMensaje->idEmisor, interfazContactos->logica.idUsuarioDelChatSeleccionado))
-        recursosComunesContactosSalas_insertarMensajeAListaMensajes (&(interfazContactos->recursosComunesContactosSalas->logica.contextoMensajes), datosRespuestaRecepcionMensaje->texto, MENSAJE_REMOTO, &(interfazContactos->recursosComunesContactosSalas->fuentes));
+        interfazContactos_insertarMensajeAListaMensajes (&(interfazContactos->logica.contextoMensajes), datosRespuestaRecepcionMensaje->texto, MENSAJE_REMOTO, &(interfazContactos->fuentes));
 }
 
 /*

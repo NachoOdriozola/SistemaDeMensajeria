@@ -26,11 +26,11 @@
 #include "../../estructuras.h"
 #include "../../comunicacion.h"
 
-#include "../recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas.h"
 #include "interfazContactos_estructuras.h"
 #include "interfazContactos_recursos.h"
 #include "interfazContactos_controladores.h"
-#include "interfazContactos_actualizaciones.h"
+#include "interfazContactos_mensajes.h"
+#include "interfazAutenticacion_actualizaciones.h"
 
 
 /* ============================================================================================================================================
@@ -57,10 +57,9 @@ int interfazContactos_inicializar (t_interfazContactos *interfazContactos);
 /** \brief Configurar los recursos graficos y logica de la interfaz de contactos.
  *
  * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de contactos y salas.
  *
  */
-void interfazContactos_configurar (t_interfazContactos *interfazContactos, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazContactos_configurar (t_interfazContactos *interfazContactos);
 
 /** \brief Ejecutar la interfaz de contactos.
  *

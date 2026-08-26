@@ -1,4 +1,4 @@
-#include "../../../../include/interfacesGraficas/recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas_mensajes.h"
+#include "interfazContactos_mensajes.h"
 
 
 /* ============================================================================================================================================
@@ -21,20 +21,20 @@ static void liberarMensaje (void *mensaje);
    ============================================================================================================================================ */
 
 
-void _recursosComunesContactosSalas_crearListaMensajes (t_contextoMensajes *contextoMensajes)
+void interfazContactos_crearListaMensajes (t_contextoMensajes *contextoMensajes)
 {
     crearListaDoble (&(contextoMensajes->mensajes));
     contextoMensajes->ultimoMensaje = NULL;
 }
 
-t_codigoRetorno recursosComunesContactosSalas_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_recursosComunesContactosSalasFuentes *fuentes)
+t_codigoRetorno interfazContactos_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_interfazContactosFuentes *fuentes)
 {
     sfText *mensajeGrafico;
 
     mensajeGrafico = sfText_create ();
     if (!mensajeGrafico)
     {
-        perror ("\nERROR - Crear mensaje grafico.\n");
+        perror ("\nERROR - Interfaz contactos, crear mensaje grafico.\n");
         return ERROR_SIN_MEMORIA;
     }
     configurarMensaje (mensajeGrafico, fuentes->cuerpo);
@@ -49,16 +49,16 @@ t_codigoRetorno recursosComunesContactosSalas_insertarMensajeAListaMensajes (t_c
     return EXITO;
 }
 
-void recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas)
+void interfazContactos_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
 {
     // --------------- SETEAR VISTA DE MENSAJES ---------------
-    sfRenderWindow_setView (renderizado, recursosComunesContactosSalas->vistas.mensajes);
+    sfRenderWindow_setView (renderizado, interfazContactos->vistas.mensajes);
 
     // --------------- RENDERIZAR LISTA DE MENSAJES ---------------
-    mapListaDobleConComplemento (&(recursosComunesContactosSalas->logica.contextoMensajes.mensajes), renderizarMensaje, renderizado);
+    mapListaDobleConComplemento (&(interfazContactos->logica.contextoMensajes.mensajes), renderizarMensaje, renderizado);
 }
 
-void recursosComunesContactosSalas_vaciarListaMensajes (t_contextoMensajes *contextoMensajes)
+void interfazContactos_vaciarListaMensajes (t_contextoMensajes *contextoMensajes)
 {
     vaciarListaDobleConAccion (&(contextoMensajes->mensajes), liberarMensaje);
     contextoMensajes->ultimoMensaje = NULL;

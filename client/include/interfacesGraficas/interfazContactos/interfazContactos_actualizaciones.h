@@ -24,9 +24,9 @@
 #include "../../estructuras.h"
 #include "../../comunicacion.h"
 
-#include "../recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas.h"
 #include "interfazContactos_estructuras.h"
 #include "interfazContactos_controladores.h"
+#include "interfazContactos_mensajes.h"
 
 
 /* ============================================================================================================================================

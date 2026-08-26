@@ -1,15 +1,15 @@
 /**
- * \file  recursosComunesContactosSalas_mensajes.h
- * \brief Contiene funciones que manejan el comportamiento de la lista de mensajes.
+ * \file   interfazContactos_mensajes.h
+ * \brief  Contiene funciones que manejan el comportamiento de la lista de mensajes.
  */
 
 
-#ifndef RECURSOSCOMUNESCONTACTOSSALAS_MENSAJES_H_INCLUDED
-#define RECURSOSCOMUNESCONTACTOSSALAS_MENSAJES_H_INCLUDED
+#ifndef INTERFAZCONTACTOS_MENSAJES_H_INCLUDED
+#define INTERFAZCONTACTOS_MENSAJES_H_INCLUDED
 
 
 /* ============================================================================================================================================
-   INCLUDE
+   INCLUDES
    ============================================================================================================================================ */
 
 
@@ -18,15 +18,15 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "../../../../../external/csfml/include/SFML/System.h"
-#include "../../../../../external/csfml/include/SFML/Window.h"
-#include "../../../../../external/csfml/include/SFML/Graphics.h"
+#include "../../../../external/csfml/include/SFML/System.h"
+#include "../../../../external/csfml/include/SFML/Window.h"
+#include "../../../../external/csfml/include/SFML/Graphics.h"
 
-#include "../../../../../shared/constantes/include/constantes.h"
-#include "../../../../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
-#include "../../../utiles.h"
+#include "../../../../shared/constantes/include/constantes.h"
+#include "../../../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
+#include "../../utiles.h"
 
-#include "recursosComunesContactosSalas_estructuras.h"
+#include "interfazContactos_estructuras.h"
 
 
 /* ============================================================================================================================================
@@ -39,7 +39,7 @@
  * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
  *
  */
-void _recursosComunesContactosSalas_crearListaMensajes (t_contextoMensajes *contextoMensajes);
+void interfazContactos_crearListaMensajes (t_contextoMensajes *contextoMensajes);
 
 /** \brief Insertar un nuevo mensaje a la lista de mensajes.
  *
@@ -50,29 +50,29 @@ void _recursosComunesContactosSalas_crearListaMensajes (t_contextoMensajes *cont
  * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
  * \param mensaje Cadena que contiene el mensaje. Si bien la estructura contextoMensajes contiene la cadena del mensaje que escribe el usuario, este parametro es necesario para mensajes recibidos por otros usuarios.
  * \param origenMensaje Origen de quien envio mensaje.
- * \param fuentes Puntero a la estructura que contiene las fuentes de los textos graficos de los recursos graficos comunes entre las interfaces de contactos y salas.
+ * \param fuentes Puntero a la estructura que contiene las fuentes de los textos graficos de la interfaz de contactos.
  * 
  * \return EXITO en caso de que todo se ejecuto correctamente, ERROR_SIN_MEMORIA en caso de que no se pueda crear el mensaje.
  *
  */
-t_codigoRetorno recursosComunesContactosSalas_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_recursosComunesContactosSalasFuentes *fuentes);
+t_codigoRetorno interfazContactos_insertarMensajeAListaMensajes (t_contextoMensajes *contextoMensajes, char *mensaje, t_origenMensaje origenMensaje, t_interfazContactosFuentes *fuentes);
 
 /** \brief Setear la vista de mensajes y renderizar la lista de mensajes.
  *
  * No se limpia ni muestra la ventana, solo los renderiza.
  *
- * \param renderizado renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
- * \param recursosComunesContactosSalas Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de contactos y salas.
+ * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void recursosComunesContactosSalas_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_recursosComunesContactosSalas *recursosComunesContactosSalas);
+void interfazContactos_setearVistaMensajesYRenderizarListaMensajes (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
 
 /** \brief Vaciar la lista de mensajes, liberando los sfText* creados.
  *
  * \param contextoMensajes Puntero a la estructura que provee contexto sobre el manejo y el estado de los mensajes.
  *
  */
-void recursosComunesContactosSalas_vaciarListaMensajes (t_contextoMensajes *contextoMensajes);
+void interfazContactos_vaciarListaMensajes (t_contextoMensajes *contextoMensajes);
 
 
-#endif // RECURSOSCOMUNESCONTACTOSSALAS_MENSAJES_H_INCLUDED
+#endif // INTERFAZCONTACTOS_MENSAJES_H_INCLUDED

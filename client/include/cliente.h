@@ -29,13 +29,10 @@
 #include "estructuras.h"
 
 #include "interfacesGraficas/recursosComunes/recursosComunesAutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
-#include "interfacesGraficas/recursosComunes/recursosComunesContactosSalas/recursosComunesContactosSalas.h"
 
 #include "interfacesGraficas/interfazAutenticacion/interfazAutenticacion.h"
-#include "interfacesGraficas/interfazConfig/interfazConfig.h"
 #include "interfacesGraficas/interfazContactos/interfazContactos.h"
 #include "interfacesGraficas/interfazRegistro/interfazRegistro.h"
-#include "interfacesGraficas/interfazSalas/interfazSalas.h"
 
 
 /* ============================================================================================================================================
@@ -58,12 +55,9 @@
 typedef struct
 {
     t_interfazAutenticacion autenticacion;
-    t_interfazConfig config;
     t_interfazContactos contactos;
     t_interfazRegistro registro;
-    t_interfazSalas salas;
     t_recursosComunesAutenticacionRegistro recursosComunesAutenticacionRegistro;
-    t_recursosComunesContactosSalas recursosComunesContactosSalas;
 } t_interfacesGraficas;
 
 

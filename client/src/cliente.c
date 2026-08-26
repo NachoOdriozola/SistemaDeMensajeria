@@ -14,8 +14,6 @@ static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion,
 static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion);
 static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
 
-static bool usuarioQuiereSalirDeConfiguraciones (t_contextoAplicacion *contextoAplicacion);
-
 
 /* ============================================================================================================================================
    FUNCIONES PUBLICAS
@@ -47,12 +45,6 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
 
     // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES ---------------
 
-    if (recursosComunesContactosSalas_inicializar (&(interfacesGraficas->recursosComunesContactosSalas)) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar recursos comunes contactos-salas.\n");
-        return ERROR_INICIALIZACION;
-    }
-
     if (recursosComunesAutenticacionRegistro_inicializar (&(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar recursos comunes autenticacion-registro.\n");
@@ -64,12 +56,6 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
     if (interfazContactos_inicializar (&(interfacesGraficas->contactos)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de contactos.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    if (interfazSalas_inicializar (&(interfacesGraficas->salas)) == ERROR_INICIALIZACION)
-    {
-        perror ("\nERROR - Inicializar interfaz de salas.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -104,13 +90,11 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS COMUNES ---------------
 
-    recursosComunesContactosSalas_configurar (&(interfacesGraficas->recursosComunesContactosSalas));
     recursosComunesAutenticacionRegistro_configurar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS DE LAS INTERFACES Y ASIGNAR LOS RECURSOS COMUNES ---------------
 
-    interfazContactos_configurar (&(interfacesGraficas->contactos), &(interfacesGraficas->recursosComunesContactosSalas));
-    interfazSalas_configurar (&(interfacesGraficas->salas), &(interfacesGraficas->recursosComunesContactosSalas));
+    interfazContactos_configurar (&(interfacesGraficas->contactos));
     interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
     interfazRegistro_configurar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
@@ -139,18 +123,6 @@ void ejecutarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesG
             if (usuarioSalioDelMenuPrincipal (contextoAplicacion))
                 cambiarDeInterfaz (contextoAplicacion, interfacesGraficas);
             break;
-
-        case INTERFAZ_SALAS:
-            ejecutarInterfazSalas (contextoAplicacion, &(interfacesGraficas->salas));
-            if (usuarioSalioDelMenuPrincipal (contextoAplicacion))
-                cambiarDeInterfaz (contextoAplicacion, interfacesGraficas);
-            break;
-
-        case INTERFAZ_CONFIG:
-            ejecutarInterfazConfig (contextoAplicacion, &(interfacesGraficas->config));
-            if (usuarioQuiereSalirDeConfiguraciones (contextoAplicacion))
-                interfazConfig_liberar (&(interfacesGraficas->config));
-            break;
         }
 }
 
@@ -164,11 +136,9 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGr
     interfazAutenticacion_liberar (&(interfacesGraficas->autenticacion));
     interfazRegistro_liberar (&(interfacesGraficas->registro));
     interfazContactos_liberar (&(interfacesGraficas->contactos));
-    interfazSalas_liberar (&(interfacesGraficas->salas));
 
     // --------------- LIBERAR RECURSOS GRAFICOS COMUNES ---------------
 
-    recursosComunesContactosSalas_liberar (&(interfacesGraficas->recursosComunesContactosSalas));
     recursosComunesAutenticacionRegistro_liberar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
     // --------------- LIBERAR SOCKET ---------------
@@ -203,12 +173,10 @@ static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoApl
     contextoAplicacion->sock = INVALID_SOCKET;
 
     // --------------- RECURSOS GRAFICOS COMUNES ---------------
-    recursosComunesContactosSalas_inicializarValoresNulos (&(interfacesGraficas->recursosComunesContactosSalas));
     recursosComunesAutenticacionRegistro_inicializarValoresNulos (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
     // --------------- INTERFACES GRAFICAS ---------------
     interfazContactos_inicializarValoresNulos (&(interfacesGraficas->contactos));
-    interfazSalas_inicializarValoresNulos (&(interfacesGraficas->salas));
     interfazAutenticacion_inicializarValoresNulos (&(interfacesGraficas->autenticacion));
     interfazRegistro_inicializarValoresNulos (&(interfacesGraficas->registro));
 }
@@ -229,8 +197,8 @@ static void liberarRecursosGraficosAutenticacion (t_interfacesGraficas *interfac
 static void prepararInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
 {
     MAXIMIZAR_VENTANA (sfRenderWindow_getSystemHandle (contextoAplicacion->renderizado), SW_MAXIMIZE);
-    recursosComunesContactosSalas_establecerNombreUsuario (&(interfacesGraficas->recursosComunesContactosSalas), contextoAplicacion->usuario.nombre);
-    recursosComunesContactosSalas_posicionarNombreUsuario (&(interfacesGraficas->recursosComunesContactosSalas));
+    _interfazContactos_establecerNombreUsuario (&(interfacesGraficas->contactos), contextoAplicacion->usuario.nombre);
+    _interfazContactos_posicionarNombreUsuario (&(interfacesGraficas->contactos));
 }
 
 static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
@@ -243,12 +211,6 @@ static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion,
 static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion)
 {
     return (contextoAplicacion->interfazActual != INTERFAZ_CONTACTOS);
-}
-
-static void prepararInterfazConfig (t_interfazConfig *interfazConfig)
-{
-    interfazConfig_inicializar (interfazConfig);
-    interfazConfig_configurar (interfazConfig);
 }
 
 static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_interfacesGraficas *interfacesGraficas)
@@ -272,16 +234,7 @@ static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_inte
 
 static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
 {
-    if (contextoAplicacion->interfazActual == INTERFAZ_CONFIG)
-        prepararInterfazConfig (&(interfacesGraficas->config));
-
     if (contextoAplicacion->interfazActual == INTERFAZ_AUTENTICACION)
         prepararInterfacesAutenticacion (contextoAplicacion->renderizado, interfacesGraficas);
-}
-
-
-static bool usuarioQuiereSalirDeConfiguraciones (t_contextoAplicacion *contextoAplicacion)
-{
-    return (contextoAplicacion->interfazActual != INTERFAZ_CONFIG);
 }
 
