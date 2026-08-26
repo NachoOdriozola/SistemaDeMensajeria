@@ -1,4 +1,4 @@
-#include "../../../include/interfacesGraficas/interfazRegistro/interfazRegistro.h"
+#include "interfacesGraficas/interfazRegistro/interfazRegistro.h"
 
 
 /* ============================================================================================================================================

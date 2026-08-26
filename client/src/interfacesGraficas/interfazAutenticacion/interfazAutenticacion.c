@@ -1,4 +1,4 @@
-#include "../../../include/interfacesGraficas/interfazAutenticacion/interfazAutenticacion.h"
+#include "interfacesGraficas/interfazAutenticacion/interfazAutenticacion.h"
 
 
 /* ============================================================================================================================================

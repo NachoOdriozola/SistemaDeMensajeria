@@ -17,19 +17,20 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../../../../external/csfml/include/SFML/System.h"
-#include "../../../../external/csfml/include/SFML/Window.h"
-#include "../../../../external/csfml/include/SFML/Graphics.h"
+#include "external/csfml/include/SFML/System.h"
+#include "external/csfml/include/SFML/Window.h"
+#include "external/csfml/include/SFML/Graphics.h"
 
-#include "../../../../shared/constantes/include/constantes.h"
-#include "../../utiles.h"
-#include "../../estructuras.h"
+#include "shared/constantes/include/constantes.h"
 
-#include "../recursosComunes/recursosComunesAutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
-#include "interfazAutenticacion_estructuras.h"
-#include "interfazAutenticacion_recursos.h"
-#include "interfazAutenticacion_controladores.h"
-#include "interfazAutenticacion_actualizaciones.h"
+#include "logica/utiles.h"
+#include "logica/estructuras.h"
+
+#include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
+#include "interfacesGraficas/interfazAutenticacion/estructuras.h"
+#include "interfacesGraficas/interfazAutenticacion/recursos.h"
+#include "interfacesGraficas/interfazAutenticacion/controladores.h"
+#include "interfacesGraficas/interfazAutenticacion/actualizaciones.h"
 
 
 /* ============================================================================================================================================

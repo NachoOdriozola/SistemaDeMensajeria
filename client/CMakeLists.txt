@@ -2,17 +2,22 @@ cmake_minimum_required(VERSION 3.16)
 
 project(client LANGUAGES C)
 
-file(GLOB CLIENT_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+file(GLOB MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c)
+
+file (GLOB COMUNICACION_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/comunicacion/*.c)
+file (GLOB LOGICA_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/logica/*.c)
 
 file(GLOB INTERFAZAUTENTICACION_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/interfacesGraficas/interfazAutenticacion/*.c)
 file(GLOB INTERFAZCONTACTOS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/interfacesGraficas/interfazContactos/*.c)
 file(GLOB INTERFAZREGISTRO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/interfacesGraficas/interfazRegistro/*.c)
 
-file(GLOB RECURSOSCOMUNESAUTENTICACIONREGISTRO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/interfacesGraficas/recursosComunes/recursosComunesAutenticacionRegistro/*.c)
+file(GLOB RECURSOSCOMUNESAUTENTICACIONREGISTRO_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/interfacesGraficas/recursosComunes/AutenticacionRegistro/*.c)
 
-add_executable(${PROJECT_NAME} ${CLIENT_SRC} ${INTERFAZAUTENTICACION_SRC} ${INTERFAZCONTACTOS_SRC} ${INTERFAZREGISTRO_SRC} ${RECURSOSCOMUNESAUTENTICACIONREGISTRO_SRC})
+add_executable(${PROJECT_NAME} ${MAIN_SRC} ${COMUNICACION_SRC} ${LOGICA_SRC} ${INTERFAZAUTENTICACION_SRC} ${INTERFAZCONTACTOS_SRC} ${INTERFAZREGISTRO_SRC} ${RECURSOSCOMUNESAUTENTICACIONREGISTRO_SRC})
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazAutenticacion ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazContactos ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/interfazRegistro ${CMAKE_CURRENT_SOURCE_DIR}/include/interfacesGraficas/recursosComunes/recursosComunesAutenticacionRegistro ${CMAKE_CURRENT_SOURCE_DIR}/../external/csfml/include)
+target_include_directories(${PROJECT_NAME} PUBLIC 
+${CMAKE_CURRENT_SOURCE_DIR}/include
+${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC sockets listaDoble constantes protocolos ws2_32 csfml-system csfml-window csfml-graphics)
 

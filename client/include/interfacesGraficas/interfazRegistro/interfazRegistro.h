@@ -17,19 +17,20 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../../../../external/csfml/include/SFML/System.h"
-#include "../../../../external/csfml/include/SFML/Window.h"
-#include "../../../../external/csfml/include/SFML/Graphics.h"
+#include "external/csfml/include/SFML/System.h"
+#include "external/csfml/include/SFML/Window.h"
+#include "external/csfml/include/SFML/Graphics.h"
 
-#include "../../../../shared/constantes/include/constantes.h"
-#include "../../utiles.h"
-#include "../../estructuras.h"
+#include "shared/constantes/include/constantes.h"
 
-#include "../recursosComunes/recursosComunesAutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
-#include "interfazRegistro_estructuras.h"
-#include "interfazRegistro_recursos.h"
-#include "interfazRegistro_controladores.h"
-#include "interfazRegistro_actualizaciones.h"
+#include "logica/utiles.h"
+#include "logica/estructuras.h"
+
+#include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
+#include "interfacesGraficas/interfazRegistro/estructuras.h"
+#include "interfacesGraficas/interfazRegistro/recursos.h"
+#include "interfacesGraficas/interfazRegistro/controladores.h"
+#include "interfacesGraficas/interfazRegistro/actualizaciones.h"
 
 
 /* ============================================================================================================================================
