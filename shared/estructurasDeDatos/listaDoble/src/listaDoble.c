@@ -1,4 +1,4 @@
-#include "../include/listaDoble.h"
+#include "listaDoble.h"
 
 
 void crearListaDoble (t_listaDoble *pl)

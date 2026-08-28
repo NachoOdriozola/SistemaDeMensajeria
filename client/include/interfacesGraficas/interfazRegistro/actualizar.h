@@ -18,8 +18,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "shared/constantes/include/constantes.h"
-#include "shared/protocolos/include/protocolos.h"
+#include "SFML/System.h"
+#include "SFML/Window.h"
+#include "SFML/Graphics.h"
+
+#include "constantes.h"
+#include "protocolos.h"
 
 #include "logica/estructuras.h"
 #include "logica/utiles.h"

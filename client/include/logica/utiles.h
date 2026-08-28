@@ -19,11 +19,11 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "external/csfml/include/SFML/System.h"
-#include "external/csfml/include/SFML/Window.h"
-#include "external/csfml/include/SFML/Graphics.h"
+#include "SFML/System.h"
+#include "SFML/Window.h"
+#include "SFML/Graphics.h"
 
-#include "shared/constantes/include/constantes.h"
+#include "constantes.h"
 
 
 /* ============================================================================================================================================

@@ -15,13 +15,13 @@
 
 #include <sqlite3.h>
 
-#include "../../shared/estructurasDeDatos/cola/include/cola.h"
-#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
-#include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
-#include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
-#include "../../shared/sockets/include/sockets.h"
+#include "cola.h"
+#include "listaSimple.h"
+#include "listaDoble.h"
+#include "tablaHash.h"
+#include "sockets.h"
 
-#include "baseDeDatos.h"
+#include "baseDeDatos/baseDeDatos.h"
 
 
 /* ============================================================================================================================================

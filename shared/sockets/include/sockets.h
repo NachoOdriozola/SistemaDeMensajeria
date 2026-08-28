@@ -32,8 +32,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../../constantes/include/constantes.h"
-#include "../../protocolos/include/protocolos.h"
+#include "constantes.h"
+#include "protocolos.h"
 
 
 /* ============================================================================================================================================

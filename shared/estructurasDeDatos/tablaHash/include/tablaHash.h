@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "../../listaDoble/include/listaDoble.h"
+#include "listaDoble.h"
 
 
 /* ============================================================================================================================================

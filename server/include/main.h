@@ -18,14 +18,15 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../../shared/constantes/include/constantes.h"
-#include "../../shared/protocolos/include/protocolos.h"
-#include "../../shared/sockets/include/sockets.h"
+#include "constantes.h"
+#include "protocolos.h"
+#include "sockets.h"
 
-#include "estructuras.h"
-#include "servidor.h"
-#include "clientes.h"
-#include "solicitudes.h"
+#include "logica/estructuras.h"
+
+#include "servidor/servidor.h"
+#include "servidor/clientes.h"
+#include "servidor/solicitudes.h"
 
 
 #endif // SERVIDOR_H_INCLUDED

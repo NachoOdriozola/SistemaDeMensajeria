@@ -18,16 +18,16 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../../shared/constantes/include/constantes.h"
-#include "../../shared/protocolos/include/protocolos.h"
-#include "../../shared/estructurasDeDatos/cola/include/cola.h"
-#include "../../shared/estructurasDeDatos/listaSimple/include/listaSimple.h"
-#include "../../shared/estructurasDeDatos/listaDoble/include/listaDoble.h"
-#include "../../shared/estructurasDeDatos/tablaHash/include/tablaHash.h"
-#include "../../shared/sockets/include/sockets.h"
+#include "constantes.h"
+#include "protocolos.h"
+#include "sockets.h"
+#include "cola.h"
+#include "listaSimple.h"
+#include "listaDoble.h"
+#include "tablaHash.h"
 
-#include "estructuras.h"
-#include "utiles.h"
+#include "logica/estructuras.h"
+#include "logica/utiles.h"
 
 
 /* ============================================================================================================================================

@@ -1,4 +1,4 @@
-#include "../include/sockets.h"
+#include "sockets.h"
 
 
 static bool estadoWinsock = false; // Estado de Winsock API

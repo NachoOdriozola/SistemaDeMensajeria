@@ -1,4 +1,4 @@
-#include "../include/utiles.h"
+#include "logica/utiles.h"
 
 
 int funcionHash (const void *clave)

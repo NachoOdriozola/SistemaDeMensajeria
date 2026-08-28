@@ -19,7 +19,7 @@
 #include <stdbool.h>
 #include <sqlite3.h>
 
-#include "../../shared/constantes/include/constantes.h"
+#include "constantes.h"
 
 
 /* ============================================================================================================================================

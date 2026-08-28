@@ -1,4 +1,4 @@
-#include "../include/servidor.h"
+#include "servidor/servidor.h"
 
 
 t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)

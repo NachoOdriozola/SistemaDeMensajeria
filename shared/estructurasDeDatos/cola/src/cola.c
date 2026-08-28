@@ -1,4 +1,4 @@
-#include "../include/cola.h"
+#include "cola.h"
 
 void crearCola (t_cola *c)
 {
