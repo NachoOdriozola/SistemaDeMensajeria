@@ -16,7 +16,7 @@ static bool procesar_escribir_mensaje (t_interfazContactos *interfazContactos, s
 
 static bool procesar_enter_enviarMensaje (t_contextoAplicacion *contextoAplicacion, const t_interfazContactos *interfazContactos);
 
-static bool procesar_pegarTextoDesdePortapapeles_escribirMensaje (t_interfazContactos *interfazContactos);
+static bool procesar_pegarTextoDesdePortapapeles_escribir_mensaje (t_interfazContactos *interfazContactos);
 
 static bool procesar_desplazar_arriba_areaMensajes (t_interfazContactos *interfazContactos);
 static bool procesar_desplazar_abajo_areaMensajes (t_interfazContactos *interfazContactos);
@@ -71,7 +71,7 @@ void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_inte
                 if (procesar_enter_enviarMensaje (contextoAplicacion, interfazContactos)) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
-                if (procesar_pegarTextoDesdePortapapeles_escribirMensaje (interfazContactos)) break;
+                if (procesar_pegarTextoDesdePortapapeles_escribir_mensaje (interfazContactos)) break;
 
             if (evento.key.code == sfKeyUp)
                 if (procesar_desplazar_arriba_areaMensajes (interfazContactos)) break;
@@ -193,7 +193,7 @@ static bool procesar_enter_enviarMensaje (t_contextoAplicacion *contextoAplicaci
 }
 
 
-static bool procesar_pegarTextoDesdePortapapeles_escribirMensaje (t_interfazContactos *interfazContactos)
+static bool procesar_pegarTextoDesdePortapapeles_escribir_mensaje (t_interfazContactos *interfazContactos)
 {
     if (interfazContactos->estadoFoco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;

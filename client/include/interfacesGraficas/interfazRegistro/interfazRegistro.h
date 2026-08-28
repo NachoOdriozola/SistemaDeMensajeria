@@ -30,7 +30,9 @@
 #include "interfacesGraficas/interfazRegistro/estructuras.h"
 #include "interfacesGraficas/interfazRegistro/recursos.h"
 #include "interfacesGraficas/interfazRegistro/controladores.h"
-#include "interfacesGraficas/interfazRegistro/actualizaciones.h"
+#include "interfacesGraficas/interfazRegistro/accion.h"
+#include "interfacesGraficas/interfazRegistro/actualizar.h"
+#include "interfacesGraficas/interfazRegistro/renderizar.h"
 
 
 /* ============================================================================================================================================
@@ -73,7 +75,7 @@ void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, t_recurs
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  *
  */
-void ejecutarInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+void interfazRegistro_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de registro.
  *

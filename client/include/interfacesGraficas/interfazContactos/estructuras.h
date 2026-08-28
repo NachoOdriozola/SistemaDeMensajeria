@@ -53,8 +53,8 @@ typedef struct
 typedef struct
 {
     sfText *auxContactoSeleccionado;                     /**< Nombre del contacto que el usuario selecciono para comunicar. */
-    sfText *auxEscribirMensaje;                                /**< Muestra el mensaje que escribe el usuario. */
-    sfText *botonEnviar;                                         /**< Texto encontrado dentro del boton para enviar mensaje. */
+    sfText *auxEscribirMensaje;                               /**< Muestra el mensaje que escribe el usuario. */
+    sfText *botonEnviar;                                          /**< Texto encontrado dentro del boton para enviar mensaje. */
     sfText *feedbackUsuario;                                  /**< Texto que muestra informacion util sobre el estado de los procedimientos que se encuentra realizando la aplicacion. */
     sfText *informacionSeleccionChat;                   /**< Texto informativo que le indica al usuario que debe seleccionar un chat con un usuario. */
     sfText *nombreUsuario;                                     /**< Muestra el nombre del usuario. */

@@ -1,10 +1,12 @@
-#include "interfacesGraficas/interfazRegistro/actualizaciones.h"
+#include "interfacesGraficas/interfazRegistro/actualizar.h"
 
 
 /* ============================================================================================================================================
    DECLARACION DE FUNCIONES PRIVADAS
    ============================================================================================================================================ */
 
+
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta);
 
 static void procesarRespuestaSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta);
 
@@ -14,16 +16,43 @@ static void procesarRespuestaSolicitudRegistro (t_contextoAplicacion *contextoAp
    ============================================================================================================================================ */
 
 
-void _interfazRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta, t_resultadoRecepcion resultadoRecepcion)
+void _interfazRegistro_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
 {
-    t_header header;
+    // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
+
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
+
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+
+    if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
+        procesarRespuesta (contextoAplicacion, interfazRegistro, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
         _interfazRegistro_manejarErrorConexion (contextoAplicacion, interfazRegistro);
         puts ("\nSe perdio la conexion con el servidor.");
-        return;
     }
+
+    // --------------- PUNTO DE INSERCION ---------------
+
+    if ((interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
+        (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA ||
+         interfazRegistro->estadoFoco == ESCRIBIR_CORREO))
+        actualizarPuntoInsercion (&(interfazRegistro->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    else if (puntoInsercionHabilitado (&(interfazRegistro->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
+        resetearPuntoInsercion (&(interfazRegistro->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta)
+{
+    t_header header;
 
     memcpy (&header, respuesta, sizeof (t_header));
     switch (header.tipo)
@@ -39,7 +68,7 @@ void _interfazRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicaci
 
 
 /* ============================================================================================================================================
-   FUNCIONES PRIVADAS
+   FUNCIONES PRIVADAS RESPUESTA SOLICITUD REGISTRO
    ============================================================================================================================================ */
 
 
@@ -53,26 +82,22 @@ static void procesarRespuestaSegunEstadoSolicitudRegistro (t_contextoAplicacion 
     switch (datosRespuestaSolicitudRegistro->estadoSolicitud)
     {
         case SOLICITUD_EXITO:
-            contextoAplicacion->usuario.id = datosRespuestaSolicitudRegistro->idUsuario;
-            strcpy (contextoAplicacion->usuario.nombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
-            contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
+            _interfazRegistro_accederAContactos (contextoAplicacion, interfazRegistro, datosRespuestaSolicitudRegistro);
             break;
 
         case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
-            sfUint32 bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
-            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferDatosInvalidos);
-            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            _interfazRegistro_accederAContactos (contextoAplicacion, interfazRegistro, datosRespuestaSolicitudRegistro);
             break;
 
         case SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE:
-            sfText_setString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Nombre de usuario ya existente");
-            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            sfText_setString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Nombre de usuario ya existente");
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
             break;
 
         case SOLICITUD_ERROR_CORREO_YA_EXISTENTE:
             sfUint32 bufferCorreoYaExistente [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', ' ', 'y', 'a', ' ', 'e', 'x', 'i', 's', 't', 'e', 'n', 't', 'e', 0};
-            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferCorreoYaExistente);
-            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 180);
+            sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferCorreoYaExistente);
+            centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
             break;
 
         default:
@@ -80,9 +105,6 @@ static void procesarRespuestaSegunEstadoSolicitudRegistro (t_contextoAplicacion 
     }
 }
 
-/*
- * Recibe los datos de la respuesta con la estructura de datos t_datosRespuestaSolicitudRegistro.
-*/
 static void procesarRespuestaSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta)
 {
     t_datosRespuestaSolicitudRegistro datosRespuestaSolicitudRegistro;

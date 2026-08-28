@@ -34,8 +34,8 @@ typedef struct
 {
     sfText *auxEscribirCorreo;                          /**< Muestra el correo electronico que escribe el usuario. */
     sfText *ingresarCorreo;                              /**< Indica al usuario donde escribir su correo electronico. */
-    sfText *textoInformativoContrasenia;        /**< Texto informativo sobre la contrasenia. */
-    sfText *textoInformativoNombre;             /**< Texto informativo sobre el nombre. */
+    sfText *informacionContrasenia;               /**< Texto informativo sobre la contrasenia. */
+    sfText *informacionNombre;                    /**< Texto informativo sobre el nombre. */
 } t_interfazRegistroTextos;
 
 /** \struct t_interfazRegistroElementos

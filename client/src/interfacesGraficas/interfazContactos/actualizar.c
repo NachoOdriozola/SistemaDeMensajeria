@@ -6,7 +6,7 @@
    ============================================================================================================================================ */
 
 
-static void _interfazContactos_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
 
 static void procesarRespuestaSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
 static void procesarRespuestaSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
@@ -28,7 +28,7 @@ void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_
     resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
-        _interfazContactos_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta);
+        procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
@@ -50,7 +50,7 @@ void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_
    ============================================================================================================================================ */
 
 
-static void _interfazContactos_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta)
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta)
 {
     t_header header;
 

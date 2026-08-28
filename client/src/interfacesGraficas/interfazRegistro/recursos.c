@@ -5,8 +5,8 @@ void _interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *
 {
     textos->auxEscribirCorreo = NULL;
     textos->ingresarCorreo = NULL;
-    textos->textoInformativoContrasenia = NULL;
-    textos->textoInformativoNombre = NULL;
+    textos->informacionContrasenia = NULL;
+    textos->informacionNombre = NULL;
 }
 
 void _interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos)
@@ -31,17 +31,17 @@ t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *t
         return ERROR_INICIALIZACION;
     }
 
-    textos->textoInformativoContrasenia = sfText_create ();
-    if (!textos->textoInformativoContrasenia)
+    textos->informacionContrasenia = sfText_create ();
+    if (!textos->informacionContrasenia)
     {
-        perror ("\nERROR - Interfaz de registro, crear texto textoInformativoContrasenia.\n");
+        perror ("\nERROR - Interfaz de registro, crear texto informacionContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->textoInformativoNombre = sfText_create ();
-    if (!textos->textoInformativoNombre)
+    textos->informacionNombre = sfText_create ();
+    if (!textos->informacionNombre)
     {
-        perror ("\nERROR - Interfaz de registro, crear texto textoInformativoNombre.\n");
+        perror ("\nERROR - Interfaz de registro, crear texto informacionNombre.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -87,17 +87,17 @@ void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const
     sfUint32 bufferIngresarCorreo [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', 0};
     sfText_setUnicodeString (textos->ingresarCorreo, bufferIngresarCorreo);
 
-    // textoInformativoContrasenia
-    sfText_setFont (textos->textoInformativoContrasenia, fuentes->ui);
-    sfText_setFillColor (textos->textoInformativoContrasenia, sfColor_fromRGB (94, 91, 87));
-    sfUint32 bufferTextoInformativoContrasenia [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '8', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
-    sfText_setUnicodeString (textos->textoInformativoContrasenia, bufferTextoInformativoContrasenia);
+    // informacionContrasenia
+    sfText_setFont (textos->informacionContrasenia, fuentes->ui);
+    sfText_setFillColor (textos->informacionContrasenia, sfColor_fromRGB (94, 91, 87));
+    sfUint32 bufferInformacionContrasenia [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '8', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    sfText_setUnicodeString (textos->informacionContrasenia, bufferInformacionContrasenia);
 
-    // textoInformativoNombre
-    sfText_setFont (textos->textoInformativoNombre, fuentes->ui);
-    sfText_setFillColor (textos->textoInformativoNombre, sfColor_fromRGB (94, 91, 87));
-    sfUint32 bufferTextoInformativoNombre [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '3', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
-    sfText_setUnicodeString (textos->textoInformativoNombre, bufferTextoInformativoNombre);
+    // informacionNombre
+    sfText_setFont (textos->informacionNombre, fuentes->ui);
+    sfText_setFillColor (textos->informacionNombre, sfColor_fromRGB (94, 91, 87));
+    sfUint32 bufferInformacionNombre [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '3', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    sfText_setUnicodeString (textos->informacionNombre, bufferInformacionNombre);
 }
 
 void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos)
@@ -118,13 +118,13 @@ void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos)
     sfText_setPosition (textos->ingresarCorreo, (sfVector2f){35, 350});
     sfText_setCharacterSize (textos->ingresarCorreo, 28);
 
-    // textoInformativoContrasenia
-    sfText_setPosition (textos->textoInformativoContrasenia, (sfVector2f){35, 260});
-    sfText_setCharacterSize (textos->textoInformativoContrasenia, 20);
+    // informacionContrasenia
+    sfText_setPosition (textos->informacionContrasenia, (sfVector2f){35, 260});
+    sfText_setCharacterSize (textos->informacionContrasenia, 20);
 
-    // textoInformativoNombre
-    sfText_setPosition (textos->textoInformativoNombre, (sfVector2f){35, 135});
-    sfText_setCharacterSize (textos->textoInformativoNombre, 20);
+    // informacionNombre
+    sfText_setPosition (textos->informacionNombre, (sfVector2f){35, 135});
+    sfText_setCharacterSize (textos->informacionNombre, 20);
 }
 
 void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos)
@@ -136,26 +136,12 @@ void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *ele
 }
 
 
-void _interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_interfazRegistroTextos *textos)
-{
-    sfRenderWindow_drawText (renderizado, textos->auxEscribirCorreo, NULL);
-    sfRenderWindow_drawText (renderizado, textos->ingresarCorreo, NULL);
-    sfRenderWindow_drawText (renderizado, textos->textoInformativoContrasenia, NULL);
-    sfRenderWindow_drawText (renderizado, textos->textoInformativoNombre, NULL);
-}
-
-void _interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_interfazRegistroElementos *elementos)
-{
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirCorreo, NULL);
-}
-
-
 void _interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirCorreo);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarCorreo);
-    DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoNombre);
-    DESTRUCTOR_SEGURO_TEXTO (textos->textoInformativoContrasenia);
+    DESTRUCTOR_SEGURO_TEXTO (textos->informacionContrasenia);
+    DESTRUCTOR_SEGURO_TEXTO (textos->informacionNombre);
 }
 
 void _interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos)

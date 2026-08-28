@@ -1,11 +1,11 @@
 /**
- * \file   actualizaciones.h
- * \brief  Contiene funciones de actualizaciones.
+ * \file   actualizar.h
+ * \brief  Contiene funciones de actualizacion. Captura y maneja los eventos no generados por el usuario directamente.
  */
 
 
-#ifndef INTERFAZREGISTRO_ACTUALIZACIONES_H_INCLUDED
-#define INTERFAZREGISTRO_ACTUALIZACIONES_H_INCLUDED
+#ifndef INTERFAZREGISTRO_ACTUALIZAR_H_INCLUDED
+#define INTERFAZREGISTRO_ACTUALIZAR_H_INCLUDED
 
 
 /* ============================================================================================================================================
@@ -22,6 +22,7 @@
 #include "shared/protocolos/include/protocolos.h"
 
 #include "logica/estructuras.h"
+#include "logica/utiles.h"
 
 #include "comunicacion/comunicacion.h"
 
@@ -35,10 +36,7 @@
    ============================================================================================================================================ */
 
 
-/*
- * Procesar las diferentes posibles respuestas que se recibio del servidor.
-*/
-void _interfazRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta, t_resultadoRecepcion resultadoRecepcion);
+void _interfazRegistro_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
 
-#endif // INTERFAZREGISTRO_ACTUALIZACIONES_H_INCLUDED
+#endif // INTERFAZREGISTRO_ACTUALIZAR_H_INCLUDED

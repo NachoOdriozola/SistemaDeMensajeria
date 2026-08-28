@@ -44,11 +44,11 @@ typedef struct
 {
     sfText *auxEscribirContrasenia;                                /**< Muestra la contrasenia que escribe el usuario. */
     sfText *auxEscribirNombre;                                      /**< Muestra el nombre que escribe el usuario. */
+    sfText *botonIngresar;                                            /**< Texto encontrado dentro del boton para ingresar usuario. */
+    sfText *cambiarInterfaz;                                          /**< Texto interrogativo para cambiar de interfaz. */
+    sfText *feedbackUsuario;                                        /**< Texto que muestra informacion util sobre el estado de los procedimientos que se encuentra realizando la aplicacion. */
     sfText *ingresarContrasenia;                                    /**< Indica al usuario donde escribir su contrasenia. */
     sfText *ingresarNombre;                                         /**< Indica al usuario donde escribir su nombre. */
-    sfText *ingresoIncorrecto;                                       /**< Mensaje de error al ingresar incorrectamente el usuario. */
-    sfText *textoBotonIngresar;                                    /**< Texto encontrado dentro del boton para ingresar usuario. */
-    sfText *textoCambiarInterfaz;                                 /**< Texto interrogativo para cambiar de interfaz. */
     sfText *tituloInterfaz;                                              /**< Titulo de la interfaz sobre la que se encuentra ubicado el usuario. */
 } t_recursosComunesAutenticacionRegistroTextos;
 
@@ -69,7 +69,7 @@ typedef struct
  */
 typedef struct
 {
-    sfView *ui;
+    sfView *ui;                                                                     /**< Vista fija que muestra la interfaz del usuario. */
 } t_recursosComunesAutenticacionRegistroVistas;
 
 /** \enum t_recursosComunesAutenticacionRegistroFoco

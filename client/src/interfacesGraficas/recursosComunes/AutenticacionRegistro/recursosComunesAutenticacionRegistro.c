@@ -60,15 +60,25 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
     _recursosComunesAutenticacionRegistro_tamVistas (&(recursosComunesAutenticacionRegistro->vistas));
 }
 
+void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+{
+    _recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (recursosComunesAutenticacionRegistro);
+}
+
+void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+{
+    _recursosComunesAutenticacionRegistro_activarInterfazRegistro (recursosComunesAutenticacionRegistro);
+}
+
 void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
+    sfRenderWindow_drawText (renderizado, textos->botonIngresar, NULL);
+    sfRenderWindow_drawText (renderizado, textos->cambiarInterfaz, NULL);
+    sfRenderWindow_drawText (renderizado, textos->feedbackUsuario, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->ingresarNombre, NULL);
-    sfRenderWindow_drawText (renderizado, textos->ingresoIncorrecto, NULL);
-    sfRenderWindow_drawText (renderizado, textos->textoBotonIngresar, NULL);
-    sfRenderWindow_drawText (renderizado, textos->textoCambiarInterfaz, NULL);
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 

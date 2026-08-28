@@ -38,85 +38,42 @@
    ============================================================================================================================================ */
 
 
-/** \brief Resetear la interfaz de autenticacion.
+/** \brief Intentar autenticar el usuario.
+ * 
+ * Verifica que los datos del usuario sean validos para no realizar solicitudes innecesarias. En caso de que no lo sean, se muestra el error de que las credenciales son invalidas.
+ * Intenta conectarse con el servidor. En caso de que la conexion falle, se maneja el error de conexion.
+ * En caso de que todas las condiciones se cumplan con exito, se envia la solicitud de autenticacion.
  *
- * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_resetear (sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
+void _interfazAutenticacion_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 
-void _interfazAutenticacion_deshabilitarFocos (t_interfazAutenticacion *interfazAutenticacion);
-
-
-/*
- * Establecer el foco en escribir nombre y posiciona el punto de insercion.
-*/
-bool _interfazAutenticacion_manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
-
-/*
- * Establecer el foco en escribir contrasenia y posiciona el punto de insercion.
-*/
-bool _interfazAutenticacion_manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
-
-/*
- * Verificar que los datos de autenticacion del usuario sean validos.
- * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
- * Enviar la solicitud de autenticacion y procesar la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
-*/
-bool _interfazAutenticacion_manejarClickIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-
-/*
- * Omite los eventos pendientes de la interfaz de autenticacion, desactiva los recursos de la interfaz de autenticacion, activa los recursos de la interfaz de registro, y selecciona la interfaz de registro.
- * Retorna EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
-*/
-bool _interfazAutenticacion_manejarClickCambiarAInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-
-
-/*
- * Si se encuentra el foco en escribir nombre, verifica que el caracter ingresado es valido.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el nombre y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazAutenticacion_manejarEscribirNombre (t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar);
-
-/*
- * Si se encuentra el foco en escribir contrasenia, verifica que el caracter ingresado es valido.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene la contrasenia y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazAutenticacion_manejarEscribirContrasenia (t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar);
-
-
-/*
- * Verificar que los datos de autenticacion del usuario sean validos.
- * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
- * Enviar la solicitud de autenticacion y procesar la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
-*/
-bool _interfazAutenticacion_manejarEnterIntentarAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-
-
-/*
- * Si se encuentra el foco en escribir nombre, intenta pegar el texto desde el portapapeles al nombre.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el nombre y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazAutenticacion_manejarPegarTextoDesdePortapapelesAEscribirNombre (t_interfazAutenticacion *interfazAutenticacion);
-
-/*
- * Si se encuentra el foco en escribir contrasenia, intenta pegar el texto desde el portapapeles a la contrasenia.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene la contrasenia y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazAutenticacion_manejarPegarTextoDesdePortapapelesAEscribirContrasenia (t_interfazAutenticacion *interfazAutenticacion);
-
-
-/*
- * Manejar el error de conexion para cualquier tipo de solicitud enviada de la interfaz de autenticacion.
-*/
+/** \brief Manejar que sucede en caso de error de conexion con el servidor. Cierra el socket del cliente y muestra que hubo un error de conexion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ *
+ */
 void _interfazAutenticacion_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+
+/** \brief Seleccionar la interfaz de contactos. Almacenar en el contexto de la aplicacion los datos del id y nombre del usuario.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param datosRespuestaSolicitudAutenticacion Puntero a los datos de la respuesta de la solicitud de autenticacion.
+ *
+ */
+void _interfazAutenticacion_accederAContactos (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion);
+
+/** \brief Resetear la interfaz de autenticacion y configurar los recursos comunes para que se adapten a la interfaz de registro. ademas, selecciona la interfaz desde el contexto de la aplicacion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ *
+ */
+void _interfazAutenticacion_cambiarAInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 
 
 #endif // INTERFAZAUTENTICACION_CONTROLADORES_H_INCLUDED

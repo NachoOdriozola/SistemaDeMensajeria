@@ -1,10 +1,12 @@
-#include "interfacesGraficas/interfazAutenticacion/actualizaciones.h"
+#include "interfacesGraficas/interfazAutenticacion/actualizar.h"
 
 
 /* ============================================================================================================================================
    DECLARACION DE FUNCIONES PRIVADAS
    ============================================================================================================================================ */
 
+
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
 
 static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
 
@@ -14,16 +16,42 @@ static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *conte
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta, t_resultadoRecepcion resultadoRecepcion)
+void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    t_header header;
+    // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
+
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
+
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+
+    if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
+        procesarRespuesta (contextoAplicacion, interfazAutenticacion, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
         _interfazAutenticacion_manejarErrorConexion (contextoAplicacion, interfazAutenticacion);
         puts ("\nSe perdio la conexion con el servidor.");
-        return;
     }
+
+    // --------------- PUNTO DE INSERCION ---------------
+
+    if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
+        (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA))
+        actualizarPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    else if (puntoInsercionHabilitado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
+        resetearPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES PRIVADAS
+   ============================================================================================================================================ */
+
+
+static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
+{
+    t_header header;
 
     memcpy (&header, respuesta, sizeof (t_header));
     switch (header.tipo)
@@ -39,7 +67,7 @@ void _interfazAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoApl
 
 
 /* ============================================================================================================================================
-   FUNCIONES PRIVADAS
+   FUNCIONES PRIVADAS RESPUESTA SOLICITUD AUTENTICACION
    ============================================================================================================================================ */
 
 
@@ -53,20 +81,18 @@ static void procesarRespuestaSegunEstadoSolicitudAutenticacion (t_contextoAplica
     switch (datosRespuestaSolicitudAutenticacion->estadoSolicitud)
     {
         case SOLICITUD_EXITO:
-            contextoAplicacion->usuario.id = datosRespuestaSolicitudAutenticacion->idUsuario;
-            strcpy (contextoAplicacion->usuario.nombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
-            contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
+            _interfazAutenticacion_accederAContactos (contextoAplicacion, interfazAutenticacion, datosRespuestaSolicitudAutenticacion);
             break;
 
         case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
             sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-            sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, bufferErrorCredenciales);
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
+            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
             break;
 
         case SOLICITUD_ERROR_OPERACION_INVALIDA:
-            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, "Usuario ya conectado");
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.ingresoIncorrecto, 0, 440, 500, 130);
+            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Usuario ya conectado");
+            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
             break;
 
         default:
@@ -74,9 +100,6 @@ static void procesarRespuestaSegunEstadoSolicitudAutenticacion (t_contextoAplica
     }
 }
 
-/*
- * Recibe los datos de la respuesta con la estructura de datos t_datosRespuestaSolicitudAutenticacion.
-*/
 static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
 {
     t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;

@@ -107,13 +107,13 @@ void ejecutarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesG
     switch (contextoAplicacion->interfazActual)
         {
         case INTERFAZ_AUTENTICACION:
-            ejecutarInterfazAutenticacion (contextoAplicacion, &(interfacesGraficas->autenticacion));
+            interfazAutenticacion_ejecutar (contextoAplicacion, &(interfacesGraficas->autenticacion));
             if (usuarioSeAutentico (contextoAplicacion))
                 cambiarAInterfazContactos (contextoAplicacion, interfacesGraficas);
             break;
 
         case INTERFAZ_REGISTRO:
-            ejecutarInterfazRegistro (contextoAplicacion, &(interfacesGraficas->registro));
+            interfazRegistro_ejecutar (contextoAplicacion, &(interfacesGraficas->registro));
             if (usuarioSeAutentico (contextoAplicacion))
                 cambiarAInterfazContactos (contextoAplicacion, interfacesGraficas);
             break;
@@ -221,8 +221,8 @@ static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_inte
     sfRenderWindow_setView (renderizado, interfacesGraficas->recursosComunesAutenticacionRegistro.vistas.ui);
 
     sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.ingresoIncorrecto, bufferErrorConexion);
-    centrarTextoEnArea (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.ingresoIncorrecto, 0, 440, 500, 130);
+    sfText_setUnicodeString (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, bufferErrorConexion);
+    centrarTextoEnArea (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
 static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)

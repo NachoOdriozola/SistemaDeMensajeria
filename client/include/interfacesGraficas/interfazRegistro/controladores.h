@@ -38,104 +38,42 @@
    ============================================================================================================================================ */
 
 
-/** \brief Resetear la interfaz de registro.
+/** \brief Intentar registrar el usuario.
+ * 
+ * Verifica que los datos del usuario sean validos para no realizar solicitudes innecesarias. En caso de que no lo sean, se muestra el error de que las credenciales son invalidas.
+ * Intenta conectarse con el servidor. En caso de que la conexion falle, se maneja el error de conexion.
+ * En caso de que todas las condiciones se cumplan con exito, se envia la solicitud de registro.
  *
- * \param renderizado Puntero al renderizado de la estructura que provee contexto de la aplicacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  *
  */
-void interfazRegistro_resetear (sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
+void _interfazRegsitro_intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
-void _interfazRegistro_deshabilitarFocos (t_interfazRegistro *interfazRegistro);
-
-
-/*
- * Establecer el foco en escribir nombre y posiciona el punto de insercion.
-*/
-bool _interfazRegistro_manejarClickEscribirNombre (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-
-/*
- * Establecer el foco en escribir contrasenia y posiciona el punto de insercion.
-*/
-bool _interfazRegistro_manejarClickEscribirContrasenia (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-
-/*
- * Establecer el foco en escribir correo electronico y posiciona el punto de insercion.
-*/
-bool _interfazRegistro_manejarClickEscribirCorreo (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-
-/*
- * Verificar que los datos de registro del usuario sean validos.
- * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
- * Enviar la solicitud de registro y procesar la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
-*/
-bool _interfazRegistro_manejarClickIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-
-/*
- * Omite los eventos pendientes de la interfaz de registro, desactiva los recursos de la interfaz de registro, activa los recursos de la interfaz de autenticacion, y selecciona la interfaz de autenticacion.
- * Retorna EVENTO_MANEJADO en caso de que el evento se manejo, EVENTO_NO_MANEJADO en caso contrario.
-*/
-bool _interfazRegistro_manejarClickCambiarAInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-
-
-/*
- * Si se encuentra el foco en escribir nombre, verifica que el caracter ingresado es valido.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el nombre y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarEscribirNombre (t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
-
-/*
- * Si se encuentra el foco en escribir contrasenia, verifica que el caracter ingresado es valido.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene la contrasenia y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarEscribirContrasenia (t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
-
-/*
- * Si se encuentra el foco en escribir correo electronico, verifica que el caracter ingresado es valido.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el correo electronico y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarEscribirCorreo (t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
-
-
-/*
- * Verificar que los datos de registro del usuario sean validos.
- * Intentar conectar con el servidor creando el socket del cliente, configurandolo y conectandolo al servidor.
- * Enviar la solicitud de registro y procesar la respuesta segun su estado.
- * En caso de una respuesta exitosa, almacena el ID, el nombre de usuario y el socket creado conectado con el servidor en el contexto de la aplicacion, y selecciona la interfaz de contactos.
-*/
-bool _interfazRegistro_manejarEnterIntentarRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-
-
-/*
- * Si se encuentra el foco en escribir nombre, intenta pegar el texto desde el portapapeles al nombre.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el nombre y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirNombre (t_interfazRegistro *interfazRegistro);
-
-/*
- * Si se encuentra el foco en escribir contrasenia, intenta pegar el texto desde el portapapeles a la contrasenia.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene la contrasenia y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirContrasenia (t_interfazRegistro *interfazRegistro);
-
-/*
- * Si se encuentra el foco en escribir correo electronico, intenta pegar el texto desde el portapapeles al correo electronico.
- * En caso de exito, verifica si habilita la posibilidad de ingreso al usuario, lo agrega a la cadena que contiene el correo electronico y posiciona el punto de insercion.
- * En caso de falla, retorna EVENTO_MANEJADO sin realizar ninguna accion.
-*/
-bool _interfazRegistro_manejarPegarTextoDesdePortapapelesAEscribirCorreo (t_interfazRegistro *interfazRegistro);
-
-
-/*
- * Manejar el error de conexion para cualquier tipo de solicitud enviada de la interfaz de registro.
-*/
+/** \brief Manejar que sucede en caso de error de conexion con el servidor. Cierra el socket del cliente y muestra que hubo un error de conexion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ *
+ */
 void _interfazRegistro_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+
+/** \brief Seleccionar la interfaz de contactos. Almacenar en el contexto de la aplicacion los datos del id y nombre del usuario.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param datosRespuestaSolicitudRegistro Puntero a los datos de la respuesta de la solicitud de registro.
+ *
+ */
+void _interfazRegistro_accederAContactos (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, t_datosRespuestaSolicitudRegistro *datosRespuestaSolicitudRegistro);
+
+/** \brief Resetear la interfaz de registro y configurar los recursos comunes para que se adapten a la interfaz de autenticacion. ademas, selecciona la interfaz desde el contexto de la aplicacion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ *
+ */
+void _interfazRegistro_cambiarAInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
 
 #endif // INTERFAZREGISTRO_CONTROLADORES_H_INCLUDED

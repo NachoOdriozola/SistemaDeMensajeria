@@ -20,7 +20,7 @@ static void activarInterfazRegistro_configurarElementos (t_recursosComunesAutent
    ============================================================================================================================================ */
 
 
-void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- RESETEAR INTERFAZ ---------------
     resetearInterfaz (recursosComunesAutenticacionRegistro);
@@ -33,7 +33,7 @@ void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recurs
     activarInterfazAutenticacion_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));
 }
 
-void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
     // --------------- RESETEAR INTERFAZ ---------------
     resetearInterfaz (recursosComunesAutenticacionRegistro);
@@ -78,23 +78,23 @@ static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAute
     sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 180});
     sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
+    // botonIngresar
+    sfText_setString (textos->botonIngresar, "INGRESAR");
+    centrarTextoEnArea (textos->botonIngresar, 180, 405, 140, 35);
+
+    // cambiarInterfaz
+    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
+    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+
+    // feedbackUsuario
+    sfText_setString (textos->feedbackUsuario, "");
+
     // ingresarContrasenia
     sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){35, 255});
 
     // ingresarNombre
     sfText_setPosition (textos->ingresarNombre, (sfVector2f){35, 120});
-
-    // ingresoIncorrecto
-    sfText_setString (textos->ingresoIncorrecto, "");
-
-    // textoBotonIngresar
-    sfText_setString (textos->textoBotonIngresar, "INGRESAR");
-    centrarTextoEnArea (textos->textoBotonIngresar, 180, 405, 140, 35);
-
-    // textoCambiarInterfaz
-    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
-    sfText_setUnicodeString (textos->textoCambiarInterfaz, bufferTextoCambiarInterfaz);
-    centrarTextoEnArea (textos->textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
     sfUint32 bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
@@ -131,23 +131,23 @@ static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutentica
     sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 170});
     sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
+    // botonIngresar
+    sfText_setString (textos->botonIngresar, "REGISTRAR");
+    centrarTextoEnArea (textos->botonIngresar, 180, 452, 140, 35);
+
+    // cambiarInterfaz
+    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
+    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+
+    // feedbackUsuario
+    sfText_setString (textos->feedbackUsuario, "");
+
     // ingresarContrasenia
     sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){35, 225});
 
     // ingresarNombre
     sfText_setPosition (textos->ingresarNombre, (sfVector2f){35, 100});
-
-    // ingresoIncorrecto
-    sfText_setString (textos->ingresoIncorrecto, "");
-
-    // textoBotonIngresar
-    sfText_setString (textos->textoBotonIngresar, "REGISTRAR");
-    centrarTextoEnArea (textos->textoBotonIngresar, 180, 452, 140, 35);
-
-    // textoCambiarInterfaz
-    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
-    sfText_setUnicodeString (textos->textoCambiarInterfaz, bufferTextoCambiarInterfaz);
-    centrarTextoEnArea (textos->textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
     sfText_setString (textos->tituloInterfaz, "CREAR CUENTA");

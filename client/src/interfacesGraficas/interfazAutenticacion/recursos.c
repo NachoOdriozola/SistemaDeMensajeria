@@ -58,17 +58,6 @@ void _interfazAutenticacion_tamYPosVentanaElementos (t_interfazAutenticacionElem
 }
 
 
-void _interfazAutenticacion_renderizarTextos (sfRenderWindow *renderizado, const t_interfazAutenticacionTextos *textos)
-{
-
-}
-
-void _interfazAutenticacion_renderizarElementos (sfRenderWindow *renderizado, const t_interfazAutenticacionElementos *elementos)
-{
-
-}
-
-
 void _interfazAutenticacion_liberarTextos (t_interfazAutenticacionTextos *textos)
 {
 

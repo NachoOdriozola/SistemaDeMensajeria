@@ -39,14 +39,40 @@ void _interfazContactos_renderizar (sfRenderWindow *renderizado, t_interfazConta
    ============================================================================================================================================ */
 
 
+static void renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos)
+{
+    sfRenderWindow_drawText (renderizado, textos->auxContactoSeleccionado, NULL);
+    sfRenderWindow_drawText (renderizado, textos->auxEscribirMensaje, NULL);
+    sfRenderWindow_drawText (renderizado, textos->botonEnviar, NULL);
+    sfRenderWindow_drawText (renderizado, textos->feedbackUsuario, NULL);
+    if (textos->informacionSeleccionChat != NULL)
+        sfRenderWindow_drawText (renderizado, textos->informacionSeleccionChat, NULL);
+    sfRenderWindow_drawText (renderizado, textos->nombreUsuario, NULL);
+    sfRenderWindow_drawText (renderizado, textos->tituloContactos, NULL);
+}
+
+static void renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos)
+{
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->areaContactoSeleccionado, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->areaMensajes, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirMensaje, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->botonEnviar, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo3, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo2, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo1, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->panelInterfaz, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionNombre, NULL);
+    sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionTitulo, NULL);
+}
+
 static void renderizarUI (sfRenderWindow *renderizado, const t_interfazContactos *interfazContactos)
 {
     // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
     // ELEMENTOS
-    _interfazContactos_renderizarElementos (renderizado, &(interfazContactos->elementos));
+    renderizarElementos (renderizado, &(interfazContactos->elementos));
 
     // TEXTOS
-    _interfazContactos_renderizarTextos (renderizado, &(interfazContactos->textos));
+    renderizarTextos (renderizado, &(interfazContactos->textos));
 
     // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
     if (puntoInsercionHabilitado (&(interfazContactos->logica.puntoInsercion)))

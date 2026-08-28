@@ -234,6 +234,15 @@ t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent
  */
 t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer);
 
+/** \brief Analizar si la cadena contiene todos espacios.
+ *
+ * \param mensaje Cadena a analizar.
+ *
+ * \return True en caso de que la cadena tenga todos espacios, False en caso contrario y en caso de cadena vacia.
+ *
+ */
+bool sonTodosEspacios (const char *mensaje);
+
 
 /* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION

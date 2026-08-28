@@ -45,9 +45,6 @@ void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *element
 void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos);
 void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos);
 
-void _interfazRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_interfazRegistroTextos *textos);
-void _interfazRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_interfazRegistroElementos *elementos);
-
 void _interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos);
 void _interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos);
 

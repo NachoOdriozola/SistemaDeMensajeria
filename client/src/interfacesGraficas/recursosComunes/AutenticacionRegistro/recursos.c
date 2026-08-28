@@ -11,11 +11,11 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recu
 {
     textos->auxEscribirContrasenia = NULL;
     textos->auxEscribirNombre = NULL;
+    textos->botonIngresar = NULL;
+    textos->cambiarInterfaz = NULL;
+    textos->feedbackUsuario = NULL;
     textos->ingresarContrasenia = NULL;
     textos->ingresarNombre = NULL;
-    textos->ingresoIncorrecto = NULL;
-    textos->textoBotonIngresar = NULL;
-    textos->textoCambiarInterfaz = NULL;
     textos->tituloInterfaz = NULL;
 }
 
@@ -70,6 +70,27 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recur
         return ERROR_INICIALIZACION;
     }
 
+    textos->botonIngresar = sfText_create ();
+    if (!textos->botonIngresar)
+    {
+        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto botonIngresar.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    textos->cambiarInterfaz = sfText_create ();
+    if (!textos->cambiarInterfaz)
+    {
+        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto cambiarInterfaz.\n");
+        return ERROR_INICIALIZACION;
+    }
+
+    textos->feedbackUsuario = sfText_create ();
+    if (!textos->feedbackUsuario)
+    {
+        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto feedbackUsuario.\n");
+        return ERROR_INICIALIZACION;
+    }
+    
     textos->ingresarContrasenia = sfText_create ();
     if (!textos->ingresarContrasenia)
     {
@@ -81,27 +102,6 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recur
     if (!textos->ingresarNombre)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto ingresarNombre.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    textos->ingresoIncorrecto = sfText_create ();
-    if (!textos->ingresoIncorrecto)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto ingresoIncorrecto.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    textos->textoBotonIngresar = sfText_create ();
-    if (!textos->textoBotonIngresar)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto textoBotonIngresar.\n");
-        return ERROR_INICIALIZACION;
-    }
-
-    textos->textoCambiarInterfaz = sfText_create ();
-    if (!textos->textoCambiarInterfaz)
-    {
-        perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto textoCambiarInterfaz.\n");
         return ERROR_INICIALIZACION;
     }
 
@@ -193,6 +193,21 @@ void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAu
     sfText_setFont (textos->auxEscribirNombre, fuentes->cuerpo);
     sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
+    // botonIngresar
+    sfText_setFont (textos->botonIngresar, fuentes->ui);
+    sfText_setString (textos->botonIngresar, "INGRESAR");
+    sfText_setColor (textos->botonIngresar, sfColor_fromRGB (94, 91, 87));
+
+    // cambiarInterfaz
+    sfText_setFont (textos->cambiarInterfaz, fuentes->ui);
+    sfText_setColor (textos->cambiarInterfaz, sfColor_fromRGB (43, 43, 43));
+    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
+
+    // feedbackUsuario
+    sfText_setFont (textos->feedbackUsuario, fuentes->ui);
+    sfText_setFillColor (textos->feedbackUsuario, sfColor_fromRGB (43, 43, 43));
+    
     // ingresarContrasenia
     sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
     sfText_setColor (textos->ingresarContrasenia, sfColor_fromRGB (43, 43, 43));
@@ -203,21 +218,6 @@ void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAu
     sfText_setFont (textos->ingresarNombre, fuentes->ui);
     sfText_setString (textos->ingresarNombre, "Nombre de usuario:");
     sfText_setColor (textos->ingresarNombre, sfColor_fromRGB (43, 43, 43));
-
-    // ingresoIncorrecto
-    sfText_setFont (textos->ingresoIncorrecto, fuentes->ui);
-    sfText_setFillColor (textos->ingresoIncorrecto, sfColor_fromRGB (43, 43, 43));
-
-    // textoBotonIngresar
-    sfText_setFont (textos->textoBotonIngresar, fuentes->ui);
-    sfText_setString (textos->textoBotonIngresar, "INGRESAR");
-    sfText_setColor (textos->textoBotonIngresar, sfColor_fromRGB (94, 91, 87));
-
-    // textoCambiarInterfaz
-    sfText_setFont (textos->textoCambiarInterfaz, fuentes->ui);
-    sfText_setColor (textos->textoCambiarInterfaz, sfColor_fromRGB (43, 43, 43));
-    sfUint32 bufferTextoCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
-    sfText_setUnicodeString (textos->textoCambiarInterfaz, bufferTextoCambiarInterfaz);
 
     // tituloInterfaz
     sfText_setFont (textos->tituloInterfaz, fuentes->ui);
@@ -259,6 +259,17 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComun
     sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 180});
     sfText_setCharacterSize (textos->auxEscribirNombre, 22);
 
+    // botonIngresar
+    sfText_setCharacterSize (textos->botonIngresar, 24);
+    centrarTextoEnArea (textos->botonIngresar, 180, 405, 140, 35);
+
+    // cambiarInterfaz
+    sfText_setCharacterSize (textos->cambiarInterfaz, 26);
+    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+
+    // feedbackUsuario
+    sfText_setCharacterSize (textos->feedbackUsuario, 24);
+
     // ingresarContrasenia
     sfText_setPosition (textos->ingresarContrasenia, (sfVector2f){35, 255});
     sfText_setCharacterSize (textos->ingresarContrasenia, 28);
@@ -266,17 +277,6 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComun
     // ingresarNombre
     sfText_setPosition (textos->ingresarNombre, (sfVector2f){35, 120});
     sfText_setCharacterSize (textos->ingresarNombre, 28);
-
-    // ingresoIncorrecto
-    sfText_setCharacterSize (textos->ingresoIncorrecto, 24);
-
-    // textoBotonIngresar
-    sfText_setCharacterSize (textos->textoBotonIngresar, 24);
-    centrarTextoEnArea (textos->textoBotonIngresar, 180, 405, 140, 35);
-
-    // textoCambiarInterfaz
-    sfText_setCharacterSize (textos->textoCambiarInterfaz, 26);
-    centrarTextoEnArea (textos->textoCambiarInterfaz, 0, 530, 500, 90);
 
     // tituloInterfaz
     sfText_setPosition (textos->tituloInterfaz, (sfVector2f){120, 25});
@@ -326,11 +326,11 @@ void _recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAuten
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirNombre);
+    DESTRUCTOR_SEGURO_TEXTO (textos->botonIngresar);
+    DESTRUCTOR_SEGURO_TEXTO (textos->cambiarInterfaz);
+    DESTRUCTOR_SEGURO_TEXTO (textos->feedbackUsuario);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarNombre);
-    DESTRUCTOR_SEGURO_TEXTO (textos->ingresoIncorrecto);
-    DESTRUCTOR_SEGURO_TEXTO (textos->textoBotonIngresar);
-    DESTRUCTOR_SEGURO_TEXTO (textos->textoCambiarInterfaz);
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloInterfaz);
 }
 

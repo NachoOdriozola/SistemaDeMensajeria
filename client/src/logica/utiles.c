@@ -154,6 +154,19 @@ t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuff
     return EXITO;
 }
 
+bool sonTodosEspacios (const char *mensaje)
+{
+    if (*mensaje == '\0')
+        return false;
+
+    while (*mensaje == ' ')
+        mensaje ++;
+
+    if (*mensaje == '\0')
+        return true;
+    return false;
+}
+
 
 /* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION

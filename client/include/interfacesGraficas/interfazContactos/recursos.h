@@ -87,9 +87,6 @@ void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
 void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos);
 void _interfazContactos_tamVistas (t_interfazContactosVistas *vistas);
 
-void _interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos);
-void _interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos);
-
 void _interfazContactos_liberarFuentes (t_interfazContactosFuentes *fuentes);
 void _interfazContactos_liberarTextos (t_interfazContactosTextos *textos);
 void _interfazContactos_liberarElementos (t_interfazContactosElementos *elementos);

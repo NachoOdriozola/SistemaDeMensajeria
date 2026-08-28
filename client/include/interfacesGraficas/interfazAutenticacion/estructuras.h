@@ -30,7 +30,7 @@
  */
 typedef struct
 {
-   sfText *aux;
+   sfText *aux;                                 /**< Declaracion de variable unicamente para que sea posible la creacion de la estructura. */
 } t_interfazAutenticacionTextos;
 
 /** \struct t_interfazAutenticacionElementos
@@ -38,7 +38,7 @@ typedef struct
  */
 typedef struct
 {
-   sfRectangleShape *aux;
+   sfRectangleShape *aux;                     /**< Declaracion de variable unicamente para que sea posible la creacion de la estructura. */
 } t_interfazAutenticacionElementos;
 
 /** \enum t_interfazAutenticacionFoco

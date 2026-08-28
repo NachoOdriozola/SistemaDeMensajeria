@@ -1,33 +1,33 @@
 /**
- * \file   actualizaciones.h
- * \brief  Contiene funciones de actualizaciones.
+ * \file   accion.h
+ * \brief  Contiene funciones de accion. Captura y maneja los eventos generados por el usuario directamente.
  */
 
 
-#ifndef INTERFAZAUTENTICACION_ACTUALIZACIONES_H_INCLUDED
-#define INTERFAZAUTENTICACION_ACTUALIZACIONES_H_INCLUDED
+#ifndef INTERFAZAUTENTICACION_ACCION_H_INCLUDED
+#define INTERFAZAUTENTICACION_ACCION_H_INCLUDED
 
 
 /* ============================================================================================================================================
    INCLUDES
    ============================================================================================================================================ */
 
-   
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "shared/constantes/include/constantes.h"
-#include "shared/protocolos/include/protocolos.h"
+#include "external/csfml/include/SFML/System.h"
+#include "external/csfml/include/SFML/Window.h"
+#include "external/csfml/include/SFML/Graphics.h"
 
 #include "logica/estructuras.h"
-
-#include "comunicacion/comunicacion.h"
+#include "logica/utiles.h"
 
 #include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
-#include "interfacesGraficas/interfazAutenticacion/estructuras.h"
-#include "interfacesGraficas/interfazAutenticacion/controladores.h"
+#include "interfacesGraficas/interfazRegistro/estructuras.h"
+#include "interfacesGraficas/interfazRegistro/controladores.h"
 
 
 /* ============================================================================================================================================
@@ -35,10 +35,7 @@
    ============================================================================================================================================ */
 
 
-/*
- * Procesar las diferentes posibles respuestas que se recibio del servidor.
-*/
-void _interfazAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta, t_resultadoRecepcion resultadoRecepcion);
+void _interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
 
 
-#endif // INTERFAZAUTENTICACION_ACTUALIZACIONES_H_INCLUDED
+#endif // INTERFAZAUTENTICACION_ACCION_H_INCLUDED

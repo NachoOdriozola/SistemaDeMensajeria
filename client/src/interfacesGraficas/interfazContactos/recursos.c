@@ -405,33 +405,6 @@ void _interfazContactos_tamVistas (t_interfazContactosVistas *vistas)
 }
 
 
-void _interfazContactos_renderizarTextos (sfRenderWindow *renderizado, const t_interfazContactosTextos *textos)
-{
-    sfRenderWindow_drawText (renderizado, textos->auxContactoSeleccionado, NULL);
-    sfRenderWindow_drawText (renderizado, textos->auxEscribirMensaje, NULL);
-    sfRenderWindow_drawText (renderizado, textos->botonEnviar, NULL);
-    sfRenderWindow_drawText (renderizado, textos->feedbackUsuario, NULL);
-    if (textos->informacionSeleccionChat != NULL)
-        sfRenderWindow_drawText (renderizado, textos->informacionSeleccionChat, NULL);
-    sfRenderWindow_drawText (renderizado, textos->nombreUsuario, NULL);
-    sfRenderWindow_drawText (renderizado, textos->tituloContactos, NULL);
-}
-
-void _interfazContactos_renderizarElementos (sfRenderWindow *renderizado, const t_interfazContactosElementos *elementos)
-{
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->areaContactoSeleccionado, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->areaMensajes, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirMensaje, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->botonEnviar, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo3, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo2, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->carpetaDecorativaFondo1, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->panelInterfaz, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionNombre, NULL);
-    sfRenderWindow_drawRectangleShape (renderizado, elementos->separacionTitulo, NULL);
-}
-
-
 void _interfazContactos_liberarFuentes (t_interfazContactosFuentes *fuentes)
 {
     DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);

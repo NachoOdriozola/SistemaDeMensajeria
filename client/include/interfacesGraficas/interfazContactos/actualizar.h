@@ -38,9 +38,6 @@
    ============================================================================================================================================ */
 
    
-/*
- * Captura y maneja los eventos no generados por el usuario directamente.
-*/
 void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 

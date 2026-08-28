@@ -30,7 +30,9 @@
 #include "interfacesGraficas/interfazAutenticacion/estructuras.h"
 #include "interfacesGraficas/interfazAutenticacion/recursos.h"
 #include "interfacesGraficas/interfazAutenticacion/controladores.h"
-#include "interfacesGraficas/interfazAutenticacion/actualizaciones.h"
+#include "interfacesGraficas/interfazAutenticacion/accion.h"
+#include "interfacesGraficas/interfazAutenticacion/actualizar.h"
+#include "interfacesGraficas/interfazAutenticacion/renderizar.h"
 
 
 /* ============================================================================================================================================
@@ -73,7 +75,7 @@ void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutentic
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void ejecutarInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+void interfazAutenticacion_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de autenticacion.
  *

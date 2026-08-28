@@ -22,7 +22,6 @@
 #include "external/csfml/include/SFML/Graphics.h"
 
 #include "interfacesGraficas/recursosComunes/AutenticacionRegistro/estructuras.h"
-#include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursos.h"
 
 
 /* ============================================================================================================================================
@@ -37,7 +36,7 @@
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void _recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Activar la interfaz de registro.
  *
@@ -46,7 +45,7 @@ void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recurs
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void _recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 
 #endif // RECURSOSCOMUNESAUTENTICACIONREGISTRO_CONTROLADORES_H_INCLUDED

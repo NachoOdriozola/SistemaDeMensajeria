@@ -34,9 +34,6 @@
    ============================================================================================================================================ */
 
 
-/*
- * Captura y maneja los eventos generados por el usuario directamente.
- */
 void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
 
 

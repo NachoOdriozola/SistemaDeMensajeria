@@ -50,6 +50,7 @@ void _interfazContactos_manejarErrorConexion (t_contextoAplicacion *contextoApli
 {
     resetearInterfaz (contextoAplicacion->renderizado, interfazContactos);
     socket_cerrar (&(contextoAplicacion->sock));
+    *(contextoAplicacion->usuario.nombre) = '\0';
     contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
 }
 
@@ -107,21 +108,7 @@ void _interfazContactos_listaMensajes_vaciar (t_contextoMensajes *contextoMensaj
    FUNCIONES PRIVADAS
    ============================================================================================================================================ */
 
-
-static bool noSonTodosEspacios (const char *mensaje)
-{
-    if (*mensaje == '\0')
-        return true;
-
-    while (*mensaje == ' ')
-        mensaje ++;
-
-    if (*mensaje == '\0')
-        return false;
-    return true;
-}
-
-
+   
 static bool esNombreValido (const char *nombreUsuarioChatSeleccionado)
 {
     int largoNombreUsuarioChatSeleccionado = strlen (nombreUsuarioChatSeleccionado);
@@ -144,7 +131,7 @@ static bool sonDatosSeleccionChatValidos (const t_interfazContactos *interfazCon
     const char *nombreUsuarioChatSeleccionadoSinBarraDeComando = &(interfazContactos->logica.contextoMensajes.mensaje[1]);
 
     return ((esNombreValido (nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
-                (noSonTodosEspacios (nombreUsuarioChatSeleccionadoSinBarraDeComando)) && 
+                (!sonTodosEspacios (nombreUsuarioChatSeleccionadoSinBarraDeComando)) && 
                 (usuarioNoSeleccionoSuPropioChat (nombreUsuarioPropio, nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
                 (noEsChatYaSeleccionado (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, nombreUsuarioChatSeleccionadoSinBarraDeComando)));
 }
@@ -169,14 +156,13 @@ static bool elEmisorNoEsElReceptor (int idEmisor, int idReceptor)
 static bool sonDatosEnvioMensajeValidos (int idUsuario, int idUsuarioDelChatSeleccionado, const char *mensaje)
 {
     return ((noEsMensajeVacio (mensaje)) && 
-                (noSonTodosEspacios (mensaje)) && 
+                (!sonTodosEspacios (mensaje)) && 
                 (sonEmisorYReceptorValidos (idUsuario, idUsuarioDelChatSeleccionado)) && 
                 (elEmisorNoEsElReceptor (idUsuario, idUsuarioDelChatSeleccionado)));
 }
 
 
 
-// chekear que resetee bien todo
 static void resetearInterfaz (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
 {
     // --------------- RESETEAR INTERFAZ ---------------
@@ -184,11 +170,15 @@ static void resetearInterfaz (sfRenderWindow *renderizado, t_interfazContactos *
     omitirEventosPendientes (renderizado);
     interfazContactos->logica.idUsuarioDelChatSeleccionado = ID_INVALIDO; // Establecer un id invalido al usuario del chat seleccionado
     *(interfazContactos->logica.nombreUsuarioDelChatSeleccionado) = '\0';
+    *(interfazContactos->logica.contextoMensajes.mensaje) = '\0';
     interfazContactos->estadoFoco = ICT_NINGUNO;
 
     // --------------- RESETEAR TEXTOS ---------------
 
     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, "");
+    sfText_setString (interfazContactos->textos.auxEscribirMensaje, "");
+    sfText_setString (interfazContactos->textos.feedbackUsuario, "");
+    sfText_setString (interfazContactos->textos.nombreUsuario, "");
     sfText_setString (interfazContactos->textos.informacionSeleccionChat, "Seleccione un chat con un usuario");
 
     // --------------- RESETEAR LISTA DE MENSAJES ---------------
