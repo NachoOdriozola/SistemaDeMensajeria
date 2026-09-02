@@ -45,8 +45,7 @@ static void renderizarTextos (sfRenderWindow *renderizado, const t_interfazConta
     sfRenderWindow_drawText (renderizado, textos->auxEscribirMensaje, NULL);
     sfRenderWindow_drawText (renderizado, textos->botonEnviar, NULL);
     sfRenderWindow_drawText (renderizado, textos->feedbackUsuario, NULL);
-    if (textos->informacionSeleccionChat != NULL)
-        sfRenderWindow_drawText (renderizado, textos->informacionSeleccionChat, NULL);
+    sfRenderWindow_drawText (renderizado, textos->informacionSeleccionChat, NULL);
     sfRenderWindow_drawText (renderizado, textos->nombreUsuario, NULL);
     sfRenderWindow_drawText (renderizado, textos->tituloContactos, NULL);
 }

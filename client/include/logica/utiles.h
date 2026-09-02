@@ -45,16 +45,36 @@
 
 
 /**
+ * \def CONTADOR_REINICIAR
+ * \brief Constante para reiniciar el contador.
+ */
+#define CONTADOR_REINICIAR 0
+
+
+/**
  * \def VELOCIDAD_PARPADEO_PUNTO_INSERCION
  * \brief Constante que determina la velocidad de parpadeo del punto de insercion.
  */
 #define VELOCIDAD_PARPADEO_PUNTO_INSERCION 22
 
+
 /**
- * \def REINICIAR_CONTADOR_PUNTO_INSERCION
- * \brief Constante para reiniciar el contador del punto de insercion.
+ * \def TEXTO_DE_CARGA_ESTADO_INICIAL
+ * \brief Estado con el que comienza el texto de carga.
  */
-#define REINICIAR_CONTADOR_PUNTO_INSERCION 0
+#define TEXTO_DE_CARGA_ESTADO_INICIAL 0
+
+/**
+ * \def TEXTO_DE_CARGA_ESTADO_FINAL
+ * \brief Estado con el que finaliza el texto de carga.
+ */
+#define TEXTO_DE_CARGA_ESTADO_FINAL 3
+
+/**
+ * \def TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION
+ * \brief Velocidad con la que cambia de estado del texto de carga.
+ */
+#define TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION 18
 
 
 /* ============================================================================================================================================
@@ -141,6 +161,16 @@ typedef struct
     t_habilitacion estado;                    /**< Activar/desactivar el punto de insercion. */
     unsigned short int contador;        /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
 } t_puntoInsercion;
+
+
+/** \struct t_textoDeCarga
+ * \brief Gestiona el texto de carga logicamente.
+ */
+typedef struct
+{
+   unsigned short int estado;             /**< Estado en el que se encuentra el texto de carga. */
+   unsigned short int contador;         /**< Contador para modificar el estado. */
+} t_textoDeCarga;
 
 
 /* ============================================================================================================================================
@@ -245,6 +275,39 @@ bool sonTodosEspacios (const char *mensaje);
 
 
 /* ============================================================================================================================================
+   VALIDACIONES DE DATOS
+   ============================================================================================================================================ */
+
+
+/** \brief Analizar si el nombre es valido. Toma en cuenta las restricciones del dominio. Valida el caso de que sean todos espacios.
+ *
+ * \param nombre Nombre a analizar.
+ *
+ * \return True en caso de que sea valido, False en caso contrario.
+ *
+ */
+bool esNombreValido (const char *nombre);
+
+/** \brief Analizar si la contrasenia es valida. Toma en cuenta las restricciones del dominio. Valida el caso de que sean todos espacios.
+ *
+ * \param contrasenia Contrasenia a analizar.
+ *
+ * \return True en caso de que sea valido, False en caso contrario.
+ *
+ */
+bool esContraseniaValida (const char *contrasenia);
+
+/** \brief Analizar si el correo electronico es valido. Toma en cuenta las restricciones del dominio. Valida el caso de que sean todos espacios.
+ *
+ * \param correo Correo a analizar.
+ *
+ * \return True en caso de que sea valido, False en caso contrario.
+ *
+ */
+bool esCorreoElectronicoValido (const char *correo);
+
+
+/* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
    ============================================================================================================================================ */
 
@@ -276,6 +339,51 @@ bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion);
  *
  */
 void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion);
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE BARRA DE CARGA
+   ============================================================================================================================================ */
+
+
+/** \brief Establecer el estado inicial del texto de carga y setear el contador.
+ *
+ * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
+ *
+ */
+void textoDeCarga_iniciar (t_textoDeCarga *textoDeCarga);
+
+/** \brief Incrementar el contador. En caso de que alcance la velocidad de actualizacion de carga, modifica el estado. Si el texto ya se encuentra en el estado final, lo reestablece al estado inicial.
+ *
+ * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
+ *
+ * \return True si se modifico el estado del texto de carga, False en caso contrario.
+ * 
+ */
+bool textoDeCarga_actualizar (t_textoDeCarga *textoDeCarga);
+
+/** \brief Concatenar al texto los puntos segun el estado de carga.
+ *
+ * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
+ *
+ */
+void textoDeCarga_modificarTextoSegunEstado (t_textoDeCarga *textoDeCarga, char *texto);
+
+
+/* ============================================================================================================================================
+   LOGS
+   ============================================================================================================================================ */
+
+   
+/** \brief Realizar un log de error en caso de error de conexion.
+ * 
+ */
+void log_error_conexion ();
+
+/** \brief Realizar un log de warning en caso de recibir una respuesta que no pertenece a la interfaz sobre la que se encuentra situado el usuario.
+ * 
+ */
+void log_warning_respuestaRecibidaDeOtraInterfaz ();
 
 
 #endif // UTILES_H_INCLUDED

@@ -119,6 +119,7 @@ typedef struct
     t_puntoInsercion puntoInsercion;
     int idUsuarioDelChatSeleccionado;                                                               /**< ID del usuario del chat seleccionado para comunicarse. */
     char nombreUsuarioDelChatSeleccionado [MAX_NOMBRE_USUARIO];      /**< Nombre del usuario del chat seleccionado para comunicarse. */
+    t_textoDeCarga textoDeCarga;
 } t_interfazContactosLogica;
 
 /** \struct t_interfazContactos

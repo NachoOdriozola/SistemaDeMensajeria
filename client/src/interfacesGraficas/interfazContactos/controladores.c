@@ -6,11 +6,10 @@
    ============================================================================================================================================ */
 
 
-static bool sonDatosSeleccionChatValidos (const t_interfazContactos *interfazContactos, const char *nombreUsuarioPropio);
+static _t_resultado_validacionDatosSeleccionChat validarDatosSeleccionChat (const t_interfazContactos *interfazContactos, const char *nombreUsuarioPropio);
+static _t_resultado_validacionDatosEnvioMensaje validarDatosEnvioMensaje (const t_interfazContactos *interfazContactos, int idUsuario);
 
-static bool sonDatosEnvioMensajeValidos (int idUsuario, int idUsuarioDelChatSeleccionado, const char *mensaje);
-
-static void resetearInterfaz (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
+static void resetearInterfaz (t_interfazContactos *interfazContactos);
 
 static void configurarMensaje (sfText *mensajeGrafico, const sfFont *fuente);
 static void establecerTextoConSaltosDeLineaAlMensaje (sfText *mensajeGrafico, const char *cadenaMensaje, float anchoMaxMensaje);
@@ -31,41 +30,101 @@ bool _interfazContactos_esUnComando (const char *mensaje)
     return  (*mensaje == '/');
 }
 
-void _interfazContactos_realizarSeleccionChat (t_contextoAplicacion *contextoAplicacion, const t_interfazContactos *interfazContactos)
+_t_resultado_intentarSeleccionarChat _interfazContactos_intentar_seleccionarChat (t_contextoAplicacion *contextoAplicacion, const t_interfazContactos *interfazContactos)
 {
+    _t_resultado_intentarSeleccionarChat resultado_intentarSeleccionarChat;
     const char *nombreUsuarioChatSeleccionadoSinBarraDeComando = &(interfazContactos->logica.contextoMensajes.mensaje[1]);
 
-    if (sonDatosSeleccionChatValidos (interfazContactos, contextoAplicacion->usuario.nombre))
+    resultado_intentarSeleccionarChat.validacion = validarDatosSeleccionChat (interfazContactos, contextoAplicacion->usuario.nombre);
+    if (resultado_intentarSeleccionarChat.validacion == INTENTARSELECCIONARCHAT_RESULTADODATOS_EXITO)
+    {
+        resultado_intentarSeleccionarChat.tipo = INTENTARSELECCIONARCHAT_RESULTADO_EXITO;
         enviarSolicitudSeleccionChat (contextoAplicacion, nombreUsuarioChatSeleccionadoSinBarraDeComando);
+    }
+    else
+        resultado_intentarSeleccionarChat.tipo = INTENTARSELECCIONARCHAT_RESULTADO_DATOS_INVALIDOS;
+
+    return resultado_intentarSeleccionarChat;
 }
 
-void _interfazContactos_realizarEnvioMensaje (t_contextoAplicacion *contextoAplicacion, const t_interfazContactos *interfazContactos)
+_t_resultado_intentarEnviarMensaje _interfazContactos_intentar_enviarMensaje (t_contextoAplicacion *contextoAplicacion, const t_interfazContactos *interfazContactos)
 {
-    if (sonDatosEnvioMensajeValidos (contextoAplicacion->usuario.id, interfazContactos->logica.idUsuarioDelChatSeleccionado, interfazContactos->logica.contextoMensajes.mensaje))
+    _t_resultado_intentarEnviarMensaje resultado_intentarEnviarMensaje;
+
+    resultado_intentarEnviarMensaje.validacion = validarDatosEnvioMensaje (interfazContactos, contextoAplicacion->usuario.id);
+    if (resultado_intentarEnviarMensaje.validacion == INTENTARENVIARMENSAJE_RESULTADODATOS_EXITO)
+    {
+        resultado_intentarEnviarMensaje.tipo = INTENTARENVIARMENSAJE_RESULTADO_EXITO;
         enviarSolicitudEnvioMensaje (contextoAplicacion, contextoAplicacion->usuario.id, interfazContactos->logica.idUsuarioDelChatSeleccionado, interfazContactos->logica.contextoMensajes.mensaje);
+    }
+    else
+        resultado_intentarEnviarMensaje.tipo = INTENTARENVIARMENSAJE_RESULTADO_DATOS_INVALIDOS;
+
+    return resultado_intentarEnviarMensaje;
 }
 
 
-void _interfazContactos_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+_t_datosUI_respuesta_solicitudEnvioMensaje _interfazContactos_solicitudEnvioMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
 {
-    resetearInterfaz (contextoAplicacion->renderizado, interfazContactos);
-    socket_cerrar (&(contextoAplicacion->sock));
+    t_datosRespuestaSolicitudEnvioMensaje datos_respuesta_solicitudEnvioMensaje;
+    _t_datosUI_respuesta_solicitudEnvioMensaje datosUI_respuesta_solicitudEnvioMensaje;
+
+    comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (respuesta, &datos_respuesta_solicitudEnvioMensaje);
+    printf ("Respuesta recibida: %c|%c\n", datos_respuesta_solicitudEnvioMensaje.header.tipo, datos_respuesta_solicitudEnvioMensaje.estadoSolicitud);
+    comunicacion_finalizarSolicitudEnCurso (contextoAplicacion);
+
+    datosUI_respuesta_solicitudEnvioMensaje.estadoSolicitud = datos_respuesta_solicitudEnvioMensaje.estadoSolicitud;
+
+    return datosUI_respuesta_solicitudEnvioMensaje;
+}
+
+_t_datosUI_respuesta_recepcionMensaje _interfazContactos_recepcionMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
+{
+    t_datosRespuestaRecepcionMensaje datos_respuesta_recepcionMensaje;
+    _t_datosUI_respuesta_recepcionMensaje datosUI_respuesta_recepcionMensaje;
+
+    comunicacion_extraerDatosRespuesta_recepcionMensaje (respuesta, &datos_respuesta_recepcionMensaje);
+    printf ("\nRespuesta recibida: %c|%d|%s\n", datos_respuesta_recepcionMensaje.header.tipo, datos_respuesta_recepcionMensaje.idEmisor, datos_respuesta_recepcionMensaje.texto);
+
+    datosUI_respuesta_recepcionMensaje.idEmisor = datos_respuesta_recepcionMensaje.idEmisor;
+    strcpy (datosUI_respuesta_recepcionMensaje.texto, datos_respuesta_recepcionMensaje.texto);
+
+    return datosUI_respuesta_recepcionMensaje;
+}
+
+_t_datosUI_respuesta_solicitudSeleccionChat _interfazContactos_solicitudSeleccionChat_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
+{
+    t_datosRespuestaSolicitudSeleccionChat datos_respuesta_solicitudSeleccionChat;
+    _t_datosUI_respuesta_solicitudSeleccionChat datosUI_respuesta_solicitudSeleccionChat;
+
+    comunicacion_extraerDatosRespuesta_solicitudSeleccionChat (respuesta, &datos_respuesta_solicitudSeleccionChat);
+    printf ("Respuesta recibida: %c|%c|%d\n", datos_respuesta_solicitudSeleccionChat.header.tipo, datos_respuesta_solicitudSeleccionChat.estadoSolicitud, datos_respuesta_solicitudSeleccionChat.idUsuarioDelChatSeleccionado);
+    comunicacion_finalizarSolicitudEnCurso (contextoAplicacion);
+
+    datosUI_respuesta_solicitudSeleccionChat.estadoSolicitud = datos_respuesta_solicitudSeleccionChat.estadoSolicitud;
+    datosUI_respuesta_solicitudSeleccionChat.idUsuarioDelChatSeleccionado = datos_respuesta_solicitudSeleccionChat.idUsuarioDelChatSeleccionado;
+
+    return datosUI_respuesta_solicitudSeleccionChat;
+}
+
+
+void _interfazContactos_manejarError_conexion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+{
+    omitirEventosPendientes (contextoAplicacion->renderizado);
+    resetearInterfaz (interfazContactos);
+    
+    log_error_conexion ();
+    comunicacion_finalizar (&(contextoAplicacion->sock));
     *(contextoAplicacion->usuario.nombre) = '\0';
+    contextoAplicacion->usuario.id = ID_INVALIDO;
     contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
 }
 
 
-void _interfazContactos_setearNuevoChatSeleccionado (t_interfazContactos *interfazContactos, const t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
+void _interfazContactos_setearNuevoChatSeleccionado (t_interfazContactos *interfazContactos, const _t_datosUI_respuesta_solicitudSeleccionChat *datosUI_respuesta_solicitudSeleccionChat)
 {
-    // LOGICAMENTE
-    interfazContactos->logica.idUsuarioDelChatSeleccionado = datosRespuestaSolicitudSeleccionChat->idUsuarioDelChatSeleccionado;
+    interfazContactos->logica.idUsuarioDelChatSeleccionado = datosUI_respuesta_solicitudSeleccionChat->idUsuarioDelChatSeleccionado;
     strcpy (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, &(interfazContactos->logica.contextoMensajes.mensaje[1]));
-
-    // GRAFICAMENTE
-    sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
-    centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
-    _interfazContactos_listaMensajes_vaciar (&(interfazContactos->logica.contextoMensajes));
-    sfText_setString (interfazContactos->textos.informacionSeleccionChat, "");
 }
 
 
@@ -108,66 +167,77 @@ void _interfazContactos_listaMensajes_vaciar (t_contextoMensajes *contextoMensaj
    FUNCIONES PRIVADAS
    ============================================================================================================================================ */
 
-   
-static bool esNombreValido (const char *nombreUsuarioChatSeleccionado)
-{
-    int largoNombreUsuarioChatSeleccionado = strlen (nombreUsuarioChatSeleccionado);
 
-    return ((largoNombreUsuarioChatSeleccionado >= 3) && (largoNombreUsuarioChatSeleccionado < MAX_NOMBRE_USUARIO));
+static bool esMensajeVacio (const char *mensaje)
+{
+    return (*mensaje == '\0');
 }
 
-static bool usuarioNoSeleccionoSuPropioChat (const char *nombreUsuarioPropio, const char *nombreUsuarioChatSeleccionado)
+
+static bool usuarioSeleccionoSuPropioChat (const char *nombreUsuarioPropio, const char *nombreUsuarioChatSeleccionado)
 {
-    return (strcmp (nombreUsuarioPropio, nombreUsuarioChatSeleccionado) != 0);
+    return (strcmp (nombreUsuarioPropio, nombreUsuarioChatSeleccionado) == 0);
 }
 
-static bool noEsChatYaSeleccionado (const char *nombreUsuarioChatYaSeleccionado, const char *nombreUsuarioChatASeleccionar)
+static bool esChatYaSeleccionado (const char *nombreUsuarioChatYaSeleccionado, const char *nombreUsuarioChatASeleccionar)
 {
-    return (strcmp (nombreUsuarioChatYaSeleccionado, nombreUsuarioChatASeleccionar) != 0);
+    return (strcmp (nombreUsuarioChatYaSeleccionado, nombreUsuarioChatASeleccionar) == 0);
 }
 
-static bool sonDatosSeleccionChatValidos (const t_interfazContactos *interfazContactos, const char *nombreUsuarioPropio)
+static _t_resultado_validacionDatosSeleccionChat validarDatosSeleccionChat (const t_interfazContactos *interfazContactos, const char *nombreUsuarioPropio)
 {
     const char *nombreUsuarioChatSeleccionadoSinBarraDeComando = &(interfazContactos->logica.contextoMensajes.mensaje[1]);
 
-    return ((esNombreValido (nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
-                (!sonTodosEspacios (nombreUsuarioChatSeleccionadoSinBarraDeComando)) && 
-                (usuarioNoSeleccionoSuPropioChat (nombreUsuarioPropio, nombreUsuarioChatSeleccionadoSinBarraDeComando)) &&
-                (noEsChatYaSeleccionado (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, nombreUsuarioChatSeleccionadoSinBarraDeComando)));
+    if (esMensajeVacio (nombreUsuarioChatSeleccionadoSinBarraDeComando))
+        return INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREVACIO;
+
+    if (!esNombreValido (nombreUsuarioChatSeleccionadoSinBarraDeComando))
+        return INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREINVALIDO;
+
+    if (usuarioSeleccionoSuPropioChat (nombreUsuarioPropio, nombreUsuarioChatSeleccionadoSinBarraDeComando))
+        return INTENTARSELECCIONARCHAT_RESULTADODATOS_SELECCIONPROPIOCHAT;
+
+    if (esChatYaSeleccionado (interfazContactos->logica.nombreUsuarioDelChatSeleccionado, nombreUsuarioChatSeleccionadoSinBarraDeComando))
+        return INTENTARSELECCIONARCHAT_RESULTADODATOS_CHATYASELECCIONADO;
+
+    return INTENTARSELECCIONARCHAT_RESULTADODATOS_EXITO;
 }
 
 
-
-static bool noEsMensajeVacio (const char *mensaje)
-{
-    return (*mensaje != '\0');
-}
 
 static bool sonEmisorYReceptorValidos (int idEmisor, int idReceptor)
 {
     return ((idEmisor != ID_INVALIDO) && (idReceptor != ID_INVALIDO));
 }
 
-static bool elEmisorNoEsElReceptor (int idEmisor, int idReceptor)
+static bool elEmisorEsElReceptor (int idEmisor, int idReceptor)
 {
-    return (idEmisor != idReceptor);
+    return (idEmisor == idReceptor);
 }
 
-static bool sonDatosEnvioMensajeValidos (int idUsuario, int idUsuarioDelChatSeleccionado, const char *mensaje)
+static _t_resultado_validacionDatosEnvioMensaje validarDatosEnvioMensaje (const t_interfazContactos *interfazContactos, int idUsuario)
 {
-    return ((noEsMensajeVacio (mensaje)) && 
-                (!sonTodosEspacios (mensaje)) && 
-                (sonEmisorYReceptorValidos (idUsuario, idUsuarioDelChatSeleccionado)) && 
-                (elEmisorNoEsElReceptor (idUsuario, idUsuarioDelChatSeleccionado)));
+    if (esMensajeVacio (interfazContactos->logica.contextoMensajes.mensaje))
+        return INTENTARENVIARMENSAJE_RESULTADODATOS_MENSAJEVACIO;
+
+    if (sonTodosEspacios (interfazContactos->logica.contextoMensajes.mensaje))
+        return INTENTARENVIARMENSAJE_RESULTADODATOS_SONTODOSESPACIOS;
+
+    if (!sonEmisorYReceptorValidos (idUsuario, interfazContactos->logica.idUsuarioDelChatSeleccionado))
+        return INTENTARENVIARMENSAJE_RESULTADODATOS_EMISORYRECEPTORINVALIDOS;
+
+    if (elEmisorEsElReceptor (idUsuario, interfazContactos->logica.idUsuarioDelChatSeleccionado))
+        return INTENTARENVIARMENSAJE_RESULTADODATOS_EMISORESELRECEPTOR;
+
+    return INTENTARENVIARMENSAJE_RESULTADODATOS_EXITO;
 }
 
 
 
-static void resetearInterfaz (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
+static void resetearInterfaz (t_interfazContactos *interfazContactos)
 {
     // --------------- RESETEAR INTERFAZ ---------------
 
-    omitirEventosPendientes (renderizado);
     interfazContactos->logica.idUsuarioDelChatSeleccionado = ID_INVALIDO; // Establecer un id invalido al usuario del chat seleccionado
     *(interfazContactos->logica.nombreUsuarioDelChatSeleccionado) = '\0';
     *(interfazContactos->logica.contextoMensajes.mensaje) = '\0';
@@ -178,12 +248,16 @@ static void resetearInterfaz (sfRenderWindow *renderizado, t_interfazContactos *
     sfText_setString (interfazContactos->textos.auxContactoSeleccionado, "");
     sfText_setString (interfazContactos->textos.auxEscribirMensaje, "");
     sfText_setString (interfazContactos->textos.feedbackUsuario, "");
-    sfText_setString (interfazContactos->textos.nombreUsuario, "");
     sfText_setString (interfazContactos->textos.informacionSeleccionChat, "Seleccione un chat con un usuario");
+    sfText_setString (interfazContactos->textos.nombreUsuario, "");
 
     // --------------- RESETEAR LISTA DE MENSAJES ---------------
 
     _interfazContactos_listaMensajes_vaciar (&(interfazContactos->logica.contextoMensajes));
+
+    // --------------- RESETEAR VISTA ---------------
+
+    sfView_setCenter (interfazContactos->vistas.mensajes, (sfVector2f){1152, 480});
 }
 
 

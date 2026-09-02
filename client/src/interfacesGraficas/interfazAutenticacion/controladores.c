@@ -6,8 +6,7 @@
    ============================================================================================================================================ */
 
 
-static bool sonDatosAutenticacionUsuarioValidos (const char *nombreUsuario, const char *contrasenia);
-static void mostrarErrorCredencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion);
+static bool sonDatosAutenticacionUsuarioValidos (const t_interfazAutenticacion *interfazAutenticacion);
 
 static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion);
 
@@ -17,42 +16,60 @@ static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion);
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+_t_resultado_intentarAutenticar _interfazAutenticacion_intentar_autenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    if (sonDatosAutenticacionUsuarioValidos (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia))
+    if (!sonDatosAutenticacionUsuarioValidos (interfazAutenticacion))
+        return INTENTARAUTENTICAR_RESULTADO_CREDENCIALES_INVALIDAS;
+
+    if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_ERROR_CONEXION)
     {
-        if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_EXITO)
-            enviarSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
-        else
-            _interfazAutenticacion_manejarErrorConexion (contextoAplicacion, interfazAutenticacion);
+        _interfazAutenticacion_manejarError_conexion (contextoAplicacion);
+        return INTENTARAUTENTICAR_RESULTADO_ERROR_CONEXION;
     }
-    else
-        mostrarErrorCredencialesInvalidas (interfazAutenticacion);
+    
+    enviarSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
+    return INTENTARAUTENTICAR_RESULTADO_EXITO;
 }
 
-void _interfazAutenticacion_manejarErrorConexion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+
+_t_datosUI_respuesta_solicitudAutenticacion _interfazAutenticacion_solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
 {
-    socket_cerrar (&(contextoAplicacion->sock));
-    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    t_datosRespuestaSolicitudAutenticacion datos_respuesta_solicitudAutenticacion;
+    _t_datosUI_respuesta_solicitudAutenticacion datosUI_respuesta_solicitudAutenticacion;
+
+    comunicacion_extraerDatosRespuesta_solicitudAutenticacion (respuesta, &datos_respuesta_solicitudAutenticacion);
+    printf ("Respuesta recibida: %c|%c|%d\n", datos_respuesta_solicitudAutenticacion.header.tipo, datos_respuesta_solicitudAutenticacion.estadoSolicitud, datos_respuesta_solicitudAutenticacion.idUsuario);
+    comunicacion_finalizarSolicitudEnCurso (contextoAplicacion);
+
+    datosUI_respuesta_solicitudAutenticacion.estadoSolicitud = datos_respuesta_solicitudAutenticacion.estadoSolicitud;
+    datosUI_respuesta_solicitudAutenticacion.idUsuario = datos_respuesta_solicitudAutenticacion.idUsuario;
+
+    return datosUI_respuesta_solicitudAutenticacion;
 }
 
-void _interfazAutenticacion_accederAContactos (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion)
+
+void _interfazAutenticacion_manejarError_conexion (t_contextoAplicacion *contextoAplicacion)
 {
-    contextoAplicacion->usuario.id = datosRespuestaSolicitudAutenticacion->idUsuario;
+    comunicacion_finalizar (&(contextoAplicacion->sock));
+    log_error_conexion ();
+}
+
+
+void _interfazAutenticacion_cambiarAInterfaz_contactos (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const _t_datosUI_respuesta_solicitudAutenticacion *datosUI_respuesta_solicitudAutenticacion)
+{
+    contextoAplicacion->usuario.id = datosUI_respuesta_solicitudAutenticacion->idUsuario;
     strcpy (contextoAplicacion->usuario.nombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
     
     contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
 }
 
-void _interfazAutenticacion_cambiarAInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+void _interfazAutenticacion_cambiarAInterfaz_registro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
     omitirEventosPendientes (contextoAplicacion->renderizado);
     resetearInterfaz (interfazAutenticacion);
+    recursosComunesAutenticacionRegistro_activarInterfazRegistro (interfazAutenticacion->recursosComunesAutenticacionRegistro);
     
     contextoAplicacion->interfazActual = INTERFAZ_REGISTRO;
-    recursosComunesAutenticacionRegistro_activarInterfazRegistro (interfazAutenticacion->recursosComunesAutenticacionRegistro);
 }
 
 
@@ -61,22 +78,9 @@ void _interfazAutenticacion_cambiarAInterfazRegistro (t_contextoAplicacion *cont
    ============================================================================================================================================ */
 
 
-/*
- * Si los datos de autenticacion que envio el usuario son validos segun las restricciones del dominio.
-*/
-static bool sonDatosAutenticacionUsuarioValidos (const char *nombreUsuario, const char *contrasenia)
+static bool sonDatosAutenticacionUsuarioValidos (const t_interfazAutenticacion *interfazAutenticacion)
 {
-    return ((strlen (nombreUsuario) >= 3) && 
-                (strlen (contrasenia) >= 8) &&
-                (!sonTodosEspacios (nombreUsuario)) &&
-                (!sonTodosEspacios (contrasenia)));
-}
-
-static void mostrarErrorCredencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion)
-{
-    sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    return ((esNombreValido (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario)) && (esContraseniaValida (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia)));
 }
 
 
@@ -84,3 +88,4 @@ static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion)
 {
     interfazAutenticacion->estadoFoco = IA_NINGUNO;
 }
+

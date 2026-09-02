@@ -90,6 +90,7 @@ typedef struct
     char nombreUsuario [MAX_NOMBRE_USUARIO];               /**< Cadena donde se guarda el nombre que escribe el usuario. */
     char contrasenia [MAX_CONTRASENIA];                             /**< Cadena donde se guarda la contrasenia que escribe el usuario. */
     t_puntoInsercion puntoInsercion;
+    t_textoDeCarga textoDeCarga;
 } t_recursosComunesAutenticacionRegistroLogica;
 
 /** \struct t_recursosComunesAutenticacionRegistro

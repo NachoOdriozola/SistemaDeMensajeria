@@ -124,12 +124,10 @@ static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutentica
     // auxEscribirContrasenia
     sfText_setString (textos->auxEscribirContrasenia, "");
     sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){42, 295});
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
 
     // auxEscribirNombre
     sfText_setString (textos->auxEscribirNombre, "");
     sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 170});
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
     // botonIngresar
     sfText_setString (textos->botonIngresar, "REGISTRAR");

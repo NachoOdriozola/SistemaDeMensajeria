@@ -60,7 +60,7 @@ typedef struct
     sfRenderWindow *renderizado;         /**< Renderizado de la ventana. */
     t_socket sock;                                     /**< Socket del usuario. */
     t_usuario usuario;
-    t_interfaz interfazActual;                                      /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
+    t_interfaz interfazActual;                     /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
     bool solicitudEnCurso;                       /**< Informar si hay una solicitud enviada en curso para no enviar otra. */
 } t_contextoAplicacion;
 

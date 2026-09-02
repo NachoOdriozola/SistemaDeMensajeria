@@ -85,7 +85,7 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
 
     sfRenderWindow_setFramerateLimit (contextoAplicacion->renderizado, 60);
     contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
-    contextoAplicacion->solicitudEnCurso = false;
+    comunicacion_inicializar (contextoAplicacion);
     omitirEventosPendientes (contextoAplicacion->renderizado);
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS COMUNES ---------------
@@ -143,7 +143,7 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGr
 
     // --------------- LIBERAR SOCKET ---------------
 
-    socket_cerrar (&(contextoAplicacion->sock));
+    comunicacion_finalizar (&(contextoAplicacion->sock));
     socket_finalizar ();
 
     // --------------- LIBERAR RENDERIZADO ---------------

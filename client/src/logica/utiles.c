@@ -169,6 +169,38 @@ bool sonTodosEspacios (const char *mensaje)
 
 
 /* ============================================================================================================================================
+   VALIDACIONES DE DATOS
+   ============================================================================================================================================ */
+
+
+bool esNombreValido (const char *nombre)
+{
+    int largoNombre = strlen (nombre);
+
+    return (((largoNombre >= 3) && (largoNombre < MAX_NOMBRE_USUARIO)) && (!sonTodosEspacios (nombre)));
+}
+
+bool esContraseniaValida (const char *contrasenia)
+{
+    int largoContrasenia = strlen (contrasenia);
+
+    return (((largoContrasenia >= 8) && (largoContrasenia < MAX_CONTRASENIA)) && (!sonTodosEspacios (contrasenia)));
+}
+
+bool esCorreoElectronicoValido (const char *correo)
+{
+    char *ptr = strchr (correo, '@'); // Se posiciona en el @
+
+    if ((ptr == NULL) ||                            // Si no tiene @
+        (ptr == correo) ||                          // O empieza con @
+        (strchr (ptr, '.') == NULL) ||           // O no tiene un punto despues del @
+        (strchr (ptr + 1, '@') != NULL))     // O tiene 2 arrobas
+        return false;
+    return true;
+}
+
+
+/* ============================================================================================================================================
    FUNCIONES DE PUNTO DE INSERCION
    ============================================================================================================================================ */
 
@@ -176,7 +208,7 @@ bool sonTodosEspacios (const char *mensaje)
 void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion)
 {
     puntoInsercion->estado = DESHABILITADO;
-    puntoInsercion->contador = REINICIAR_CONTADOR_PUNTO_INSERCION;
+    puntoInsercion->contador = CONTADOR_REINICIAR;
 }
 
 bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion)
@@ -191,10 +223,76 @@ void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion)
     puntoInsercion->contador ++;
     if (puntoInsercion->contador >= VELOCIDAD_PARPADEO_PUNTO_INSERCION)
     {
-        puntoInsercion->contador = REINICIAR_CONTADOR_PUNTO_INSERCION;
+        puntoInsercion->contador = CONTADOR_REINICIAR;
         if (puntoInsercion->estado == DESHABILITADO)
             puntoInsercion->estado = HABILITADO;
         else
             puntoInsercion->estado = DESHABILITADO;
     }
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE BARRA DE CARGA
+   ============================================================================================================================================ */
+
+
+void textoDeCarga_iniciar (t_textoDeCarga *textoDeCarga)
+{
+    textoDeCarga->estado = TEXTO_DE_CARGA_ESTADO_INICIAL;
+    textoDeCarga->contador = CONTADOR_REINICIAR;
+}
+
+bool textoDeCarga_actualizar (t_textoDeCarga *textoDeCarga)
+{
+    if (textoDeCarga->contador >= TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION)
+    {
+        textoDeCarga->estado ++;
+        if (textoDeCarga->estado > TEXTO_DE_CARGA_ESTADO_FINAL)
+            textoDeCarga->estado = TEXTO_DE_CARGA_ESTADO_INICIAL;
+        textoDeCarga->contador = CONTADOR_REINICIAR;
+        return true;
+    }
+    else
+    {
+        textoDeCarga->contador ++;
+        return false;
+    }
+}
+
+void textoDeCarga_modificarTextoSegunEstado (t_textoDeCarga *textoDeCarga, char *texto)
+{
+    switch (textoDeCarga->estado)
+    {
+        case 1:
+            strcat (texto, " .");
+            break;
+
+        case 2:
+            strcat (texto, " . .");
+            break;
+
+        case 3:
+            strcat (texto, " . . .");
+            break;
+        
+        default:
+            break;
+    }
+}
+
+
+/* ============================================================================================================================================
+   LOGS
+   ============================================================================================================================================ */
+
+
+void log_error_conexion ()
+{
+    puts ("\nERROR - Se perdio la conexion con el servidor");
+}
+
+void log_warning_respuestaRecibidaDeOtraInterfaz ()
+{
+    puts ("\nWARNING - La respuesta recibida del servidor no corresponde a la interfaz sobre la que esta situado el usuario.");
 }

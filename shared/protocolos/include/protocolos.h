@@ -98,7 +98,7 @@ typedef enum
 
 
 /**
- * \enum t_header
+ * \struct t_header
  * \brief Header que contiene los datos del paquete a transmitir.
  */
 typedef struct
@@ -109,7 +109,7 @@ typedef struct
 
 
 /**
- * \enum t_datosEnvioSolicitudAutenticacion
+ * \struct t_datosEnvioSolicitudAutenticacion
  * \brief Datos enviados por el cliente para realizar la solicitud.
  */
 typedef struct
@@ -120,7 +120,7 @@ typedef struct
 } t_datosEnvioSolicitudAutenticacion;
 
 /**
- * \enum t_datosEnvioSolicitudRegistro
+ * \struct t_datosEnvioSolicitudRegistro
  * \brief Datos enviados por el cliente para realizar la solicitud.
  */
 typedef struct
@@ -132,7 +132,7 @@ typedef struct
 } t_datosEnvioSolicitudRegistro;
 
 /**
- * \enum t_datosEnvioSolicitudEnvioMensaje
+ * \struct t_datosEnvioSolicitudEnvioMensaje
  * \brief Datos enviados por el cliente para realizar la solicitud.
  */
 typedef struct
@@ -143,7 +143,7 @@ typedef struct
 } t_datosEnvioSolicitudEnvioMensaje;
 
 /**
- * \enum t_datosEnvioSolicitudSeleccionChat
+ * \struct t_datosEnvioSolicitudSeleccionChat
  * \brief Datos enviados por el cliente para realizar la solicitud.
  */
 typedef struct
@@ -159,7 +159,7 @@ typedef struct
 
 
 /**
- * \enum t_datosRespuestaSolicitudAutenticacion
+ * \struct t_datosRespuestaSolicitudAutenticacion
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
@@ -170,7 +170,7 @@ typedef struct
 } t_datosRespuestaSolicitudAutenticacion;
 
 /**
- * \enum t_datosRespuestaSolicitudRegistro
+ * \struct t_datosRespuestaSolicitudRegistro
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
@@ -181,7 +181,7 @@ typedef struct
 } t_datosRespuestaSolicitudRegistro;
 
 /**
- * \enum t_datosRespuestaSolicitudEnvioMensaje
+ * \struct t_datosRespuestaSolicitudEnvioMensaje
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
@@ -191,7 +191,7 @@ typedef struct
 } t_datosRespuestaSolicitudEnvioMensaje;
 
 /**
- * \enum t_datosRespuestaSolicitudRegistro
+ * \struct t_datosRespuestaSolicitudRegistro
  * \brief Datos de respuesta a enviar al cliente.
  */
 typedef struct
@@ -202,7 +202,7 @@ typedef struct
 } t_datosRespuestaRecepcionMensaje;
 
 /**
- * \enum t_datosRespuestaSolicitudSeleccionChat
+ * \struct t_datosRespuestaSolicitudSeleccionChat
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct

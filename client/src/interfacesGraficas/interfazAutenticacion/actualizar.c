@@ -6,9 +6,13 @@
    ============================================================================================================================================ */
 
 
-static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
+static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+static void puntoInsercion (t_interfazAutenticacion *interfazAutenticacion);
+static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
 
-static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
+static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion);
+
+static void solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
 
 
 /* ============================================================================================================================================
@@ -18,29 +22,9 @@ static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *conte
 
 void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    // --------------- RECIBIR Y PROCESAR RESPUESTAS DEL SERVIDOR ---------------
-
-    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
-    t_resultadoRecepcion resultadoRecepcion;
-
-    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
-
-    if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
-        procesarRespuesta (contextoAplicacion, interfazAutenticacion, bufferRespuesta);
-
-    if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
-    {
-        _interfazAutenticacion_manejarErrorConexion (contextoAplicacion, interfazAutenticacion);
-        puts ("\nSe perdio la conexion con el servidor.");
-    }
-
-    // --------------- PUNTO DE INSERCION ---------------
-
-    if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
-        (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA))
-        actualizarPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
-    else if (puntoInsercionHabilitado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
-        resetearPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    recibirYProcesarRespuestaServidor (contextoAplicacion, interfazAutenticacion);
+    puntoInsercion (interfazAutenticacion);
+    textoDeCarga (contextoAplicacion, interfazAutenticacion);
 }
 
 
@@ -49,20 +33,64 @@ void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion
    ============================================================================================================================================ */
 
 
-static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
+static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
 {
-    t_header header;
+    char bufferRespuesta [MAX_BUFFER_RESPUESTA];
+    t_resultadoRecepcion resultadoRecepcion;
 
-    memcpy (&header, respuesta, sizeof (t_header));
-    switch (header.tipo)
+    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+
+    if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
     {
-        case RESPUESTA_SOLICITUD_AUTENTICACION:
-            procesarRespuestaSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion, respuesta);
-            break;
+        switch (comunicacion_obtenerTipoRespuesta (bufferRespuesta))
+        {
+            case RESPUESTA_SOLICITUD_AUTENTICACION:
+                solicitudAutenticacion_procesarRespuesta (contextoAplicacion, interfazAutenticacion, bufferRespuesta);
+                break;
 
-        default:
-            break;
+            default:
+                log_warning_respuestaRecibidaDeOtraInterfaz ();
+                break;
+        }
     }
+
+    if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
+    {
+        _interfazAutenticacion_manejarError_conexion (contextoAplicacion);
+        mostrar_feedback_errorConexion (interfazAutenticacion);
+    }
+}
+
+static void puntoInsercion (t_interfazAutenticacion *interfazAutenticacion)
+{
+    if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
+        (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA))
+        actualizarPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    else if (puntoInsercionHabilitado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
+        resetearPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+}
+
+static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+{
+    char texto [] = "Cargando";
+
+    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    {
+        if (textoDeCarga_actualizar (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.textoDeCarga)))
+        {
+            textoDeCarga_modificarTextoSegunEstado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.textoDeCarga), texto);
+            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, texto);
+            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+        }
+    }
+}
+
+
+static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion)
+{
+    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
+    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
 
@@ -71,28 +99,33 @@ static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_inter
    ============================================================================================================================================ */
 
 
-static void extraerDatosRespuestaSolicitudAutenticacion (const char *respuesta, t_datosRespuestaSolicitudAutenticacion *returnDatosRespuestaSolicitudAutenticacion)
+static void mostrar_feedback_credencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion)
 {
-    memcpy (returnDatosRespuestaSolicitudAutenticacion, respuesta, sizeof (t_datosRespuestaSolicitudAutenticacion));
+    sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
+    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
+    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void procesarRespuestaSegunEstadoSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion)
+static void mostrar_feedback_operacionInvalida (t_interfazAutenticacion *interfazAutenticacion)
 {
-    switch (datosRespuestaSolicitudAutenticacion->estadoSolicitud)
+    sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Usuario ya conectado");
+    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+}
+
+static void solicitudAutenticacion_procesarRespuestaSegunEstado (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, _t_datosUI_respuesta_solicitudAutenticacion *datosUI_respuesta_solicitudAutenticacion)
+{
+    switch (datosUI_respuesta_solicitudAutenticacion->estadoSolicitud)
     {
         case SOLICITUD_EXITO:
-            _interfazAutenticacion_accederAContactos (contextoAplicacion, interfazAutenticacion, datosRespuestaSolicitudAutenticacion);
+            _interfazAutenticacion_cambiarAInterfaz_contactos (contextoAplicacion, interfazAutenticacion, datosUI_respuesta_solicitudAutenticacion);
             break;
 
         case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
-            sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-            sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+            mostrar_feedback_credencialesInvalidas (interfazAutenticacion);
             break;
 
         case SOLICITUD_ERROR_OPERACION_INVALIDA:
-            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Usuario ya conectado");
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+            mostrar_feedback_operacionInvalida (interfazAutenticacion);
             break;
 
         default:
@@ -100,13 +133,10 @@ static void procesarRespuestaSegunEstadoSolicitudAutenticacion (t_contextoAplica
     }
 }
 
-static void procesarRespuestaSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
+static void solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
 {
-    t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;
+    _t_datosUI_respuesta_solicitudAutenticacion datosUI_respuesta_solicitudAutenticacion;
 
-    extraerDatosRespuestaSolicitudAutenticacion (respuesta, &datosRespuestaSolicitudAutenticacion);
-    printf ("Respuesta recibida: %c|%c|%d\n", datosRespuestaSolicitudAutenticacion.header.tipo, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
-    procesarRespuestaSegunEstadoSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion, &datosRespuestaSolicitudAutenticacion);
-    contextoAplicacion->solicitudEnCurso = false;
+    datosUI_respuesta_solicitudAutenticacion = _interfazAutenticacion_solicitudAutenticacion_procesarRespuesta (contextoAplicacion, respuesta);
+    solicitudAutenticacion_procesarRespuestaSegunEstado (contextoAplicacion, interfazAutenticacion, &datosUI_respuesta_solicitudAutenticacion);
 }
-

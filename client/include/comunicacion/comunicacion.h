@@ -26,9 +26,18 @@
 
 
 /* ============================================================================================================================================
-   FUNCIONES
+   FUNCIONES DE INFRAESTRUCTURA
    ============================================================================================================================================ */
 
+
+/** \brief Inicializar la comunicacion configurando los recursos necesarios para su utilizacion.
+ * 
+ * Invocar una unica vez al inicio del programa, antes de realizar cualquier otro proceso de comunicacion.
+ * 
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ *
+ */
+void comunicacion_inicializar (t_contextoAplicacion *contextoAplicacion);
 
 /** \brief Crear el socket y configurarlo como cliente para conectarse al servidor. Ademas, le establece un timeout y lo configura como modo no bloqueante.
  *
@@ -40,6 +49,12 @@
  *
  */
 t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock);
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE RECEPCION Y ENVIO DE SOLICITUDES
+   ============================================================================================================================================ */
+
 
 /** \brief Recibir una respuesta del servidor a traves del socket.
  *
@@ -110,6 +125,93 @@ void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int 
  *
  */
 void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuarioChatSeleccionado);
+
+
+/* ============================================================================================================================================
+   FUNCIONES LOGICAS
+   ============================================================================================================================================ */
+
+
+/** \brief Preguntar si hay una solicitud en curso en el momento en el que se invoca la funcion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ *
+ * \return True si hay una solicitud en curso, False en caso contrario.
+ * 
+ */
+bool comunicacion_haySolicitudEnCurso (const t_contextoAplicacion *contextoAplicacion);
+
+/** \brief Finalizar el proceso de solicitud en curso. 
+ * 
+ * Invocar siempre que se reciba la respuesta de la solicitud enviada para dar por finalizada la comunicacion.
+ *
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
+ * 
+ */
+void comunicacion_finalizarSolicitudEnCurso (t_contextoAplicacion *contextoAplicacion);
+
+/** \brief Finalizar la comunicacion con el servidor del socket asignado.
+ *
+ * \param sock Socket del usuario donde se finalizara la comunicacion.
+ * 
+ */
+void comunicacion_finalizar (t_socket *sock);
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE EXTRACCION DE DATOS
+   ============================================================================================================================================ */
+
+
+/** \brief Obtener el tipo de respuesta segun el contenido del header.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ *
+ * \return Tipo de respuesta recibido.
+ * 
+ */
+t_tipoRespuesta comunicacion_obtenerTipoRespuesta (const char *respuesta);
+
+
+/** \brief Extraer los datos crudos del buffer que contiene la respuesta recibida por el servidor a datos procesados contenidos en una estructura.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ * \param returnDatosRespuestaSolicitudAutenticacion Puntero a la estructura que contiene los datos de respuesta de la solicitud de autenticacion donde seran retornados.
+ * 
+ */
+void comunicacion_extraerDatosRespuesta_solicitudAutenticacion (const char *respuesta, t_datosRespuestaSolicitudAutenticacion *returnDatosRespuestaSolicitudAutenticacion);
+
+/** \brief Extraer los datos crudos del buffer que contiene la respuesta recibida por el servidor a datos procesados contenidos en una estructura.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ * \param returnDatosRespuestaSolicitudRegistro Puntero a la estructura que contiene los datos de respuesta de la solicitud de registro donde seran retornados.
+ * 
+ */
+void comunicacion_extraerDatosRespuesta_solicitudRegistro (const char *respuesta, t_datosRespuestaSolicitudRegistro *returnDatosRespuestaSolicitudRegistro);
+
+/** \brief Extraer los datos crudos del buffer que contiene la respuesta recibida por el servidor a datos procesados contenidos en una estructura.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ * \param returnDatosRespuestaSolicitudSeleccionChat Puntero a la estructura que contiene los datos de respuesta de la solicitud de seleccion de chat donde seran retornados.
+ * 
+ */
+void comunicacion_extraerDatosRespuesta_solicitudSeleccionChat (const char *respuesta, t_datosRespuestaSolicitudSeleccionChat *returnDatosRespuestaSolicitudSeleccionChat);
+
+/** \brief Extraer los datos crudos del buffer que contiene la respuesta recibida por el servidor a datos procesados contenidos en una estructura.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ * \param returnDatosRespuestaSolicitudEnvioMensaje Puntero a la estructura que contiene los datos de respuesta de la solicitud de envio de mensaje donde seran retornados.
+ * 
+ */
+void comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (const char *respuesta, t_datosRespuestaSolicitudEnvioMensaje *returnDatosRespuestaSolicitudEnvioMensaje);
+
+/** \brief Extraer los datos crudos del buffer que contiene la respuesta recibida por el servidor a datos procesados contenidos en una estructura.
+ *
+ * \param respuesta Buffer que contiene la respuesta recibida por el servidor.
+ * \param t_datosRespuestaRecepcionMensaje Puntero a la estructura que contiene los datos de respuesta de la solicitud de envio de mensaje donde seran retornados.
+ * 
+ */
+void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *t_datosRespuestaRecepcionMensaje);
 
 
 #endif // COMUNICACION_H_INCLUDED

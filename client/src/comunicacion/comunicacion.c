@@ -1,6 +1,17 @@
 #include "comunicacion/comunicacion.h"
 
 
+/* ============================================================================================================================================
+   FUNCIONES DE INFRAESTRUCTURA
+   ============================================================================================================================================ */
+
+
+void comunicacion_inicializar (t_contextoAplicacion *contextoAplicacion)
+{
+    contextoAplicacion->sock = SOCKET_INVALIDO;
+    contextoAplicacion->solicitudEnCurso = false;
+}
+
 static bool socketConectado;
 
 t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
@@ -15,7 +26,11 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
     if (!socketConectado)
     {
         if (socket_conectarCliente (returnSock) == EXITO)
+        {
+            socket_establecerTimeout (returnSock, 5000);
+            socket_establecerModoNoBloqueante (returnSock);
             socketConectado = true;
+        }
         else
         {
             socket_cerrar (returnSock);
@@ -23,11 +38,14 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
         }
     }
 
-    socket_establecerTimeout (returnSock, 5000);
-    socket_establecerModoNoBloqueante (returnSock);
-
     return SOLICITUD_EXITO;
 }
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE RECEPCION Y ENVIO DE SOLICITUDES
+   ============================================================================================================================================ */
+
 
 t_resultadoRecepcion recibirRespuesta (t_socket sock, char *bufferRespuesta)
 {
@@ -122,3 +140,66 @@ void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, con
     else
         printf ("\nYa hay una solicitud en curso.\n");
 }
+
+
+/* ============================================================================================================================================
+   FUNCIONES LOGICAS
+   ============================================================================================================================================ */
+
+
+bool comunicacion_haySolicitudEnCurso (const t_contextoAplicacion *contextoAplicacion)
+{
+    return (contextoAplicacion->solicitudEnCurso);
+}
+
+void comunicacion_finalizarSolicitudEnCurso (t_contextoAplicacion *contextoAplicacion)
+{
+    contextoAplicacion->solicitudEnCurso = false;
+}
+
+void comunicacion_finalizar (t_socket *sock)
+{
+    socket_cerrar (sock);
+}
+
+
+/* ============================================================================================================================================
+   FUNCIONES DE EXTRACCION DE DATOS
+   ============================================================================================================================================ */
+
+
+t_tipoRespuesta comunicacion_obtenerTipoRespuesta (const char *respuesta)
+{
+    t_header header;
+
+    memcpy (&header, respuesta, sizeof (t_header));
+
+    return header.tipo;
+}
+
+
+void comunicacion_extraerDatosRespuesta_solicitudAutenticacion (const char *respuesta, t_datosRespuestaSolicitudAutenticacion *returnDatosRespuestaSolicitudAutenticacion)
+{
+    memcpy (returnDatosRespuestaSolicitudAutenticacion, respuesta, sizeof (t_datosRespuestaSolicitudAutenticacion));
+}
+
+void comunicacion_extraerDatosRespuesta_solicitudRegistro (const char *respuesta, t_datosRespuestaSolicitudRegistro *returnDatosRespuestaSolicitudRegistro)
+{
+    memcpy (returnDatosRespuestaSolicitudRegistro, respuesta, sizeof (t_datosRespuestaSolicitudRegistro));
+}
+
+void comunicacion_extraerDatosRespuesta_solicitudSeleccionChat (const char *respuesta, t_datosRespuestaSolicitudSeleccionChat *returnDatosRespuestaSolicitudSeleccionChat)
+{
+    memcpy (returnDatosRespuestaSolicitudSeleccionChat, respuesta, sizeof (t_datosRespuestaSolicitudSeleccionChat));
+}
+
+void comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (const char *respuesta, t_datosRespuestaSolicitudEnvioMensaje *returnDatosRespuestaSolicitudEnvioMensaje)
+{
+    memcpy (returnDatosRespuestaSolicitudEnvioMensaje, respuesta, sizeof (t_datosRespuestaSolicitudEnvioMensaje));
+}
+
+void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *t_datosRespuestaRecepcionMensaje)
+{
+    memcpy (t_datosRespuestaRecepcionMensaje, respuesta, sizeof (t_datosRespuestaRecepcionMensaje));
+}
+

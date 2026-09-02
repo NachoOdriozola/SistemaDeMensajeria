@@ -327,7 +327,7 @@ void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
 
     // feedbackUsuario
     sfText_setCharacterSize (textos->feedbackUsuario, 22);
-    sfText_setPosition (textos->feedbackUsuario, (sfVector2f){442, 958});
+    sfText_setPosition (textos->feedbackUsuario, (sfVector2f){442, 964});
 
     // informacionSeleccionChat
     sfText_setCharacterSize (textos->informacionSeleccionChat, 30);
