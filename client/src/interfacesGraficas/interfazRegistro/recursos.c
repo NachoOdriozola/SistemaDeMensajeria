@@ -15,30 +15,30 @@ void _interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroEleme
 }
 
 
-t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos)
+t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
-    textos->auxEscribirCorreo = sfText_create ();
+    textos->auxEscribirCorreo = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirCorreo)
     {
         perror ("\nERROR - Interfaz de registro, crear texto auxEscribirCorreo.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->ingresarCorreo = sfText_create ();
+    textos->ingresarCorreo = sfText_create (fuentes->ui);
     if (!textos->ingresarCorreo)
     {
         perror ("\nERROR - Interfaz de registro, crear texto ingresarCorreo.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->informacionContrasenia = sfText_create ();
+    textos->informacionContrasenia = sfText_create (fuentes->ui);
     if (!textos->informacionContrasenia)
     {
         perror ("\nERROR - Interfaz de registro, crear texto informacionContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->informacionNombre = sfText_create ();
+    textos->informacionNombre = sfText_create (fuentes->ui);
     if (!textos->informacionNombre)
     {
         perror ("\nERROR - Interfaz de registro, crear texto informacionNombre.\n");
@@ -63,11 +63,8 @@ t_codigoRetorno _interfazRegistro_inicializarElementos (t_interfazRegistroElemen
 }
 
 
-void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro)
 {
-    // Asignar recursos comunes
-    interfazRegistro->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
-
     // Deshabilitar foco
     interfazRegistro->estadoFoco = IR_NINGUNO;
 
@@ -75,28 +72,24 @@ void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro,
     *(interfazRegistro->logica.correoElectronico) = '\0';
 }
 
-void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos)
 {
     // auxEscribirCorreo
-    sfText_setFont (textos->auxEscribirCorreo, fuentes->cuerpo);
     sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
 
     // ingresarCorreo
-    sfText_setFont (textos->ingresarCorreo, fuentes->ui);
     sfText_setFillColor (textos->ingresarCorreo, sfColor_fromRGB (43, 43, 43));
-    sfUint32 bufferIngresarCorreo [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', 0};
+    uint32_t bufferIngresarCorreo [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', 0};
     sfText_setUnicodeString (textos->ingresarCorreo, bufferIngresarCorreo);
 
     // informacionContrasenia
-    sfText_setFont (textos->informacionContrasenia, fuentes->ui);
     sfText_setFillColor (textos->informacionContrasenia, sfColor_fromRGB (94, 91, 87));
-    sfUint32 bufferInformacionContrasenia [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '8', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    uint32_t bufferInformacionContrasenia [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '8', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
     sfText_setUnicodeString (textos->informacionContrasenia, bufferInformacionContrasenia);
 
     // informacionNombre
-    sfText_setFont (textos->informacionNombre, fuentes->ui);
     sfText_setFillColor (textos->informacionNombre, sfColor_fromRGB (94, 91, 87));
-    sfUint32 bufferInformacionNombre [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '3', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
+    uint32_t bufferInformacionNombre [] = {'M', 0x00ed, 'n', 'i', 'm', 'o', ' ', '3', ' ', 'c', 'a', 'r', 'a', 'c', 't', 'e', 'r', 'e', 's', 0};
     sfText_setUnicodeString (textos->informacionNombre, bufferInformacionNombre);
 }
 

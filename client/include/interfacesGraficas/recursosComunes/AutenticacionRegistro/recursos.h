@@ -15,9 +15,9 @@
 
 #include <stdio.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -37,12 +37,12 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_r
 void _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (t_recursosComunesAutenticacionRegistroVistas *vistas);
 
 t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes);
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
+t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarVistas (t_recursosComunesAutenticacionRegistroVistas *vistas);
 
 void _recursosComunesAutenticacionRegistro_configurarInterfaz (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
+void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
 void _recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
 
 void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos);

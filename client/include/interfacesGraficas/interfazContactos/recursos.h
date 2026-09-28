@@ -15,9 +15,9 @@
 
 #include <stdio.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -75,12 +75,12 @@ void _interfazContactos_inicializarValoresNulosElementos (t_interfazContactosEle
 void _interfazContactos_inicializarValoresNulosVistas (t_interfazContactosVistas *vistas);
 
 t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuentes *fuentes);
-t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos);
+t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes);
 t_codigoRetorno _interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos);
 t_codigoRetorno _interfazContactos_inicializarVistas (t_interfazContactosVistas *vistas);
 
 void _interfazContactos_configurarInterfaz (t_interfazContactos *interfazContactos);
-void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes);
+void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos);
 void _interfazContactos_configurarElementos (t_interfazContactosElementos *elementos);
 
 void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos);

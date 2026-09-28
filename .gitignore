@@ -3,11 +3,15 @@
 
 # Base de datos
 *.db
-server/database/database.db-shm
-server/database/database.db-wal
+*.db-shm
+*.db-wal
 
 # Doxygen
 docs/html
 
 # CMake
 build/
+CMakeUserPresets.json
+
+# VSCode
+.vscode

@@ -10,10 +10,16 @@ void interfazAutenticacion_inicializarValoresNulos (t_interfazAutenticacion *int
     _interfazAutenticacion_inicializarValoresNulosElementos (&(interfazAutenticacion->elementos));
 }
 
-t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion)
+t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
+    // --------------- ASIGNAR RECURSOS COMUNES ---------------
+
+    interfazAutenticacion->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
+
+    // --------------- CREAR RECURSOS GRAFICOS ---------------
+
     // TEXTOS
-    if (_interfazAutenticacion_inicializarTextos (&(interfazAutenticacion->textos)) == ERROR_INICIALIZACION)
+    if (_interfazAutenticacion_inicializarTextos (&(interfazAutenticacion->textos), &(interfazAutenticacion->recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
@@ -23,14 +29,14 @@ t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *inte
     return EXITO;
 }
 
-void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazAutenticacion_configurarInterfaz (interfazAutenticacion, recursosComunesAutenticacionRegistro);
+    _interfazAutenticacion_configurarInterfaz (interfazAutenticacion);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazAutenticacion_configurarTextos (&(interfazAutenticacion->textos), &(interfazAutenticacion->recursosComunesAutenticacionRegistro->fuentes));
+    _interfazAutenticacion_configurarTextos (&(interfazAutenticacion->textos));
 
     // ELEMENTOS
     _interfazAutenticacion_configurarElementos (&(interfazAutenticacion->elementos));

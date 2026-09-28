@@ -248,7 +248,7 @@ static bool sonDatosRegistroUsuarioInvalidos (const t_datosEnvioSolicitudRegistr
     return 0;
 }
 
-static nombreYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static bool nombreYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
 {
     t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
 
@@ -257,7 +257,7 @@ static nombreYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recupera
     return (buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, NULL));
 }
 
-static correoYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static bool correoYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
 {
     t_datosBuscarUsuarioPorCorreo datosBuscarUsuarioPorCorreo;
 

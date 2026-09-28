@@ -19,9 +19,9 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 

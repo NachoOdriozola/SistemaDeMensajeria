@@ -16,7 +16,7 @@ bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShap
     mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
     limiteRectangulo = sfRectangleShape_getGlobalBounds (rectangulo);
 
-    return sfFloatRect_contains (&limiteRectangulo, mouseMundo.x, mouseMundo.y);
+    return sfFloatRect_contains (&limiteRectangulo, (sfVector2f){mouseMundo.x, mouseMundo.y});
 }
 
 bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
@@ -29,7 +29,7 @@ bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
     mouseMundo = sfRenderWindow_mapPixelToCoords (renderizado, mousePixel, NULL);
     limiteTexto = sfText_getGlobalBounds (texto);
 
-    return sfFloatRect_contains (&limiteTexto, mouseMundo.x, mouseMundo.y);
+    return sfFloatRect_contains (&limiteTexto, (sfVector2f){mouseMundo.x, mouseMundo.y});
 }
 
 void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea)
@@ -40,8 +40,8 @@ void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, fl
 
     sfText_setPosition (texto, (sfVector2f)
                         {
-                            round (posXInicial + anchoArea / 2.f - limites.width / 2.f - limites.left),
-                            round (posYInicial + altoArea / 2.f - limites.height /2.f - limites.top)
+                            round (posXInicial + anchoArea / 2.f - limites.size.x / 2.f - limites.position.x),
+                            round (posYInicial + altoArea / 2.f - limites.size.y /2.f - limites.position.y)
                         });
 }
 
@@ -49,7 +49,7 @@ static bool textoEntraEnBarraEscritura (sfText *texto, float anchoBarraEscritura
 {
     sfFloatRect limitesTexto = sfText_getLocalBounds(texto);
 
-    return (limitesTexto.width <= anchoBarraEscritura);
+    return (limitesTexto.size.x <= anchoBarraEscritura);
 }
 
 void limitarVisualizacionTextoSobreBarraEscritura (sfText *texto, const char *cadena, float anchoBarraEscritura)
@@ -121,7 +121,7 @@ t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent
 
 t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer)
 {
-    const sfUint32 *texto, *pTexto;
+    const uint32_t *texto, *pTexto;
     int largoBuffer, espacioDisponibleEnBuffer, largoTextoPortapapeles = 0;
 
     texto = sfClipboard_getUnicodeString ();

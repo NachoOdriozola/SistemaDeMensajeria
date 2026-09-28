@@ -23,7 +23,7 @@ t_codigoRetorno recursosComunesAutenticacionRegistro_inicializar (t_recursosComu
         return ERROR_INICIALIZACION;
 
     // TEXTOS
-    if (_recursosComunesAutenticacionRegistro_inicializarTextos (&(recursosComunesAutenticacionRegistro->textos)) == ERROR_INICIALIZACION)
+    if (_recursosComunesAutenticacionRegistro_inicializarTextos (&(recursosComunesAutenticacionRegistro->textos), &(recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
@@ -44,7 +44,7 @@ void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutentica
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _recursosComunesAutenticacionRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos), &(recursosComunesAutenticacionRegistro->fuentes));
+    _recursosComunesAutenticacionRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos));
 
     // ELEMENTOS
     _recursosComunesAutenticacionRegistro_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));

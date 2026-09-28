@@ -71,19 +71,19 @@ static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAute
     // auxEscribirContrasenia
     sfText_setString (textos->auxEscribirContrasenia, "");
     sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){42, 315});
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    sfText_setFillColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
 
     // auxEscribirNombre
     sfText_setString (textos->auxEscribirNombre, "");
     sfText_setPosition (textos->auxEscribirNombre, (sfVector2f){42, 180});
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    sfText_setFillColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
     // botonIngresar
     sfText_setString (textos->botonIngresar, "INGRESAR");
     centrarTextoEnArea (textos->botonIngresar, 180, 405, 140, 35);
 
     // cambiarInterfaz
-    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    uint32_t bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
     sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
     centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
 
@@ -97,7 +97,7 @@ static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAute
     sfText_setPosition (textos->ingresarNombre, (sfVector2f){35, 120});
 
     // tituloInterfaz
-    sfUint32 bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
+    uint32_t bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
     sfText_setUnicodeString (textos->tituloInterfaz, bufferTituloInterfaz);
     sfText_setPosition (textos->tituloInterfaz, (sfVector2f){120, 25});
 }
@@ -134,7 +134,7 @@ static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutentica
     centrarTextoEnArea (textos->botonIngresar, 180, 452, 140, 35);
 
     // cambiarInterfaz
-    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
+    uint32_t bufferCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
     sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
     centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
 

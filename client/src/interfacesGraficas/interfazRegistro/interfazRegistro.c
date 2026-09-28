@@ -10,10 +10,16 @@ void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegis
     _interfazRegistro_inicializarValoresNulosElementos (&(interfazRegistro->elementos));
 }
 
-t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro)
+t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
 {
+    // --------------- ASIGNAR RECURSOS COMUNES ---------------
+
+    interfazRegistro->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
+
+    // --------------- CREAR RECURSOS GRAFICOS ---------------
+
     // TEXTOS
-    if (_interfazRegistro_inicializarTextos (&(interfazRegistro->textos)) == ERROR_INICIALIZACION)
+    if (_interfazRegistro_inicializarTextos (&(interfazRegistro->textos), &(interfazRegistro->recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
@@ -23,14 +29,14 @@ t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegist
     return EXITO;
 }
 
-void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazRegistro_configurarInterfaz (interfazRegistro, recursosComunesAutenticacionRegistro);
+    _interfazRegistro_configurarInterfaz (interfazRegistro);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazRegistro_configurarTextos (&(interfazRegistro->textos), &(interfazRegistro->recursosComunesAutenticacionRegistro->fuentes));
+    _interfazRegistro_configurarTextos (&(interfazRegistro->textos));
 
     // ELEMENTOS
     _interfazRegistro_configurarElementos (&(interfazRegistro->elementos));

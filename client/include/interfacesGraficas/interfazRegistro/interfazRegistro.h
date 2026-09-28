@@ -17,9 +17,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -47,22 +47,22 @@
  */
 void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro);
 
-/** \brief Inicializar los recursos graficos de la interfaz de registro.
+/** \brief Inicializar los recursos graficos de la interfaz de registro. Ademas, asigna los recursos comunes.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro);
+t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
-/** \brief Configurar los recursos graficos y logica de la interfaz de registro. Ademas, asigna los recursos comunes.
+/** \brief Configurar los recursos graficos y logica de la interfaz de registro.
  *
  * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  * 
  */
-void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro);
 
 /** \brief Ejecutar la interfaz de registro.
  *

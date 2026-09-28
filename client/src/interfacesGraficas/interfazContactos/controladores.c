@@ -11,7 +11,7 @@ static _t_resultado_validacionDatosEnvioMensaje validarDatosEnvioMensaje (const 
 
 static void resetearInterfaz (t_interfazContactos *interfazContactos);
 
-static void configurarMensaje (sfText *mensajeGrafico, const sfFont *fuente);
+static void configurarMensaje (sfText *mensajeGrafico);
 static void establecerTextoConSaltosDeLineaAlMensaje (sfText *mensajeGrafico, const char *cadenaMensaje, float anchoMaxMensaje);
 static void desplazarHaciaArribaTodosLosMensajes (t_listaDoble *mensajes, float desplazamientoY);
 static void establecerPosicionMensajeSegunOrigen (sfText *mensaje, t_origenMensaje origenMensaje);
@@ -138,15 +138,15 @@ t_codigoRetorno _interfazContactos_listaMensajes_insertarMensaje (t_contextoMens
 {
     sfText *mensajeGrafico;
 
-    mensajeGrafico = sfText_create ();
+    mensajeGrafico = sfText_create (fuentes->cuerpo);
     if (!mensajeGrafico)
     {
         perror ("\nERROR - Interfaz contactos, crear mensaje grafico.\n");
         return ERROR_SIN_MEMORIA;
     } 
-    configurarMensaje (mensajeGrafico, fuentes->cuerpo);
+    configurarMensaje (mensajeGrafico);
     establecerTextoConSaltosDeLineaAlMensaje (mensajeGrafico, mensaje, 700);
-    desplazarHaciaArribaTodosLosMensajes (&(contextoMensajes->mensajes), (sfText_getLocalBounds (mensajeGrafico)).height + 35);
+    desplazarHaciaArribaTodosLosMensajes (&(contextoMensajes->mensajes), (sfText_getLocalBounds (mensajeGrafico)).size.y + 35);
     establecerPosicionMensajeSegunOrigen (mensajeGrafico, origenMensaje);
     if (insertarAlInicioListaDoble (&(contextoMensajes->mensajes), &mensajeGrafico, sizeof (sfText*)) != 0) // 0 es exito.
         return ERROR_SIN_MEMORIA;
@@ -265,9 +265,8 @@ static void resetearInterfaz (t_interfazContactos *interfazContactos)
 /*
  * Aun no establece la posicion en ventana ni el contenido del mensaje.
 */
-static void configurarMensaje (sfText *mensajeGrafico, const sfFont *fuente)
+static void configurarMensaje (sfText *mensajeGrafico)
 {
-    sfText_setFont (mensajeGrafico, fuente);
     sfText_setFillColor (mensajeGrafico, sfColor_fromRGB (53, 53, 53));
     sfText_setCharacterSize (mensajeGrafico, 22);
     sfText_setLineSpacing (mensajeGrafico, 1.3);
@@ -365,9 +364,9 @@ static void establecerPosicionMensajeSegunOrigen (sfText *mensaje, t_origenMensa
     sfFloatRect limitesMensaje = sfText_getLocalBounds (mensaje);
 
     if (origenMensaje == MENSAJE_PROPIO)
-        sfText_setPosition (mensaje, (sfVector2f){1824 - limitesMensaje.width - limitesMensaje.left, 825 - limitesMensaje.height});
+        sfText_setPosition (mensaje, (sfVector2f){1824 - limitesMensaje.size.x - limitesMensaje.position.x, 825 - limitesMensaje.size.y});
     else
-        sfText_setPosition (mensaje, (sfVector2f){485, 825 - limitesMensaje.height});
+        sfText_setPosition (mensaje, (sfVector2f){485, 825 - limitesMensaje.size.y});
 }
 
 static bool esElPrimerMensaje (t_contextoMensajes *contextoMensajes)

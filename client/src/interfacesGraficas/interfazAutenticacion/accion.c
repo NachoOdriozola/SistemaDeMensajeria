@@ -100,14 +100,14 @@ static void mostrar_feedback_cargando (t_interfazAutenticacion *interfazAutentic
 
 static void mostrar_feedback_credencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion)
 {
-    sfUint32 bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
+    uint32_t bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
     sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
     centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
 static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion)
 {
-    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
     sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
     centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
 }
@@ -142,7 +142,7 @@ static void posicionarPuntoInsercion_escribirNombre (t_interfazAutenticacion *in
     sfFloatRect limitesAuxEscribirNombre;
 
     limitesAuxEscribirNombre = sfText_getGlobalBounds (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.width, 208});
+    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 208});
 }
 
 static void posicionarPuntoInsercion_escribirContrasenia (t_interfazAutenticacion *interfazAutenticacion)
@@ -150,7 +150,7 @@ static void posicionarPuntoInsercion_escribirContrasenia (t_interfazAutenticacio
     sfFloatRect limitesAuxEscribirContrasenia;
     
     limitesAuxEscribirContrasenia = sfText_getGlobalBounds (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.width, 343});
+    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 343});
 }
 
 

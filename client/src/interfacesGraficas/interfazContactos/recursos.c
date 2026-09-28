@@ -42,14 +42,14 @@ void _interfazContactos_inicializarValoresNulosVistas (t_interfazContactosVistas
 
 t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
+    fuentes->ui = sfFont_createFromFile ("assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Interfaz de contactos, crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("../../../client/assets/fonts/fuenteCuerpo.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("assets/fonts/fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Interfaz de contactos, crear fuente cuerpo.\n");
@@ -59,51 +59,51 @@ t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuente
     return EXITO;
 }
 
-t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos)
+t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes)
 {
-    textos->auxContactoSeleccionado = sfText_create ();
+    textos->auxContactoSeleccionado = sfText_create (fuentes->cuerpo);
     if (!textos->auxContactoSeleccionado)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto auxContactoSeleccionado.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->auxEscribirMensaje = sfText_create ();
+    textos->auxEscribirMensaje = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirMensaje)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto auxEscribirMensaje.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->botonEnviar = sfText_create ();
+    textos->botonEnviar = sfText_create (fuentes->ui);
     if (!textos->botonEnviar)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto botonEnviar.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->feedbackUsuario = sfText_create ();
+    textos->feedbackUsuario = sfText_create (fuentes->ui);
     if (!textos->feedbackUsuario)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto feedbackUsuario.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->informacionSeleccionChat = sfText_create ();
+    textos->informacionSeleccionChat = sfText_create (fuentes->ui);
     if (!textos->informacionSeleccionChat)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto informacionSeleccionChat.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->nombreUsuario = sfText_create ();
+    textos->nombreUsuario = sfText_create (fuentes->ui);
     if (!textos->nombreUsuario)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto nombreUsuario.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->tituloContactos = sfText_create ();
+    textos->tituloContactos = sfText_create (fuentes->ui);
     if (!textos->tituloContactos)
     {
         perror ("\nERROR - Interfaz de contactos, crear texto tituloContactos.\n");
@@ -231,36 +231,29 @@ void _interfazContactos_configurarInterfaz (t_interfazContactos *interfazContact
     resetearPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
 }
 
-void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes)
+void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos)
 {
     // auxContactoSeleccionado
-    sfText_setFont (textos->auxContactoSeleccionado, fuentes->cuerpo);
     sfText_setFillColor (textos->auxContactoSeleccionado, sfColor_fromRGB (94, 91, 87));
 
     // auxEscribirMensaje
-    sfText_setFont (textos->auxEscribirMensaje, fuentes->cuerpo);
     sfText_setFillColor (textos->auxEscribirMensaje, sfColor_fromRGB (53, 53, 53));
 
     // botonEnviar
-    sfText_setFont (textos->botonEnviar, fuentes->ui);
     sfText_setString (textos->botonEnviar, "ENVIAR");
     sfText_setFillColor (textos->botonEnviar, sfColor_fromRGB (94, 91, 87));
     
     // feedbackUsuario
-    sfText_setFont (textos->feedbackUsuario, fuentes->ui);
     sfText_setFillColor (textos->feedbackUsuario, sfColor_fromRGB (94, 91, 87));
 
     // informacionSeleccionChat
-    sfText_setFont (textos->informacionSeleccionChat, fuentes->ui);
     sfText_setFillColor (textos->informacionSeleccionChat, sfColor_fromRGBA (94, 91, 87, 191));
     sfText_setString (textos->informacionSeleccionChat, "Seleccione un chat con un usuario");
 
     // nombreUsuario
-    sfText_setFont (textos->nombreUsuario, fuentes->ui);
     sfText_setFillColor (textos->nombreUsuario, sfColor_fromRGB (43, 43, 43));
 
     // tituloContactos
-    sfText_setFont (textos->tituloContactos, fuentes->ui);
     sfText_setString (textos->tituloContactos, "CONTACTOS");
     sfText_setFillColor (textos->tituloContactos, sfColor_fromRGB (43, 43, 43));
 }

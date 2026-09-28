@@ -104,14 +104,14 @@ static void mostrar_feedback_cargando (t_interfazRegistro *interfazRegistro)
 
 static void mostrar_feedback_errorConexion (t_interfazRegistro *interfazRegistro)
 {
-    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
     sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
     centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
 }
 
 static void mostrar_feedback_credencialesInvalidas (t_interfazRegistro *interfazRegistro)
 {
-    sfUint32 bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
+    uint32_t bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
     sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferDatosInvalidos);
     centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
 }
@@ -119,13 +119,13 @@ static void mostrar_feedback_credencialesInvalidas (t_interfazRegistro *interfaz
 static void mostrar_datosInvalidos (t_interfazRegistro *interfazRegistro, const _t_resultado_validacionDatosRegistro *resultado_validacionDatosRegistro)
 {
     if (!resultado_validacionDatosRegistro->nombreValido)
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
 
     if (!resultado_validacionDatosRegistro->contraseniaValida)
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
 
     if (!resultado_validacionDatosRegistro->correoValido)
-        sfText_setColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
+        sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
 }
 
 static void intentarRegistrarYProcesarResultadoOperacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
@@ -159,7 +159,7 @@ static void posicionarPuntoInsercion_escribirNombre (t_interfazRegistro *interfa
     sfFloatRect limitesAuxEscribirNombre;
     
     limitesAuxEscribirNombre = sfText_getGlobalBounds (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.width, 198});
+    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 198});
 }
 
 static void posicionarPuntoInsercion_escribirContrasenia (t_interfazRegistro *interfazRegistro)
@@ -167,7 +167,7 @@ static void posicionarPuntoInsercion_escribirContrasenia (t_interfazRegistro *in
     sfFloatRect limitesAuxEscribirContrasenia;
     
     limitesAuxEscribirContrasenia = sfText_getGlobalBounds (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.width, 323});
+    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 323});
 }
 
 static void posicionarPuntoInsercion_escribirCorreo (t_interfazRegistro *interfazRegistro)
@@ -175,7 +175,7 @@ static void posicionarPuntoInsercion_escribirCorreo (t_interfazRegistro *interfa
     sfFloatRect limitesAuxEscribirCorreo;
 
     limitesAuxEscribirCorreo = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirCorreo.width, 420});
+    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirCorreo.size.x, 420});
 }
 
 
@@ -250,7 +250,7 @@ static bool procesar_escribir_nombre (t_contextoAplicacion *contextoAplicacion, 
 
     if (ingresarCaracterABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO, eventoChar) == EXITO)
     {
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
         limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
         posicionarPuntoInsercion_escribirNombre (interfazRegistro);
     }
@@ -268,7 +268,7 @@ static bool procesar_escribir_contrasenia (t_contextoAplicacion *contextoAplicac
 
     if (ingresarCaracterABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA, eventoChar) == EXITO)
     {
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
         limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
         posicionarPuntoInsercion_escribirContrasenia (interfazRegistro);
     }
@@ -319,7 +319,7 @@ static bool procesar_pegarTextoDesdePortapapeles_escribir_nombre (t_contextoApli
 
     if (pegarTextoDesdePortapapelesABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO) == EXITO)
     {
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
         limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
         posicionarPuntoInsercion_escribirNombre (interfazRegistro);
     }
@@ -339,7 +339,7 @@ static bool procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (t_context
 
     if (pegarTextoDesdePortapapelesABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA) == EXITO)
     {
-        sfText_setColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
         limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
         posicionarPuntoInsercion_escribirContrasenia (interfazRegistro);
     }

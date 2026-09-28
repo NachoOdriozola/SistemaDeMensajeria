@@ -103,15 +103,15 @@ static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, t_
 {
     sfVector2u nuevoTamVentana;
 
-    if (eventoRedimensionamiento.size.width < ANCHO_MINIMO_VENTANA)
+    if (eventoRedimensionamiento.size.size.x < ANCHO_MINIMO_VENTANA)
         nuevoTamVentana.x = ANCHO_MINIMO_VENTANA;
     else
-        nuevoTamVentana.x = eventoRedimensionamiento.size.width;
+        nuevoTamVentana.x = eventoRedimensionamiento.size.size.x;
 
-    if (eventoRedimensionamiento.size.height < ALTO_MINIMO_VENTANA)
+    if (eventoRedimensionamiento.size.size.y < ALTO_MINIMO_VENTANA)
         nuevoTamVentana.y = ALTO_MINIMO_VENTANA;
     else
-        nuevoTamVentana.y = eventoRedimensionamiento.size.height;
+        nuevoTamVentana.y = eventoRedimensionamiento.size.size.y;
 
     sfRenderWindow_setSize (renderizado, nuevoTamVentana);
 
@@ -126,7 +126,7 @@ static void posicionarPuntoInsercion_escribirMensaje (t_interfazContactos *inter
     sfFloatRect limitesAuxEscribirMensaje;
 
     limitesAuxEscribirMensaje = sfText_getGlobalBounds (interfazContactos->textos.auxEscribirMensaje);
-    sfRectangleShape_setPosition (interfazContactos->elementos.puntoInsercion, (sfVector2f){451 + limitesAuxEscribirMensaje.width, 942});
+    sfRectangleShape_setPosition (interfazContactos->elementos.puntoInsercion, (sfVector2f){451 + limitesAuxEscribirMensaje.size.x, 942});
 }
 
 static void resetearBarraEscritura (t_interfazContactos *interfazContactos)
@@ -147,14 +147,18 @@ static void mostrarFeedback_datosInvalidosSeleccionChat (t_interfazContactos *in
     switch (*resultado_validacionDatosSeleccionChat)
     {
         case INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREVACIO:
-            sfUint32 bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'n', 'o', 'm', 'b', 'r', 'e', ' ', 'd','e',' ','u','s','u','a','r','i','o', ' ','v', 'a', 'c', 0x00ED, 'o', 0};
+        {
+            uint32_t bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'n', 'o', 'm', 'b', 'r', 'e', ' ', 'd','e',' ','u','s','u','a','r','i','o', ' ','v', 'a', 'c', 0x00ED, 'o', 0};
             sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferEsMensajeVacio);
             break;
+        }
 
         case INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREINVALIDO:
-            sfUint32 bufferNoEsNombreValido[] = {'N','o',' ','e','s',' ','u','n',' ','n','o','m','b','r','e',' ','d','e',' ','u','s','u','a','r','i','o',' ','v',0x00e1,'l','i','d','o',0};
+        {
+            uint32_t bufferNoEsNombreValido[] = {'N','o',' ','e','s',' ','u','n',' ','n','o','m','b','r','e',' ','d','e',' ','u','s','u','a','r','i','o',' ','v',0x00e1,'l','i','d','o',0};
             sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferNoEsNombreValido);
             break;
+        }
 
         case INTENTARSELECCIONARCHAT_RESULTADODATOS_SELECCIONPROPIOCHAT:
             sfText_setString (interfazContactos->textos.feedbackUsuario, "No se puede seleccionar un chat con su propio usuario");
@@ -197,9 +201,11 @@ static void mostrarFeedback_datosInvalidosEnvioMensaje (t_interfazContactos *int
     switch (*resultado_validacionDatosEnvioMensaje)
     {
         case INTENTARENVIARMENSAJE_RESULTADODATOS_MENSAJEVACIO:
-            sfUint32 bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'm', 'e', 'n', 's', 'a', 'j', 'e', ' ', 'v', 'a', 'c', 0x00ED, 'o', 0};
+        {
+            uint32_t bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'm', 'e', 'n', 's', 'a', 'j', 'e', ' ', 'v', 'a', 'c', 0x00ED, 'o', 0};
             sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferEsMensajeVacio);
             break;
+        }
 
         case INTENTARENVIARMENSAJE_RESULTADODATOS_SONTODOSESPACIOS:
             sfText_setString (interfazContactos->textos.feedbackUsuario, "No se puede enviar un mensaje de todos espacios");

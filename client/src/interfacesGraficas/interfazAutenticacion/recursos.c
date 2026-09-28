@@ -12,7 +12,7 @@ void _interfazAutenticacion_inicializarValoresNulosElementos (t_interfazAutentic
 }
 
 
-t_codigoRetorno _interfazAutenticacion_inicializarTextos (t_interfazAutenticacionTextos *textos)
+t_codigoRetorno _interfazAutenticacion_inicializarTextos (t_interfazAutenticacionTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
 
 
@@ -27,16 +27,13 @@ t_codigoRetorno _interfazAutenticacion_inicializarElementos (t_interfazAutentica
 }
 
 
-void _interfazAutenticacion_configurarInterfaz (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _interfazAutenticacion_configurarInterfaz (t_interfazAutenticacion *interfazAutenticacion)
 {
-    // Asignar recursos comunes
-    interfazAutenticacion->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
-
     // Deshabilitar foco
     interfazAutenticacion->estadoFoco = IA_NINGUNO;
 }
 
-void _interfazAutenticacion_configurarTextos (t_interfazAutenticacionTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+void _interfazAutenticacion_configurarTextos (t_interfazAutenticacionTextos *textos)
 {
 
 }

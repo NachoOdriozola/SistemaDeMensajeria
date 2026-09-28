@@ -36,7 +36,7 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
 
     // --------------- INICIALIZAR RENDERIZADO ---------------
 
-    contextoAplicacion->renderizado = sfRenderWindow_create ((sfVideoMode){500, 620}, "Aplicacion", sfDefaultStyle, NULL);
+    contextoAplicacion->renderizado = sfRenderWindow_create ((sfVideoMode){500, 620}, "Aplicacion", sfDefaultStyle, sfWindowed, NULL);
     if (!contextoAplicacion->renderizado)
     {
         perror ("\nERROR - Crear renderizado.\n");
@@ -58,19 +58,18 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
         perror ("\nERROR - Inicializar interfaz de contactos.\n");
         return ERROR_INICIALIZACION;
     }
-
-    if (interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion)) == ERROR_INICIALIZACION)
+    
+    if (interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de autenticacion.\n");
         return ERROR_INICIALIZACION;
     }
-
-    if (interfazRegistro_inicializar (&(interfacesGraficas->registro)) == ERROR_INICIALIZACION)
+    
+    if (interfazRegistro_inicializar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de registro.\n");
         return ERROR_INICIALIZACION;
     }
-
 
     printf ("-INICIALIZACION EXITOSA-\n");
     return EXITO;
@@ -95,8 +94,8 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS DE LAS INTERFACES Y ASIGNAR LOS RECURSOS COMUNES ---------------
 
     interfazContactos_configurar (&(interfacesGraficas->contactos));
-    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazRegistro_configurar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion));
+    interfazRegistro_configurar (&(interfacesGraficas->registro));
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
@@ -211,16 +210,16 @@ static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_inte
     sfRenderWindow_setSize (renderizado, (sfVector2u){500, 620});
 
     recursosComunesAutenticacionRegistro_inicializar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion));
-    interfazRegistro_inicializar (&(interfacesGraficas->registro));
+    interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazRegistro_inicializar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
 
     recursosComunesAutenticacionRegistro_configurar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazRegistro_configurar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion));
+    interfazRegistro_configurar (&(interfacesGraficas->registro));
 
     sfRenderWindow_setView (renderizado, interfacesGraficas->recursosComunesAutenticacionRegistro.vistas.ui);
 
-    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
     sfText_setUnicodeString (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, bufferErrorConexion);
     centrarTextoEnArea (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, 0, 440, 500, 130);
 }

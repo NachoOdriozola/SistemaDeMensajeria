@@ -87,26 +87,9 @@ static void textoDeCarga (t_contextoAplicacion *contextoAplicacion, t_interfazRe
 }
 
 
-static void procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const char *respuesta)
-{
-    t_header header;
-
-    memcpy (&header, respuesta, sizeof (t_header));
-    switch (header.tipo)
-    {
-        case RESPUESTA_SOLICITUD_REGISTRO:
-            procesarRespuestaSolicitudRegistro (contextoAplicacion, interfazRegistro, respuesta);
-            break;
-
-        default:
-            break;
-    }
-}
-
-
 static void mostrar_feedback_errorConexion (t_interfazRegistro *interfazRegistro)
 {
-    sfUint32 bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
+    uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
     sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
     centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
 }
@@ -119,7 +102,7 @@ static void mostrar_feedback_errorConexion (t_interfazRegistro *interfazRegistro
 
 static void mostrar_feedback_credencialesInvalidas (t_interfazRegistro *interfazRegistro)
 {
-     sfUint32 bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
+     uint32_t bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
     sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferDatosInvalidos);
     centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
 }
@@ -132,7 +115,7 @@ static void mostrar_feedback_nombreYaExistente (t_interfazRegistro *interfazRegi
 
 static void mostrar_feedback_correoYaExistente (t_interfazRegistro *interfazRegistro)
 {
-    sfUint32 bufferCorreoYaExistente [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', ' ', 'y', 'a', ' ', 'e', 'x', 'i', 's', 't', 'e', 'n', 't', 'e', 0};
+    uint32_t bufferCorreoYaExistente [] = {'C', 'o', 'r', 'r', 'e', 'o', ' ', 'e', 'l', 'e', 'c', 't', 'r', 0x00f3, 'n', 'i', 'c', 'o', ' ', 'y', 'a', ' ', 'e', 'x', 'i', 's', 't', 'e', 'n', 't', 'e', 0};
     sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferCorreoYaExistente);
     centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
 }

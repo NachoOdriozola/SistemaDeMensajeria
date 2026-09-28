@@ -36,14 +36,14 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (t_recu
 
 t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
-    fuentes->ui = sfFont_createFromFile ("../../../client/assets/fonts/fuenteUI.ttf");
+    fuentes->ui = sfFont_createFromFile ("assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
     {
         perror ("\nERROR - Crear fuente UI.\n");
         return ERROR_INICIALIZACION;
     }
 
-    fuentes->cuerpo = sfFont_createFromFile ("../../../client/assets/fonts/fuenteCuerpo.ttf");
+    fuentes->cuerpo = sfFont_createFromFile ("assets/fonts/fuenteCuerpo.ttf");
     if (!fuentes->cuerpo)
     {
         perror ("\nERROR - Crear fuente cuerpo.\n");
@@ -54,58 +54,58 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recu
     return EXITO;
 }
 
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
 {
-    textos->auxEscribirContrasenia = sfText_create ();
+    textos->auxEscribirContrasenia = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirContrasenia)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto auxEscribirContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->auxEscribirNombre = sfText_create ();
+    textos->auxEscribirNombre = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirNombre)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto auxEscribirNombre.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->botonIngresar = sfText_create ();
+    textos->botonIngresar = sfText_create (fuentes->ui);
     if (!textos->botonIngresar)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto botonIngresar.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->cambiarInterfaz = sfText_create ();
+    textos->cambiarInterfaz = sfText_create (fuentes->ui);
     if (!textos->cambiarInterfaz)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto cambiarInterfaz.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->feedbackUsuario = sfText_create ();
+    textos->feedbackUsuario = sfText_create (fuentes->ui);
     if (!textos->feedbackUsuario)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto feedbackUsuario.\n");
         return ERROR_INICIALIZACION;
     }
     
-    textos->ingresarContrasenia = sfText_create ();
+    textos->ingresarContrasenia = sfText_create (fuentes->ui);
     if (!textos->ingresarContrasenia)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto ingresarContrasenia.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->ingresarNombre = sfText_create ();
+    textos->ingresarNombre = sfText_create (fuentes->ui);
     if (!textos->ingresarNombre)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto ingresarNombre.\n");
         return ERROR_INICIALIZACION;
     }
 
-    textos->tituloInterfaz = sfText_create ();
+    textos->tituloInterfaz = sfText_create (fuentes->ui);
     if (!textos->tituloInterfaz)
     {
         perror ("\nERROR - Recursos comunes autenticacion-registro, crear texto tituloInterfaz.\n");
@@ -183,46 +183,38 @@ void _recursosComunesAutenticacionRegistro_configurarInterfaz (t_recursosComunes
     *(recursosComunesAutenticacionRegistro->logica.nombreUsuario) = '\0';
 }
 
-void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
 {
     // auxEscribirContrasenia
-    sfText_setFont (textos->auxEscribirContrasenia, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+    sfText_setFillColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
 
     // auxEscribirNombre
-    sfText_setFont (textos->auxEscribirNombre, fuentes->cuerpo);
-    sfText_setColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+    sfText_setFillColor (textos->auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
 
     // botonIngresar
-    sfText_setFont (textos->botonIngresar, fuentes->ui);
     sfText_setString (textos->botonIngresar, "INGRESAR");
-    sfText_setColor (textos->botonIngresar, sfColor_fromRGB (94, 91, 87));
+    sfText_setFillColor (textos->botonIngresar, sfColor_fromRGB (94, 91, 87));
 
     // cambiarInterfaz
-    sfText_setFont (textos->cambiarInterfaz, fuentes->ui);
-    sfText_setColor (textos->cambiarInterfaz, sfColor_fromRGB (43, 43, 43));
-    sfUint32 bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
+    sfText_setFillColor (textos->cambiarInterfaz, sfColor_fromRGB (43, 43, 43));
+    uint32_t bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
     sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
 
     // feedbackUsuario
-    sfText_setFont (textos->feedbackUsuario, fuentes->ui);
     sfText_setFillColor (textos->feedbackUsuario, sfColor_fromRGB (43, 43, 43));
     
     // ingresarContrasenia
-    sfText_setFont (textos->ingresarContrasenia, fuentes->ui);
-    sfText_setColor (textos->ingresarContrasenia, sfColor_fromRGB (43, 43, 43));
-    sfUint32 bufferIngresarContrasenia [] = {'C', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ':', 0};
+    sfText_setFillColor (textos->ingresarContrasenia, sfColor_fromRGB (43, 43, 43));
+    uint32_t bufferIngresarContrasenia [] = {'C', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ':', 0};
     sfText_setUnicodeString (textos->ingresarContrasenia, bufferIngresarContrasenia);
 
     // ingresarNombre
-    sfText_setFont (textos->ingresarNombre, fuentes->ui);
     sfText_setString (textos->ingresarNombre, "Nombre de usuario:");
-    sfText_setColor (textos->ingresarNombre, sfColor_fromRGB (43, 43, 43));
+    sfText_setFillColor (textos->ingresarNombre, sfColor_fromRGB (43, 43, 43));
 
     // tituloInterfaz
-    sfText_setFont (textos->tituloInterfaz, fuentes->ui);
-    sfText_setColor (textos->tituloInterfaz, sfColor_fromRGB (43, 43, 43));
-    sfUint32 bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
+    sfText_setFillColor (textos->tituloInterfaz, sfColor_fromRGB (43, 43, 43));
+    uint32_t bufferTituloInterfaz [] = {'I', 'N', 'I', 'C', 'I', 'A', 'R', ' ', 'S', 'E', 'S', 'I', 0x00d3, 'N', 0};
     sfText_setUnicodeString (textos->tituloInterfaz, bufferTituloInterfaz);
 }
 

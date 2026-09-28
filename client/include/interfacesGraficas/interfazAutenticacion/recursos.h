@@ -15,9 +15,9 @@
 
 #include <stdio.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -35,11 +35,11 @@
 void _interfazAutenticacion_inicializarValoresNulosTextos (t_interfazAutenticacionTextos *textos);
 void _interfazAutenticacion_inicializarValoresNulosElementos (t_interfazAutenticacionElementos *elementos);
 
-t_codigoRetorno _interfazAutenticacion_inicializarTextos (t_interfazAutenticacionTextos *textos);
+t_codigoRetorno _interfazAutenticacion_inicializarTextos (t_interfazAutenticacionTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 t_codigoRetorno _interfazAutenticacion_inicializarElementos (t_interfazAutenticacionElementos *elementos);
 
-void _interfazAutenticacion_configurarInterfaz (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-void _interfazAutenticacion_configurarTextos (t_interfazAutenticacionTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
+void _interfazAutenticacion_configurarInterfaz (t_interfazAutenticacion *interfazAutenticacion);
+void _interfazAutenticacion_configurarTextos (t_interfazAutenticacionTextos *textos);
 void _interfazAutenticacion_configurarElementos (t_interfazAutenticacionElementos *elementos);
 
 void _interfazAutenticacion_tamYPosVentanaTextos (t_interfazAutenticacionTextos *textos);

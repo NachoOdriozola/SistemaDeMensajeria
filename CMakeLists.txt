@@ -1,8 +1,10 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 
 project(SistemaDeMensajeria LANGUAGES C)
 
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(shared/constantes)
 add_subdirectory(shared/protocolos)
@@ -12,9 +14,8 @@ add_subdirectory(shared/estructurasDeDatos/listaDoble)
 add_subdirectory(shared/estructurasDeDatos/cola)
 add_subdirectory(shared/estructurasDeDatos/tablaHash)
 
-add_subdirectory(external/csfml)
-add_subdirectory(external/libsodium)
-add_subdirectory(external/sqlite)
-
 add_subdirectory(server)
-add_subdirectory(client)
+
+if (WIN32)
+    add_subdirectory(client)
+endif()

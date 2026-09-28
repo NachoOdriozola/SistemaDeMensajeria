@@ -15,9 +15,9 @@
 
 #include <stdio.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -35,11 +35,11 @@
 void _interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos);
 void _interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos);
 
-t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos);
+t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
 t_codigoRetorno _interfazRegistro_inicializarElementos (t_interfazRegistroElementos *elementos);
 
-void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
-void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
+void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro);
+void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos);
 void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos);
 
 void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos);

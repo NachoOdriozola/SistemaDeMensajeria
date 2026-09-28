@@ -17,9 +17,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -65,7 +65,7 @@ void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazCon
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazContactos_inicializar (t_interfazContactos *interfazContactos);
+t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazContactos);
 
 /** \brief Configurar los recursos graficos y logica de la interfaz de contactos.
  *

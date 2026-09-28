@@ -17,9 +17,9 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "SFML/System.h"
-#include "SFML/Window.h"
-#include "SFML/Graphics.h"
+#include "CSFML/System.h"
+#include "CSFML/Window.h"
+#include "CSFML/Graphics.h"
 
 #include "constantes.h"
 
@@ -47,22 +47,22 @@
  */
 void interfazAutenticacion_inicializarValoresNulos (t_interfazAutenticacion *interfazAutenticacion);
 
-/** \brief Inicializar los recursos graficos de la interfaz de autenticacion.
+/** \brief Inicializar los recursos graficos de la interfaz de autenticacion. Ademas, asigna los recursos comunes.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
- *
+ * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * 
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-int interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion);
+t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de autenticacion.
  *
  * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion);
 
 /** \brief Ejecutar la interfaz de autenticacion.
  *

@@ -23,7 +23,7 @@ t_codigoRetorno inicializarBaseDatos (sqlite3 **db, t_sentenciasSqlite *sentenci
 {
     t_respuestaInicializacionDB respuestaInicializacionDB;
 
-    if (sqlite3_open ("../../../server/database/database.db", db) != SQLITE_OK)
+    if (sqlite3_open ("database/database.db", db) != SQLITE_OK)
     {
         printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
         return ERROR_INICIALIZACION;
@@ -178,7 +178,7 @@ static t_codigoRetorno crearEsquema (sqlite3 *db)
     long tamArchEsquema;
     char *consulta;
 
-    archEsquema = fopen("../../../server/database/schema.sql", "rb");
+    archEsquema = fopen("database/schema.sql", "rb");
     if (!archEsquema)
     {
         perror ("\nERROR - Abrir archivo schema.sql.\n");

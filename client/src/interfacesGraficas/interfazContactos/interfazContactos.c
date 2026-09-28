@@ -36,7 +36,7 @@ t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazCont
         return ERROR_INICIALIZACION;
 
     // TEXTOS
-    if (_interfazContactos_inicializarTextos (&(interfazContactos->textos)) == ERROR_INICIALIZACION)
+    if (_interfazContactos_inicializarTextos (&(interfazContactos->textos), &(interfazContactos->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
@@ -60,7 +60,7 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos)
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazContactos_configurarTextos (&(interfazContactos->textos), &(interfazContactos->fuentes));
+    _interfazContactos_configurarTextos (&(interfazContactos->textos));
 
     // ELEMENTOS
     _interfazContactos_configurarElementos (&(interfazContactos->elementos));
@@ -78,7 +78,7 @@ void interfazContactos_configurar (t_interfazContactos *interfazContactos)
 
 void interfazContactos_prepararInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
 {
-    MAXIMIZAR_VENTANA (sfRenderWindow_getSystemHandle (contextoAplicacion->renderizado), SW_MAXIMIZE);
+    MAXIMIZAR_VENTANA (sfRenderWindow_getNativeHandle (contextoAplicacion->renderizado), SW_MAXIMIZE);
     establecerYPosicionarNombreUsuario (interfazContactos, contextoAplicacion->usuario.nombre);
 }
 
@@ -122,6 +122,6 @@ static void establecerYPosicionarNombreUsuario (t_interfazContactos *interfazCon
         centrarTextoEnArea (interfazContactos->textos.nombreUsuario, 44, 888, 254, 120);
         limitesNombreUsuario = sfText_getLocalBounds (interfazContactos->textos.nombreUsuario);
         pixeles -= 2;
-    } while (limitesNombreUsuario.width > 254);
+    } while (limitesNombreUsuario.size.x > 254);
 }
 
