@@ -151,6 +151,11 @@ static void solicitudSeleccionChat_procesarRespuestaSegunEstado (t_interfazConta
             sfText_setString (interfazContactos->textos.feedbackUsuario, "");
             break;
 
+        case SOLICITUD_ERROR_OPERACION_INVALIDA:
+            resetearBarraDeEscritura (interfazContactos);
+            sfText_setString (interfazContactos->textos.feedbackUsuario, "El usuario no existe");
+            break;
+
         default:
             break;
     }

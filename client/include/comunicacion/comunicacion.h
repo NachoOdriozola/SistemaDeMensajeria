@@ -211,7 +211,7 @@ void comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (const char *respu
  * \param t_datosRespuestaRecepcionMensaje Puntero a la estructura que contiene los datos de respuesta de la solicitud de envio de mensaje donde seran retornados.
  * 
  */
-void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *t_datosRespuestaRecepcionMensaje);
+void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *returnDatosRespuestaRecepcionMensaje);
 
 
 #endif // COMUNICACION_H_INCLUDED

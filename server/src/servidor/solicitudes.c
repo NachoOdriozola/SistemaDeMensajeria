@@ -440,7 +440,7 @@ static void enviarMensajeAlReceptor (t_contextoServidor *contextoServidor, t_cli
     fabricarRespuestaRecepcionMensaje (&respuestaCliente, cliente, &datosRespuestaRecepcionMensaje, datosEnvioSolicitudEnvioMensaje);
 
     if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%d\n", datosRespuestaRecepcionMensaje.header.tipo, datosRespuestaRecepcionMensaje.idEmisor);
+        printf ("Respuesta enviada: %c|%d\n", datosRespuestaRecepcionMensaje.header.tipo, datosRespuestaRecepcionMensaje.idEmisor, datosRespuestaRecepcionMensaje.texto);
 }
 
 static void enviarMensaje (t_contextoServidor *contextoServidor, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)

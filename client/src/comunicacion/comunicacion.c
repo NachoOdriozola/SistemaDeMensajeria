@@ -198,8 +198,8 @@ void comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (const char *respu
     memcpy (returnDatosRespuestaSolicitudEnvioMensaje, respuesta, sizeof (t_datosRespuestaSolicitudEnvioMensaje));
 }
 
-void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *t_datosRespuestaRecepcionMensaje)
+void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *returnDatosRespuestaRecepcionMensaje)
 {
-    memcpy (t_datosRespuestaRecepcionMensaje, respuesta, sizeof (t_datosRespuestaRecepcionMensaje));
+    memcpy (returnDatosRespuestaRecepcionMensaje, respuesta, sizeof (t_datosRespuestaRecepcionMensaje));
 }
 
