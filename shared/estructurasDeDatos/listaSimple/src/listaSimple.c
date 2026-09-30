@@ -1,16 +1,16 @@
 #include "listaSimple.h"
 
 
-void crearListaSimple (t_listaSimple *pl)
+void lista_simple_crear (ListaSimple *pl)
 {
     *pl = NULL;
 }
 
-int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned tamDato)
+int lista_simple_insertar_al_inicio (ListaSimple *pl, const void *dato, unsigned tamDato)
 {
-    t_nodoListaSimple *nuevoNodo;
+    NodoListaSimple *nuevoNodo;
 
-    nuevoNodo = malloc (sizeof (t_nodoListaSimple));
+    nuevoNodo = malloc (sizeof (NodoListaSimple));
     if (!nuevoNodo)
     {
         perror ("ERROR - Sin memoria.\n");
@@ -32,7 +32,7 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
     return 0;
 }
 
-void mapListaSimple (t_listaSimple *pl, void accion (void *dato))
+void lista_simple_map (ListaSimple *pl, void accion (void *dato))
 {
     while (*pl != NULL)
     {
@@ -41,7 +41,7 @@ void mapListaSimple (t_listaSimple *pl, void accion (void *dato))
     }
 }
 
-void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void accion (void *dato, void *complemento))
+void lista_simple_map_con_complemento (ListaSimple *pl, void *complemento, void accion (void *dato, void *complemento))
 {
     while (*pl != NULL)
     {
@@ -50,7 +50,7 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
     }
 }
 
-int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
+int lista_simple_buscar_clave_unica (ListaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
 {
     while (*pl != NULL)
     {
@@ -66,9 +66,9 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
     return 0;
 }
 
-void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato)
+void lista_simple_eliminar_nodo (ListaSimple *pl, void *returnDato, unsigned tamDato)
 {
-    t_nodoListaSimple *nodoElim = *pl;
+    NodoListaSimple *nodoElim = *pl;
 
     *pl = nodoElim->sig;
     if (returnDato != NULL)
@@ -78,9 +78,9 @@ void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamD
     free (nodoElim);
 }
 
-void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
+void lista_simple_eliminar_nodo_con_accion (ListaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato))
 {
-    t_nodoListaSimple *nodoElim = *pl;
+    NodoListaSimple *nodoElim = *pl;
 
     *pl = nodoElim->sig;
     if (returnDato != NULL)
@@ -91,9 +91,9 @@ void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsi
     free (nodoElim);
 }
 
-void vaciarListaSimple (t_listaSimple *pl)
+void lista_simple_vaciar (ListaSimple *pl)
 {
-    t_nodoListaSimple *nodoElim;
+    NodoListaSimple *nodoElim;
 
     while (*pl != NULL)
     {
@@ -104,9 +104,9 @@ void vaciarListaSimple (t_listaSimple *pl)
     }
 }
 
-void vaciarListaSimpleConAccion (t_listaSimple *pl, void accion (void *dato))
+void lista_simple_vaciar_con_accion (ListaSimple *pl, void accion (void *dato))
 {
-    t_nodoListaSimple *nodoElim;
+    NodoListaSimple *nodoElim;
 
     while (*pl != NULL)
     {

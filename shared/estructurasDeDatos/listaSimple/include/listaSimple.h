@@ -23,7 +23,7 @@
    ============================================================================================================================================ */
 
    
-/** \struct t_nodoListaSimple
+/** \struct NodoListaSimple
  * \brief Define la estructura base de un nodo de una lista doblemente enlazada. Utiliza el s_nodoListaSimple como recursivo.
  */
 typedef struct s_nodoListaSimple
@@ -31,9 +31,9 @@ typedef struct s_nodoListaSimple
     void *dato;
     unsigned tam;
     struct s_nodoListaSimple *sig;
-} t_nodoListaSimple;
+} NodoListaSimple;
 
-typedef t_nodoListaSimple *t_listaSimple;
+typedef NodoListaSimple *ListaSimple;
 
 
 /* ============================================================================================================================================
@@ -47,7 +47,7 @@ typedef t_nodoListaSimple *t_listaSimple;
  * \param pl Direccion de la lista simple.
  *
  */
-void crearListaSimple (t_listaSimple *pl);
+void lista_simple_crear (ListaSimple *pl);
 
 /** \brief Insertar al inicio de la lista simple.
  *
@@ -60,7 +60,7 @@ void crearListaSimple (t_listaSimple *pl);
  * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
-int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned tamDato);
+int lista_simple_insertar_al_inicio (ListaSimple *pl, const void *dato, unsigned tamDato);
 
 /** \brief Funcion map sobre la lista simple.
  *
@@ -68,7 +68,7 @@ int insertarAlInicioListaSimple (t_listaSimple *pl, const void *dato, unsigned t
  * \param accion Funcion de accion a realizar sobre la lista simple.
  *
  */
-void mapListaSimple (t_listaSimple *pl, void accion (void *dato));
+void lista_simple_map (ListaSimple *pl, void accion (void *dato));
 
 /** \brief Funcion map utilizando un complemento sobre la lista simple.
  *
@@ -77,7 +77,7 @@ void mapListaSimple (t_listaSimple *pl, void accion (void *dato));
  * \param accion Funcion de accion a realizar sobre la lista simple utilizando el complemento.
  *
  */
-void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void accion (void *dato, void *complemento));
+void lista_simple_map_con_complemento (ListaSimple *pl, void *complemento, void accion (void *dato, void *complemento));
 
 /** \brief Buscar una clave unica en la lista simple.
  *
@@ -94,7 +94,7 @@ void mapListaSimpleConComplemento (t_listaSimple *pl, void *complemento, void ac
  * \return 1 si encontro la clave, 0 en caso contrario.
  *
  */
-int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
+int lista_simple_buscar_clave_unica (ListaSimple *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
 
 /** \brief Eliminar el nodo, apuntado por la lista simple.
  *
@@ -105,7 +105,7 @@ int buscarClaveUnicaEnListaSimple (t_listaSimple *pl, const void *key, void *ret
  * \param tamDato tamanio en bytes del dato.
  *
  */
-void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato);
+void lista_simple_eliminar_nodo (ListaSimple *pl, void *returnDato, unsigned tamDato);
 
 /** \brief Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista simple.
  *
@@ -117,7 +117,7 @@ void eliminarNodoListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamD
  * \param accion Funcion de accion a realizar sobre el dato del nodo antes de eliminarlo.
  *
  */
-void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato));
+void lista_simple_eliminar_nodo_con_accion (ListaSimple *pl, void *returnDato, unsigned tamDato, void accion (void *dato));
 
 /** \brief Vaciar la lista simple.
  *
@@ -126,7 +126,7 @@ void eliminarNodoConAccionListaSimple (t_listaSimple *pl, void *returnDato, unsi
  * \param pl Direccion de la lista simple.
  *
  */
-void vaciarListaSimple (t_listaSimple *pl);
+void lista_simple_vaciar (ListaSimple *pl);
 
 /** \brief Vaciar la lista simple, realizando una accion sobre los datos previamente.
  *
@@ -136,7 +136,7 @@ void vaciarListaSimple (t_listaSimple *pl);
  * \param accion Funcion de accion a realizar sobre los datos de los nodos antes de eliminarlos.
  *
  */
-void vaciarListaSimpleConAccion (t_listaSimple *pl, void accion (void *dato));
+void lista_simple_vaciar_con_accion (ListaSimple *pl, void accion (void *dato));
 
 
 #endif // LISTASIMPLE_H_INCLUDED

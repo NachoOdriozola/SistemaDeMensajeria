@@ -6,10 +6,10 @@
    ============================================================================================================================================ */
 
 
-static _t_resultado_validacionDatosRegistro validarDatosRegistroUsuario (const t_interfazRegistro *interfazRegistro);
-static void establecerDatosRegistroUsuarioValidos (_t_resultado_validacionDatosRegistro *resultado_validacionDatosRegistro);
+static ValidacionRegistro validar_registro (const UiRegistro *uiRegistro);
+static void establecer_datos_registro_validos (ValidacionRegistro *validacionRegistro);
 
-static void resetearInterfaz (t_interfazRegistro *interfazRegistro);
+static void resetear_interfaz (UiRegistro *uiRegistro);
 
 
 /* ============================================================================================================================================
@@ -17,72 +17,72 @@ static void resetearInterfaz (t_interfazRegistro *interfazRegistro);
    ============================================================================================================================================ */
 
 
-_t_resultado_intentarRegistrar _interfazRegsitro_intentar_registrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+ResultadoIntentoRegistro _ui_registro_intentar_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    _t_resultado_intentarRegistrar resultado_intentarRegistrar;
+    ResultadoIntentoRegistro resultadoIntentoRegistro;
 
-    resultado_intentarRegistrar.validacion = validarDatosRegistroUsuario (interfazRegistro);
-    if ((!resultado_intentarRegistrar.validacion.nombreValido) || (!resultado_intentarRegistrar.validacion.contraseniaValida) || (!resultado_intentarRegistrar.validacion.correoValido))
+    resultadoIntentoRegistro.validacion = validar_registro (uiRegistro);
+    if ((!resultadoIntentoRegistro.validacion.nombreValido) || (!resultadoIntentoRegistro.validacion.contraseniaValida) || (!resultadoIntentoRegistro.validacion.correoValido))
     {
-        resultado_intentarRegistrar.tipo = INTENTARREGISTRAR_RESULTADO_CREDENCIALES_INVALIDAS;
-        return resultado_intentarRegistrar;
+        resultadoIntentoRegistro.estado = INTENTO_REGISTRO_CREDENCIALES_INVALIDAS;
+        return resultadoIntentoRegistro;
     }
 
-    if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_ERROR_CONEXION)
+    if (comunicacion_intentar_conectar_con_servidor (&(contextoAplicacion->sock)) == SOLICITUD_ERROR_CONEXION)
     {
-        _interfazRegistro_manejarError_conexion (contextoAplicacion);
-        resultado_intentarRegistrar.tipo = INTENTARREGISTRAR_RESULTADO_ERROR_CONEXION;
-        establecerDatosRegistroUsuarioValidos (&(resultado_intentarRegistrar.validacion));
-        return resultado_intentarRegistrar;
+        _ui_registro_manejar_error_conexion (contextoAplicacion);
+        resultadoIntentoRegistro.estado = INTENTO_REGISTRO_ERROR_CONEXION;
+        establecer_datos_registro_validos (&(resultadoIntentoRegistro.validacion));
+        return resultadoIntentoRegistro;
     }
 
-    enviarSolicitudRegistro (contextoAplicacion, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, interfazRegistro->logica.correoElectronico);
-    resultado_intentarRegistrar.tipo = INTENTARREGISTRAR_RESULTADO_EXITO;
-    establecerDatosRegistroUsuarioValidos (&(resultado_intentarRegistrar.validacion));
+    comunicacion_enviar_solicitud_registro (contextoAplicacion, uiRegistro->uiAcceso->logica.nombreUsuario, uiRegistro->uiAcceso->logica.contrasenia, uiRegistro->logica.correoElectronico);
+    resultadoIntentoRegistro.estado = INTENTO_REGISTRO_SOLICITUD_ENVIADA;
+    establecer_datos_registro_validos (&(resultadoIntentoRegistro.validacion));
     
-    return resultado_intentarRegistrar;
+    return resultadoIntentoRegistro;
 }
 
 
-_t_datosUI_respuesta_solicitudRegistro _interfazRegistro_solicitudRegistro_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
+RespuestaRegistroUi _ui_registro_procesar_respuesta_registro (ContextoAplicacion *contextoAplicacion, const char *respuesta)
 {
-    t_datosRespuestaSolicitudRegistro datos_respuesta_solicitudRegistro;
-    _t_datosUI_respuesta_solicitudRegistro datosUI_respuesta_solicitudRegistro;
+    RespuestaRegistro respuestaRegistro;
+    RespuestaRegistroUi respuestaRegistroUi;
 
-    comunicacion_extraerDatosRespuesta_solicitudRegistro (respuesta, &datos_respuesta_solicitudRegistro);
-    printf ("Respuesta recibida: %c|%c|%d\n", datos_respuesta_solicitudRegistro.header.tipo, datos_respuesta_solicitudRegistro.estadoSolicitud, datos_respuesta_solicitudRegistro.idUsuario);
-    comunicacion_finalizarSolicitudEnCurso (contextoAplicacion);
+    comunicacion_extraer_respuesta_registro (respuesta, &respuestaRegistro);
+    printf ("Respuesta recibida: %c|%c|%d\n", respuestaRegistro.header.tipoPaquete, respuestaRegistro.estado, respuestaRegistro.idUsuario);
+    comunicacion_finalizar_solicitud_en_curso (contextoAplicacion);
 
-    datosUI_respuesta_solicitudRegistro.estadoSolicitud = datos_respuesta_solicitudRegistro.estadoSolicitud;
-    datosUI_respuesta_solicitudRegistro.idUsuario = datos_respuesta_solicitudRegistro.idUsuario;
+    respuestaRegistroUi.estado = respuestaRegistro.estado;
+    respuestaRegistroUi.idUsuario = respuestaRegistro.idUsuario;
 
-    return datosUI_respuesta_solicitudRegistro;
+    return respuestaRegistroUi;
 }
 
 
-void _interfazRegistro_manejarError_conexion (t_contextoAplicacion *contextoAplicacion)
+void _ui_registro_manejar_error_conexion (ContextoAplicacion *contextoAplicacion)
 {
     comunicacion_finalizar (&(contextoAplicacion->sock));
     log_error_conexion ();
 }
 
 
-void _interfazRegistro_cambiarAInterfaz_contactos (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, const _t_datosUI_respuesta_solicitudRegistro *datosUI_respuesta_solicitudRegistro)
+void _ui_registro_cambiar_a_ui_contactos (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, const RespuestaRegistroUi *respuestaRegistroUi)
 {
-    contextoAplicacion->usuario.id = datosUI_respuesta_solicitudRegistro->idUsuario;
-    strcpy (contextoAplicacion->usuario.nombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
+    contextoAplicacion->usuario.id = respuestaRegistroUi->idUsuario;
+    strcpy (contextoAplicacion->usuario.nombre, uiRegistro->uiAcceso->logica.nombreUsuario);
     
     contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
 }
 
-void _interfazRegistro_cambiarAInterfaz_autenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+void _ui_registro_cambiar_a_ui_autenticacion (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return;
 
-    omitirEventosPendientes (contextoAplicacion->renderizado);
-    resetearInterfaz (interfazRegistro);
-    recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (interfazRegistro->recursosComunesAutenticacionRegistro);
+    omitir_eventos_pendientes (contextoAplicacion->renderizado);
+    resetear_interfaz (uiRegistro);
+    ui_acceso_activar_interfaz_autenticacion (uiRegistro->uiAcceso);
 
     contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
 }
@@ -93,32 +93,32 @@ void _interfazRegistro_cambiarAInterfaz_autenticacion (t_contextoAplicacion *con
    ============================================================================================================================================ */
 
 
-static _t_resultado_validacionDatosRegistro validarDatosRegistroUsuario (const t_interfazRegistro *interfazRegistro)
+static ValidacionRegistro validar_registro (const UiRegistro *uiRegistro)
 {
-    _t_resultado_validacionDatosRegistro resultado_validacionDatosRegistro;
+    ValidacionRegistro validacionRegistro;
 
-    resultado_validacionDatosRegistro.nombreValido = esNombreValido (interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
-    resultado_validacionDatosRegistro.contraseniaValida = esContraseniaValida (interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia);
-    resultado_validacionDatosRegistro.correoValido = esCorreoElectronicoValido (interfazRegistro->logica.correoElectronico);
+    validacionRegistro.nombreValido = es_nombre_valido (uiRegistro->uiAcceso->logica.nombreUsuario);
+    validacionRegistro.contraseniaValida = es_contrasenia_valida (uiRegistro->uiAcceso->logica.contrasenia);
+    validacionRegistro.correoValido = es_correo_electronico_valido (uiRegistro->logica.correoElectronico);
     
-    return resultado_validacionDatosRegistro;
+    return validacionRegistro;
 }
 
-static void establecerDatosRegistroUsuarioValidos (_t_resultado_validacionDatosRegistro *resultado_validacionDatosRegistro)
+static void establecer_datos_registro_validos (ValidacionRegistro *validacionRegistro)
 {
-    resultado_validacionDatosRegistro->nombreValido = 1;
-    resultado_validacionDatosRegistro->contraseniaValida = 1;
-    resultado_validacionDatosRegistro->correoValido = 1;
+    validacionRegistro->nombreValido = 1;
+    validacionRegistro->contraseniaValida = 1;
+    validacionRegistro->correoValido = 1;
 }
 
 
-static void resetearInterfaz (t_interfazRegistro *interfazRegistro)
+static void resetear_interfaz (UiRegistro *uiRegistro)
 {
     // INTERFAZ
-    interfazRegistro->estadoFoco = IR_NINGUNO;
-    *(interfazRegistro->logica.correoElectronico) = '\0';
+    uiRegistro->foco = UI_REGISTRO_NINGUNO;
+    *(uiRegistro->logica.correoElectronico) = '\0';
 
     // TEXTOS
-    sfText_setString (interfazRegistro->textos.auxEscribirCorreo, "");
-    sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+    sfText_setString (uiRegistro->textos.auxEscribirCorreo, "");
+    sfText_setFillColor (uiRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
 }

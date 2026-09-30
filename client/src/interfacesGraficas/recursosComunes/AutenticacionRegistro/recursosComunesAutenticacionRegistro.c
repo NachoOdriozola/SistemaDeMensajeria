@@ -1,76 +1,76 @@
 #include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursosComunesAutenticacionRegistro.h"
 
 
-void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void ui_acceso_inicializar (UiAcceso *uiAcceso)
 {
     // FUENTES
-    _recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (&(recursosComunesAutenticacionRegistro->fuentes));
+    _ui_acceso_inicializar_fuentes (&(uiAcceso->fuentes));
 
     // TEXTOS
-    _recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (&(recursosComunesAutenticacionRegistro->textos));
+    _ui_acceso_inicializar_textos (&(uiAcceso->textos));
 
     // ELEMENTOS
-    _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    _ui_acceso_inicializar_elementos (&(uiAcceso->elementos));
 
     //VISTAS
-    _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (&(recursosComunesAutenticacionRegistro->vistas));
+    _ui_acceso_inicializar_vistas (&(uiAcceso->vistas));
 }
 
-t_codigoRetorno recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+CodigoRetorno ui_acceso_crear (UiAcceso *uiAcceso)
 {
     // FUENTES
-    if (_recursosComunesAutenticacionRegistro_inicializarFuentes (&(recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_acceso_crear_fuentes (&(uiAcceso->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // TEXTOS
-    if (_recursosComunesAutenticacionRegistro_inicializarTextos (&(recursosComunesAutenticacionRegistro->textos), &(recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_acceso_crear_textos (&(uiAcceso->textos), &(uiAcceso->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
-    if (_recursosComunesAutenticacionRegistro_inicializarElementos (&(recursosComunesAutenticacionRegistro->elementos)) == ERROR_INICIALIZACION)
+    if (_ui_acceso_crear_elementos (&(uiAcceso->elementos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     //VISTAS
-    if (_recursosComunesAutenticacionRegistro_inicializarVistas (&(recursosComunesAutenticacionRegistro->vistas)) == ERROR_INICIALIZACION)
+    if (_ui_acceso_crear_vistas (&(uiAcceso->vistas)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     return EXITO;
 }
 
-void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void ui_acceso_configurar (UiAcceso *uiAcceso)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _recursosComunesAutenticacionRegistro_configurarInterfaz (recursosComunesAutenticacionRegistro);
+    _ui_acceso_configurar_interfaz (uiAcceso);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _recursosComunesAutenticacionRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos));
+    _ui_acceso_configurar_textos (&(uiAcceso->textos));
 
     // ELEMENTOS
-    _recursosComunesAutenticacionRegistro_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    _ui_acceso_configurar_elementos (&(uiAcceso->elementos));
 
     // --------------- ESTABLECER TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (&(recursosComunesAutenticacionRegistro->textos));
+    _ui_acceso_establecer_tam_y_pos_ventana_textos (&(uiAcceso->textos));
 
     // ELEMENTO
-    _recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    _ui_acceso_establecer_tam_y_pos_ventana_elementos (&(uiAcceso->elementos));
 
     //VISTAS
-    _recursosComunesAutenticacionRegistro_tamVistas (&(recursosComunesAutenticacionRegistro->vistas));
+    _ui_acceso_establecer_tam_vistas (&(uiAcceso->vistas));
 }
 
-void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void ui_acceso_activar_interfaz_autenticacion (UiAcceso *uiAcceso)
 {
-    _recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (recursosComunesAutenticacionRegistro);
+    _ui_acceso_activar_interfaz_autenticacion (uiAcceso);
 }
 
-void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void ui_acceso_activar_interfaz_registro (UiAcceso *uiAcceso)
 {
-    _recursosComunesAutenticacionRegistro_activarInterfazRegistro (recursosComunesAutenticacionRegistro);
+    _ui_acceso_activar_interfaz_registro (uiAcceso);
 }
 
-void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos)
+void ui_acceso_renderizar_textos (sfRenderWindow *renderizado, const UiAccesoTextos *textos)
 {
     sfRenderWindow_drawText (renderizado, textos->auxEscribirContrasenia, NULL);
     sfRenderWindow_drawText (renderizado, textos->auxEscribirNombre, NULL);
@@ -82,7 +82,7 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
     sfRenderWindow_drawText (renderizado, textos->tituloInterfaz, NULL);
 }
 
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *elementos)
+void ui_acceso_renderizar_Elementos (sfRenderWindow *renderizado, const UiAccesoElementos *elementos)
 {
     sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirContrasenia, NULL);
     sfRenderWindow_drawRectangleShape (renderizado, elementos->barraEscribirNombre, NULL);
@@ -90,18 +90,18 @@ void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *r
     sfRenderWindow_drawRectangleShape (renderizado, elementos->subrayadoTitulo, NULL);
 }
 
-void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void ui_acceso_liberar (UiAcceso *uiAcceso)
 {
     // FUENTES
-    _recursosComunesAutenticacionRegistro_liberarFuentes (&(recursosComunesAutenticacionRegistro->fuentes));
+    _ui_acceso_liberar_fuentes (&(uiAcceso->fuentes));
 
     // TEXTOS
-    _recursosComunesAutenticacionRegistro_liberarTextos (&(recursosComunesAutenticacionRegistro->textos));
+    _ui_acceso_liberar_textos (&(uiAcceso->textos));
 
     // ELEMENTOS
-    _recursosComunesAutenticacionRegistro_liberarElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    _ui_acceso_liberar_elementos (&(uiAcceso->elementos));
 
     //VISTAS
-    _recursosComunesAutenticacionRegistro_liberarVistas (&(recursosComunesAutenticacionRegistro->vistas));
+    _ui_acceso_liberar_vistas (&(uiAcceso->vistas));
 }
 

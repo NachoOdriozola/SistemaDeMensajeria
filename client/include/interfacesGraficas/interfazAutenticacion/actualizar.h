@@ -40,7 +40,7 @@
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+void _ui_autenticacion_actualizar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
 
 #endif // INTERFAZAUTENTICACION_ACTUALIZACIONES_H_INCLUDED

@@ -6,9 +6,9 @@
    ============================================================================================================================================ */
 
 
-static bool sonDatosAutenticacionUsuarioValidos (const t_interfazAutenticacion *interfazAutenticacion);
+static bool es_autenticacion_valida (const UiAutenticacion *uiAutenticacion);
 
-static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion);
+static void resetear_interfaz (UiAutenticacion *uiAutenticacion);
 
 
 /* ============================================================================================================================================
@@ -16,58 +16,58 @@ static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion);
    ============================================================================================================================================ */
 
 
-_t_resultado_intentarAutenticar _interfazAutenticacion_intentar_autenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+ResultadoIntentoAutenticacion _ui_autenticacion_intentar_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if (!sonDatosAutenticacionUsuarioValidos (interfazAutenticacion))
-        return INTENTARAUTENTICAR_RESULTADO_CREDENCIALES_INVALIDAS;
+    if (!es_autenticacion_valida (uiAutenticacion))
+        return INTENTO_AUTENTICACION_CREDENCIALES_INVALIDAS;
 
-    if (intentarConectarConServidor (&(contextoAplicacion->sock)) == SOLICITUD_ERROR_CONEXION)
+    if (comunicacion_intentar_conectar_con_servidor (&(contextoAplicacion->sock)) == SOLICITUD_ERROR_CONEXION)
     {
-        _interfazAutenticacion_manejarError_conexion (contextoAplicacion);
-        return INTENTARAUTENTICAR_RESULTADO_ERROR_CONEXION;
+        _ui_autenticacion_manejar_error_conexion (contextoAplicacion);
+        return INTENTO_AUTENTICACION_ERROR_CONEXION;
     }
     
-    enviarSolicitudAutenticacion (contextoAplicacion, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia);
-    return INTENTARAUTENTICAR_RESULTADO_EXITO;
+    comunicacion_enviar_solicitud_autenticacion (contextoAplicacion, uiAutenticacion->uiAcceso->logica.nombreUsuario, uiAutenticacion->uiAcceso->logica.contrasenia);
+    return INTENTO_AUTENTICACION_SOLICITUD_ENVIADA;
 }
 
 
-_t_datosUI_respuesta_solicitudAutenticacion _interfazAutenticacion_solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, const char *respuesta)
+RespuestaAutenticacionUi _ui_autenticacion_procesar_respuesta_autenticacion (ContextoAplicacion *contextoAplicacion, const char *respuesta)
 {
-    t_datosRespuestaSolicitudAutenticacion datos_respuesta_solicitudAutenticacion;
-    _t_datosUI_respuesta_solicitudAutenticacion datosUI_respuesta_solicitudAutenticacion;
+    RespuestaAutenticacion respuestaAutenticacion;
+    RespuestaAutenticacionUi respuestaAutenticacionUi;
 
-    comunicacion_extraerDatosRespuesta_solicitudAutenticacion (respuesta, &datos_respuesta_solicitudAutenticacion);
-    printf ("Respuesta recibida: %c|%c|%d\n", datos_respuesta_solicitudAutenticacion.header.tipo, datos_respuesta_solicitudAutenticacion.estadoSolicitud, datos_respuesta_solicitudAutenticacion.idUsuario);
-    comunicacion_finalizarSolicitudEnCurso (contextoAplicacion);
+    comunicacion_extraer_respuesta_autenticacion (respuesta, &respuestaAutenticacion);
+    printf ("Respuesta recibida: %c|%c|%d\n", respuestaAutenticacion.header.tipoPaquete, respuestaAutenticacion.estado, respuestaAutenticacion.idUsuario);
+    comunicacion_finalizar_solicitud_en_curso (contextoAplicacion);
 
-    datosUI_respuesta_solicitudAutenticacion.estadoSolicitud = datos_respuesta_solicitudAutenticacion.estadoSolicitud;
-    datosUI_respuesta_solicitudAutenticacion.idUsuario = datos_respuesta_solicitudAutenticacion.idUsuario;
+    respuestaAutenticacionUi.estado = respuestaAutenticacion.estado;
+    respuestaAutenticacionUi.idUsuario = respuestaAutenticacion.idUsuario;
 
-    return datosUI_respuesta_solicitudAutenticacion;
+    return respuestaAutenticacionUi;
 }
 
 
-void _interfazAutenticacion_manejarError_conexion (t_contextoAplicacion *contextoAplicacion)
+void _ui_autenticacion_manejar_error_conexion (ContextoAplicacion *contextoAplicacion)
 {
     comunicacion_finalizar (&(contextoAplicacion->sock));
     log_error_conexion ();
 }
 
 
-void _interfazAutenticacion_cambiarAInterfaz_contactos (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const _t_datosUI_respuesta_solicitudAutenticacion *datosUI_respuesta_solicitudAutenticacion)
+void _ui_autenticacion_cambiar_a_ui_contactos (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, const RespuestaAutenticacionUi *respuestaAutenticacionUi)
 {
-    contextoAplicacion->usuario.id = datosUI_respuesta_solicitudAutenticacion->idUsuario;
-    strcpy (contextoAplicacion->usuario.nombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario);
+    contextoAplicacion->usuario.id = respuestaAutenticacionUi->idUsuario;
+    strcpy (contextoAplicacion->usuario.nombre, uiAutenticacion->uiAcceso->logica.nombreUsuario);
     
     contextoAplicacion->interfazActual = INTERFAZ_CONTACTOS;
 }
 
-void _interfazAutenticacion_cambiarAInterfaz_registro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+void _ui_autenticacion_cambiar_a_ui_registro (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    omitirEventosPendientes (contextoAplicacion->renderizado);
-    resetearInterfaz (interfazAutenticacion);
-    recursosComunesAutenticacionRegistro_activarInterfazRegistro (interfazAutenticacion->recursosComunesAutenticacionRegistro);
+    omitir_eventos_pendientes (contextoAplicacion->renderizado);
+    resetear_interfaz (uiAutenticacion);
+    ui_acceso_activar_interfaz_registro (uiAutenticacion->uiAcceso);
     
     contextoAplicacion->interfazActual = INTERFAZ_REGISTRO;
 }
@@ -78,14 +78,14 @@ void _interfazAutenticacion_cambiarAInterfaz_registro (t_contextoAplicacion *con
    ============================================================================================================================================ */
 
 
-static bool sonDatosAutenticacionUsuarioValidos (const t_interfazAutenticacion *interfazAutenticacion)
+static bool es_autenticacion_valida (const UiAutenticacion *uiAutenticacion)
 {
-    return ((esNombreValido (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario)) && (esContraseniaValida (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia)));
+    return ((es_nombre_valido (uiAutenticacion->uiAcceso->logica.nombreUsuario)) && (es_contrasenia_valida (uiAutenticacion->uiAcceso->logica.contrasenia)));
 }
 
 
-static void resetearInterfaz (t_interfazAutenticacion *interfazAutenticacion)
+static void resetear_interfaz (UiAutenticacion *uiAutenticacion)
 {
-    interfazAutenticacion->estadoFoco = IA_NINGUNO;
+    uiAutenticacion->foco = UI_AUTENTICACION_NINGUNO;
 }
 

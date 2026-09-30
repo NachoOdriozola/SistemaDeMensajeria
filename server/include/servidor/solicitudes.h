@@ -44,10 +44,10 @@
 
 /** \brief Procesar las solicitudes enviada por los cliente y enviarles una respuesta. Procesa toda la cola de solicitudes y finalmente las elimina.
  * 
- * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
  *
  */
-void procesarSolicitudes (t_contextoServidor *contextoServidor);
+void procesar_solicitudes (ContextoServidor *contextoServidor);
 
 
 

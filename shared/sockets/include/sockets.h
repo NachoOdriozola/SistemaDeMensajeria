@@ -12,11 +12,11 @@
     #include <winsock2.h>
     #include <ws2tcpip.h>
     #include <mstcpip.h>
-    typedef SOCKET t_socket;
+    typedef SOCKET Socket;
     #define SOCKET_INVALIDO INVALID_SOCKET
     #define ERROR_SOCKET SOCKET_ERROR
 #else
-    typedef int t_socket;
+    typedef int Socket;
     #define SOCKET_INVALIDO (-1)
     #define ERROR_SOCKET (-1)
 #endif
@@ -42,7 +42,7 @@
 
 
 /**
- * \struct t_resultadoEnvio
+ * \struct ResultadoEnvio
  * \brief Informa el resultado del envio de datos.
  */
 typedef enum
@@ -50,10 +50,10 @@ typedef enum
     ENVIO_COMPLETO,
     ENVIO_ERROR_CONEXION,
     ENVIO_BUFFER_LLENO
-} t_resultadoEnvio;
+} ResultadoEnvio;
 
 /**
- * \struct t_resultadoRecepcion
+ * \struct ResultadoRecepcion
  * \brief Informa el resultado de la recepcion de datos.
  */
 typedef enum
@@ -61,7 +61,7 @@ typedef enum
    RECEPCION_RECIBIO_DATOS,
    RECEPCION_NO_RECIBIO_DATOS,
    RECEPCION_ERROR_CONEXION
-} t_resultadoRecepcion;
+} ResultadoRecepcion;
 
 
 /* ============================================================================================================================================
@@ -74,7 +74,7 @@ typedef enum
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos.
  * 
  */
-t_codigoRetorno socket_inicializar ();
+CodigoRetorno socket_inicializar ();
 
 /** \brief Crear un socket.
  *
@@ -83,7 +83,7 @@ t_codigoRetorno socket_inicializar ();
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos.
  *
  */
-t_codigoRetorno socket_crear (t_socket *sock);
+CodigoRetorno socket_crear (Socket *sock);
 
 /** \brief Conectar el socket del servidor. Establecer que el socket escuche cualquier direccion IP en el puerto asignado.
  * 
@@ -92,7 +92,7 @@ t_codigoRetorno socket_crear (t_socket *sock);
  * \return EXITO si se inicializo correctamente, ERROR_CONFIGURACION en caso de fallas al configurar recursos.
  *
  */
-t_codigoRetorno socket_conectarServidor (t_socket *sock);
+CodigoRetorno socket_conectar_servidor (Socket *sock);
 
 /** \brief Conectar el socket del cliente. Establecer que el socket se conecte a la IP establecida.
  * 
@@ -101,21 +101,21 @@ t_codigoRetorno socket_conectarServidor (t_socket *sock);
  * \return EXITO si se inicializo correctamente, ERROR_CONFIGURACION en caso de fallas al configurar recursos.
  *
  */
-t_codigoRetorno socket_conectarCliente (t_socket *sock);
+CodigoRetorno socket_conectar_cliente (Socket *sock);
 
 /** \brief Establecer el socket como modo bloqueante.
  *
  * \param sock Puntero al socket a procesar.
  *
  */
-void socket_establecerModoBloqueante (t_socket *sock);
+void socket_establecer_modo_bloqueante (Socket *sock);
 
 /** \brief Establecer el socket como modo no bloqueante.
  *
  * \param sock Puntero al socket a procesar.
  *
  */
-void socket_establecerModoNoBloqueante (t_socket *sock);
+void socket_establecer_modo_no_bloqueante (Socket *sock);
 
 /** \brief Establecer timeout al socket.
  *
@@ -123,14 +123,14 @@ void socket_establecerModoNoBloqueante (t_socket *sock);
  * \param tiempo Tiempo en milisegundos para que ocurra el timeout.
  *
  */
-void socket_establecerTimeout (t_socket *sock, DWORD tiempo);
+void socket_establecer_timeout (Socket *sock, DWORD tiempo);
 
 /** \brief Crear y establecer keepalive al socket. Se envian sondas cada 60s y 5s de intervalo.
  *
  * \param sock Puntero al socket a procesar.
  *
  */
-t_codigoRetorno socket_establecerKeepAlive (t_socket *sock);
+CodigoRetorno socket_establecer_keep_alive (Socket *sock);
 
 /** \brief Aceptar nuevos clientes que se quieren conectar con el servidor.
  *
@@ -139,7 +139,7 @@ t_codigoRetorno socket_establecerKeepAlive (t_socket *sock);
  * \return Resultado del socket aceptado del nuevo cliente.
  *
  */
-t_socket socket_aceptarNuevoCliente (t_socket sockServidor);
+Socket socket_aceptar_nuevo_cliente (Socket sockServidor);
 
 /** \brief Enviar al socket un buffer. Iterar hasta enviar todos los datos.
  * 
@@ -150,7 +150,7 @@ t_socket socket_aceptarNuevoCliente (t_socket sockServidor);
  * \return ENVIO_COMPLETO si pudo enviar todos los datos correctamente, ENVIO_BUFFER_LLENO si el buffer del socket se encuentra agotado y no se pueden cargar mas datos, ENVIO_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t tamBuffer);
+ResultadoEnvio socket_enviar_todo (Socket sock, const char *buffer, size_t tamBuffer);
 
 /** \brief Recibir un buffer del socket. Iterar hasta recibir todos los datos.
  *
@@ -162,7 +162,7 @@ t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t ta
  * \return RECEPCION_RECIBIO_DATOS en caso de haber recibido datos, RECEPCION_NO_RECIBIO_DATOS en caso contrario, y RECEPCION_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer);
+ResultadoRecepcion socket_recibir_todo (Socket sock, char *returnBuffer);
 
 /** \brief Preguntar si el socket no recibio datos en modo no bloqueante. Ademas, asegura que no haya recibido datos en caso de que el socket no se haya inicializado.
  *
@@ -172,7 +172,7 @@ t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer);
  * \return true si no recibio datos, false en caso contrario.
  * 
  */
-bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos);
+bool socket_no_recibio_datos (Socket sock, int bytesRecibidos);
 
 /** \brief Preguntar si el socket perdio la conexion.
  *
@@ -182,14 +182,14 @@ bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos);
  * \return true si el socket perdio la conexion, false en caso contrario.
  * 
  */
-bool socket_perdioConexion (t_socket sock, int bytesRecibidos);
+bool socket_perdio_conexion (Socket sock, int bytesRecibidos);
 
 /** \brief Cerrar el socket. Verifica que sea un socket valido. Si es un socket valido, asegura que su contenido sea SOCKET_INVALIDO al finalizar.
  *
  * \param sock Puntero al socket a procesar.
  *
  */
-void socket_cerrar (t_socket *sock);
+void socket_cerrar (Socket *sock);
 
 /** \brief Finalizar el uso de sockets. Libera Winsock API. Verifica que Winsock API haya sido inicializada.
  *

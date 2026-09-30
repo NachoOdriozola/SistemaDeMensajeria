@@ -1,67 +1,67 @@
 #include "interfacesGraficas/interfazRegistro/interfazRegistro.h"
 
 
-void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro)
+void ui_registro_inicializar (UiRegistro *uiRegistro)
 {
     // TEXTOS
-    _interfazRegistro_inicializarValoresNulosTextos (&(interfazRegistro->textos));
+    _ui_registro_inicializar_textos (&(uiRegistro->textos));
 
     // ELEMENTOS
-    _interfazRegistro_inicializarValoresNulosElementos (&(interfazRegistro->elementos));
+    _ui_registro_inicializar_elementos (&(uiRegistro->elementos));
 }
 
-t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+CodigoRetorno ui_registro_crear (UiRegistro *uiRegistro, UiAcceso *uiAcceso)
 {
     // --------------- ASIGNAR RECURSOS COMUNES ---------------
 
-    interfazRegistro->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
+    uiRegistro->uiAcceso = uiAcceso;
 
     // --------------- CREAR RECURSOS GRAFICOS ---------------
 
     // TEXTOS
-    if (_interfazRegistro_inicializarTextos (&(interfazRegistro->textos), &(interfazRegistro->recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_registro_crear_textos (&(uiRegistro->textos), &(uiRegistro->uiAcceso->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
-    if (_interfazRegistro_inicializarElementos (&(interfazRegistro->elementos)) == ERROR_INICIALIZACION)
+    if (_ui_registro_crear_elementos (&(uiRegistro->elementos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     return EXITO;
 }
 
-void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro)
+void ui_registro_configurar (UiRegistro *uiRegistro)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazRegistro_configurarInterfaz (interfazRegistro);
+    _ui_registro_configurar_interfaz (uiRegistro);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazRegistro_configurarTextos (&(interfazRegistro->textos));
+    _ui_registro_configurar_textos (&(uiRegistro->textos));
 
     // ELEMENTOS
-    _interfazRegistro_configurarElementos (&(interfazRegistro->elementos));
+    _ui_registro_configurar_elementos (&(uiRegistro->elementos));
 
     // --------------- ESTABLECER TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazRegistro_tamYPosVentanaTextos (&(interfazRegistro->textos));
+    _ui_registro_establecer_tam_y_pos_ventana_textos (&(uiRegistro->textos));
 
     // ELEMENTOS
-    _interfazRegistro_tamYPosVentanaElementos (&(interfazRegistro->elementos));
+    _ui_registro_establecer_tam_y_pos_ventana_elementos (&(uiRegistro->elementos));
 }
 
-void interfazRegistro_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+void ui_registro_ejecutar (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    _interfazRegistro_accion (contextoAplicacion, interfazRegistro);
-    _interfazRegistro_actualizar (contextoAplicacion, interfazRegistro);
-    _interfazRegistro_renderizar (contextoAplicacion->renderizado, interfazRegistro);
+    _ui_registro_accionar (contextoAplicacion, uiRegistro);
+    _ui_registro_actualizar (contextoAplicacion, uiRegistro);
+    _ui_registro_renderizar (contextoAplicacion->renderizado, uiRegistro);
 }
 
-void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro)
+void ui_registro_liberar (UiRegistro *uiRegistro)
 {
     // TEXTOS
-    _interfazRegistro_liberarTextos (&(interfazRegistro->textos));
+    _ui_registro_liberar_textos (&(uiRegistro->textos));
 
     // ELEMENTOS
-    _interfazRegistro_liberarElementos (&(interfazRegistro->elementos));
+    _ui_registro_liberar_elementos (&(uiRegistro->elementos));
 }
 

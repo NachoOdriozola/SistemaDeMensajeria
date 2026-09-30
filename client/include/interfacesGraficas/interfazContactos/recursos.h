@@ -69,28 +69,28 @@
    ============================================================================================================================================ */
 
 
-void _interfazContactos_inicializarValoresNulosFuentes (t_interfazContactosFuentes *fuentes);
-void _interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos *textos);
-void _interfazContactos_inicializarValoresNulosElementos (t_interfazContactosElementos *elementos);
-void _interfazContactos_inicializarValoresNulosVistas (t_interfazContactosVistas *vistas);
+void _ui_contactos_inicializar_fuentes (UiContactosFuentes *fuentes);
+void _ui_contactos_inicializar_textos (UiContactosTextos *textos);
+void _ui_contactos_inicializar_elementos (UiContactosElementos *elementos);
+void _ui_contactos_inicializar_vistas (UiContactosVistas *vistas);
 
-t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuentes *fuentes);
-t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes);
-t_codigoRetorno _interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos);
-t_codigoRetorno _interfazContactos_inicializarVistas (t_interfazContactosVistas *vistas);
+CodigoRetorno _ui_contactos_crear_fuentes (UiContactosFuentes *fuentes);
+CodigoRetorno _ui_contactos_crear_textos (UiContactosTextos *textos, const UiContactosFuentes *fuentes);
+CodigoRetorno _ui_contactos_crear_elementos (UiContactosElementos *elementos);
+CodigoRetorno _ui_contactos_crear_vistas (UiContactosVistas *vistas);
 
-void _interfazContactos_configurarInterfaz (t_interfazContactos *interfazContactos);
-void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos);
-void _interfazContactos_configurarElementos (t_interfazContactosElementos *elementos);
+void _ui_contactos_configurar_interfaz (UiContactos *uiContactos);
+void _ui_contactos_configurar_textos (UiContactosTextos *textos);
+void _ui_contactos_configurar_elementos (UiContactosElementos *elementos);
 
-void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos);
-void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos);
-void _interfazContactos_tamVistas (t_interfazContactosVistas *vistas);
+void _ui_contactos_establecer_tam_y_pos_ventana_textos (UiContactosTextos *textos);
+void _ui_contactos_establecer_tam_y_pos_ventana_elementos (UiContactosElementos *elementos);
+void _ui_contactos_establecer_tam_vistas (UiContactosVistas *vistas);
 
-void _interfazContactos_liberarFuentes (t_interfazContactosFuentes *fuentes);
-void _interfazContactos_liberarTextos (t_interfazContactosTextos *textos);
-void _interfazContactos_liberarElementos (t_interfazContactosElementos *elementos);
-void _interfazContactos_liberarVistas (t_interfazContactosVistas *vistas);
+void _ui_contactos_liberar_fuentes (UiContactosFuentes *fuentes);
+void _ui_contactos_liberar_textos (UiContactosTextos *textos);
+void _ui_contactos_liberar_elementos (UiContactosElementos *elementos);
+void _ui_contactos_liberar_vistas (UiContactosVistas *vistas);
 
 
 #endif // INTERFAZCONTACTOS_RECURSOS_H_INCLUDED

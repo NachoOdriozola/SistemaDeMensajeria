@@ -1,13 +1,13 @@
 #include "interfacesGraficas/recursosComunes/AutenticacionRegistro/recursos.h"
 
 
-void _recursosComunesAutenticacionRegistro_inicializarValoresNulosFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+void _ui_acceso_inicializar_fuentes (UiAccesoFuentes *fuentes)
 {
     fuentes->cuerpo = NULL;
     fuentes->ui = NULL;
 }
 
-void _recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+void _ui_acceso_inicializar_textos (UiAccesoTextos *textos)
 {
     textos->auxEscribirContrasenia = NULL;
     textos->auxEscribirNombre = NULL;
@@ -19,7 +19,7 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosTextos (t_recu
     textos->tituloInterfaz = NULL;
 }
 
-void _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+void _ui_acceso_inicializar_elementos (UiAccesoElementos *elementos)
 {
     elementos->barraEscribirContrasenia = NULL;
     elementos->barraEscribirNombre = NULL;
@@ -28,13 +28,13 @@ void _recursosComunesAutenticacionRegistro_inicializarValoresNulosElementos (t_r
     elementos->subrayadoTitulo = NULL;
 }
 
-void _recursosComunesAutenticacionRegistro_inicializarValoresNulosVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+void _ui_acceso_inicializar_vistas (UiAccesoVistas *vistas)
 {
     vistas->ui = NULL;
 }
 
 
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+CodigoRetorno _ui_acceso_crear_fuentes (UiAccesoFuentes *fuentes)
 {
     fuentes->ui = sfFont_createFromFile ("assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
@@ -54,7 +54,7 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarFuentes (t_recu
     return EXITO;
 }
 
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recursosComunesAutenticacionRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+CodigoRetorno _ui_acceso_crear_textos (UiAccesoTextos *textos, const UiAccesoFuentes *fuentes)
 {
     textos->auxEscribirContrasenia = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirContrasenia)
@@ -116,7 +116,7 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarTextos (t_recur
     return EXITO;
 }
 
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+CodigoRetorno _ui_acceso_crear_elementos (UiAccesoElementos *elementos)
 {
     elementos->barraEscribirContrasenia = sfRectangleShape_create ();
     if (!elementos->barraEscribirContrasenia)
@@ -157,7 +157,7 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarElementos (t_re
     return EXITO;
 }
 
-t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+CodigoRetorno _ui_acceso_crear_vistas (UiAccesoVistas *vistas)
 {
     vistas->ui = sfView_create ();
     if (!vistas->ui)
@@ -170,20 +170,20 @@ t_codigoRetorno _recursosComunesAutenticacionRegistro_inicializarVistas (t_recur
 }
 
 
-void _recursosComunesAutenticacionRegistro_configurarInterfaz (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _ui_acceso_configurar_interfaz (UiAcceso *uiAcceso)
 {
     // Deshabilitar foco
-    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+    uiAcceso->foco = UI_ACCESO_NINGUNO;
 
     // Inicializar el punto de insecion
-    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    punto_insercion_resetear (&(uiAcceso->logica.puntoInsercion));
 
     // Setear cadenas vacias
-    *(recursosComunesAutenticacionRegistro->logica.contrasenia) = '\0';
-    *(recursosComunesAutenticacionRegistro->logica.nombreUsuario) = '\0';
+    *(uiAcceso->logica.contrasenia) = '\0';
+    *(uiAcceso->logica.nombreUsuario) = '\0';
 }
 
-void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+void _ui_acceso_configurar_textos (UiAccesoTextos *textos)
 {
     // auxEscribirContrasenia
     sfText_setFillColor (textos->auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
@@ -218,7 +218,7 @@ void _recursosComunesAutenticacionRegistro_configurarTextos (t_recursosComunesAu
     sfText_setUnicodeString (textos->tituloInterfaz, bufferTituloInterfaz);
 }
 
-void _recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+void _ui_acceso_configurar_elementos (UiAccesoElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setFillColor (elementos->barraEscribirContrasenia, sfColor_fromRGB (222, 216, 204));
@@ -241,7 +241,7 @@ void _recursosComunesAutenticacionRegistro_configurarElementos (t_recursosComune
 }
 
 
-void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+void _ui_acceso_establecer_tam_y_pos_ventana_textos (UiAccesoTextos *textos)
 {
     // auxEscribirContrasenia
     sfText_setPosition (textos->auxEscribirContrasenia, (sfVector2f){42, 315});
@@ -253,11 +253,11 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComun
 
     // botonIngresar
     sfText_setCharacterSize (textos->botonIngresar, 24);
-    centrarTextoEnArea (textos->botonIngresar, 180, 405, 140, 35);
+    centrar_texto_en_area (textos->botonIngresar, 180, 405, 140, 35);
 
     // cambiarInterfaz
     sfText_setCharacterSize (textos->cambiarInterfaz, 26);
-    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+    centrar_texto_en_area (textos->cambiarInterfaz, 0, 530, 500, 90);
 
     // feedbackUsuario
     sfText_setCharacterSize (textos->feedbackUsuario, 24);
@@ -275,7 +275,7 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaTextos (t_recursosComun
     sfText_setCharacterSize (textos->tituloInterfaz, 36);
 }
 
-void _recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+void _ui_acceso_establecer_tam_y_pos_ventana_elementos (UiAccesoElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){35, 315});
@@ -300,7 +300,7 @@ void _recursosComunesAutenticacionRegistro_tamYPosVentanaElementos (t_recursosCo
     sfRectangleShape_setSize (elementos->subrayadoTitulo, (sfVector2f){260, 2.5});
 }
 
-void _recursosComunesAutenticacionRegistro_tamVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+void _ui_acceso_establecer_tam_vistas (UiAccesoVistas *vistas)
 {
     // UI
     sfView_setSize (vistas->ui, (sfVector2f){500, 620});
@@ -308,13 +308,13 @@ void _recursosComunesAutenticacionRegistro_tamVistas (t_recursosComunesAutentica
 }
 
 
-void _recursosComunesAutenticacionRegistro_liberarFuentes (t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+void _ui_acceso_liberar_fuentes (UiAccesoFuentes *fuentes)
 {
     DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);
     DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
 }
 
-void _recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+void _ui_acceso_liberar_textos (UiAccesoTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirContrasenia);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirNombre);
@@ -326,7 +326,7 @@ void _recursosComunesAutenticacionRegistro_liberarTextos (t_recursosComunesAuten
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloInterfaz);
 }
 
-void _recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+void _ui_acceso_liberar_elementos (UiAccesoElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirContrasenia);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirNombre);
@@ -335,7 +335,7 @@ void _recursosComunesAutenticacionRegistro_liberarElementos (t_recursosComunesAu
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->subrayadoTitulo);
 }
 
-void _recursosComunesAutenticacionRegistro_liberarVistas (t_recursosComunesAutenticacionRegistroVistas *vistas)
+void _ui_acceso_liberar_vistas (UiAccesoVistas *vistas)
 {
     DESTRUCTOR_SEGURO_VISTA (vistas->ui);
 }

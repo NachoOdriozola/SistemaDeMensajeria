@@ -34,7 +34,7 @@
    ============================================================================================================================================ */
 
 
-void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+void _ui_contactos_accionar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
 
 #endif // INTERFAZCONTACTOS_ACCION_H_INCLUDED

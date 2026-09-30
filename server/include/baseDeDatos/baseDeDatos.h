@@ -28,7 +28,7 @@
 
 
 /**
- * \struct t_respuestaInicializacionDB
+ * \struct ResultadoInicializacionBD
  * \brief  Codigos de retorno de la inicializacion de la base de datos.
  */
 typedef enum
@@ -36,43 +36,43 @@ typedef enum
    TABLA_EXISTE,
    TABLA_NO_EXISTE,
    ERROR_PREPARACION_CONSULTA
-} t_respuestaInicializacionDB;
+} ResultadoInicializacionBD;
 
 
 /**
- * \struct t_sentenciasSqlite
+ * \struct SentenciasSqlite
  * \brief  Cache de sentencias de consultas de base de datos.
  */
 typedef struct
 {
-    sqlite3_stmt *buscarUsuarioPorNombre_recuperarId;
-    sqlite3_stmt *buscarUsuarioPorNombre_recuperarIdYContrasenia;
-    sqlite3_stmt *buscarUsuarioPorCorreo;
+    sqlite3_stmt *buscarIdPorNombre;
+    sqlite3_stmt *buscarIdYContraseniaPorNombre;
+    sqlite3_stmt *buscarIdPorCorreo;
     sqlite3_stmt *insertarUsuario;
     sqlite3_stmt *insertarMensaje;
-} t_sentenciasSqlite;
+} SentenciasSqlite;
 
 
 /**
- * \struct t_datosBuscarUsuarioPorNombre
+ * \struct ParametrosBuscarUsuarioPorNombre
  * \brief  Estructura que contiene los datos necesarios para realizar la consulta de buscarUsuarioPorNombre.
  */
 typedef struct
 {
     char nombreUsuario [MAX_NOMBRE_USUARIO];
-} t_datosBuscarUsuarioPorNombre;
+} ParametrosBuscarUsuarioPorNombre;
 
 /**
- * \struct t_datosBuscarUsuarioPorCorreo
+ * \struct ParametrosBuscarUsuarioPorCorreo
  * \brief  Estructura que contiene los datos necesarios para realizar la consulta de buscarUsuarioPorCorreo.
  */
 typedef struct
 {
     char correoElectronico [MAX_CORREO_ELECTRONICO];
-} t_datosBuscarUsuarioPorCorreo;
+} ParametrosBuscarUsuarioPorCorreo;
 
 /**
- * \struct t_datosInsertarUsuario
+ * \struct ParametrosInsertarUsuario
  * \brief  Estructura que contiene los datos necesarios para realizar la consulta de insertarUsuario.
  */
 typedef struct
@@ -80,10 +80,10 @@ typedef struct
     char nombreUsuario [MAX_NOMBRE_USUARIO];
     char contrasenia [MAX_CONTRASENIA];
     char correoElectronico [MAX_CORREO_ELECTRONICO];
-} t_datosInsertarUsuario;
+} ParametrosInsertarUsuario;
 
 /**
- * \struct t_datosInsertarMensaje
+ * \struct ParametrosInsertarMensaje
  * \brief  Estructura que contiene los datos necesarios para realizar la consulta de insertarMensaje.
  */
 typedef struct
@@ -91,7 +91,7 @@ typedef struct
     int idEmisor;
     int idReceptor;
     char texto [MAX_MENSAJE];
-} t_datosInsertarMensaje;
+} ParametrosInsertarMensaje;
 
 
 /* ============================================================================================================================================
@@ -106,78 +106,78 @@ typedef struct
  * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
  * No cierra la base de datos en caso de fallas.
  *
- * \param db Direccion del puntero que contiene la base de datos del contexto del servidor.
+ * \param bd Direccion del puntero que contiene la base de datos del contexto del servidor.
  * \param sentenciasSqlite Puntero a la cache de sentencias de consultas de base de datos.
  *
  * \return Retorna EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al preparar consultas, abrir archivos y asignar memoria.
  *
  */
-t_codigoRetorno inicializarBaseDatos(sqlite3 **db, t_sentenciasSqlite *sentenciasSqlite);
+CodigoRetorno bd_inicializar (sqlite3 **bd, SentenciasSqlite *sentenciasSqlite);
 
 /** \brief Configurar la base de datos. Establece el journal en modo WAL para mejorar el rendimiento sin sacrificar confiabilidad.
  *
- * \param db Puntero que contiene la base de datos del contexto del servidor.
+ * \param bd Puntero que contiene la base de datos del contexto del servidor.
  *
  */
-void configurarBaseDeDatos (sqlite3 *db);
+void bd_configurar (sqlite3 *bd);
 
 /** \brief Cerrar la base de datos y liberar las sentencias de consultas de base de datos.
  *
- * \param db Puntero que contiene la base de datos del contexto del servidor.
+ * \param bd Puntero que contiene la base de datos del contexto del servidor.
  * \param sentenciasSqlite Puntero a la cache de sentencias de consultas de base de datos.
  *
  */
-void liberarBaseDeDatos (sqlite3 *db, t_sentenciasSqlite *sentenciasSqlite);
+void bd_liberar (sqlite3 *bd, SentenciasSqlite *sentenciasSqlite);
 
 
 /** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID correspondiente.
  * 
- * \param sentenciaBuscarUsuarioPorNombre_recuperarId Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param t_datosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta.
+ * \param sentenciaBuscarIdPorNombre Puntero que contiene la sentencia para realizar la consulta en la base de datos.
+ * \param ParametrosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta.
  * \param returnIdUsuario Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su ID correspondiente, sino retorna ID_INVALIDO. Enviar NULL si no se desea recuperar el ID.
  *
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool buscarUsuarioPorNombre_recuperarId (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario);
+bool bd_buscar_id_por_nombre (sqlite3_stmt *sentenciaBuscarIdPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario);
 
 /** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID y contrasenia correspondiente.
  *
- * \param sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param datosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
+ * \param sentenciaBuscarIdYContraseniaPorNombre Puntero que contiene la sentencia para realizar la consulta en la base de datos.
+ * \param parametrosBuscarUsuarioPorNombre Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * \param returnIdUsuario Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su ID correspondiente, sino retorna ID_INVALIDO.
  * \param returnContrasenia Puntero donde se retorna el resultado de la consulta. Si encontro un usuario retorna su contrasenia correspondiente, sino retorna NULL.
  *
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool buscarUsuarioPorNombre_recuperarIdYContrasenia (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia);
+bool bd_buscar_id_y_contrasenia_por_nombre (sqlite3_stmt *sentenciaBuscarIdYContraseniaPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia);
 
 /** \brief Buscar un usuario en la base de datos por su correo electronico.
  *
- * \param sentenciaBuscarUsuarioPorCorreo Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param datosBuscarUsuarioPorCorreo Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
+ * \param sentenciaBuscarIdPorCorreo Puntero que contiene la sentencia para realizar la consulta en la base de datos.
+ * \param parametrosBuscarUsuarioPorCorreo Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  *
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool buscarUsuarioPorCorreo (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosBuscarUsuarioPorCorreo *datosBuscarUsuarioPorCorreo);
+bool bd_existe_usuario_con_correo (sqlite3_stmt *sentenciaBuscarIdPorCorreo, const ParametrosBuscarUsuarioPorCorreo *parametrosBuscarUsuarioPorCorreo);
 
 /** \brief Insertar un usuario en la base de datos.
  *
  * \param sentenciaInsertarUsuario Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param datosInsertarUsuario Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
+ * \param parametrosInsertarUsuario Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * 
  */
-void insertarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosInsertarUsuario *datosInsertarUsuario);
+void bd_insertar_usuario (sqlite3_stmt *sentenciaInsertarUsuario, const ParametrosInsertarUsuario *parametrosInsertarUsuario);
 
 /** \brief Insertar un mensaje en la base de datos.
  *
  * \param sentenciaInsertarMensaje Puntero que contiene la sentencia para realizar la consulta en la base de datos.
- * \param datosInsertarMensaje Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
+ * \param parametrosInsertarMensaje Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * 
  */
-void insertarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosInsertarMensaje *datosInsertarMensaje);
+void bd_insertar_mensaje (sqlite3_stmt *sentenciaInsertarMensaje, const ParametrosInsertarMensaje *parametrosInsertarMensaje);
 
 
 #endif // BASEDEDATOS_H_INCLUDED

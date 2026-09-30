@@ -1,5 +1,5 @@
 /**
- * \file   recursosComunesAutenticacionRegistro.h
+ * \file   uiAcceso.h
  * \brief Contiene funciones estructurales de interfaz.
  */
 
@@ -37,44 +37,44 @@
 
 /** \brief Inicializar todas las variables graficas en NULL de los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_inicializarValoresNulos (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void ui_acceso_inicializar (UiAcceso *uiAcceso);
 
 /** \brief Inicializar los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-t_codigoRetorno recursosComunesAutenticacionRegistro_inicializar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+CodigoRetorno ui_acceso_crear (UiAcceso *uiAcceso);
 
 /** \brief Configurar los recursos graficos comunes, establecerles un tamanio y posicion en ventana, y la logica (compartido) entre las interfaces de autenticacion y registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_configurar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void ui_acceso_configurar (UiAcceso *uiAcceso);
 
 /** \brief Activar la interfaz de autenticacion.
  *
  * Resetear la interfaz en uso y modificar los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de autenticacion.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void ui_acceso_activar_interfaz_autenticacion (UiAcceso *uiAcceso);
 
 /** \brief Activar la interfaz de registro.
  *
  * Resetear la interfaz en uso y modificar los recursos graficos de texto y/o elementos que se necesiten adaptar para activar la interfaz de registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void ui_acceso_activar_interfaz_registro (UiAcceso *uiAcceso);
 
 /** \brief Renderizar los recursos graficos de texto comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
@@ -85,7 +85,7 @@ void recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosCom
  * \param textos Puntero a la estructura que contiene las variables de los textos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroTextos *textos);
+void ui_acceso_renderizar_textos (sfRenderWindow *renderizado, const UiAccesoTextos *textos);
 
 /** \brief Renderizar los recursos graficos de elementos comunes (compartidos) entre las interfaces de autenticacion y registro
  *
@@ -96,14 +96,14 @@ void recursosComunesAutenticacionRegistro_renderizarTextos (sfRenderWindow *rend
  * \param elementos Puntero a la estructura que contiene las variables de los elementos graficos de los recursos graficos comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_renderizarElementos (sfRenderWindow *renderizado, const t_recursosComunesAutenticacionRegistroElementos *elementos);
+void ui_acceso_renderizar_Elementos (sfRenderWindow *renderizado, const UiAccesoElementos *elementos);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos comunes (compartidos) entre las interfaces de autenticacion y registro.
  *
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  */
-void recursosComunesAutenticacionRegistro_liberar (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+void ui_acceso_liberar (UiAcceso *uiAcceso);
 
 
 #endif // RECURSOSCOMUNESAUTENTICACIONREGISTRO_H_INCLUDED

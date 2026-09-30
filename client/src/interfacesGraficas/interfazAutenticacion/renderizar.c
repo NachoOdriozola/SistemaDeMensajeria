@@ -6,7 +6,7 @@
    ============================================================================================================================================ */
 
 
-static void renderizarUI (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion);
+static void renderizar_ui (sfRenderWindow *renderizado, const UiAutenticacion *uiAutenticacion);
 
 
 /* ============================================================================================================================================
@@ -14,14 +14,14 @@ static void renderizarUI (sfRenderWindow *renderizado, const t_interfazAutentica
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion)
+void _ui_autenticacion_renderizar (sfRenderWindow *renderizado, const UiAutenticacion *uiAutenticacion)
 {
    // --------------- LIMPIAR VENTANA ---------------
    sfRenderWindow_clear (renderizado, sfColor_fromRGB (244, 241, 236));
 
    // --------------- RENDERIZAR VISTA DE UI ---------------
-   sfRenderWindow_setView (renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->vistas.ui);
-   renderizarUI (renderizado, interfazAutenticacion);
+   sfRenderWindow_setView (renderizado, uiAutenticacion->uiAcceso->vistas.ui);
+   renderizar_ui (renderizado, uiAutenticacion);
 
    // --------------- MOSTRAR VENTANA ---------------
    sfRenderWindow_display (renderizado);
@@ -33,28 +33,28 @@ void _interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_int
    ============================================================================================================================================ */
 
 
-static void renderizarTextos (sfRenderWindow *renderizado, const t_interfazAutenticacionTextos *textos)
+static void renderizar_textos (sfRenderWindow *renderizado, const UiAutenticacionTextos *textos)
 {
 
 }
 
-static void renderizarElementos (sfRenderWindow *renderizado, const t_interfazAutenticacionElementos *elementos)
+static void renderizar_elementos (sfRenderWindow *renderizado, const UiAutenticacionElementos *elementos)
 {
 
 }
 
-static void renderizarUI (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion)
+static void renderizar_ui (sfRenderWindow *renderizado, const UiAutenticacion *uiAutenticacion)
 {
    // --------------- RENDERIZAR RECURSOS GRAFICOS ---------------
    // ELEMENTOS
-   recursosComunesAutenticacionRegistro_renderizarElementos (renderizado, &(interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos));
-   renderizarElementos (renderizado, &(interfazAutenticacion->elementos));
+   ui_acceso_renderizar_Elementos (renderizado, &(uiAutenticacion->uiAcceso->elementos));
+   renderizar_elementos (renderizado, &(uiAutenticacion->elementos));
 
    // TEXTOS
-   recursosComunesAutenticacionRegistro_renderizarTextos (renderizado, &(interfazAutenticacion->recursosComunesAutenticacionRegistro->textos));
-   renderizarTextos (renderizado, &(interfazAutenticacion->textos));
+   ui_acceso_renderizar_textos (renderizado, &(uiAutenticacion->uiAcceso->textos));
+   renderizar_textos (renderizado, &(uiAutenticacion->textos));
 
    // --------------- RENDERIZAR PUNTO DE INSERCION ---------------
-   if (puntoInsercionHabilitado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
-      sfRenderWindow_drawRectangleShape (renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, NULL);
+   if (punto_insercion_esta_habilitado (&(uiAutenticacion->uiAcceso->logica.puntoInsercion)))
+      sfRenderWindow_drawRectangleShape (renderizado, uiAutenticacion->uiAcceso->elementos.puntoInsercion, NULL);
 }

@@ -6,12 +6,12 @@
    ============================================================================================================================================ */
 
 
-static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
-static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
-static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
-static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente);
+static void procesar_solicitud_autenticacion (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente);
+static void procesar_solicitud_registro (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente);
+static void procesar_solicitud_envio_mensaje (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente);
+static void procesar_solicitud_seleccion_chat (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente);
 
-static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServidor);
+static void intentar_enviar_respuestas_pendientes (ContextoServidor *contextoServidor);
 
 
 /* ============================================================================================================================================
@@ -19,38 +19,38 @@ static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServ
    ============================================================================================================================================ */
 
 
-void procesarSolicitudes (t_contextoServidor *contextoServidor)
+void procesar_solicitudes (ContextoServidor *contextoServidor)
 {
-    t_solicitudCliente solicitudCliente;
+    SolicitudCliente solicitudCliente;
     char headerTipoSolicitud;
 
-    while (noEsColaVacia (&(contextoServidor->solicitudes)))
+    while (cola_no_esta_vacia (&(contextoServidor->solicitudes)))
     {
-        desacolar (&(contextoServidor->solicitudes), &solicitudCliente, sizeof (t_solicitudCliente));
+        cola_sacar (&(contextoServidor->solicitudes), &solicitudCliente, sizeof (SolicitudCliente));
         headerTipoSolicitud = *(solicitudCliente.solicitud);
         switch (headerTipoSolicitud)
         {
             case SOLICITUD_AUTENTICACION:
-                procesarSolicitudAutenticacion (contextoServidor, &solicitudCliente);
+                procesar_solicitud_autenticacion (contextoServidor, &solicitudCliente);
                 break;
     
             case SOLICITUD_REGISTRO:
-                procesarSolicitudRegistro (contextoServidor, &solicitudCliente);
+                procesar_solicitud_registro (contextoServidor, &solicitudCliente);
                 break;
     
             case SOLICITUD_ENVIO_MENSAJE:
-                procesarSolicitudEnvioMensaje (contextoServidor, &solicitudCliente);
+                procesar_solicitud_envio_mensaje (contextoServidor, &solicitudCliente);
                 break;
     
             case SOLICITUD_SELECCION_CHAT:
-                procesarSolicitudSeleccionChat (contextoServidor, &solicitudCliente);
+                procesar_solicitud_seleccion_chat (contextoServidor, &solicitudCliente);
                 break;
     
             default:
                 break;
         }
     }
-    intentarEnviarRespuestasPendientes (contextoServidor);
+    intentar_enviar_respuestas_pendientes (contextoServidor);
 }
 
 
@@ -59,20 +59,20 @@ void procesarSolicitudes (t_contextoServidor *contextoServidor)
    ============================================================================================================================================ */
 
 
-static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServidor)
+static void intentar_enviar_respuestas_pendientes (ContextoServidor *contextoServidor)
 {
-    t_listaSimple *pl = &(contextoServidor->respuestasPendientes);
-    t_respuestaCliente *respuestaPendienteACliente;
-    t_resultadoEnvio resultadoEnvio;
+    ListaSimple *pl = &(contextoServidor->respuestasPendientes);
+    RespuestaCliente *respuestaPendienteCliente;
+    ResultadoEnvio resultadoEnvio;
 
     while (*pl != NULL)
     {
-        respuestaPendienteACliente = (t_respuestaCliente*)((*pl)->dato);
-        resultadoEnvio = intentarEnviarRespuestaPendienteACliente (respuestaPendienteACliente);
+        respuestaPendienteCliente = (RespuestaCliente*)((*pl)->dato);
+        resultadoEnvio = intentar_enviar_respuesta_pendiente_cliente (respuestaPendienteCliente);
         if ((resultadoEnvio == ENVIO_COMPLETO) || (resultadoEnvio == ENVIO_ERROR_CONEXION))
         {
-            printf ("\nSe envio respuesta pendiente a cliente: %d\n", respuestaPendienteACliente->clienteAResponder->id);
-            eliminarNodoListaSimple (pl, NULL, 0);
+            printf ("\nSe envio respuesta pendiente a cliente: %d\n", respuestaPendienteCliente->clienteAResponder->id);
+            lista_simple_eliminar_nodo (pl, NULL, 0);
         }
         else
             pl = &((*pl)->sig); // Si todavia no se puede enviar la respuesta al cliente por buffer lleno, lo mantiene en la lista hasta que se pueda enviar.
@@ -80,18 +80,18 @@ static void intentarEnviarRespuestasPendientes (t_contextoServidor *contextoServ
 }
 
 
-static void conectarUsuario (t_tablaHash *clientes, t_listaDoble *clientesNoAutenticados, t_nodoListaDoble *clienteAProcesar, int idUsuario)
+static void conectar_usuario (TablaHash *clientes, ListaDoble *clientesNoAutenticados, NodoListaDoble *clienteAProcesar, int idUsuario)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    Cliente *cliente = (Cliente*)(clienteAProcesar->dato);
     
     cliente->id = idUsuario;
     
     // Mover el cliente de la lista simple de clientes no autenticados a la tabla hash de clientes autenticados.
-    desvincularNodoDeListaDoble (clientesNoAutenticados, clienteAProcesar);
-    vincularNodoATablaHash (clientes, &(cliente->id), funcionHash, clienteAProcesar);
+    lista_doble_desvincular_nodo (clientesNoAutenticados, clienteAProcesar);
+    tabla_hash_vincular_nodo (clientes, &(cliente->id), aplicar_hash_id_cliente, clienteAProcesar);
 }
 
-static bool sonTodosEspacios (const char *mensaje)
+static bool son_todos_espacios (const char *mensaje)
 {
     if (*mensaje == '\0')
         return false;
@@ -110,104 +110,104 @@ static bool sonTodosEspacios (const char *mensaje)
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudAutenticacion (const char *solicitud, t_datosEnvioSolicitudAutenticacion *returnDatosEnvioSolicitudAutenticacion)
+static void extraer_solicitud_autenticacion (const char *solicitud, SolicitudAutenticacion *returnSolicitudAutenticacion)
 {
-    memcpy (returnDatosEnvioSolicitudAutenticacion, solicitud, sizeof (t_datosEnvioSolicitudAutenticacion));
+    memcpy (returnSolicitudAutenticacion, solicitud, sizeof (SolicitudAutenticacion));
 }
 
-static bool sonDatosAutenticacionUsuarioInvalidos (const t_datosEnvioSolicitudAutenticacion *datosEnvioSolicitudAutenticacion)
+static bool son_datos_autenticacion_invalidos (const SolicitudAutenticacion *solicitudAutenticacion)
 {
-    if ((strlen (datosEnvioSolicitudAutenticacion->nombreUsuario) < 3) || (sonTodosEspacios (datosEnvioSolicitudAutenticacion->nombreUsuario)))
+    if ((strlen (solicitudAutenticacion->nombreUsuario) < 3) || (son_todos_espacios (solicitudAutenticacion->nombreUsuario)))
         return 1;
     
-    if ((strlen (datosEnvioSolicitudAutenticacion->contrasenia) < 8) || (sonTodosEspacios (datosEnvioSolicitudAutenticacion->contrasenia)))
+    if ((strlen (solicitudAutenticacion->contrasenia) < 8) || (son_todos_espacios (solicitudAutenticacion->contrasenia)))
         return 1;
 
     return 0;
 }
 
-static bool usuarioNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, const t_datosEnvioSolicitudAutenticacion *datosEnvioSolicitudAutenticacion, int *returnIdUsuario, char *returnContrasenia)
+static bool usuario_no_existe (sqlite3_stmt *sentenciaBuscarIdYContraseniaPorNombre, const SolicitudAutenticacion *solicitudAutenticacion, int *returnIdUsuario, char *returnContrasenia)
 {
-    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
+    ParametrosBuscarUsuarioPorNombre parametrosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosEnvioSolicitudAutenticacion->nombreUsuario);
+    strcpy (parametrosBuscarUsuarioPorNombre.nombreUsuario, solicitudAutenticacion->nombreUsuario);
 
-    return (!buscarUsuarioPorNombre_recuperarIdYContrasenia (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, &datosBuscarUsuarioPorNombre, returnIdUsuario, returnContrasenia));
+    return (!bd_buscar_id_y_contrasenia_por_nombre (sentenciaBuscarIdYContraseniaPorNombre, &parametrosBuscarUsuarioPorNombre, returnIdUsuario, returnContrasenia));
 }
 
-static bool contraseniaNoCoincide (const t_datosEnvioSolicitudAutenticacion *datosEnvioSolicitudAutenticacion, const char *hashContrasenia)
+static bool contrasenia_no_coincide (const SolicitudAutenticacion *solicitudAutenticacion, const char *hashContrasenia)
 {
-    return (crypto_pwhash_str_verify (hashContrasenia, datosEnvioSolicitudAutenticacion->contrasenia, strlen (datosEnvioSolicitudAutenticacion->contrasenia)));
+    return (crypto_pwhash_str_verify (hashContrasenia, solicitudAutenticacion->contrasenia, strlen (solicitudAutenticacion->contrasenia)));
 }
 
-static bool usuarioEstaConectado (t_tablaHash *clientes, int *idUsuario)
+static bool usuario_esta_conectado (TablaHash *clientes, int *idUsuario)
 {
-    return buscarClaveUnicaEnTablaHash (clientes, idUsuario, funcionHash, NULL, 0, cmpIdCliente);
+    return tabla_hash_buscar_clave_unica (clientes, idUsuario, aplicar_hash_id_cliente, NULL, 0, cmp_id_cliente);
 }
 
-static void autenticarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosEnvioSolicitudAutenticacion *datosEnvioSolicitudAutenticacion, t_datosRespuestaSolicitudAutenticacion *returnDatosRespuestaSolicitudAutenticacion)
+static void autenticar_cliente (ContextoServidor *contextoServidor, NodoListaDoble *clienteAProcesar, const SolicitudAutenticacion *solicitudAutenticacion, RespuestaAutenticacion *returnRespuestaAutenticacion)
 {
     char hashContrasenia [MAX_CONTRASENIA];
 
-    if ((sonDatosAutenticacionUsuarioInvalidos (datosEnvioSolicitudAutenticacion)) ||
-        (usuarioNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarIdYContrasenia, datosEnvioSolicitudAutenticacion, &(returnDatosRespuestaSolicitudAutenticacion->idUsuario), hashContrasenia)) ||
-        (contraseniaNoCoincide (datosEnvioSolicitudAutenticacion, hashContrasenia)))
+    if ((son_datos_autenticacion_invalidos (solicitudAutenticacion)) ||
+        (usuario_no_existe (contextoServidor->sentenciasSqlite.buscarIdYContraseniaPorNombre, solicitudAutenticacion, &(returnRespuestaAutenticacion->idUsuario), hashContrasenia)) ||
+        (contrasenia_no_coincide (solicitudAutenticacion, hashContrasenia)))
     {
-        returnDatosRespuestaSolicitudAutenticacion->estadoSolicitud = SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
-        returnDatosRespuestaSolicitudAutenticacion->idUsuario = ID_INVALIDO;
+        returnRespuestaAutenticacion->estado = SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+        returnRespuestaAutenticacion->idUsuario = ID_INVALIDO;
         return;
     }
 
-    if (usuarioEstaConectado (&(contextoServidor->clientes), &(returnDatosRespuestaSolicitudAutenticacion->idUsuario)))
+    if (usuario_esta_conectado (&(contextoServidor->clientes), &(returnRespuestaAutenticacion->idUsuario)))
     {
-        returnDatosRespuestaSolicitudAutenticacion->estadoSolicitud = SOLICITUD_ERROR_OPERACION_INVALIDA;
-        returnDatosRespuestaSolicitudAutenticacion->idUsuario = ID_INVALIDO;
+        returnRespuestaAutenticacion->estado = SOLICITUD_ERROR_OPERACION_INVALIDA;
+        returnRespuestaAutenticacion->idUsuario = ID_INVALIDO;
         return;
     }
             
-    conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, returnDatosRespuestaSolicitudAutenticacion->idUsuario);
+    conectar_usuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, returnRespuestaAutenticacion->idUsuario);
 
-    returnDatosRespuestaSolicitudAutenticacion->estadoSolicitud = SOLICITUD_EXITO;
+    returnRespuestaAutenticacion->estado = SOLICITUD_EXITO;
 }
 
-static void fabricarRespuestaSolicitudAutenticacion (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudAutenticacion *datosRespuestaSolicitudAutenticacion)
+static void fabricar_respuesta_autenticacion (RespuestaCliente *respuestaCliente, const NodoListaDoble *clienteAResponder, RespuestaAutenticacion *respuestaAutenticacion)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
+    Cliente *cliente = (Cliente*)(clienteAResponder->dato);
 
-    datosRespuestaSolicitudAutenticacion->header.tipo = RESPUESTA_SOLICITUD_AUTENTICACION;
-    datosRespuestaSolicitudAutenticacion->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudAutenticacion);
+    respuestaAutenticacion->header.tipoPaquete = RESPUESTA_SOLICITUD_AUTENTICACION;
+    respuestaAutenticacion->header.bytesTransmitidos = sizeof (RespuestaAutenticacion);
 
-    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudAutenticacion);
-    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudAutenticacion);
+    respuestaCliente->datosAEnviar = (char*)(respuestaAutenticacion);
+    respuestaCliente->tamDatosAEnviar = sizeof (RespuestaAutenticacion);
     respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
- * Recibe los datos del usuario que envio la solicitud con la estructura t_datosEnvioSolicitudAutenticacion.
+ * Recibe los datos del usuario que envio la solicitud con la estructura SolicitudAutenticacion.
  * 
  * Consultar en la base de datos si las credenciales del usuario existen y son validas.
  * Verificar que el usuario no se encuentre conectado.
  * Si el usuario no se encuentra conectado, lo conecta mediante recuperar su ID, guardarlo en el nodo del cliente y moverlo de la lista doble de clientes no autenticados a la tabla hash de clientes autenticados.
  * 
- * Responde los datos del procesamiento de la solicitud al cliente con la estructura t_datosRespuestaSolicitudAutenticacion.
+ * Responde los datos del procesamiento de la solicitud al cliente con la estructura RespuestaAutenticacion.
  * 
  * Posibles respuestas:
  * RESPUESTA_SOLICITUD_AUTENTICACION|SOLICITUD_EXITO|ID del usuario #En caso de procesamiento exitoso.
  * RESPUESTA_SOLICITUD_AUTENTICACION|SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido #En caso de que el usuario ya se encuentre conectado.
  * RESPUESTA_SOLICITUD_AUTENTICACION|SOLICITUD_ERROR_CREDENCIALES_INVALIDAS|ID invalido #En caso de que sean datos de usuario invalidos, el usuario no exista o que la contrasenia sea incorrecta.
  */
-static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
+static void procesar_solicitud_autenticacion (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente)
 {
-    t_datosEnvioSolicitudAutenticacion datosEnvioSolicitudAutenticacion;
-    t_datosRespuestaSolicitudAutenticacion datosRespuestaSolicitudAutenticacion;
-    t_respuestaCliente respuestaCliente;
+    SolicitudAutenticacion solicitudAutenticacion;
+    RespuestaAutenticacion respuestaAutenticacion;
+    RespuestaCliente respuestaCliente;
 
-    extraerDatosSolicitudAutenticacion (solicitudCliente->solicitud, &datosEnvioSolicitudAutenticacion);
-    printf ("Solicitud recibida: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.header.tipo, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
-    autenticarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudAutenticacion, &datosRespuestaSolicitudAutenticacion);
-    fabricarRespuestaSolicitudAutenticacion (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudAutenticacion);
-    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudAutenticacion.header.tipo, datosRespuestaSolicitudAutenticacion.estadoSolicitud, datosRespuestaSolicitudAutenticacion.idUsuario);
+    extraer_solicitud_autenticacion (solicitudCliente->solicitud, &solicitudAutenticacion);
+    printf ("Solicitud recibida: %c|%s|%s\n", solicitudAutenticacion.header.tipoPaquete, solicitudAutenticacion.nombreUsuario, solicitudAutenticacion.contrasenia);
+    autenticar_cliente (contextoServidor, solicitudCliente->clienteAProcesar, &solicitudAutenticacion, &respuestaAutenticacion);
+    fabricar_respuesta_autenticacion (&respuestaCliente, solicitudCliente->clienteAProcesar, &respuestaAutenticacion);
+    if (enviar_respuesta_cliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", respuestaAutenticacion.header.tipoPaquete, respuestaAutenticacion.estado, respuestaAutenticacion.idUsuario);
 }
 
 
@@ -216,12 +216,12 @@ static void procesarSolicitudAutenticacion (t_contextoServidor *contextoServidor
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudRegistro (const char *solicitud, t_datosEnvioSolicitudRegistro *returnDatosEnvioSolicitudRegistro)
+static void extraer_solicitud_registro (const char *solicitud, SolicitudRegistro *returnSolicitudRegistro)
 {
-    memcpy (returnDatosEnvioSolicitudRegistro, solicitud, sizeof (t_datosEnvioSolicitudRegistro));
+    memcpy (returnSolicitudRegistro, solicitud, sizeof (SolicitudRegistro));
 }
 
-static bool esCorreoElectronicoInvalido (const char *correoElectronico)
+static bool es_correo_electronico_invalido (const char *correoElectronico)
 {
     char *ptr = strchr (correoElectronico, '@'); // Se posiciona en el @
 
@@ -234,124 +234,124 @@ static bool esCorreoElectronicoInvalido (const char *correoElectronico)
     return 0;
 }
 
-static bool sonDatosRegistroUsuarioInvalidos (const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static bool son_datos_registro_invalidos (const SolicitudRegistro *solicitudRegistro)
 {
-    if ((strlen (datosEnvioSolicitudRegistro->nombreUsuario) < 3) || sonTodosEspacios (datosEnvioSolicitudRegistro->nombreUsuario))
+    if ((strlen (solicitudRegistro->nombreUsuario) < 3) || son_todos_espacios (solicitudRegistro->nombreUsuario))
         return 1;
     
-    if ((strlen (datosEnvioSolicitudRegistro->contrasenia) < 8) || sonTodosEspacios (datosEnvioSolicitudRegistro->contrasenia))
+    if ((strlen (solicitudRegistro->contrasenia) < 8) || son_todos_espacios (solicitudRegistro->contrasenia))
         return 1;
 
-    if (esCorreoElectronicoInvalido (datosEnvioSolicitudRegistro->correoElectronico))
+    if (es_correo_electronico_invalido (solicitudRegistro->correoElectronico))
         return 1;
 
     return 0;
 }
 
-static bool nombreYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static bool nombre_ya_existe (sqlite3_stmt *sentenciaBuscarIdPorNombre, const SolicitudRegistro *solicitudRegistro)
 {
-    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
+    ParametrosBuscarUsuarioPorNombre parametrosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosEnvioSolicitudRegistro->nombreUsuario);
+    strcpy (parametrosBuscarUsuarioPorNombre.nombreUsuario, solicitudRegistro->nombreUsuario);
 
-    return (buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, NULL));
+    return (bd_buscar_id_por_nombre (sentenciaBuscarIdPorNombre, &parametrosBuscarUsuarioPorNombre, NULL));
 }
 
-static bool correoYaExistente (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static bool correo_ya_existe (sqlite3_stmt *sentenciaBuscarIdPorCorreo, const SolicitudRegistro *solicitudRegistro)
 {
-    t_datosBuscarUsuarioPorCorreo datosBuscarUsuarioPorCorreo;
+    ParametrosBuscarUsuarioPorCorreo parametrosBuscarUsuarioPorCorreo;
 
-    strcpy (datosBuscarUsuarioPorCorreo.correoElectronico, datosEnvioSolicitudRegistro->correoElectronico);
+    strcpy (parametrosBuscarUsuarioPorCorreo.correoElectronico, solicitudRegistro->correoElectronico);
 
-    return (buscarUsuarioPorCorreo (sentenciaBuscarUsuarioPorCorreo, &datosBuscarUsuarioPorCorreo));
+    return (bd_existe_usuario_con_correo (sentenciaBuscarIdPorCorreo, &parametrosBuscarUsuarioPorCorreo));
 }
 
-static t_codigoRetorno hashearContrasenia (t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static CodigoRetorno hashear_contrasenia (SolicitudRegistro *solicitudRegistro)
 {
     char contraseniaHasheada [crypto_pwhash_STRBYTES];
 
-    if (crypto_pwhash_str (contraseniaHasheada, datosEnvioSolicitudRegistro->contrasenia, strlen (datosEnvioSolicitudRegistro->contrasenia), 3, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0)
+    if (crypto_pwhash_str (contraseniaHasheada, solicitudRegistro->contrasenia, strlen (solicitudRegistro->contrasenia), 3, crypto_pwhash_MEMLIMIT_SENSITIVE) != 0)
         return ERROR_INICIALIZACION;
 
-    strcpy (datosEnvioSolicitudRegistro->contrasenia, contraseniaHasheada);
+    strcpy (solicitudRegistro->contrasenia, contraseniaHasheada);
     
     return EXITO;
 }
 
-static void registrarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro)
+static void insertar_usuario (sqlite3_stmt *sentenciaInsertarUsuario, const SolicitudRegistro *solicitudRegistro)
 {
-    t_datosInsertarUsuario datosInsertarUsuario;
+    ParametrosInsertarUsuario parametrosInsertarUsuario;
 
-    strcpy (datosInsertarUsuario.nombreUsuario, datosEnvioSolicitudRegistro->nombreUsuario);
-    strcpy (datosInsertarUsuario.contrasenia, datosEnvioSolicitudRegistro->contrasenia);
-    strcpy (datosInsertarUsuario.correoElectronico, datosEnvioSolicitudRegistro->correoElectronico);
+    strcpy (parametrosInsertarUsuario.nombreUsuario, solicitudRegistro->nombreUsuario);
+    strcpy (parametrosInsertarUsuario.contrasenia, solicitudRegistro->contrasenia);
+    strcpy (parametrosInsertarUsuario.correoElectronico, solicitudRegistro->correoElectronico);
 
-    insertarUsuario (sentenciaInsertarUsuario, &datosInsertarUsuario);
+    bd_insertar_usuario (sentenciaInsertarUsuario, &parametrosInsertarUsuario);
 }
 
-static void recuperarIdUsuarioRecienRegistrado (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro, int *returnIdUsuario)
+static void recuperar_id_usuario_registrado (sqlite3_stmt *sentenciaBuscarIdPorNombre, const SolicitudRegistro *solicitudRegistro, int *returnIdUsuario)
 {
-    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
+    ParametrosBuscarUsuarioPorNombre parametrosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosEnvioSolicitudRegistro->nombreUsuario);
+    strcpy (parametrosBuscarUsuarioPorNombre.nombreUsuario, solicitudRegistro->nombreUsuario);
 
-    buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, returnIdUsuario);
+    bd_buscar_id_por_nombre (sentenciaBuscarIdPorNombre, &parametrosBuscarUsuarioPorNombre, returnIdUsuario);
 }
 
-static void registrarCliente (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, t_datosEnvioSolicitudRegistro *datosEnvioSolicitudRegistro, t_datosRespuestaSolicitudRegistro *datosRespuestaSolicitudRegistro)
+static void registrar_usuario (ContextoServidor *contextoServidor, NodoListaDoble *clienteAProcesar, SolicitudRegistro *solicitudRegistro, RespuestaRegistro *returnRespuestaRegistro)
 {
-    datosRespuestaSolicitudRegistro->idUsuario = ID_INVALIDO;
+    returnRespuestaRegistro->idUsuario = ID_INVALIDO;
 
-    if (sonDatosRegistroUsuarioInvalidos (datosEnvioSolicitudRegistro))
+    if (son_datos_registro_invalidos (solicitudRegistro))
     {
-        datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
+        returnRespuestaRegistro->estado = SOLICITUD_ERROR_CREDENCIALES_INVALIDAS;
         return;
     }
 
-    if (nombreYaExistente (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosEnvioSolicitudRegistro))
+    if (nombre_ya_existe (contextoServidor->sentenciasSqlite.buscarIdPorNombre, solicitudRegistro))
     {
-        datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE;
+        returnRespuestaRegistro->estado = SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE;
         return;
     }
 
-    if (correoYaExistente (contextoServidor->sentenciasSqlite.buscarUsuarioPorCorreo, datosEnvioSolicitudRegistro))
+    if (correo_ya_existe (contextoServidor->sentenciasSqlite.buscarIdPorCorreo, solicitudRegistro))
     {
-        datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_ERROR_CORREO_YA_EXISTENTE;
+        returnRespuestaRegistro->estado = SOLICITUD_ERROR_CORREO_YA_EXISTENTE;
         return;
     }
 
-    if (hashearContrasenia (datosEnvioSolicitudRegistro) == ERROR_INICIALIZACION)
+    if (hashear_contrasenia (solicitudRegistro) == ERROR_INICIALIZACION)
     {
-        datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_ERROR_SERVIDOR;
+        returnRespuestaRegistro->estado = SOLICITUD_ERROR_SERVIDOR;
         return;
     }
 
-    registrarUsuario (contextoServidor->sentenciasSqlite.insertarUsuario, datosEnvioSolicitudRegistro);
-    recuperarIdUsuarioRecienRegistrado (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosEnvioSolicitudRegistro, &(datosRespuestaSolicitudRegistro->idUsuario));
-    conectarUsuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, datosRespuestaSolicitudRegistro->idUsuario);
+    insertar_usuario (contextoServidor->sentenciasSqlite.insertarUsuario, solicitudRegistro);
+    recuperar_id_usuario_registrado (contextoServidor->sentenciasSqlite.buscarIdPorNombre, solicitudRegistro, &(returnRespuestaRegistro->idUsuario));
+    conectar_usuario (&(contextoServidor->clientes), &(contextoServidor->clientesNoAutenticados), clienteAProcesar, returnRespuestaRegistro->idUsuario);
 
-    datosRespuestaSolicitudRegistro->estadoSolicitud = SOLICITUD_EXITO;
+    returnRespuestaRegistro->estado = SOLICITUD_EXITO;
 }
 
-static void fabricarRespuestaSolicitudRegistro (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudRegistro *datosRespuestaSolicitudRegistro)
+static void fabricar_respuesta_registro (RespuestaCliente *respuestaCliente, const NodoListaDoble *clienteAResponder, RespuestaRegistro *respuestaRegistro)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
+    Cliente *cliente = (Cliente*)(clienteAResponder->dato);
 
-    datosRespuestaSolicitudRegistro->header.tipo = RESPUESTA_SOLICITUD_REGISTRO;
-    datosRespuestaSolicitudRegistro->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudRegistro);
+    respuestaRegistro->header.tipoPaquete = RESPUESTA_SOLICITUD_REGISTRO;
+    respuestaRegistro->header.bytesTransmitidos = sizeof (RespuestaRegistro);
 
-    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudRegistro);
-    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudRegistro);
+    respuestaCliente->datosAEnviar = (char*)(respuestaRegistro);
+    respuestaCliente->tamDatosAEnviar = sizeof (RespuestaRegistro);
     respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
- * Recibe los datos del usuario que envio la solicitud con la estructura t_datosEnvioSolicitudRegistro.
+ * Recibe los datos del usuario que envio la solicitud con la estructura SolicitudRegistro.
  * 
  * Verificar en la base de datos si ya existe un usuario registrado con el mismo nombre de usuario o correo electronico.
  * Si el usuario se puede registrar, lo conecta mediante recuperar su ID, guardarlo en el nodo del cliente y moverlo de la lista doble de clientes no autenticados a la tabla hash de clientes autenticados.
  * 
- * Responde los datos del procesamiento de la solicitud al cliente con la estructura t_datosRespuestaSolicitudRegistro.
+ * Responde los datos del procesamiento de la solicitud al cliente con la estructura RespuestaRegistro.
  * 
  * Posibles respuestas:
  * RESPUESTA_SOLICITUD_REGISTRO|SOLICITUD_EXITO|ID del usuario #En caso de procesamiento exitoso.
@@ -360,18 +360,18 @@ static void fabricarRespuestaSolicitudRegistro (t_respuestaCliente *respuestaCli
  * RESPUESTA_SOLICITUD_REGISTRO|SOLICITUD_ERROR_CORREO_YA_EXISTENTE|ID invalido #En caso de que el correo electronico ya se encuentre en uso.
  * RESPUESTA_SOLICITUD_REGISTRO|SOLICITUD_ERROR_SERVIDOR|ID invalido #En caso de problemas al hashear la contrasenia.
  */
-static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
+static void procesar_solicitud_registro (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente)
 {
-    t_datosEnvioSolicitudRegistro datosEnvioSolicitudRegistro;
-    t_datosRespuestaSolicitudRegistro datosRespuestaSolicitudRegistro;
-    t_respuestaCliente respuestaCliente;
+    SolicitudRegistro solicitudRegistro;
+    RespuestaRegistro respuestaRegistro;
+    RespuestaCliente respuestaCliente;
 
-    extraerDatosSolicitudRegistro (solicitudCliente->solicitud, &datosEnvioSolicitudRegistro);
-    printf ("Solicitud recibida: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.header.tipo, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
-    registrarCliente (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudRegistro, &datosRespuestaSolicitudRegistro);
-    fabricarRespuestaSolicitudRegistro (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudRegistro);
-    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudRegistro.header.tipo, datosRespuestaSolicitudRegistro.estadoSolicitud, datosRespuestaSolicitudRegistro.idUsuario);
+    extraer_solicitud_registro (solicitudCliente->solicitud, &solicitudRegistro);
+    printf ("Solicitud recibida: %c|%s|%s|%s\n", solicitudRegistro.header.tipoPaquete, solicitudRegistro.nombreUsuario, solicitudRegistro.contrasenia, solicitudRegistro.correoElectronico);
+    registrar_usuario (contextoServidor, solicitudCliente->clienteAProcesar, &solicitudRegistro, &respuestaRegistro);
+    fabricar_respuesta_registro (&respuestaCliente, solicitudCliente->clienteAProcesar, &respuestaRegistro);
+    if (enviar_respuesta_cliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", respuestaRegistro.header.tipoPaquete, respuestaRegistro.estado, respuestaRegistro.idUsuario);
 }
 
 
@@ -380,124 +380,124 @@ static void procesarSolicitudRegistro (t_contextoServidor *contextoServidor, t_s
    ============================================================================================================================================ */
 
 
-static void extrarDatosSolicitudEnvioMensaje (const char *solicitud, t_datosEnvioSolicitudEnvioMensaje *returnDatosEnvioSolicitudEnvioMensaje)
+static void extrar_solicitud_envio_mensaje (const char *solicitud, SolicitudEnvioMensaje *returnSolicitudEnvioMensaje)
 {
-    memcpy (returnDatosEnvioSolicitudEnvioMensaje, solicitud, sizeof (t_datosEnvioSolicitudEnvioMensaje));
+    memcpy (returnSolicitudEnvioMensaje, solicitud, sizeof (SolicitudEnvioMensaje));
 }
 
-static bool sonEmisorOReceptorInvalidos (const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static bool son_emisor_o_receptor_invalidos (const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    return ((datosEnvioSolicitudEnvioMensaje->idEmisor == ID_INVALIDO) || (datosEnvioSolicitudEnvioMensaje->idReceptor == ID_INVALIDO));
+    return ((solicitudEnvioMensaje->idEmisor == ID_INVALIDO) || (solicitudEnvioMensaje->idReceptor == ID_INVALIDO));
 }
 
-static bool elEmisorEsElReceptor (const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static bool emisor_es_receptor (const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    return (datosEnvioSolicitudEnvioMensaje->idEmisor == datosEnvioSolicitudEnvioMensaje->idReceptor);
+    return (solicitudEnvioMensaje->idEmisor == solicitudEnvioMensaje->idReceptor);
 }
 
-static bool sonDatosEnvioMensajeInvalidos (const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static bool son_datos_envio_mensaje_invalidos (const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    return ((*(datosEnvioSolicitudEnvioMensaje->texto) == '\0') || 
-                (sonTodosEspacios (datosEnvioSolicitudEnvioMensaje->texto)) ||
-                (sonEmisorOReceptorInvalidos (datosEnvioSolicitudEnvioMensaje)) || 
-                (elEmisorEsElReceptor (datosEnvioSolicitudEnvioMensaje)));
+    return ((*(solicitudEnvioMensaje->texto) == '\0') || 
+                (son_todos_espacios (solicitudEnvioMensaje->texto)) ||
+                (son_emisor_o_receptor_invalidos (solicitudEnvioMensaje)) || 
+                (emisor_es_receptor (solicitudEnvioMensaje)));
 }
 
-static void almacenarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static void insertar_mensaje (sqlite3_stmt *sentenciaInsertarMensaje, const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    t_datosInsertarMensaje datosInsertarMensaje;
+    ParametrosInsertarMensaje parametrosInsertarMensaje;
 
-    datosInsertarMensaje.idEmisor = datosEnvioSolicitudEnvioMensaje->idEmisor;
-    datosInsertarMensaje.idReceptor = datosEnvioSolicitudEnvioMensaje->idReceptor;
-    strcpy (datosInsertarMensaje.texto, datosEnvioSolicitudEnvioMensaje->texto);
+    parametrosInsertarMensaje.idEmisor = solicitudEnvioMensaje->idEmisor;
+    parametrosInsertarMensaje.idReceptor = solicitudEnvioMensaje->idReceptor;
+    strcpy (parametrosInsertarMensaje.texto, solicitudEnvioMensaje->texto);
 
-    insertarMensaje (sentenciaInsertarMensaje, &datosInsertarMensaje);
+    bd_insertar_mensaje (sentenciaInsertarMensaje, &parametrosInsertarMensaje);
 }
 
-static bool receptorEstaConectado (t_tablaHash *clientes, const int *idReceptor, t_cliente *returnCliente)
+static bool receptor_esta_conectado (TablaHash *clientes, const int *idReceptor, Cliente *returnCliente)
 {
-    return buscarClaveUnicaEnTablaHash (clientes, idReceptor, funcionHash, returnCliente, sizeof (t_cliente), cmpIdCliente);
+    return tabla_hash_buscar_clave_unica (clientes, idReceptor, aplicar_hash_id_cliente, returnCliente, sizeof (Cliente), cmp_id_cliente);
 }
 
-static void fabricarRespuestaRecepcionMensaje (t_respuestaCliente *respuestaCliente, t_cliente *cliente, t_datosRespuestaRecepcionMensaje *datosRespuestaRecepcionMensaje, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static void fabricar_respuesta_recepcion_mensaje (RespuestaCliente *respuestaCliente, Cliente *cliente, RespuestaRecepcionMensaje *respuestaRecepcionMensaje, const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    datosRespuestaRecepcionMensaje->header.tipo = RESPUESTA_RECEPCION_MENSAJE;
-    datosRespuestaRecepcionMensaje->header.bytesTransmitidos = sizeof (t_datosRespuestaRecepcionMensaje);
+    respuestaRecepcionMensaje->header.tipoPaquete = RESPUESTA_RECEPCION_MENSAJE;
+    respuestaRecepcionMensaje->header.bytesTransmitidos = sizeof (RespuestaRecepcionMensaje);
 
-    datosRespuestaRecepcionMensaje->idEmisor = datosEnvioSolicitudEnvioMensaje->idEmisor;
-    strcpy (datosRespuestaRecepcionMensaje->texto, datosEnvioSolicitudEnvioMensaje->texto);
+    respuestaRecepcionMensaje->idEmisor = solicitudEnvioMensaje->idEmisor;
+    strcpy (respuestaRecepcionMensaje->texto, solicitudEnvioMensaje->texto);
 
-    respuestaCliente->datosAEnviar = (char*)(datosRespuestaRecepcionMensaje);
-    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaRecepcionMensaje);
+    respuestaCliente->datosAEnviar = (char*)(respuestaRecepcionMensaje);
+    respuestaCliente->tamDatosAEnviar = sizeof (RespuestaRecepcionMensaje);
     respuestaCliente->clienteAResponder = cliente;
 }
 
-static void enviarMensajeAlReceptor (t_contextoServidor *contextoServidor, t_cliente *cliente, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje)
+static void enviar_mensaje_receptor (ContextoServidor *contextoServidor, Cliente *cliente, const SolicitudEnvioMensaje *solicitudEnvioMensaje)
 {
-    t_datosRespuestaRecepcionMensaje datosRespuestaRecepcionMensaje;
-    t_respuestaCliente respuestaCliente;
+    RespuestaRecepcionMensaje respuestaRecepcionMensaje;
+    RespuestaCliente respuestaCliente;
 
-    fabricarRespuestaRecepcionMensaje (&respuestaCliente, cliente, &datosRespuestaRecepcionMensaje, datosEnvioSolicitudEnvioMensaje);
+    fabricar_respuesta_recepcion_mensaje (&respuestaCliente, cliente, &respuestaRecepcionMensaje, solicitudEnvioMensaje);
 
-    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%d\n", datosRespuestaRecepcionMensaje.header.tipo, datosRespuestaRecepcionMensaje.idEmisor, datosRespuestaRecepcionMensaje.texto);
+    if (enviar_respuesta_cliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%d\n", respuestaRecepcionMensaje.header.tipoPaquete, respuestaRecepcionMensaje.idEmisor, respuestaRecepcionMensaje.texto);
 }
 
-static void enviarMensaje (t_contextoServidor *contextoServidor, const t_datosEnvioSolicitudEnvioMensaje *datosEnvioSolicitudEnvioMensaje, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)
+static void enviar_mensaje (ContextoServidor *contextoServidor, const SolicitudEnvioMensaje *solicitudEnvioMensaje, RespuestaEnvioMensaje *returnRespuestaEnvioMensaje)
 {
-    t_cliente clienteReceptor;
+    Cliente clienteReceptor;
 
-    if (sonDatosEnvioMensajeInvalidos (datosEnvioSolicitudEnvioMensaje))
+    if (son_datos_envio_mensaje_invalidos (solicitudEnvioMensaje))
     {
-        datosRespuestaSolicitudEnvioMensaje->estadoSolicitud = SOLICITUD_ERROR_OPERACION_INVALIDA;
+        returnRespuestaEnvioMensaje->estado = SOLICITUD_ERROR_OPERACION_INVALIDA;
         return;
     }
 
-    almacenarMensaje (contextoServidor->sentenciasSqlite.insertarMensaje, datosEnvioSolicitudEnvioMensaje);
-    if (receptorEstaConectado (&(contextoServidor->clientes), &(datosEnvioSolicitudEnvioMensaje->idReceptor), &clienteReceptor))
-        enviarMensajeAlReceptor (contextoServidor, &clienteReceptor, datosEnvioSolicitudEnvioMensaje);
+    insertar_mensaje (contextoServidor->sentenciasSqlite.insertarMensaje, solicitudEnvioMensaje);
+    if (receptor_esta_conectado (&(contextoServidor->clientes), &(solicitudEnvioMensaje->idReceptor), &clienteReceptor))
+        enviar_mensaje_receptor (contextoServidor, &clienteReceptor, solicitudEnvioMensaje);
 
-    datosRespuestaSolicitudEnvioMensaje->estadoSolicitud = SOLICITUD_EXITO;
+    returnRespuestaEnvioMensaje->estado = SOLICITUD_EXITO;
 }
 
-static void fabricarRespuestaSolicitudEnvioMensaje (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudEnvioMensaje *datosRespuestaSolicitudEnvioMensaje)
+static void fabricar_respuesta_envio_mensaje (RespuestaCliente *respuestaCliente, const NodoListaDoble *clienteAResponder, RespuestaEnvioMensaje *respuestaEnvioMensaje)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
+    Cliente *cliente = (Cliente*)(clienteAResponder->dato);
 
-    datosRespuestaSolicitudEnvioMensaje->header.tipo = RESPUESTA_SOLICITUD_ENVIO_MENSAJE;
-    datosRespuestaSolicitudEnvioMensaje->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudEnvioMensaje);
+    respuestaEnvioMensaje->header.tipoPaquete = RESPUESTA_SOLICITUD_ENVIO_MENSAJE;
+    respuestaEnvioMensaje->header.bytesTransmitidos = sizeof (RespuestaEnvioMensaje);
 
-    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudEnvioMensaje);
-    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudEnvioMensaje);
+    respuestaCliente->datosAEnviar = (char*)(respuestaEnvioMensaje);
+    respuestaCliente->tamDatosAEnviar = sizeof (RespuestaEnvioMensaje);
     respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
- * Recibe los datos del usuario que envio la solicitud con la estructura t_datosEnvioSolicitudEnvioMensaje.
+ * Recibe los datos del usuario que envio la solicitud con la estructura SolicitudEnvioMensaje.
  * 
  * Antes de enviar el mensaje, verifica que el ID del emisor o del receptor sean validos y que no sean los mismos.
  * El mensaje es almacenado en la base de datos antes de ser reenviado al receptor.
  * Si el receptor se encuentra conectado, le reenvia el mensaje con una cadena compuesta de la siguiente manera:
  * tipo respuesta mensaje|id del emisor|texto del mensaje
  * 
- * Responde los datos del procesamiento de la solicitud al cliente con la estructura t_datosRespuestaSolicitudEnvioMensaje.
+ * Responde los datos del procesamiento de la solicitud al cliente con la estructura RespuestaEnvioMensaje.
  * 
  * Posibles respuestas:
  * RESPUESTA_SOLICITUD_ENVIO_MENSAJE|SOLICITUD_EXITO #En caso de procesamiento exitoso.
  * RESPUESTA_SOLICITUD_ENVIO_MENSAJE|SOLICITUD_ERROR_OPERACION_INVALIDA #En caso que sean datos de envio de mensaje invalidos o que el emisor sea el receptor.
  */
-static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
+static void procesar_solicitud_envio_mensaje (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente)
 {
-    t_datosEnvioSolicitudEnvioMensaje datosEnvioSolicitudEnvioMensaje;
-    t_datosRespuestaSolicitudEnvioMensaje datosRespuestaSolicitudEnvioMensaje;
-    t_respuestaCliente respuestaCliente;
+    SolicitudEnvioMensaje solicitudEnvioMensaje;
+    RespuestaEnvioMensaje respuestaEnvioMensaje;
+    RespuestaCliente respuestaCliente;
 
-    extrarDatosSolicitudEnvioMensaje (solicitudCliente->solicitud, &datosEnvioSolicitudEnvioMensaje);
-    printf("Solicitud recibida: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.header.tipo, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
-    enviarMensaje (contextoServidor, &datosEnvioSolicitudEnvioMensaje, &datosRespuestaSolicitudEnvioMensaje);
-    fabricarRespuestaSolicitudEnvioMensaje (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudEnvioMensaje);
-    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%c\n\n", datosRespuestaSolicitudEnvioMensaje.header.tipo, datosRespuestaSolicitudEnvioMensaje.estadoSolicitud);
+    extrar_solicitud_envio_mensaje (solicitudCliente->solicitud, &solicitudEnvioMensaje);
+    printf("Solicitud recibida: %c|%d|%d|%s\n", solicitudEnvioMensaje.header.tipoPaquete, solicitudEnvioMensaje.idEmisor, solicitudEnvioMensaje.idReceptor, solicitudEnvioMensaje.texto);
+    enviar_mensaje (contextoServidor, &solicitudEnvioMensaje, &respuestaEnvioMensaje);
+    fabricar_respuesta_envio_mensaje (&respuestaCliente, solicitudCliente->clienteAProcesar, &respuestaEnvioMensaje);
+    if (enviar_respuesta_cliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c\n\n", respuestaEnvioMensaje.header.tipoPaquete, respuestaEnvioMensaje.estado);
 }
 
 
@@ -506,81 +506,81 @@ static void procesarSolicitudEnvioMensaje (t_contextoServidor *contextoServidor,
    ============================================================================================================================================ */
 
 
-static void extraerDatosSolicitudSeleccionChat (const char *solicitud, t_datosEnvioSolicitudSeleccionChat *returnDatosEnvioSolicitudSeleccionChat)
+static void extraer_solicitud_seleccion_chat (const char *solicitud, SolicitudSeleccionChat *returnSolicitudSeleccionChat)
 {
-    memcpy (returnDatosEnvioSolicitudSeleccionChat, solicitud, sizeof (t_datosEnvioSolicitudSeleccionChat));
+    memcpy (returnSolicitudSeleccionChat, solicitud, sizeof (SolicitudSeleccionChat));
 }
 
-static bool sonDatosSeleccionChatInvalidos (const t_datosEnvioSolicitudSeleccionChat *datosEnvioSolicitudSeleccionChat)
+static bool son_datos_seleccion_chat_invalidos (const SolicitudSeleccionChat *solicitudSeleccionChat)
 {
-    return ((strlen (datosEnvioSolicitudSeleccionChat->nombreUsuarioChatSeleccionado) < 3) || (sonTodosEspacios (datosEnvioSolicitudSeleccionChat->nombreUsuarioChatSeleccionado)));
+    return ((strlen (solicitudSeleccionChat->nombreUsuarioChatSeleccionado) < 3) || (son_todos_espacios (solicitudSeleccionChat->nombreUsuarioChatSeleccionado)));
 }
 
-static bool usuarioSeleccionadoNoExiste (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosEnvioSolicitudSeleccionChat *datosEnvioSolicitudSeleccionChat, int *returnIdUsuarioDelChatSeleccinado)
+static bool usuario_seleccionado_no_existe (sqlite3_stmt *sentenciaBuscarIdPorNombre, const SolicitudSeleccionChat *solicitudSeleccionChat, int *returnIdUsuarioChatSeleccinado)
 {
-    t_datosBuscarUsuarioPorNombre datosBuscarUsuarioPorNombre;
+    ParametrosBuscarUsuarioPorNombre parametrosBuscarUsuarioPorNombre;
 
-    strcpy (datosBuscarUsuarioPorNombre.nombreUsuario, datosEnvioSolicitudSeleccionChat->nombreUsuarioChatSeleccionado);
+    strcpy (parametrosBuscarUsuarioPorNombre.nombreUsuario, solicitudSeleccionChat->nombreUsuarioChatSeleccionado);
 
-    return (!buscarUsuarioPorNombre_recuperarId (sentenciaBuscarUsuarioPorNombre_recuperarId, &datosBuscarUsuarioPorNombre, returnIdUsuarioDelChatSeleccinado));
+    return (!bd_buscar_id_por_nombre (sentenciaBuscarIdPorNombre, &parametrosBuscarUsuarioPorNombre, returnIdUsuarioChatSeleccinado));
 }
 
-static bool usuarioSeleccionoSuPropioChat (int idCliente, int idUsuarioDelChatSeleccionado)
+static bool usuario_selecciono_su_propio_chat (int idCliente, int idUsuarioChatSeleccionado)
 {
-    return (idCliente == idUsuarioDelChatSeleccionado);
+    return (idCliente == idUsuarioChatSeleccionado);
 }
 
-static void seleccionarChat (t_contextoServidor *contextoServidor, t_nodoListaDoble *clienteAProcesar, const t_datosEnvioSolicitudSeleccionChat *datosEnvioSolicitudSeleccionChat, t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
+static void seleccionar_chat (ContextoServidor *contextoServidor, NodoListaDoble *clienteAProcesar, const SolicitudSeleccionChat *solicitudSeleccionChat, RespuestaSeleccionChat *returnRespuestaSeleccionChat)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAProcesar->dato);
+    Cliente *cliente = (Cliente*)(clienteAProcesar->dato);
 
-    if ((sonDatosSeleccionChatInvalidos (datosEnvioSolicitudSeleccionChat)) ||
-        (usuarioSeleccionadoNoExiste (contextoServidor->sentenciasSqlite.buscarUsuarioPorNombre_recuperarId, datosEnvioSolicitudSeleccionChat, &(datosRespuestaSolicitudSeleccionChat->idUsuarioDelChatSeleccionado))) ||
-        (usuarioSeleccionoSuPropioChat (cliente->id, datosRespuestaSolicitudSeleccionChat->idUsuarioDelChatSeleccionado)))
+    if ((son_datos_seleccion_chat_invalidos (solicitudSeleccionChat)) ||
+        (usuario_seleccionado_no_existe (contextoServidor->sentenciasSqlite.buscarIdPorNombre, solicitudSeleccionChat, &(returnRespuestaSeleccionChat->idUsuarioChatSeleccionado))) ||
+        (usuario_selecciono_su_propio_chat (cliente->id, returnRespuestaSeleccionChat->idUsuarioChatSeleccionado)))
     {
-        datosRespuestaSolicitudSeleccionChat->estadoSolicitud = SOLICITUD_ERROR_OPERACION_INVALIDA;
-        datosRespuestaSolicitudSeleccionChat->idUsuarioDelChatSeleccionado = ID_INVALIDO;
+        returnRespuestaSeleccionChat->estado = SOLICITUD_ERROR_OPERACION_INVALIDA;
+        returnRespuestaSeleccionChat->idUsuarioChatSeleccionado = ID_INVALIDO;
         return;
     }
 
-    datosRespuestaSolicitudSeleccionChat->estadoSolicitud = SOLICITUD_EXITO;
+    returnRespuestaSeleccionChat->estado = SOLICITUD_EXITO;
 }
 
-static void fabricarRespuestaSolicitudSeleccionChat (t_respuestaCliente *respuestaCliente, const t_nodoListaDoble *clienteAResponder, t_datosRespuestaSolicitudSeleccionChat *datosRespuestaSolicitudSeleccionChat)
+static void fabricar_respuesta_seleccion_chat (RespuestaCliente *respuestaCliente, const NodoListaDoble *clienteAResponder, RespuestaSeleccionChat *respuestaSeleccionChat)
 {
-    t_cliente *cliente = (t_cliente*)(clienteAResponder->dato);
+    Cliente *cliente = (Cliente*)(clienteAResponder->dato);
 
-    datosRespuestaSolicitudSeleccionChat->header.tipo = RESPUESTA_SOLICITUD_SELECCION_CHAT;
-    datosRespuestaSolicitudSeleccionChat->header.bytesTransmitidos = sizeof (t_datosRespuestaSolicitudSeleccionChat);
+    respuestaSeleccionChat->header.tipoPaquete = RESPUESTA_SOLICITUD_SELECCION_CHAT;
+    respuestaSeleccionChat->header.bytesTransmitidos = sizeof (RespuestaSeleccionChat);
 
-    respuestaCliente->datosAEnviar = (char*)(datosRespuestaSolicitudSeleccionChat);
-    respuestaCliente->tamDatosAEnviar = sizeof (t_datosRespuestaSolicitudSeleccionChat);
+    respuestaCliente->datosAEnviar = (char*)(respuestaSeleccionChat);
+    respuestaCliente->tamDatosAEnviar = sizeof (RespuestaSeleccionChat);
     respuestaCliente->clienteAResponder = cliente;
 }
 
 /*
- * Recibe los datos del usuario que envio la solicitud con la estructura t_datosEnvioSolicitudSeleccionChat.
+ * Recibe los datos del usuario que envio la solicitud con la estructura SolicitudSeleccionChat.
  *
  * Verificar que el usuario seleccionado existe.
  * Verificar que el usuario no haya seleccionado su propio chat.
  *
- * Responde los datos del procesamiento de la solicitud al cliente con la estructura t_datosRespuestaSolicitudSeleccionChat.
+ * Responde los datos del procesamiento de la solicitud al cliente con la estructura RespuestaSeleccionChat.
  * 
  * Posibles respuestas:
  * RESPUESTA_SOLICITUD_SELECCION_CHAT|SOLICITUD_EXITO|ID del usuario del chat seleccionado #En caso de procesamiento exitoso.
  * RESPUESTA_SOLICITUD_SELECCION_CHAT|SOLICITUD_ERROR_OPERACION_INVALIDA|ID invalido #En caso que sean datos de seleccion de chat invalidos, que el usuario seleccionado no exista o que el usuario selecciono su propio chat.
  */
-static void procesarSolicitudSeleccionChat (t_contextoServidor *contextoServidor, t_solicitudCliente *solicitudCliente)
+static void procesar_solicitud_seleccion_chat (ContextoServidor *contextoServidor, SolicitudCliente *solicitudCliente)
 {  
-    t_datosEnvioSolicitudSeleccionChat datosEnvioSolicitudSeleccionChat;
-    t_datosRespuestaSolicitudSeleccionChat datosRespuestaSolicitudSeleccionChat;
-    t_respuestaCliente respuestaCliente;
+    SolicitudSeleccionChat solicitudSeleccionChat;
+    RespuestaSeleccionChat respuestaSeleccionChat;
+    RespuestaCliente respuestaCliente;
 
-    extraerDatosSolicitudSeleccionChat (solicitudCliente->solicitud, &datosEnvioSolicitudSeleccionChat);
-    printf ("Solicitud recibida: %c|%s\n", datosEnvioSolicitudSeleccionChat.header.tipo, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
-    seleccionarChat (contextoServidor, solicitudCliente->clienteAProcesar, &datosEnvioSolicitudSeleccionChat, &datosRespuestaSolicitudSeleccionChat);
-    fabricarRespuestaSolicitudSeleccionChat (&respuestaCliente, solicitudCliente->clienteAProcesar, &datosRespuestaSolicitudSeleccionChat);
-    if (enviarRespuestaACliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
-        printf ("Respuesta enviada: %c|%c|%d\n\n", datosRespuestaSolicitudSeleccionChat.header.tipo, datosRespuestaSolicitudSeleccionChat.estadoSolicitud, datosRespuestaSolicitudSeleccionChat.idUsuarioDelChatSeleccionado);
+    extraer_solicitud_seleccion_chat (solicitudCliente->solicitud, &solicitudSeleccionChat);
+    printf ("Solicitud recibida: %c|%s\n", solicitudSeleccionChat.header.tipoPaquete, solicitudSeleccionChat.nombreUsuarioChatSeleccionado);
+    seleccionar_chat (contextoServidor, solicitudCliente->clienteAProcesar, &solicitudSeleccionChat, &respuestaSeleccionChat);
+    fabricar_respuesta_seleccion_chat (&respuestaCliente, solicitudCliente->clienteAProcesar, &respuestaSeleccionChat);
+    if (enviar_respuesta_cliente (contextoServidor, &respuestaCliente) == ENVIO_COMPLETO)
+        printf ("Respuesta enviada: %c|%c|%d\n\n", respuestaSeleccionChat.header.tipoPaquete, respuestaSeleccionChat.estado, respuestaSeleccionChat.idUsuarioChatSeleccionado);
 }
 

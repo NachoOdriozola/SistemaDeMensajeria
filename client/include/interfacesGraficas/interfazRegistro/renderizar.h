@@ -34,7 +34,7 @@
  * 3) Muestra la ventana actualizada.
  * Procura el orden de los objetos graficos renderizados para que no se superpongan.
 */
-void _interfazRegistro_renderizar (sfRenderWindow *renderizado, const t_interfazRegistro *interfazRegistro);
+void _ui_registro_renderizar (sfRenderWindow *renderizado, const UiRegistro *uiRegistro);
 
 
 #endif // INTERFAZREGISTRO_RENDERIZAR_H_INCLUDED

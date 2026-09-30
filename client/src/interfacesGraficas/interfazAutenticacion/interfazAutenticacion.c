@@ -1,67 +1,67 @@
 #include "interfacesGraficas/interfazAutenticacion/interfazAutenticacion.h"
 
 
-void interfazAutenticacion_inicializarValoresNulos (t_interfazAutenticacion *interfazAutenticacion)
+void ui_autenticacion_inicializar (UiAutenticacion *uiAutenticacion)
 {
     // TEXTOS
-    _interfazAutenticacion_inicializarValoresNulosTextos (&(interfazAutenticacion->textos));
+    _ui_autenticacion_inicializar_textos (&(uiAutenticacion->textos));
 
     // ELEMENTOS
-    _interfazAutenticacion_inicializarValoresNulosElementos (&(interfazAutenticacion->elementos));
+    _ui_autenticacion_inicializar_elementos (&(uiAutenticacion->elementos));
 }
 
-t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+CodigoRetorno ui_autenticacion_crear (UiAutenticacion *uiAutenticacion, UiAcceso *uiAcceso)
 {
     // --------------- ASIGNAR RECURSOS COMUNES ---------------
 
-    interfazAutenticacion->recursosComunesAutenticacionRegistro = recursosComunesAutenticacionRegistro;
+    uiAutenticacion->uiAcceso = uiAcceso;
 
     // --------------- CREAR RECURSOS GRAFICOS ---------------
 
     // TEXTOS
-    if (_interfazAutenticacion_inicializarTextos (&(interfazAutenticacion->textos), &(interfazAutenticacion->recursosComunesAutenticacionRegistro->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_autenticacion_crear_textos (&(uiAutenticacion->textos), &(uiAutenticacion->uiAcceso->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
-    if (_interfazAutenticacion_inicializarElementos (&(interfazAutenticacion->elementos)) == ERROR_INICIALIZACION)
+    if (_ui_autenticacion_crear_elementos (&(uiAutenticacion->elementos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     return EXITO;
 }
 
-void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion)
+void ui_autenticacion_configurar (UiAutenticacion *uiAutenticacion)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazAutenticacion_configurarInterfaz (interfazAutenticacion);
+    _ui_autenticacion_configurar_interfaz (uiAutenticacion);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazAutenticacion_configurarTextos (&(interfazAutenticacion->textos));
+    _ui_autenticacion_configurar_textos (&(uiAutenticacion->textos));
 
     // ELEMENTOS
-    _interfazAutenticacion_configurarElementos (&(interfazAutenticacion->elementos));
+    _ui_autenticacion_configurar_elementos (&(uiAutenticacion->elementos));
 
     // --------------- ESTABLECER TAMANIO Y POSICION EN VENTANA DE RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazAutenticacion_tamYPosVentanaTextos (&(interfazAutenticacion->textos));
+    _ui_autenticacion_establecer_tam_y_pos_ventana_textos (&(uiAutenticacion->textos));
 
     // ELEMENTOS
-    _interfazAutenticacion_tamYPosVentanaElementos (&(interfazAutenticacion->elementos));
+    _ui_autenticacion_establecer_tam_y_pos_ventana_elementos (&(uiAutenticacion->elementos));
 }
 
-void interfazAutenticacion_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+void ui_autenticacion_ejecutar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    _interfazAutenticacion_accion (contextoAplicacion, interfazAutenticacion);
-    _interfazAutenticacion_actualizar (contextoAplicacion, interfazAutenticacion);
-    _interfazAutenticacion_renderizar (contextoAplicacion->renderizado, interfazAutenticacion);
+    _ui_autenticacion_accionar (contextoAplicacion, uiAutenticacion);
+    _ui_autenticacion_actualizar (contextoAplicacion, uiAutenticacion);
+    _ui_autenticacion_renderizar (contextoAplicacion->renderizado, uiAutenticacion);
 }
 
-void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticacion)
+void ui_autenticacion_liberar (UiAutenticacion *uiAutenticacion)
 {
     // TEXTOS
-    _interfazAutenticacion_liberarTextos (&(interfazAutenticacion->textos));
+    _ui_autenticacion_liberar_textos (&(uiAutenticacion->textos));
 
     // ELEMENTOS
-    _interfazAutenticacion_liberarElementos (&(interfazAutenticacion->elementos));
+    _ui_autenticacion_liberar_elementos (&(uiAutenticacion->elementos));
 }
 

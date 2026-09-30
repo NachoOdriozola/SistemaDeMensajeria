@@ -1,16 +1,16 @@
 #include "cola.h"
 
-void crearCola (t_cola *c)
+void cola_crear (Cola *c)
 {
     c->pri = NULL;
     c->ult = NULL;
 }
 
-int insertarACola (t_cola *c, void *dato, unsigned tamDato)
+int cola_insertar (Cola *c, void *dato, unsigned tamDato)
 {
-    t_nodoCola *nuevoNodo;
+    NodoCola *nuevoNodo;
 
-    nuevoNodo = malloc (sizeof (t_nodoCola));
+    nuevoNodo = malloc (sizeof (NodoCola));
     if (!nuevoNodo)
         return 1;
 
@@ -36,9 +36,9 @@ int insertarACola (t_cola *c, void *dato, unsigned tamDato)
     return 0;
 }
 
-void desacolar (t_cola *c, void *returnDato, unsigned tamDato)
+void cola_sacar (Cola *c, void *returnDato, unsigned tamDato)
 {
-    t_nodoCola *nodoElim;
+    NodoCola *nodoElim;
 
     if (c->pri == NULL)
         return;
@@ -52,14 +52,14 @@ void desacolar (t_cola *c, void *returnDato, unsigned tamDato)
     free (nodoElim);
 }
 
-bool noEsColaVacia (t_cola *c)
+bool cola_no_esta_vacia (Cola *c)
 {
     return (c->pri != NULL);
 }
 
-void vaciarCola (t_cola *c)
+void cola_vaciar (Cola *c)
 {
-    t_nodoCola *nodoElim;
+    NodoCola *nodoElim;
 
     while (c->pri != NULL)
     {

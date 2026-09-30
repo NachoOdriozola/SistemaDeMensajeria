@@ -6,24 +6,24 @@
    ============================================================================================================================================ */
 
 
-static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, t_interfazContactosVistas *vistas, sfEvent eventoRedimensionamiento);
+static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, UiContactosVistas *vistas, sfEvent eventoRedimensionamiento);
 
-static bool procesar_click_escribirMensaje (const sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
-static bool procesar_click_areaMensajes (const sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
-static bool procesar_click_enviarMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+static bool procesar_click_escribir_mensaje (const sfRenderWindow *renderizado, UiContactos *uiContactos);
+static bool procesar_click_area_mensajes (const sfRenderWindow *renderizado, UiContactos *uiContactos);
+static bool procesar_click_enviar_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
-static bool procesar_escribir_mensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, sfEvent eventoChar);
+static bool procesar_escribir_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, sfEvent eventoChar);
 
-static bool procesar_enter_enviarMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+static bool procesar_enter_enviar_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_mensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+static bool procesar_pegar_mensaje_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
-static bool procesar_desplazar_arriba_areaMensajes (t_interfazContactos *interfazContactos);
-static bool procesar_desplazar_abajo_areaMensajes (t_interfazContactos *interfazContactos);
+static bool procesar_desplazamiento_arriba_area_mensajes (UiContactos *uiContactos);
+static bool procesar_desplazamiento_abajo_area_mensajes (UiContactos *uiContactos);
 
-static bool procesar_scroll_areaMensajes (t_interfazContactos *interfazContactos, sfEvent eventoScroll);
+static bool procesar_scroll_area_mensajes (UiContactos *uiContactos, sfEvent eventoScroll);
 
-static void deshabilitarFoco (t_interfazContactos *interfazContactos);
+static void deshabilitar_focos (UiContactos *uiContactos);
 
 
 /* ============================================================================================================================================
@@ -31,7 +31,7 @@ static void deshabilitarFoco (t_interfazContactos *interfazContactos);
    ============================================================================================================================================ */
 
 
-void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+void _ui_contactos_accionar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
     sfEvent evento;
 
@@ -46,44 +46,44 @@ void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_inte
 
 
         case sfEvtResized:
-            procesar_redimensionamiento_ventana (contextoAplicacion->renderizado, &(interfazContactos->vistas), evento);
+            procesar_redimensionamiento_ventana (contextoAplicacion->renderizado, &(uiContactos->vistas), evento);
             break;
 
 
         case sfEvtMouseButtonPressed:
             if (evento.mouseButton.button == sfMouseLeft)
             {
-                if (procesar_click_escribirMensaje (contextoAplicacion->renderizado, interfazContactos)) break;
-                if (procesar_click_areaMensajes (contextoAplicacion->renderizado, interfazContactos)) break;
-                if (procesar_click_enviarMensaje (contextoAplicacion, interfazContactos)) break;
-                deshabilitarFoco (interfazContactos);
+                if (procesar_click_escribir_mensaje (contextoAplicacion->renderizado, uiContactos)) break;
+                if (procesar_click_area_mensajes (contextoAplicacion->renderizado, uiContactos)) break;
+                if (procesar_click_enviar_mensaje (contextoAplicacion, uiContactos)) break;
+                deshabilitar_focos (uiContactos);
             }
             break;
 
 
         case sfEvtTextEntered:
-            if (procesar_escribir_mensaje (contextoAplicacion, interfazContactos, evento)) break;
+            if (procesar_escribir_mensaje (contextoAplicacion, uiContactos, evento)) break;
             break;
 
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-                if (procesar_enter_enviarMensaje (contextoAplicacion, interfazContactos)) break;
+                if (procesar_enter_enviar_mensaje (contextoAplicacion, uiContactos)) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
-                if (procesar_pegarTextoDesdePortapapeles_escribir_mensaje (contextoAplicacion, interfazContactos)) break;
+                if (procesar_pegar_mensaje_desde_portapapeles (contextoAplicacion, uiContactos)) break;
 
             if (evento.key.code == sfKeyUp)
-                if (procesar_desplazar_arriba_areaMensajes (interfazContactos)) break;
+                if (procesar_desplazamiento_arriba_area_mensajes (uiContactos)) break;
 
             if (evento.key.code == sfKeyDown)
-                if (procesar_desplazar_abajo_areaMensajes (interfazContactos)) break;
+                if (procesar_desplazamiento_abajo_area_mensajes (uiContactos)) break;
 
             break;
 
 
         case sfEvtMouseWheelScrolled:
-            if (procesar_scroll_areaMensajes (interfazContactos, evento)) break;
+            if (procesar_scroll_area_mensajes (uiContactos, evento)) break;
             break;
 
 
@@ -99,7 +99,7 @@ void _interfazContactos_accion (t_contextoAplicacion *contextoAplicacion, t_inte
    ============================================================================================================================================ */
 
 
-static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, t_interfazContactosVistas *vistas, sfEvent eventoRedimensionamiento)
+static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, UiContactosVistas *vistas, sfEvent eventoRedimensionamiento)
 {
     sfVector2u nuevoTamVentana;
 
@@ -121,51 +121,67 @@ static void procesar_redimensionamiento_ventana (sfRenderWindow *renderizado, t_
 }
 
 
-static void posicionarPuntoInsercion_escribirMensaje (t_interfazContactos *interfazContactos)
+static void posicionar_punto_insercion_mensaje (UiContactos *uiContactos)
 {
     sfFloatRect limitesAuxEscribirMensaje;
 
-    limitesAuxEscribirMensaje = sfText_getGlobalBounds (interfazContactos->textos.auxEscribirMensaje);
-    sfRectangleShape_setPosition (interfazContactos->elementos.puntoInsercion, (sfVector2f){451 + limitesAuxEscribirMensaje.size.x, 942});
+    limitesAuxEscribirMensaje = sfText_getGlobalBounds (uiContactos->textos.auxEscribirMensaje);
+    sfRectangleShape_setPosition (uiContactos->elementos.puntoInsercion, (sfVector2f){451 + limitesAuxEscribirMensaje.size.x, 942});
 }
 
-static void resetearBarraEscritura (t_interfazContactos *interfazContactos)
+static void resetear_barra_escritura (UiContactos *uiContactos)
 {
-    *(interfazContactos->logica.contextoMensajes.mensaje) = '\0';
-    sfText_setString (interfazContactos->textos.auxEscribirMensaje, "");
+    *(uiContactos->logica.contextoMensajes.mensaje) = '\0';
+    sfText_setString (uiContactos->textos.auxEscribirMensaje, "");
 }
 
-static void mostrarFeedback_enviando (t_interfazContactos *interfazContactos)
+static void mostrar_feedback_enviando_solicitud (UiContactos *uiContactos)
 {
-    textoDeCarga_iniciar (&(interfazContactos->logica.textoDeCarga));
-    sfText_setString (interfazContactos->textos.feedbackUsuario, "Enviando");
+    texto_de_carga_iniciar (&(uiContactos->logica.textoDeCarga));
+    sfText_setString (uiContactos->textos.feedbackUsuario, "Enviando");
 }
 
 
-static void mostrarFeedback_datosInvalidosSeleccionChat (t_interfazContactos *interfazContactos, const _t_resultado_validacionDatosSeleccionChat *resultado_validacionDatosSeleccionChat)
+static void mostrar_feedback_nombre_vacio (UiContactos *uiContactos)
 {
-    switch (*resultado_validacionDatosSeleccionChat)
+    uint32_t bufferMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'n', 'o', 'm', 'b', 'r', 'e', ' ', 'd','e',' ','u','s','u','a','r','i','o', ' ','v', 'a', 'c', 0x00ED, 'o', 0};
+    sfText_setUnicodeString (uiContactos->textos.feedbackUsuario, bufferMensajeVacio);
+}
+
+static void mostrar_feedback_nombre_invalido (UiContactos *uiContactos)
+{
+    uint32_t bufferNombreInvalido[] = {'N','o',' ','e','s',' ','u','n',' ','n','o','m','b','r','e',' ','d','e',' ','u','s','u','a','r','i','o',' ','v',0x00e1,'l','i','d','o',0};
+    sfText_setUnicodeString (uiContactos->textos.feedbackUsuario, bufferNombreInvalido);
+}
+
+static void mostrar_feedback_selecciono_propio_chat (UiContactos *uiContactos)
+{
+    sfText_setString (uiContactos->textos.feedbackUsuario, "No se puede seleccionar un chat con su propio usuario");
+}
+
+static void mostrar_feedback_chat_ya_seleccionado (UiContactos *uiContactos)
+{
+    sfText_setString (uiContactos->textos.feedbackUsuario, "El chat con el usuario ya se encuentra seleccionado");
+}
+
+static void mostrar_feedback_seleccion_chat_invalido (UiContactos *uiContactos, const ValidacionSeleccionChat *validacionSeleccionChat)
+{
+    switch (*validacionSeleccionChat)
     {
-        case INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREVACIO:
-        {
-            uint32_t bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'n', 'o', 'm', 'b', 'r', 'e', ' ', 'd','e',' ','u','s','u','a','r','i','o', ' ','v', 'a', 'c', 0x00ED, 'o', 0};
-            sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferEsMensajeVacio);
-            break;
-        }
-
-        case INTENTARSELECCIONARCHAT_RESULTADODATOS_NOMBREINVALIDO:
-        {
-            uint32_t bufferNoEsNombreValido[] = {'N','o',' ','e','s',' ','u','n',' ','n','o','m','b','r','e',' ','d','e',' ','u','s','u','a','r','i','o',' ','v',0x00e1,'l','i','d','o',0};
-            sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferNoEsNombreValido);
-            break;
-        }
-
-        case INTENTARSELECCIONARCHAT_RESULTADODATOS_SELECCIONPROPIOCHAT:
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "No se puede seleccionar un chat con su propio usuario");
+        case INTENTO_SELECCION_CHAT_NOMBRE_VACIO:
+            mostrar_feedback_nombre_vacio (uiContactos);
             break;
 
-        case INTENTARSELECCIONARCHAT_RESULTADODATOS_CHATYASELECCIONADO:
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "El chat con el usuario ya se encuentra seleccionado");
+        case INTENTO_SELECCION_CHAT_NOMBRE_INVALIDO:
+            mostrar_feedback_nombre_invalido (uiContactos);
+            break;
+
+        case INTENTO_SELECCION_CHAT_SELECCIONO_CHAT_PROPIO:
+            mostrar_feedback_selecciono_propio_chat (uiContactos);
+            break;
+
+        case INTENTO_SELECCION_CHAT_CHAT_YA_SELECCIONADO:
+            mostrar_feedback_chat_ya_seleccionado (uiContactos);
             break;
 
         default:
@@ -173,21 +189,18 @@ static void mostrarFeedback_datosInvalidosSeleccionChat (t_interfazContactos *in
     }
 }
 
-static void intentarSeleccionarChatYProcesarResultadoOperacion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static void procesar_resultado_seleccion_chat (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, ResultadoIntentoSeleccionChat resultadoIntentoSeleccionChat)
 {
-    _t_resultado_intentarSeleccionarChat resultado_intentarSeleccionarChat;
-
-    resultado_intentarSeleccionarChat = _interfazContactos_intentar_seleccionarChat (contextoAplicacion, interfazContactos);
-    switch (resultado_intentarSeleccionarChat.tipo)
+    switch (resultadoIntentoSeleccionChat.estado)
     {
-        case INTENTARSELECCIONARCHAT_RESULTADO_EXITO:
-            mostrarFeedback_enviando (interfazContactos);
+        case INTENTO_SELECCION_CHAT_SOLICITUD_ENVIADA:
+            mostrar_feedback_enviando_solicitud (uiContactos);
             break;
 
-        case INTENTARSELECCIONARCHAT_RESULTADO_DATOS_INVALIDOS:
-            resetearBarraEscritura (interfazContactos);
-            posicionarPuntoInsercion_escribirMensaje (interfazContactos);
-            mostrarFeedback_datosInvalidosSeleccionChat (interfazContactos, &(resultado_intentarSeleccionarChat.validacion));
+        case INTENTO_SELECCION_CHAT_DATOS_INVALIDOS:
+            resetear_barra_escritura (uiContactos);
+            posicionar_punto_insercion_mensaje (uiContactos);
+            mostrar_feedback_seleccion_chat_invalido (uiContactos, &(resultadoIntentoSeleccionChat.validacion));
             break;
 
         default:
@@ -196,23 +209,36 @@ static void intentarSeleccionarChatYProcesarResultadoOperacion (t_contextoAplica
 }
 
 
-static void mostrarFeedback_datosInvalidosEnvioMensaje (t_interfazContactos *interfazContactos, _t_resultado_validacionDatosEnvioMensaje *resultado_validacionDatosEnvioMensaje)
+static void mostrar_feedback_mensaje_vacio (UiContactos *uiContactos)
+{
+    uint32_t bufferMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'm', 'e', 'n', 's', 'a', 'j', 'e', ' ', 'v', 'a', 'c', 0x00ED, 'o', 0};
+    sfText_setUnicodeString (uiContactos->textos.feedbackUsuario, bufferMensajeVacio);
+}
+
+static void mostrar_feedback_son_todos_espacios (UiContactos *uiContactos)
+{
+    sfText_setString (uiContactos->textos.feedbackUsuario, "No se puede enviar un mensaje de todos espacios");
+}
+
+static void mostrar_feedback_emisor_receptor_invalidos (UiContactos *uiContactos)
+{
+    sfText_setString (uiContactos->textos.feedbackUsuario, "Se debe seleccionar un chat con un usuario antes de enviar un mensaje");
+}
+
+static void mostrar_feedback_envio_mensaje_invalido (UiContactos *uiContactos, ValidacionEnvioMensaje *resultado_validacionDatosEnvioMensaje)
 {
     switch (*resultado_validacionDatosEnvioMensaje)
     {
-        case INTENTARENVIARMENSAJE_RESULTADODATOS_MENSAJEVACIO:
-        {
-            uint32_t bufferEsMensajeVacio [] = {'N', 'o', ' ', 's', 'e', ' ', 'p', 'u', 'e', 'd', 'e', ' ', 'e', 'n', 'v', 'i', 'a', 'r', ' ', 'u', 'n', ' ', 'm', 'e', 'n', 's', 'a', 'j', 'e', ' ', 'v', 'a', 'c', 0x00ED, 'o', 0};
-            sfText_setUnicodeString (interfazContactos->textos.feedbackUsuario, bufferEsMensajeVacio);
+        case INTENTO_ENVIO_MENSAJE_MENSAJE_VACIO:
+            mostrar_feedback_mensaje_vacio (uiContactos);
             break;
-        }
 
-        case INTENTARENVIARMENSAJE_RESULTADODATOS_SONTODOSESPACIOS:
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "No se puede enviar un mensaje de todos espacios");
+        case INTENTO_ENVIO_MENSAJE_SON_TODOS_ESPACIOS:
+            mostrar_feedback_son_todos_espacios (uiContactos);
             break;
         
-        case INTENTARENVIARMENSAJE_RESULTADODATOS_EMISORYRECEPTORINVALIDOS:
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "Se debe seleccionar un chat con un usuario antes de enviar un mensaje");
+        case INTENTO_ENVIO_MENSAJE_EMISOR_RECEPTOR_INVALIDOS:
+            mostrar_feedback_emisor_receptor_invalidos (uiContactos);
             break;
 
         default:
@@ -220,21 +246,18 @@ static void mostrarFeedback_datosInvalidosEnvioMensaje (t_interfazContactos *int
     }
 }
 
-static void intentarEnviarMensajeYProcesarResultadoOperacion (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static void procesar_resultado_envio_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, ResultadoIntentoEnvioMensaje resultadoIntentoEnvioMensaje)
 {
-    _t_resultado_intentarEnviarMensaje resultado_intentarEnviarMensaje;
-
-    resultado_intentarEnviarMensaje = _interfazContactos_intentar_enviarMensaje (contextoAplicacion, interfazContactos);
-    switch (resultado_intentarEnviarMensaje.tipo)
+    switch (resultadoIntentoEnvioMensaje.estado)
     {
-        case INTENTARENVIARMENSAJE_RESULTADO_EXITO:
-            mostrarFeedback_enviando (interfazContactos);
+        case INTENTO_ENVIO_MENSAJE_SOLICITUD_ENVIADA:
+            mostrar_feedback_enviando_solicitud (uiContactos);
             break;
 
-        case INTENTARENVIARMENSAJE_RESULTADO_DATOS_INVALIDOS:
-            resetearBarraEscritura (interfazContactos);
-            posicionarPuntoInsercion_escribirMensaje (interfazContactos);
-            mostrarFeedback_datosInvalidosEnvioMensaje (interfazContactos, &(resultado_intentarEnviarMensaje.validacion));
+        case INTENTO_ENVIO_MENSAJE_DATOS_INVALIDOS:
+            resetear_barra_escritura (uiContactos);
+            posicionar_punto_insercion_mensaje (uiContactos);
+            mostrar_feedback_envio_mensaje_invalido (uiContactos, &(resultadoIntentoEnvioMensaje.validacion));
             break;
 
         default:
@@ -243,133 +266,153 @@ static void intentarEnviarMensajeYProcesarResultadoOperacion (t_contextoAplicaci
 }
 
 
-static bool procesar_click_escribirMensaje (const sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
+static bool procesar_click_escribir_mensaje (const sfRenderWindow *renderizado, UiContactos *uiContactos)
 {
-    if (!clickEnRectangulo (renderizado, interfazContactos->elementos.barraEscribirMensaje))
+    if (!se_clickeo_en_rectangulo (renderizado, uiContactos->elementos.barraEscribirMensaje))
         return EVENTO_NO_MANEJADO;
 
-    interfazContactos->estadoFoco = ESCRIBIR_MENSAJE;
-    posicionarPuntoInsercion_escribirMensaje (interfazContactos);
+    uiContactos->foco = ESCRIBIR_MENSAJE;
+    posicionar_punto_insercion_mensaje (uiContactos);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_areaMensajes (const sfRenderWindow *renderizado, t_interfazContactos *interfazContactos)
+static bool procesar_click_area_mensajes (const sfRenderWindow *renderizado, UiContactos *uiContactos)
 {
-    if (!clickEnRectangulo (renderizado, interfazContactos->elementos.areaMensajes))
+    if (!se_clickeo_en_rectangulo (renderizado, uiContactos->elementos.areaMensajes))
         return EVENTO_NO_MANEJADO;
 
-    interfazContactos->estadoFoco = AREA_MENSAJES;
+    uiContactos->foco = AREA_MENSAJES;
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_enviarMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static bool procesar_click_enviar_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
-    if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazContactos->elementos.botonEnviar))
+    if (!se_clickeo_en_rectangulo (contextoAplicacion->renderizado, uiContactos->elementos.botonEnviar))
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (_interfazContactos_esUnComando (interfazContactos->logica.contextoMensajes.mensaje))
-        intentarSeleccionarChatYProcesarResultadoOperacion (contextoAplicacion, interfazContactos);
-    else
-        intentarEnviarMensajeYProcesarResultadoOperacion (contextoAplicacion, interfazContactos);
-
-    return EVENTO_MANEJADO;
-}
-
-
-static bool procesar_escribir_mensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, sfEvent eventoChar)
-{
-    if (interfazContactos->estadoFoco != ESCRIBIR_MENSAJE)
-        return EVENTO_NO_MANEJADO;
-
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
-        return EVENTO_MANEJADO;
-
-    if (ingresarCaracterABuffer (interfazContactos->logica.contextoMensajes.mensaje, MAX_MENSAJE, eventoChar) == EXITO)
+    if (_ui_contactos_es_comando (uiContactos->logica.contextoMensajes.mensaje))
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazContactos->textos.auxEscribirMensaje, interfazContactos->logica.contextoMensajes.mensaje, 1250);
-        posicionarPuntoInsercion_escribirMensaje (interfazContactos);
+        ResultadoIntentoSeleccionChat resultadoIntentoSeleccionChat;
+
+        resultadoIntentoSeleccionChat = _ui_contactos_intentar_seleccion_chat (contextoAplicacion, uiContactos);
+        procesar_resultado_seleccion_chat (contextoAplicacion, uiContactos, resultadoIntentoSeleccionChat);
+    }
+    else
+    {
+        ResultadoIntentoEnvioMensaje resultadoIntentoEnvioMensaje;
+
+        resultadoIntentoEnvioMensaje = _ui_contactos_intentar_envio_mensaje (contextoAplicacion, uiContactos);
+        procesar_resultado_envio_mensaje (contextoAplicacion, uiContactos, resultadoIntentoEnvioMensaje);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_enter_enviarMensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static bool procesar_escribir_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, sfEvent eventoChar)
 {
-    if (interfazContactos->estadoFoco != ESCRIBIR_MENSAJE)
+    if (uiContactos->foco != ESCRIBIR_MENSAJE)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (_interfazContactos_esUnComando (interfazContactos->logica.contextoMensajes.mensaje))
-        intentarSeleccionarChatYProcesarResultadoOperacion (contextoAplicacion, interfazContactos);
-    else
-        intentarEnviarMensajeYProcesarResultadoOperacion (contextoAplicacion, interfazContactos);
-
-    return EVENTO_MANEJADO;
-}
-
-
-static bool procesar_pegarTextoDesdePortapapeles_escribir_mensaje (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
-{
-    if (interfazContactos->estadoFoco != ESCRIBIR_MENSAJE)
-        return EVENTO_NO_MANEJADO;
-
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
-        return EVENTO_MANEJADO;
-
-    if (pegarTextoDesdePortapapelesABuffer (interfazContactos->logica.contextoMensajes.mensaje, MAX_MENSAJE) == EXITO)
+    if (ingresar_caracter_a_buffer (uiContactos->logica.contextoMensajes.mensaje, MAX_MENSAJE, eventoChar) == EXITO)
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazContactos->textos.auxEscribirMensaje, interfazContactos->logica.contextoMensajes.mensaje, 1250);
-        posicionarPuntoInsercion_escribirMensaje (interfazContactos);
+        limitar_visualizacion_texto_sobre_barra_escritura (uiContactos->textos.auxEscribirMensaje, uiContactos->logica.contextoMensajes.mensaje, 1250);
+        posicionar_punto_insercion_mensaje (uiContactos);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_desplazar_arriba_areaMensajes (t_interfazContactos *interfazContactos)
+static bool procesar_enter_enviar_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
+{
+    if (uiContactos->foco != ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
+        return EVENTO_MANEJADO;
+
+    if (_ui_contactos_es_comando (uiContactos->logica.contextoMensajes.mensaje))
+    {
+        ResultadoIntentoSeleccionChat resultadoIntentoSeleccionChat;
+
+        resultadoIntentoSeleccionChat = _ui_contactos_intentar_seleccion_chat (contextoAplicacion, uiContactos);
+        procesar_resultado_seleccion_chat (contextoAplicacion, uiContactos, resultadoIntentoSeleccionChat);
+    }
+    else
+    {
+        ResultadoIntentoEnvioMensaje resultadoIntentoEnvioMensaje;
+
+        resultadoIntentoEnvioMensaje = _ui_contactos_intentar_envio_mensaje (contextoAplicacion, uiContactos);
+        procesar_resultado_envio_mensaje (contextoAplicacion, uiContactos, resultadoIntentoEnvioMensaje);
+    }
+
+    return EVENTO_MANEJADO;
+}
+
+
+static bool procesar_pegar_mensaje_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
+{
+    if (uiContactos->foco != ESCRIBIR_MENSAJE)
+        return EVENTO_NO_MANEJADO;
+
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
+        return EVENTO_MANEJADO;
+
+    if (pegar_texto_desde_portapapeles_a_buffer (uiContactos->logica.contextoMensajes.mensaje, MAX_MENSAJE) == EXITO)
+    {
+        limitar_visualizacion_texto_sobre_barra_escritura (uiContactos->textos.auxEscribirMensaje, uiContactos->logica.contextoMensajes.mensaje, 1250);
+        posicionar_punto_insercion_mensaje (uiContactos);
+    }
+
+    return EVENTO_MANEJADO;
+}
+
+
+static bool procesar_desplazamiento_arriba_area_mensajes (UiContactos *uiContactos)
 {
     sfVector2f tamVista, posCentroVista;
     sfVector2f posUltimoMensaje;
 
-    if (interfazContactos->estadoFoco != AREA_MENSAJES)
+    if (uiContactos->foco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
-    tamVista = sfView_getSize (interfazContactos->vistas.mensajes);
-    posCentroVista = sfView_getCenter (interfazContactos->vistas.mensajes);
-    posUltimoMensaje = sfText_getPosition (*((sfText**)(interfazContactos->logica.contextoMensajes.ultimoMensaje->dato)));
+    tamVista = sfView_getSize (uiContactos->vistas.mensajes);
+    posCentroVista = sfView_getCenter (uiContactos->vistas.mensajes);
+    posUltimoMensaje = sfText_getPosition (*((sfText**)(uiContactos->logica.contextoMensajes.ultimoMensaje->dato)));
 
     if (posCentroVista.y - tamVista.y / 2.f > posUltimoMensaje.y)
-        sfView_move (interfazContactos->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
+        sfView_move (uiContactos->vistas.mensajes, (sfVector2f){0, -VELOCIDAD_SCROLL});
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_desplazar_abajo_areaMensajes (t_interfazContactos *interfazContactos)
+static bool procesar_desplazamiento_abajo_area_mensajes (UiContactos *uiContactos)
 {
     sfVector2f tamVista, posCentroVista;
 
-    if (interfazContactos->estadoFoco != AREA_MENSAJES)
+    if (uiContactos->foco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
-    tamVista = sfView_getSize (interfazContactos->vistas.mensajes);
-    posCentroVista = sfView_getCenter (interfazContactos->vistas.mensajes);
+    tamVista = sfView_getSize (uiContactos->vistas.mensajes);
+    posCentroVista = sfView_getCenter (uiContactos->vistas.mensajes);
 
     if (posCentroVista.y + tamVista.y / 2.f < 870)
-        sfView_move (interfazContactos->vistas.mensajes, (sfVector2f){0, VELOCIDAD_SCROLL});
+        sfView_move (uiContactos->vistas.mensajes, (sfVector2f){0, VELOCIDAD_SCROLL});
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_scroll_areaMensajes (t_interfazContactos *interfazContactos, sfEvent eventoScroll)
+static bool procesar_scroll_area_mensajes (UiContactos *uiContactos, sfEvent eventoScroll)
 {
     sfVector2f tamVista, posCentro;
     sfVector2f posUltimoMensaje;
@@ -377,12 +420,12 @@ static bool procesar_scroll_areaMensajes (t_interfazContactos *interfazContactos
     float superiorVista, inferiorVista;
     float limiteSuperior, limiteInferior;
 
-    if (interfazContactos->estadoFoco != AREA_MENSAJES)
+    if (uiContactos->foco != AREA_MENSAJES)
         return EVENTO_NO_MANEJADO;
 
-    tamVista = sfView_getSize (interfazContactos->vistas.mensajes);
-    posCentro = sfView_getCenter (interfazContactos->vistas.mensajes);
-    posUltimoMensaje = sfText_getPosition (*((sfText**)(interfazContactos->logica.contextoMensajes.ultimoMensaje->dato)));
+    tamVista = sfView_getSize (uiContactos->vistas.mensajes);
+    posCentro = sfView_getCenter (uiContactos->vistas.mensajes);
+    posUltimoMensaje = sfText_getPosition (*((sfText**)(uiContactos->logica.contextoMensajes.ultimoMensaje->dato)));
 
     desplazamientoY = -eventoScroll.mouseWheelScroll.delta * VELOCIDAD_SCROLL;
 
@@ -399,13 +442,13 @@ static bool procesar_scroll_areaMensajes (t_interfazContactos *interfazContactos
         desplazamientoY = limiteInferior - inferiorVista;
 
     if (desplazamientoY != 0)
-        sfView_move (interfazContactos->vistas.mensajes, (sfVector2f){0, desplazamientoY});
+        sfView_move (uiContactos->vistas.mensajes, (sfVector2f){0, desplazamientoY});
 
     return EVENTO_MANEJADO;
 }
 
 
-static void deshabilitarFoco (t_interfazContactos *interfazContactos)
+static void deshabilitar_focos (UiContactos *uiContactos)
 {
-    interfazContactos->estadoFoco = ICT_NINGUNO;
+    uiContactos->foco = UI_CONTACTOS_NINGUNO;
 }

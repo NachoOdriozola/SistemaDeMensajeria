@@ -40,7 +40,7 @@
    ============================================================================================================================================ */
 
 
-void _interfazRegistro_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+void _ui_registro_actualizar (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
 
 #endif // INTERFAZREGISTRO_ACTUALIZAR_H_INCLUDED

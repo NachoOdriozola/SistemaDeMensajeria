@@ -53,34 +53,34 @@ extern BOOL servidorActivo;
  *
  * Inicializar el socket del servidor, la base de datos, y crear la tabla hash de clientes, la lista doble de clientes no autenticados y la cola de solicitudes.
  *
- * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos.
  *
  */
-t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor);
+CodigoRetorno servidor_inicializar (ContextoServidor *contextoServidor);
 
 /** \brief Configurar los recursos del servidor.
  *
  * Configurar el manejador de cierre de la consola, el socket del del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado y establecerlo como modo no bloqueante,
  * y la base de datos.
  *
- * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
  *
  * \return EXITO si se configuro correctamente, ERROR_CONFIGURACION en caso de error.
  *
  */
-t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor);
+CodigoRetorno servidor_configurar (ContextoServidor *contextoServidor);
 
 /** \brief Liberar los recursos del servidor.
  *
  * Vaciar la lista doble de clientes no autenticados y la tabla hash de clientes, y cerrar y finalizar el socket del servidor y la base de datos.
  * No vacia la cola de solicitudes debido a que no es necesario, siempre se encontraria vacia al ejecutar esta fucion.
  *
- * \param contextoServidor Puntero a la estructura que provee contexto (estados y recursos) global del servidor.
+ * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
  *
  */
-void liberarServidor (t_contextoServidor *contextoServidor);
+void servidor_liberar (ContextoServidor *contextoServidor);
 
 /** \brief Manejar eventos de cierre de la consola.
  *
@@ -94,7 +94,7 @@ void liberarServidor (t_contextoServidor *contextoServidor);
  * \return TRUE si el evento fue manejado, FALSE en caso contrario.
  *
  */
-BOOL WINAPI manejadorConsola(DWORD tipoEvento);
+BOOL WINAPI manejador_consola (DWORD tipoEvento);
 
 
 #endif // SERVIDOR_H_INCLUDED

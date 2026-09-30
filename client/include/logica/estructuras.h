@@ -29,40 +29,38 @@
 
 
 /**
- * \enum t_interfaz
- * \brief Indica las interfaces graficas de la aplicacion.
+ * \enum IdInterfaz
+ * \brief Identifica cada interfaz grafica de la aplicacion.
  */
 typedef enum
 {
     INTERFAZ_AUTENTICACION,
     INTERFAZ_REGISTRO,
-    INTERFAZ_CONTACTOS,
-    INTERFAZ_SALAS,
-    INTERFAZ_CONFIG
-} t_interfaz;
+    INTERFAZ_CONTACTOS
+} IdInterfaz;
 
 /**
- * \struct t_usuario
+ * \struct Usuario
  * \brief Representa un usuario.
  */
 typedef struct
 {
     int id;                                                                     /**< Identificador correspondiente del usuario. */
     char nombre [MAX_NOMBRE_USUARIO];            /**< Nombre correspondiente del usuario. */
-} t_usuario;
+} Usuario;
 
 /**
- * \struct t_contextoAplicacion
- * \brief Contexto (estados y recursos) global de la aplicacion.
+ * \struct ContextoAplicacion
+ * \brief Contexto (EstadoSolicituds y recursos) global de la aplicacion.
  */
 typedef struct
 {
     sfRenderWindow *renderizado;         /**< Renderizado de la ventana. */
-    t_socket sock;                                     /**< Socket del usuario. */
-    t_usuario usuario;
-    t_interfaz interfazActual;                     /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
+    Socket sock;                                     /**< Socket del usuario. */
+    Usuario usuario;
+    IdInterfaz interfazActual;                     /**< Interfaz sobre la cual se encuentra posicionado actualmente. */
     bool solicitudEnCurso;                       /**< Informar si hay una solicitud enviada en curso para no enviar otra. */
-} t_contextoAplicacion;
+} ContextoAplicacion;
 
 
 #endif // ESTRUCTURAS_H_INCLUDED

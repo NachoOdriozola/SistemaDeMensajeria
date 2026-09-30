@@ -14,7 +14,7 @@
 
 
 /**
- * \struct t_codigoRetorno
+ * \struct CodigoRetorno
  * \brief  Codigos de retorno segun el resultado de la ejecucion de la funcion.
  */
 typedef  enum
@@ -24,7 +24,7 @@ typedef  enum
    ERROR_CONFIGURACION,
    ERROR_SIN_MEMORIA,
    ERROR_OPERACION
-} t_codigoRetorno;
+} CodigoRetorno;
 
 
 /* ============================================================================================================================================

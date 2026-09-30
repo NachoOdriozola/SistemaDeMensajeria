@@ -53,36 +53,36 @@
 
 /** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de contactos.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazContactos);
+void ui_contactos_inicializar (UiContactos *uiContactos);
 
 /** \brief Inicializar los recursos graficos de la interfaz de contactos.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazContactos);
+CodigoRetorno ui_contactos_crear (UiContactos *uiContactos);
 
 /** \brief Configurar los recursos graficos y logica de la interfaz de contactos.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void interfazContactos_configurar (t_interfazContactos *interfazContactos);
+void ui_contactos_configurar (UiContactos *uiContactos);
 
 /** \brief Preparar la interfaz de contactos para su ejecucion.
  * 
  * Se realiza una distincion entre las funciones de inicializar y configurar ya que realiza ciertas operaciones que en un inicio no se deben realizar y necesita ciertos datos que en un inicio no se conocen.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global de la aplicacion.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void interfazContactos_prepararInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+void ui_contactos_preparar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
 /** \brief Ejecutar la interfaz de contactos.
  *
@@ -91,18 +91,18 @@ void interfazContactos_prepararInterfaz (t_contextoAplicacion *contextoAplicacio
  * 2) Actualizacion: Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes, notificaciones, etc).
  * 3) Renderizado: Limpiar la ventana anterior y mostrar los recursos graficos actualizados de la interfaz de contactos en la ventana.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global de la aplicacion.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void interfazContactos_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+void ui_contactos_ejecutar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de contactos.
  *
- * \param interfazContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
+ * \param uiContactos Puntero a la estructura base de los recursos graficos y logica de la interfaz de contactos.
  *
  */
-void interfazContactos_liberar (t_interfazContactos *interfazContactos);
+void ui_contactos_liberar (UiContactos *uiContactos);
 
 
 #endif // INTERFAZCONTACTOS_H_INCLUDED

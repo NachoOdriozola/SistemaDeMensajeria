@@ -37,7 +37,7 @@
  * \return Indice del bucket correspondiente al ID del cliente.
  *
  */
-int funcionHash (const void *clave);
+int aplicar_hash_id_cliente (const void *clave);
 
 /** \brief Comparar el ID de un cliente con una clave ID.
  *
@@ -47,21 +47,21 @@ int funcionHash (const void *clave);
  * \return Diferencia entre el ID del cliente y la clave ID.
  *
  */
-int cmpIdCliente (const void *a, const void *b);
+int cmp_id_cliente (const void *a, const void *b);
 
 /** \brief Mostrar el ID de un cliente en consola. Agrega salto de linea.
  *
  * \param cliente Puntero al cliente cuyo ID se desea mostrar.
  *
  */
-void mostrarCliente (void *cliente);
+void mostrar_cliente (void *cliente);
 
 /** \brief Liberar los recursos asociados a un cliente.
  *
  * \param cliente Puntero al cliente cuyos recursos seran liberados.
  *
  */
-void liberarCliente (void *cliente);
+void liberar_cliente (void *cliente);
 
 
 

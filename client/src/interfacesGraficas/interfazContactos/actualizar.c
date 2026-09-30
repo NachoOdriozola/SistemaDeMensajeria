@@ -6,13 +6,13 @@
    ============================================================================================================================================ */
 
 
-static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
-static void puntoInsercion (t_interfazContactos *interfazContactos);
-static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+static void recibir_y_procesar_respuesta_servidor (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
+static void punto_insercion (UiContactos *uiContactos);
+static void texto_de_carga (const ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
-static void solicitudEnvioMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
-static void solicitudSeleccionChat_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
-static void recepcionMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta);
+static void procesar_respuesta_envio_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta);
+static void procesar_respuesta_seleccion_chat (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta);
+static void procesar_respuesta_recepcion_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta);
 
 
 /* ============================================================================================================================================
@@ -20,11 +20,11 @@ static void recepcionMensaje_procesarRespuesta (t_contextoAplicacion *contextoAp
    ============================================================================================================================================ */
 
 
-void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+void _ui_contactos_actualizar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
-    recibirYProcesarRespuestaServidor (contextoAplicacion, interfazContactos);
-    puntoInsercion (interfazContactos);
-    textoDeCarga (contextoAplicacion, interfazContactos);
+    recibir_y_procesar_respuesta_servidor (contextoAplicacion, uiContactos);
+    punto_insercion (uiContactos);
+    texto_de_carga (contextoAplicacion, uiContactos);
 }
 
 
@@ -33,67 +33,67 @@ void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_
    ============================================================================================================================================ */
 
 
-static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static void recibir_y_procesar_respuesta_servidor (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
     char bufferRespuesta [MAX_BUFFER_RESPUESTA];
-    t_resultadoRecepcion resultadoRecepcion;
+    ResultadoRecepcion resultadoRecepcion;
 
-    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+    resultadoRecepcion = comunicacion_recibir_respuesta (contextoAplicacion->sock, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
     {
-        switch (comunicacion_obtenerTipoRespuesta (bufferRespuesta))
+        switch (comunicacion_obtener_tipo_respuesta (bufferRespuesta))
         {
             case RESPUESTA_SOLICITUD_ENVIO_MENSAJE:
-                solicitudEnvioMensaje_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta);
+                procesar_respuesta_envio_mensaje (contextoAplicacion, uiContactos, bufferRespuesta);
                 break;
 
             case RESPUESTA_RECEPCION_MENSAJE:
-                recepcionMensaje_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta);
+                procesar_respuesta_recepcion_mensaje (contextoAplicacion, uiContactos, bufferRespuesta);
                 break;
 
             case RESPUESTA_SOLICITUD_SELECCION_CHAT:
-                solicitudSeleccionChat_procesarRespuesta (contextoAplicacion, interfazContactos, bufferRespuesta);
+                procesar_respuesta_seleccion_chat (contextoAplicacion, uiContactos, bufferRespuesta);
                 break;
 
             default:
-                log_warning_respuestaRecibidaDeOtraInterfaz ();
+                log_warning_respuesta_recibida_otra_ui ();
                 break;
         }
     }
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
-        _interfazContactos_manejarError_conexion (contextoAplicacion, interfazContactos);
+        _ui_contactos_manejar_error_conexion (contextoAplicacion, uiContactos);
 }
 
-static void puntoInsercion (t_interfazContactos *interfazContactos)
+static void punto_insercion (UiContactos *uiContactos)
 {
-    if (interfazContactos->estadoFoco == ESCRIBIR_MENSAJE)
-        actualizarPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
-    else if (puntoInsercionHabilitado (&(interfazContactos->logica.puntoInsercion)))
-        resetearPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
+    if (uiContactos->foco == ESCRIBIR_MENSAJE)
+        punto_insercion_actualizar (&(uiContactos->logica.puntoInsercion));
+    else if (punto_insercion_esta_habilitado (&(uiContactos->logica.puntoInsercion)))
+        punto_insercion_resetear (&(uiContactos->logica.puntoInsercion));
 }
 
-static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+static void texto_de_carga (const ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
     char texto [] = "Enviando";
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
     {
-        if (textoDeCarga_actualizar (&(interfazContactos->logica.textoDeCarga)))
+        if (texto_de_carga_actualizar (&(uiContactos->logica.textoDeCarga)))
         {
-            textoDeCarga_modificarTextoSegunEstado (&(interfazContactos->logica.textoDeCarga), texto);
-            sfText_setString (interfazContactos->textos.feedbackUsuario, texto);
+            texto_de_carga_modificar_texto (&(uiContactos->logica.textoDeCarga), texto);
+            sfText_setString (uiContactos->textos.feedbackUsuario, texto);
         }
     }
 }
 
 
-static void resetearBarraDeEscritura (t_interfazContactos *interfazContactos)
+static void resetear_barra_escritura (UiContactos *uiContactos)
 {
-    *(interfazContactos->logica.contextoMensajes.mensaje) = '\0';
-    sfText_setString (interfazContactos->textos.auxEscribirMensaje, "");
-    sfRectangleShape_setPosition (interfazContactos->elementos.puntoInsercion, (sfVector2f){451, 942});
+    *(uiContactos->logica.contextoMensajes.mensaje) = '\0';
+    sfText_setString (uiContactos->textos.auxEscribirMensaje, "");
+    sfRectangleShape_setPosition (uiContactos->elementos.puntoInsercion, (sfVector2f){451, 942});
 }
 
 
@@ -102,14 +102,14 @@ static void resetearBarraDeEscritura (t_interfazContactos *interfazContactos)
    ============================================================================================================================================ */
 
 
-static void solicitudEnvioMensaje_procesarRespuestaSegunEstado (t_interfazContactos *interfazContactos, const _t_datosUI_respuesta_solicitudEnvioMensaje *datosUI_respuesta_solicitudEnvioMensaje)
+static void reaccionar_respuesta_envio_mensaje (UiContactos *uiContactos, const RespuestaEnvioMensajeUi *respuestaEnvioMensajeUi)
 {
-    switch (datosUI_respuesta_solicitudEnvioMensaje->estadoSolicitud)
+    switch (respuestaEnvioMensajeUi->estado)
     {
         case SOLICITUD_EXITO:
-            _interfazContactos_listaMensajes_insertarMensaje (&(interfazContactos->logica.contextoMensajes), interfazContactos->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(interfazContactos->fuentes));
-            resetearBarraDeEscritura (interfazContactos);
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "");
+            _ui_contactos_lista_mensajes_insertar (&(uiContactos->logica.contextoMensajes), uiContactos->logica.contextoMensajes.mensaje, MENSAJE_PROPIO, &(uiContactos->fuentes));
+            resetear_barra_escritura (uiContactos);
+            sfText_setString (uiContactos->textos.feedbackUsuario, "");
             break;
 
         default:
@@ -117,12 +117,12 @@ static void solicitudEnvioMensaje_procesarRespuestaSegunEstado (t_interfazContac
     }
 }
 
-static void solicitudEnvioMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta)
+static void procesar_respuesta_envio_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta)
 {
-    _t_datosUI_respuesta_solicitudEnvioMensaje datosUI_respuesta_solicitudEnvioMensaje;
+    RespuestaEnvioMensajeUi respuestaEnvioMensajeUi;
 
-    datosUI_respuesta_solicitudEnvioMensaje = _interfazContactos_solicitudEnvioMensaje_procesarRespuesta (contextoAplicacion, respuesta);
-    solicitudEnvioMensaje_procesarRespuestaSegunEstado (interfazContactos, &datosUI_respuesta_solicitudEnvioMensaje);
+    respuestaEnvioMensajeUi = _ui_contactos_procesar_respuesta_envio_mensaje (contextoAplicacion, respuesta);
+    reaccionar_respuesta_envio_mensaje (uiContactos, &respuestaEnvioMensajeUi);
 }
 
 
@@ -131,29 +131,29 @@ static void solicitudEnvioMensaje_procesarRespuesta (t_contextoAplicacion *conte
    ============================================================================================================================================ */
 
 
-static void mostrar_nuevoChatSeleccionado (t_interfazContactos *interfazContactos)
+static void mostrar_nuevo_chat_seleccionado (UiContactos *uiContactos)
 {
-    sfView_setCenter (interfazContactos->vistas.mensajes, (sfVector2f){1152, 480});
-    sfText_setString (interfazContactos->textos.auxContactoSeleccionado, interfazContactos->logica.nombreUsuarioDelChatSeleccionado);
-    centrarTextoEnArea (interfazContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
-    _interfazContactos_listaMensajes_vaciar (&(interfazContactos->logica.contextoMensajes));
-    sfText_setString (interfazContactos->textos.informacionSeleccionChat, "");
+    sfView_setCenter (uiContactos->vistas.mensajes, (sfVector2f){1152, 480});
+    sfText_setString (uiContactos->textos.auxContactoSeleccionado, uiContactos->logica.nombreUsuarioDelChatSeleccionado);
+    centrar_texto_en_area (uiContactos->textos.auxContactoSeleccionado, 852, 25, 600, 40);
+    _ui_contactos_lista_mensajes_vaciar (&(uiContactos->logica.contextoMensajes));
+    sfText_setString (uiContactos->textos.informacionSeleccionChat, "");
 }
 
-static void solicitudSeleccionChat_procesarRespuestaSegunEstado (t_interfazContactos *interfazContactos, const _t_datosUI_respuesta_solicitudSeleccionChat *datosUI_respuesta_solicitudSeleccionChat)
+static void reaccionar_respuesta_seleccion_chat (UiContactos *uiContactos, const RespuestaSeleccionChatUi *respuestaSeleccionChatUi)
 {
-    switch (datosUI_respuesta_solicitudSeleccionChat->estadoSolicitud)
+    switch (respuestaSeleccionChatUi->estado)
     {
         case SOLICITUD_EXITO:
-            _interfazContactos_setearNuevoChatSeleccionado (interfazContactos, datosUI_respuesta_solicitudSeleccionChat);
-            mostrar_nuevoChatSeleccionado (interfazContactos);
-            resetearBarraDeEscritura (interfazContactos);
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "");
+            _ui_contactos_setear_nuevo_chat_seleccionado (uiContactos, respuestaSeleccionChatUi);
+            mostrar_nuevo_chat_seleccionado (uiContactos);
+            resetear_barra_escritura (uiContactos);
+            sfText_setString (uiContactos->textos.feedbackUsuario, "");
             break;
 
         case SOLICITUD_ERROR_OPERACION_INVALIDA:
-            resetearBarraDeEscritura (interfazContactos);
-            sfText_setString (interfazContactos->textos.feedbackUsuario, "El usuario no existe");
+            resetear_barra_escritura (uiContactos);
+            sfText_setString (uiContactos->textos.feedbackUsuario, "El usuario no existe");
             break;
 
         default:
@@ -161,12 +161,12 @@ static void solicitudSeleccionChat_procesarRespuestaSegunEstado (t_interfazConta
     }
 }
 
-static void solicitudSeleccionChat_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta)
+static void procesar_respuesta_seleccion_chat (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta)
 {
-    _t_datosUI_respuesta_solicitudSeleccionChat datosUI_respuesta_solicitudSeleccionChat;
+    RespuestaSeleccionChatUi respuestaSeleccionChatUi;
 
-    datosUI_respuesta_solicitudSeleccionChat = _interfazContactos_solicitudSeleccionChat_procesarRespuesta (contextoAplicacion, respuesta);
-    solicitudSeleccionChat_procesarRespuestaSegunEstado (interfazContactos, &datosUI_respuesta_solicitudSeleccionChat);
+    respuestaSeleccionChatUi = _ui_contactos_procesar_respuesta_seleccion_chat (contextoAplicacion, respuesta);
+    reaccionar_respuesta_seleccion_chat (uiContactos, &respuestaSeleccionChatUi);
 }
 
 
@@ -175,22 +175,22 @@ static void solicitudSeleccionChat_procesarRespuesta (t_contextoAplicacion *cont
    ============================================================================================================================================ */
 
 
-static bool elUsuarioDelChatSeleccionadoEsElEmisor (int idUsuarioEmisor, int idUsuarioDelChatSeleccionado)
+static bool usuario_chat_seleccionado_es_emisor (int idUsuarioEmisor, int idUsuarioChatSeleccionado)
 {
-    return (idUsuarioEmisor == idUsuarioDelChatSeleccionado);
+    return (idUsuarioEmisor == idUsuarioChatSeleccionado);
 }
 
-static void recepcionMensaje_procesarRespuestaSegunEstado (t_interfazContactos *interfazContactos, const _t_datosUI_respuesta_recepcionMensaje *datosUI_respuesta_recepcionMensaje)
+static void reacccionar_respuesta_recepcion_mensaje (UiContactos *uiContactos, const RespuestaRecepcionMensajeUi *respuestaRecepcionMensajeUi)
 {
-    if (elUsuarioDelChatSeleccionadoEsElEmisor (datosUI_respuesta_recepcionMensaje->idEmisor, interfazContactos->logica.idUsuarioDelChatSeleccionado))
-        _interfazContactos_listaMensajes_insertarMensaje (&(interfazContactos->logica.contextoMensajes), datosUI_respuesta_recepcionMensaje->texto, MENSAJE_REMOTO, &(interfazContactos->fuentes));
+    if (usuario_chat_seleccionado_es_emisor (respuestaRecepcionMensajeUi->idEmisor, uiContactos->logica.idUsuarioChatSeleccionado))
+        _ui_contactos_lista_mensajes_insertar (&(uiContactos->logica.contextoMensajes), respuestaRecepcionMensajeUi->texto, MENSAJE_REMOTO, &(uiContactos->fuentes));
 }
 
-static void recepcionMensaje_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos, const char *respuesta)
+static void procesar_respuesta_recepcion_mensaje (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos, const char *respuesta)
 {
-    _t_datosUI_respuesta_recepcionMensaje datosUI_respuesta_recepcionMensaje;
+    RespuestaRecepcionMensajeUi respuestaRecepcionMensajeUi;
 
-    datosUI_respuesta_recepcionMensaje = _interfazContactos_recepcionMensaje_procesarRespuesta (contextoAplicacion, respuesta);
-    recepcionMensaje_procesarRespuestaSegunEstado (interfazContactos, &datosUI_respuesta_recepcionMensaje);
+    respuestaRecepcionMensajeUi = _ui_contactos_procesar_respuesta_recepcion_mensaje (contextoAplicacion, respuesta);
+    reacccionar_respuesta_recepcion_mensaje (uiContactos, &respuestaRecepcionMensajeUi);
 }
 

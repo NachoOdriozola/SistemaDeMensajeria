@@ -35,7 +35,7 @@
    ============================================================================================================================================ */
 
 
-void _interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+void _ui_registro_accionar (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
 
 #endif // INTERFAZAUTENTICACION_ACCION_H_INCLUDED

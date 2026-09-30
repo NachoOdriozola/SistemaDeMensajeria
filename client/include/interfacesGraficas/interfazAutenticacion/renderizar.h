@@ -34,7 +34,7 @@
  * 3) Muestra la ventana actualizada.
  * Procura el orden de los objetos graficos renderizados para que no se superpongan.
 */
-void _interfazAutenticacion_renderizar (sfRenderWindow *renderizado, const t_interfazAutenticacion *interfazAutenticacion);
+void _ui_autenticacion_renderizar (sfRenderWindow *renderizado, const UiAutenticacion *uiAutenticacion);
 
 
 #endif // INTERFAZAUTENTICACION_RENDERIZAR_H_INCLUDED

@@ -35,7 +35,7 @@
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+void _ui_autenticacion_accionar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
 
 #endif // INTERFAZAUTENTICACION_ACCION_H_INCLUDED

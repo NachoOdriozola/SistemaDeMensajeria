@@ -6,7 +6,7 @@
    ============================================================================================================================================ */
 
 
-static void establecerYPosicionarNombreUsuario (t_interfazContactos *interfazContactos, const char *nombreUsuario);
+static void establecer_y_posicionar_nombre_usuario (UiContactos *uiContactos, const char *nombreUsuario);
 
 
 /* ============================================================================================================================================
@@ -14,94 +14,94 @@ static void establecerYPosicionarNombreUsuario (t_interfazContactos *interfazCon
    ============================================================================================================================================ */
 
 
-void interfazContactos_inicializarValoresNulos (t_interfazContactos *interfazContactos)
+void ui_contactos_inicializar (UiContactos *uiContactos)
 {
     //FUENTES
-    _interfazContactos_inicializarValoresNulosFuentes (&(interfazContactos->fuentes));
+    _ui_contactos_inicializar_fuentes (&(uiContactos->fuentes));
 
     // TEXTOS
-    _interfazContactos_inicializarValoresNulosTextos (&(interfazContactos->textos));
+    _ui_contactos_inicializar_textos (&(uiContactos->textos));
 
     // ELEMENTOS
-    _interfazContactos_inicializarValoresNulosElementos (&(interfazContactos->elementos));
+    _ui_contactos_inicializar_elementos (&(uiContactos->elementos));
 
     //VISTAS
-    _interfazContactos_inicializarValoresNulosVistas (&(interfazContactos->vistas));
+    _ui_contactos_inicializar_vistas (&(uiContactos->vistas));
 }
 
-t_codigoRetorno interfazContactos_inicializar (t_interfazContactos *interfazContactos)
+CodigoRetorno ui_contactos_crear (UiContactos *uiContactos)
 {
     //FUENTES
-    if (_interfazContactos_inicializarFuentes (&(interfazContactos->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_contactos_crear_fuentes (&(uiContactos->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // TEXTOS
-    if (_interfazContactos_inicializarTextos (&(interfazContactos->textos), &(interfazContactos->fuentes)) == ERROR_INICIALIZACION)
+    if (_ui_contactos_crear_textos (&(uiContactos->textos), &(uiContactos->fuentes)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // ELEMENTOS
-    if (_interfazContactos_inicializarElementos (&(interfazContactos->elementos)) == ERROR_INICIALIZACION)
+    if (_ui_contactos_crear_elementos (&(uiContactos->elementos)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     //VISTAS
-    if (_interfazContactos_inicializarVistas (&(interfazContactos->vistas)) == ERROR_INICIALIZACION)
+    if (_ui_contactos_crear_vistas (&(uiContactos->vistas)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     //LISTA DE MENSAJES
-    _interfazContactos_listaMensajes_crear (&(interfazContactos->logica.contextoMensajes));
+    _ui_contactos_lista_mensajes_crear (&(uiContactos->logica.contextoMensajes));
 
     return EXITO;
 }
 
-void interfazContactos_configurar (t_interfazContactos *interfazContactos)
+void ui_contactos_configurar (UiContactos *uiContactos)
 {
     // --------------- CONFIGURAR INTERFAZ ---------------
-    _interfazContactos_configurarInterfaz (interfazContactos);
+    _ui_contactos_configurar_interfaz (uiContactos);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTOS
-    _interfazContactos_configurarTextos (&(interfazContactos->textos));
+    _ui_contactos_configurar_textos (&(uiContactos->textos));
 
     // ELEMENTOS
-    _interfazContactos_configurarElementos (&(interfazContactos->elementos));
+    _ui_contactos_configurar_elementos (&(uiContactos->elementos));
 
     // --------------- ESTABLECER TAMANIO Y POSICION EN PANTALLA DE LOS RECURSOS GRAFICOS ---------------
     // TEXTO
-    _interfazContactos_tamYPosVentanaTextos (&(interfazContactos->textos));
+    _ui_contactos_establecer_tam_y_pos_ventana_textos (&(uiContactos->textos));
 
     // ELEMENTOS
-    _interfazContactos_tamYPosVentanaElementos (&(interfazContactos->elementos));
+    _ui_contactos_establecer_tam_y_pos_ventana_elementos (&(uiContactos->elementos));
 
     //VISTAS
-    _interfazContactos_tamVistas (&(interfazContactos->vistas));
+    _ui_contactos_establecer_tam_vistas (&(uiContactos->vistas));
 }
 
-void interfazContactos_prepararInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+void ui_contactos_preparar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
     MAXIMIZAR_VENTANA (sfRenderWindow_getNativeHandle (contextoAplicacion->renderizado), SW_MAXIMIZE);
-    establecerYPosicionarNombreUsuario (interfazContactos, contextoAplicacion->usuario.nombre);
+    establecer_y_posicionar_nombre_usuario (uiContactos, contextoAplicacion->usuario.nombre);
 }
 
-void interfazContactos_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos)
+void ui_contactos_ejecutar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos)
 {
-    _interfazContactos_accion (contextoAplicacion, interfazContactos);
-    _interfazContactos_actualizar (contextoAplicacion, interfazContactos);
-    _interfazContactos_renderizar (contextoAplicacion->renderizado, interfazContactos);
+    _ui_contactos_accionar (contextoAplicacion, uiContactos);
+    _ui_contactos_actualizar (contextoAplicacion, uiContactos);
+    _ui_contactos_renderizar (contextoAplicacion->renderizado, uiContactos);
 }
 
-void interfazContactos_liberar (t_interfazContactos *interfazContactos)
+void ui_contactos_liberar (UiContactos *uiContactos)
 {
     //FUENTES
-    _interfazContactos_liberarFuentes (&(interfazContactos->fuentes));
+    _ui_contactos_liberar_fuentes (&(uiContactos->fuentes));
 
     // TEXTOS
-    _interfazContactos_liberarTextos (&(interfazContactos->textos));
+    _ui_contactos_liberar_textos (&(uiContactos->textos));
 
     // ELEMENTOS
-    _interfazContactos_liberarElementos (&(interfazContactos->elementos));
+    _ui_contactos_liberar_elementos (&(uiContactos->elementos));
 
     //VISTAS
-    _interfazContactos_liberarVistas (&(interfazContactos->vistas));
+    _ui_contactos_liberar_vistas (&(uiContactos->vistas));
 }
 
 
@@ -110,17 +110,17 @@ void interfazContactos_liberar (t_interfazContactos *interfazContactos)
    ============================================================================================================================================ */
 
 
-static void establecerYPosicionarNombreUsuario (t_interfazContactos *interfazContactos, const char *nombreUsuario)
+static void establecer_y_posicionar_nombre_usuario (UiContactos *uiContactos, const char *nombreUsuario)
 {
     sfFloatRect limitesNombreUsuario;
     unsigned short int pixeles = 32;
     
-    sfText_setString (interfazContactos->textos.nombreUsuario, nombreUsuario);
+    sfText_setString (uiContactos->textos.nombreUsuario, nombreUsuario);
     do
     {
-        sfText_setCharacterSize (interfazContactos->textos.nombreUsuario, pixeles);
-        centrarTextoEnArea (interfazContactos->textos.nombreUsuario, 44, 888, 254, 120);
-        limitesNombreUsuario = sfText_getLocalBounds (interfazContactos->textos.nombreUsuario);
+        sfText_setCharacterSize (uiContactos->textos.nombreUsuario, pixeles);
+        centrar_texto_en_area (uiContactos->textos.nombreUsuario, 44, 888, 254, 120);
+        limitesNombreUsuario = sfText_getLocalBounds (uiContactos->textos.nombreUsuario);
         pixeles -= 2;
     } while (limitesNombreUsuario.size.x > 254);
 }

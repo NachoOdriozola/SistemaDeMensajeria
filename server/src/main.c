@@ -3,28 +3,28 @@
 
 int main ()
 {
-    t_contextoServidor contextoServidor;
+    ContextoServidor contextoServidor;
 
-    if (inicializarServidor (&contextoServidor) == ERROR_INICIALIZACION)
+    if (servidor_inicializar (&contextoServidor) == ERROR_INICIALIZACION)
     {
-        liberarServidor (&contextoServidor);
+        servidor_liberar (&contextoServidor);
         return ERROR_INICIALIZACION;
     }
 
-    if (configurarServidor (&contextoServidor) == ERROR_CONFIGURACION)
+    if (servidor_configurar (&contextoServidor) == ERROR_CONFIGURACION)
     {
-        liberarServidor (&contextoServidor);
+        servidor_liberar (&contextoServidor);
         return ERROR_CONFIGURACION;
     }
 
     while (servidorActivo)
     {
-        aceptarNuevosClientes (contextoServidor.sock, &(contextoServidor.clientesNoAutenticados));
-        recibirSolicitudes (&contextoServidor);
-        procesarSolicitudes (&contextoServidor);
+        aceptar_nuevos_clientes (contextoServidor.sock, &(contextoServidor.clientesNoAutenticados));
+        recibir_solicitudes (&contextoServidor);
+        procesar_solicitudes (&contextoServidor);
         Sleep (5); // Pausa para evitar ciclos innecesarios.
     }
 
-    liberarServidor (&contextoServidor);
+    servidor_liberar (&contextoServidor);
     return EXITO;
 }

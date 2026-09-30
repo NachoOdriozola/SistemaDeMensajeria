@@ -52,27 +52,27 @@
 
 
 /**
- * \def VELOCIDAD_PARPADEO_PUNTO_INSERCION
+ * \def PUNTO_INSERCION_VELOCIDAD_PARPADEO
  * \brief Constante que determina la velocidad de parpadeo del punto de insercion.
  */
-#define VELOCIDAD_PARPADEO_PUNTO_INSERCION 22
+#define PUNTO_INSERCION_VELOCIDAD_PARPADEO 22
 
 
 /**
  * \def TEXTO_DE_CARGA_ESTADO_INICIAL
- * \brief Estado con el que comienza el texto de carga.
+ * \brief EstadoSolicitud con el que comienza el texto de carga.
  */
 #define TEXTO_DE_CARGA_ESTADO_INICIAL 0
 
 /**
  * \def TEXTO_DE_CARGA_ESTADO_FINAL
- * \brief Estado con el que finaliza el texto de carga.
+ * \brief EstadoSolicitud con el que finaliza el texto de carga.
  */
 #define TEXTO_DE_CARGA_ESTADO_FINAL 3
 
 /**
  * \def TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION
- * \brief Velocidad con la que cambia de estado del texto de carga.
+ * \brief Velocidad con la que cambia de EstadoSolicitud del texto de carga.
  */
 #define TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION 18
 
@@ -144,33 +144,34 @@
 
 
 /**
- * \enum t_habilitacion
- * \brief Representa el estado de habilitacion de un recurso o funcionalidad. Activo (HABILITADO) o inactivo (DESHABILITADO).
+ * \enum Habilitacion
+ * \brief Representa el EstadoSolicitud de habilitacion de un recurso o funcionalidad. Activo (HABILITADO) o inactivo (DESHABILITADO).
  */
 typedef enum
 {
-    HABILITADO,
-    DESHABILITADO
-} t_habilitacion;
+   HABILITADO,
+   DESHABILITADO
+} Habilitacion;
 
-/** \struct t_puntoInsercion
+
+/** \struct PuntoInsercion
  * \brief Gestiona el punto de insercion logicamente.
  */
 typedef struct
 {
-    t_habilitacion estado;                    /**< Activar/desactivar el punto de insercion. */
-    unsigned short int contador;        /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
-} t_puntoInsercion;
+   Habilitacion estado;                    /**< Activar/desactivar el punto de insercion. */
+   unsigned short int contador;        /**< Contador para determinar el tiempo en el que se activa/desactiva el punto de insercion. */
+} PuntoInsercion;
 
 
-/** \struct t_textoDeCarga
+/** \struct TextoDeCarga
  * \brief Gestiona el texto de carga logicamente.
  */
 typedef struct
 {
    unsigned short int estado;             /**< Estado en el que se encuentra el texto de carga. */
-   unsigned short int contador;         /**< Contador para modificar el estado. */
-} t_textoDeCarga;
+   unsigned short int contador;         /**< Contador para modificar el EstadoSolicitud. */
+} TextoDeCarga;
 
 
 /* ============================================================================================================================================
@@ -188,7 +189,7 @@ typedef struct
  * \return True en caso de que el usuario lo clickeo, False en caso contrario.
  *
  */
-bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo);
+bool se_clickeo_en_rectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo);
 
 /** \brief Verificar si el usuario clickeo un texto grafico en pantalla.
  *
@@ -200,7 +201,7 @@ bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShap
  * \return True en caso de que el usuario lo clickeo, False en caso contrario.
  *
  */
-bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto);
+bool se_clickeo_en_texto (const sfRenderWindow *renderizado, const sfText *texto);
 
 /** \brief Centrar un texto dentro de una area.
  *
@@ -211,7 +212,7 @@ bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto);
  * \param altoArea Alto (y) del area.
  *
  */
-void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea);
+void centrar_texto_en_area (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea);
 
 /** \brief Limitar la visualizacion de texto ingresado por el usuario en caso de que no entre sobre la barra de escritura.
  * 
@@ -219,14 +220,14 @@ void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, fl
  * \param cadena Cadena que contiene el texto a mostrar.
  * \param anchoBarraEscritura Ancho de la barra de escritura.
  */
-void limitarVisualizacionTextoSobreBarraEscritura (sfText *texto, const char *cadena, float anchoBarraEscritura);
+void limitar_visualizacion_texto_sobre_barra_escritura (sfText *texto, const char *cadena, float anchoBarraEscritura);
 
 /** \brief Omitir eventos pendientes a procesar. Invocar cuando se necesite desactivar una interfaz y no procesar sus eventos pendientes.
  *
  * \param renderizado Puntero al renderizado de la estructura base de la aplicacion.
  *
  */
-void omitirEventosPendientes (sfRenderWindow *renderizado);
+void omitir_eventos_pendientes (sfRenderWindow *renderizado);
 
 
 /* ============================================================================================================================================
@@ -248,7 +249,7 @@ void omitirEventosPendientes (sfRenderWindow *renderizado);
  * \return ERROR_OPERACION en caso de que el caracter ingresado no sea valido (es un caracter de control), EXITO en caso contrario.
  *
  */
-t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
+CodigoRetorno ingresar_caracter_a_buffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar);
 
 /** \brief Pegar texto desde el portapapeles a buffer.
  *
@@ -262,7 +263,7 @@ t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent
  * \return ERROR_OPERACION en caso de que el portapapeles contenga caracteres invalidos o en caso de que el buffer no tenga espacio suficiente para pegar el portapapeles, EXITO en caso contrario.
  *
  */
-t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer);
+CodigoRetorno pegar_texto_desde_portapapeles_a_buffer (char *buffer, int tamMaxBuffer);
 
 /** \brief Analizar si la cadena contiene todos espacios.
  *
@@ -271,7 +272,7 @@ t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuff
  * \return True en caso de que la cadena tenga todos espacios, False en caso contrario y en caso de cadena vacia.
  *
  */
-bool sonTodosEspacios (const char *mensaje);
+bool son_todos_espacios (const char *mensaje);
 
 
 /* ============================================================================================================================================
@@ -286,7 +287,7 @@ bool sonTodosEspacios (const char *mensaje);
  * \return True en caso de que sea valido, False en caso contrario.
  *
  */
-bool esNombreValido (const char *nombre);
+bool es_nombre_valido (const char *nombre);
 
 /** \brief Analizar si la contrasenia es valida. Toma en cuenta las restricciones del dominio. Valida el caso de que sean todos espacios.
  *
@@ -295,7 +296,7 @@ bool esNombreValido (const char *nombre);
  * \return True en caso de que sea valido, False en caso contrario.
  *
  */
-bool esContraseniaValida (const char *contrasenia);
+bool es_contrasenia_valida (const char *contrasenia);
 
 /** \brief Analizar si el correo electronico es valido. Toma en cuenta las restricciones del dominio. Valida el caso de que sean todos espacios.
  *
@@ -304,7 +305,7 @@ bool esContraseniaValida (const char *contrasenia);
  * \return True en caso de que sea valido, False en caso contrario.
  *
  */
-bool esCorreoElectronicoValido (const char *correo);
+bool es_correo_electronico_valido (const char *correo);
 
 
 /* ============================================================================================================================================
@@ -319,7 +320,7 @@ bool esCorreoElectronicoValido (const char *correo);
  * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
  *
  */
-void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion);
+void punto_insercion_resetear (PuntoInsercion *puntoInsercion);
 
 /** \brief Preguntar si el punto de insercion esta habilitado o deshabilitado.
  *
@@ -327,18 +328,18 @@ void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion);
  *
  * \return 1 si se encuentra habilitado, 0 si no lo esta.
  */
-bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion);
+bool punto_insercion_esta_habilitado (const PuntoInsercion *puntoInsercion);
 
-/** \brief Actualizar el punto de insercion segun su estado.
+/** \brief Actualizar el punto de insercion segun su EstadoSolicitud.
  *
- * Avanzar el contador del punto de insercion. Si el punto de insercion alcanza la velocidad (constante) establecida, se reinicia el contador y se actualiza (activa/desactiva) segun su estado:
+ * Avanzar el contador del punto de insercion. Si el punto de insercion alcanza la velocidad (constante) establecida, se reinicia el contador y se actualiza (activa/desactiva) segun su EstadoSolicitud:
  * si el punto de insercion esta deshabilitado, se habilita.
  * si el punto de insercion esta habilitado, se deshabilita.
  *
  * \param puntoInsercion Puntero a la estructura que gestiona el punto de insercion.
  *
  */
-void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion);
+void punto_insercion_actualizar (PuntoInsercion *puntoInsercion);
 
 
 /* ============================================================================================================================================
@@ -346,28 +347,28 @@ void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion);
    ============================================================================================================================================ */
 
 
-/** \brief Establecer el estado inicial del texto de carga y setear el contador.
+/** \brief Establecer el EstadoSolicitud inicial del texto de carga y setear el contador.
  *
  * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
  *
  */
-void textoDeCarga_iniciar (t_textoDeCarga *textoDeCarga);
+void texto_de_carga_iniciar (TextoDeCarga *textoDeCarga);
 
-/** \brief Incrementar el contador. En caso de que alcance la velocidad de actualizacion de carga, modifica el estado. Si el texto ya se encuentra en el estado final, lo reestablece al estado inicial.
+/** \brief Incrementar el contador. En caso de que alcance la velocidad de actualizacion de carga, modifica el EstadoSolicitud. Si el texto ya se encuentra en el EstadoSolicitud final, lo reestablece al EstadoSolicitud inicial.
  *
  * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
  *
- * \return True si se modifico el estado del texto de carga, False en caso contrario.
+ * \return True si se modifico el EstadoSolicitud del texto de carga, False en caso contrario.
  * 
  */
-bool textoDeCarga_actualizar (t_textoDeCarga *textoDeCarga);
+bool texto_de_carga_actualizar (TextoDeCarga *textoDeCarga);
 
-/** \brief Concatenar al texto los puntos segun el estado de carga.
+/** \brief Concatenar al texto los puntos segun el EstadoSolicitud de carga.
  *
  * \param textoDeCarga Puntero a la estructura que gestiona el texto de carga.
  *
  */
-void textoDeCarga_modificarTextoSegunEstado (t_textoDeCarga *textoDeCarga, char *texto);
+void texto_de_carga_modificar_texto (TextoDeCarga *textoDeCarga, char *texto);
 
 
 /* ============================================================================================================================================
@@ -383,7 +384,7 @@ void log_error_conexion ();
 /** \brief Realizar un log de warning en caso de recibir una respuesta que no pertenece a la interfaz sobre la que se encuentra situado el usuario.
  * 
  */
-void log_warning_respuestaRecibidaDeOtraInterfaz ();
+void log_warning_respuesta_recibida_otra_ui ();
 
 
 #endif // UTILES_H_INCLUDED

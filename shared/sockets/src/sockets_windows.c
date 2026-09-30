@@ -4,7 +4,7 @@
 static bool estadoWinsock = false; // Estado de Winsock API
 
 
-t_codigoRetorno socket_inicializar ()
+CodigoRetorno socket_inicializar ()
 {
     WSADATA wsaData;
     int resultado;
@@ -20,7 +20,7 @@ t_codigoRetorno socket_inicializar ()
     return EXITO;
 }
 
-t_codigoRetorno socket_crear (t_socket *sock)
+CodigoRetorno socket_crear (Socket *sock)
 {
     *sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (*sock == SOCKET_INVALIDO)
@@ -32,7 +32,7 @@ t_codigoRetorno socket_crear (t_socket *sock)
     return EXITO;
 }
 
-t_codigoRetorno socket_conectarServidor (t_socket *sock)
+CodigoRetorno socket_conectar_servidor (Socket *sock)
 {
     struct sockaddr_in dirServidor;
 
@@ -55,7 +55,7 @@ t_codigoRetorno socket_conectarServidor (t_socket *sock)
     return EXITO;
 }
 
-t_codigoRetorno socket_conectarCliente (t_socket *sock)
+CodigoRetorno socket_conectar_cliente (Socket *sock)
 {
     struct sockaddr_in dirCliente;
 
@@ -72,24 +72,24 @@ t_codigoRetorno socket_conectarCliente (t_socket *sock)
     return EXITO;
 }
 
-void socket_establecerModoBloqueante (t_socket *sock)
+void socket_establecer_modo_bloqueante (Socket *sock)
 {
     u_long modoSocket = 0;
     ioctlsocket (*sock, FIONBIO, &modoSocket);
 }
 
-void socket_establecerModoNoBloqueante (t_socket *sock)
+void socket_establecer_modo_no_bloqueante (Socket *sock)
 {
     u_long modoSocket = 1;
     ioctlsocket (*sock, FIONBIO, &modoSocket);
 }
 
-void socket_establecerTimeout (t_socket *sock, DWORD tiempo)
+void socket_establecer_timeout (Socket *sock, DWORD tiempo)
 {
     setsockopt (*sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&tiempo), sizeof (tiempo));
 }
 
-t_codigoRetorno socket_establecerKeepAlive (t_socket *sock)
+CodigoRetorno socket_establecer_keep_alive (Socket *sock)
 {
     BOOL activar = true;
     DWORD bytesRetornados;
@@ -107,9 +107,9 @@ t_codigoRetorno socket_establecerKeepAlive (t_socket *sock)
     return EXITO;
 }
 
-t_socket socket_aceptarNuevoCliente (t_socket sockServidor)
+Socket socket_aceptar_nuevo_cliente (Socket sockServidor)
 {
-    t_socket sockCliente;
+    Socket sockCliente;
     struct sockaddr_in dirNuevoCliente;
     int tamNuevoCliente = sizeof (dirNuevoCliente);
 
@@ -118,7 +118,7 @@ t_socket socket_aceptarNuevoCliente (t_socket sockServidor)
     return sockCliente;
 }
 
-t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t tamBuffer)
+ResultadoEnvio socket_enviar_todo (Socket sock, const char *buffer, size_t tamBuffer)
 {
     int bytesEnviadosTotales = 0, bytesEnviadosParciales;
 
@@ -138,37 +138,37 @@ t_resultadoEnvio socket_enviarTodo (t_socket sock, const char *buffer, size_t ta
     return ENVIO_COMPLETO;
 }
 
-t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer)
+ResultadoRecepcion socket_recibir_todo (Socket sock, char *returnBuffer)
 {
-    t_header header;
+    Header header;
     int bytesRecibidosTotales = 0, bytesRecibidosParciales;
 
     do
     {
-        bytesRecibidosParciales = recv (sock, (char*)(&header), sizeof (t_header), 0);
+        bytesRecibidosParciales = recv (sock, (char*)(&header), sizeof (Header), 0);
     
-        if (socket_noRecibioDatos (sock, bytesRecibidosParciales))
+        if (socket_no_recibio_datos (sock, bytesRecibidosParciales))
             return RECEPCION_NO_RECIBIO_DATOS;
     
-        if (socket_perdioConexion (sock, bytesRecibidosParciales))
+        if (socket_perdio_conexion (sock, bytesRecibidosParciales))
             return RECEPCION_ERROR_CONEXION;
 
         bytesRecibidosTotales += bytesRecibidosParciales;
-    } while (bytesRecibidosTotales < sizeof (t_header));
+    } while (bytesRecibidosTotales < sizeof (Header));
 
-    memcpy (returnBuffer, &header, sizeof (t_header));
+    memcpy (returnBuffer, &header, sizeof (Header));
     returnBuffer += bytesRecibidosTotales;
     
     bytesRecibidosTotales = 0;
     do
     {
-        bytesRecibidosParciales = recv (sock, returnBuffer, header.bytesTransmitidos - sizeof (t_header), 0);
+        bytesRecibidosParciales = recv (sock, returnBuffer, header.bytesTransmitidos - sizeof (Header), 0);
     
-        if (socket_perdioConexion (sock, bytesRecibidosParciales))
+        if (socket_perdio_conexion (sock, bytesRecibidosParciales))
             return RECEPCION_ERROR_CONEXION;
 
         bytesRecibidosTotales += bytesRecibidosParciales;
-    } while (bytesRecibidosTotales < header.bytesTransmitidos - sizeof (t_header));
+    } while (bytesRecibidosTotales < header.bytesTransmitidos - sizeof (Header));
 
     returnBuffer += bytesRecibidosTotales;
     *returnBuffer = '\0';
@@ -176,13 +176,13 @@ t_resultadoRecepcion socket_recibirTodo (t_socket sock, char *returnBuffer)
     return RECEPCION_RECIBIO_DATOS;
 }
 
-bool socket_noRecibioDatos (t_socket sock, int bytesRecibidos)
+bool socket_no_recibio_datos (Socket sock, int bytesRecibidos)
 {
     return ((bytesRecibidos == ERROR_SOCKET) && 
                 ((WSAGetLastError() == WSAEWOULDBLOCK) || (WSAGetLastError() == WSAENOTSOCK)));
 }
 
-bool socket_perdioConexion (t_socket sock, int bytesRecibidos)
+bool socket_perdio_conexion (Socket sock, int bytesRecibidos)
 {
     if (bytesRecibidos == 0) // Si el cliente cerro la conexion de forma ordenada.
         return true;
@@ -193,7 +193,7 @@ bool socket_perdioConexion (t_socket sock, int bytesRecibidos)
     return false;
 }
 
-void socket_cerrar (t_socket *sock)
+void socket_cerrar (Socket *sock)
 {
     if (*sock != SOCKET_INVALIDO)
     {

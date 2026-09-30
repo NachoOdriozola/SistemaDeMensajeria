@@ -1,16 +1,16 @@
 #include "listaDoble.h"
 
 
-void crearListaDoble (t_listaDoble *pl)
+void lista_doble_crear (ListaDoble *pl)
 {
     *pl = NULL;
 }
 
-int insertarAlInicioListaDoble (t_listaDoble *pl, const void *dato, unsigned tamDato)
+int lista_doble_insertar_al_inicio (ListaDoble *pl, const void *dato, unsigned tamDato)
 {
-    t_nodoListaDoble *nuevoNodo;
+    NodoListaDoble *nuevoNodo;
 
-    nuevoNodo = malloc (sizeof(t_nodoListaDoble));
+    nuevoNodo = malloc (sizeof(NodoListaDoble));
     if (!nuevoNodo)
         return 1;
 
@@ -30,7 +30,7 @@ int insertarAlInicioListaDoble (t_listaDoble *pl, const void *dato, unsigned tam
     return 0;
 }
 
-void vincularNodoAlInicioListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoAVincular)
+void lista_doble_vincular_nodo_al_inicio (ListaDoble *pl, NodoListaDoble *nodoAVincular)
 {
     if (*pl != NULL)
         (*pl)->ant = nodoAVincular;
@@ -39,7 +39,7 @@ void vincularNodoAlInicioListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoAVi
     *pl = nodoAVincular;
 }
 
-void mapListaDoble (t_listaDoble *pl, void accion (void*))
+void lista_doble_map (ListaDoble *pl, void accion (void*))
 {
     while (*pl != NULL)
     {
@@ -48,7 +48,7 @@ void mapListaDoble (t_listaDoble *pl, void accion (void*))
     }
 }
 
-void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), void *complemento)
+void lista_doble_map_con_complemento (ListaDoble *pl, void accion (void*, void*), void *complemento)
 {
     while (*pl != NULL)
     {
@@ -57,7 +57,7 @@ void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), 
     }
 }
 
-int buscarClaveUnicaEnListaDoble (t_listaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
+int lista_doble_buscar_clave_unica (ListaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
 {
     while (*pl != NULL)
     {
@@ -73,9 +73,9 @@ int buscarClaveUnicaEnListaDoble (t_listaDoble *pl, const void *key, void *retur
     return 0;
 }
 
-void desvincularNodoDeListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoADesvincular)
+void lista_doble_desvincular_nodo (ListaDoble *pl, NodoListaDoble *nodoADesvincular)
 {
-    t_nodoListaDoble *ant = nodoADesvincular->ant, *sig = nodoADesvincular->sig;
+    NodoListaDoble *ant = nodoADesvincular->ant, *sig = nodoADesvincular->sig;
 
     if (ant != NULL)
         ant->sig = sig;
@@ -88,9 +88,9 @@ void desvincularNodoDeListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoADesvi
     nodoADesvincular->sig = NULL;
 }
 
-void eliminarNodoConAccionListaDoble (t_listaDoble *pl, void *returnDato, unsigned tamDato, void accion (void*))
+void lista_doble_eliminar_nodo_con_accion (ListaDoble *pl, void *returnDato, unsigned tamDato, void accion (void*))
 {
-    t_nodoListaDoble *nodoElim, *ant, *sig;
+    NodoListaDoble *nodoElim, *ant, *sig;
 
     if (*pl == NULL)
         return;
@@ -114,9 +114,9 @@ void eliminarNodoConAccionListaDoble (t_listaDoble *pl, void *returnDato, unsign
     free (nodoElim);
 }
 
-void vaciarListaDobleConAccion (t_listaDoble *pl, void accion (void *dato))
+void lista_doble_vaciar_con_accion (ListaDoble *pl, void accion (void *dato))
 {
-    t_nodoListaDoble *nodoElim;
+    NodoListaDoble *nodoElim;
 
     while (*pl != NULL)
     {

@@ -27,7 +27,7 @@
    ============================================================================================================================================ */
 
 
-/** \struct t_interfazRegistroTextos
+/** \struct UiRegistroTextos
  * \brief Contiene todos los textos graficos de la interfaz de registro.
  */
 typedef struct
@@ -36,44 +36,44 @@ typedef struct
     sfText *ingresarCorreo;                              /**< Indica al usuario donde escribir su correo electronico. */
     sfText *informacionContrasenia;               /**< Texto informativo sobre la contrasenia. */
     sfText *informacionNombre;                    /**< Texto informativo sobre el nombre. */
-} t_interfazRegistroTextos;
+} UiRegistroTextos;
 
-/** \struct t_interfazRegistroElementos
+/** \struct UiRegistroElementos
  * \brief Contiene todos los elementos graficos de la interfaz de registro.
  */
 typedef struct
 {
     sfRectangleShape *barraEscribirCorreo;          /**< Barra donde el usuario escribe su correo electronico. */
-} t_interfazRegistroElementos;
+} UiRegistroElementos;
 
-/** \enum t_interfazRegistroFoco
- * \brief Contiene todos los estados de foco de la interfaz de registro.
+/** \enum UiRegistroFoco
+ * \brief Contiene todos los EstadoSolicituds de foco de la interfaz de registro.
  */
 typedef enum
 {
     ESCRIBIR_CORREO,                /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir su correo electronico. */
-    IR_NINGUNO                         /**< Ningun foco establecido. */
-} t_interfazRegistroFoco;
+    UI_REGISTRO_NINGUNO                         /**< Ningun foco establecido. */
+} UiRegistroFoco;
 
-/** \enum t_interfazRegistroLogica
+/** \enum UiRegistroLogica
  * \brief Contiene la logica de la interfaz de registro.
  */
 typedef struct
 {
     char correoElectronico [MAX_CORREO_ELECTRONICO];         /**< Cadena donde se guarda el correo electronico que escribe el usuario. */
-} t_interfazRegistroLogica;
+} UiRegistroLogica;
 
-/** \struct t_interfazRegistro
+/** \struct UiRegistro
  * \brief Estructura base que contiene la logica y une los recursos graficos de la interfaz de registro.
  */
 typedef struct
 {
-    t_interfazRegistroTextos textos;
-    t_interfazRegistroElementos elementos;
-    t_interfazRegistroFoco estadoFoco;
-    t_interfazRegistroLogica logica;
-    t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro;
-} t_interfazRegistro;
+    UiRegistroTextos textos;
+    UiRegistroElementos elementos;
+    UiRegistroFoco foco;
+    UiRegistroLogica logica;
+    UiAcceso *uiAcceso;
+} UiRegistro;
 
 
 #endif // INTERFAZREGISTRO_ESTRUCTURAS_H_INCLUDED

@@ -6,23 +6,23 @@
    ============================================================================================================================================ */
 
 
-static void posicionarPuntoInsercion_escribirNombre (t_interfazAutenticacion *interfazAutenticacion);
-static void posicionarPuntoInsercion_escribirContrasenia (t_interfazAutenticacion *interfazAutenticacion);
+static void posicionar_punto_insercion_nombre (UiAutenticacion *uiAutenticacion);
+static void posicionar_punto_insercion_contrasenia (UiAutenticacion *uiAutenticacion);
 
-static bool procesar_click_escribirNombre (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
-static bool procesar_click_escribirContrasenia (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion);
-static bool procesar_click_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-static bool procesar_click_cambiarAInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+static bool procesar_click_escribir_nombre (const sfRenderWindow *renderizado, UiAutenticacion *uiAutenticacion);
+static bool procesar_click_escribir_contrasenia (const sfRenderWindow *renderizado, UiAutenticacion *uiAutenticacion);
+static bool procesar_click_intentar_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
+static bool procesar_click_cambiar_a_ui_registro (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
-static bool procesar_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar);
-static bool procesar_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar);
+static bool procesar_escribir_nombre (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, sfEvent eventoChar);
+static bool procesar_escribir_contrasenia (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, sfEvent eventoChar);
 
-static bool procesar_enter_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+static bool procesar_enter_intentar_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-static bool procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+static bool procesar_pegar_nombre_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
+static bool procesar_pegar_contrasenia_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
-static void deshabilitarFocos (t_interfazAutenticacion *interfazAutenticacion);
+static void deshabilitar_focos (UiAutenticacion *uiAutenticacion);
 
 
 /* ============================================================================================================================================
@@ -30,7 +30,7 @@ static void deshabilitarFocos (t_interfazAutenticacion *interfazAutenticacion);
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+void _ui_autenticacion_accionar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
     sfEvent evento;
 
@@ -51,29 +51,29 @@ void _interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_
         case sfEvtMouseButtonPressed:
             if (evento.mouseButton.button == sfMouseLeft)
             {
-                if (procesar_click_escribirNombre (contextoAplicacion->renderizado, interfazAutenticacion)) break;
-                if (procesar_click_escribirContrasenia (contextoAplicacion->renderizado, interfazAutenticacion)) break;
-                if (procesar_click_intentarAutenticar (contextoAplicacion, interfazAutenticacion)) break;
-                if (procesar_click_cambiarAInterfazRegistro (contextoAplicacion, interfazAutenticacion)) break;
-                deshabilitarFocos (interfazAutenticacion);
+                if (procesar_click_escribir_nombre (contextoAplicacion->renderizado, uiAutenticacion)) break;
+                if (procesar_click_escribir_contrasenia (contextoAplicacion->renderizado, uiAutenticacion)) break;
+                if (procesar_click_intentar_autenticacion (contextoAplicacion, uiAutenticacion)) break;
+                if (procesar_click_cambiar_a_ui_registro (contextoAplicacion, uiAutenticacion)) break;
+                deshabilitar_focos (uiAutenticacion);
             }
             break;
 
 
         case sfEvtTextEntered:
-            if (procesar_escribir_nombre (contextoAplicacion, interfazAutenticacion, evento)) break;
-            if (procesar_escribir_contrasenia (contextoAplicacion, interfazAutenticacion, evento)) break;
+            if (procesar_escribir_nombre (contextoAplicacion, uiAutenticacion, evento)) break;
+            if (procesar_escribir_contrasenia (contextoAplicacion, uiAutenticacion, evento)) break;
             break;
 
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-                if (procesar_enter_intentarAutenticar (contextoAplicacion, interfazAutenticacion)) break;
+                if (procesar_enter_intentar_autenticacion (contextoAplicacion, uiAutenticacion)) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
             {
-                if (procesar_pegarTextoDesdePortapapeles_escribir_nombre (contextoAplicacion, interfazAutenticacion)) break;
-                if (procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (contextoAplicacion, interfazAutenticacion)) break;
+                if (procesar_pegar_nombre_desde_portapapeles (contextoAplicacion, uiAutenticacion)) break;
+                if (procesar_pegar_contrasenia_desde_portapapeles (contextoAplicacion, uiAutenticacion)) break;
             }
 
             break;
@@ -91,44 +91,41 @@ void _interfazAutenticacion_accion (t_contextoAplicacion *contextoAplicacion, t_
    ============================================================================================================================================ */
 
 
-static void mostrar_feedback_cargando (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_cargando_solicitud (UiAutenticacion *uiAutenticacion)
 {
-    textoDeCarga_iniciar (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.textoDeCarga));
-    sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Cargando");
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    texto_de_carga_iniciar (&(uiAutenticacion->uiAcceso->logica.textoDeCarga));
+    sfText_setString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, "Cargando");
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void mostrar_feedback_credencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_credenciales_invalidas (UiAutenticacion *uiAutenticacion)
 {
     uint32_t bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setUnicodeString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, bufferErrorCredenciales);
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_error_conexion (UiAutenticacion *uiAutenticacion)
 {
     uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setUnicodeString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, bufferErrorConexion);
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void intentarAutenticarYProcesarResultadoOperacion (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static void procesar_resultado_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, ResultadoIntentoAutenticacion resultadoIntentoAutenticacion)
 {
-    _t_resultado_intentarAutenticar resultado_intentarAutenticar;
-
-    resultado_intentarAutenticar = _interfazAutenticacion_intentar_autenticar (contextoAplicacion, interfazAutenticacion);
-    switch (resultado_intentarAutenticar)
+    switch (resultadoIntentoAutenticacion)
     {
-        case INTENTARAUTENTICAR_RESULTADO_EXITO:
-            mostrar_feedback_cargando (interfazAutenticacion);
+        case INTENTO_AUTENTICACION_SOLICITUD_ENVIADA:
+            mostrar_feedback_cargando_solicitud (uiAutenticacion);
             break;
         
-        case INTENTARAUTENTICAR_RESULTADO_CREDENCIALES_INVALIDAS:
-            mostrar_feedback_credencialesInvalidas (interfazAutenticacion);
+        case INTENTO_AUTENTICACION_CREDENCIALES_INVALIDAS:
+            mostrar_feedback_credenciales_invalidas (uiAutenticacion);
             break;
 
-        case INTENTARAUTENTICAR_RESULTADO_ERROR_CONEXION:
-            mostrar_feedback_errorConexion (interfazAutenticacion);
+        case INTENTO_AUTENTICACION_ERROR_CONEXION:
+            mostrar_feedback_error_conexion (uiAutenticacion);
             break;
 
         default:
@@ -137,161 +134,169 @@ static void intentarAutenticarYProcesarResultadoOperacion (t_contextoAplicacion 
 }
 
 
-static void posicionarPuntoInsercion_escribirNombre (t_interfazAutenticacion *interfazAutenticacion)
+static void posicionar_punto_insercion_nombre (UiAutenticacion *uiAutenticacion)
 {
     sfFloatRect limitesAuxEscribirNombre;
 
-    limitesAuxEscribirNombre = sfText_getGlobalBounds (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 208});
+    limitesAuxEscribirNombre = sfText_getGlobalBounds (uiAutenticacion->uiAcceso->textos.auxEscribirNombre);
+    sfRectangleShape_setPosition (uiAutenticacion->uiAcceso->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 208});
 }
 
-static void posicionarPuntoInsercion_escribirContrasenia (t_interfazAutenticacion *interfazAutenticacion)
+static void posicionar_punto_insercion_contrasenia (UiAutenticacion *uiAutenticacion)
 {
     sfFloatRect limitesAuxEscribirContrasenia;
     
-    limitesAuxEscribirContrasenia = sfText_getGlobalBounds (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-    sfRectangleShape_setPosition (interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 343});
+    limitesAuxEscribirContrasenia = sfText_getGlobalBounds (uiAutenticacion->uiAcceso->textos.auxEscribirContrasenia);
+    sfRectangleShape_setPosition (uiAutenticacion->uiAcceso->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 343});
 }
 
 
-static bool procesar_click_escribirNombre (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_click_escribir_nombre (const sfRenderWindow *renderizado, UiAutenticacion *uiAutenticacion)
 {
-    if (!clickEnRectangulo (renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre))
+    if (!se_clickeo_en_rectangulo (renderizado, uiAutenticacion->uiAcceso->elementos.barraEscribirNombre))
         return EVENTO_NO_MANEJADO;
 
-    interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_NOMBRE;
-    interfazAutenticacion->estadoFoco = IA_NINGUNO;
-    posicionarPuntoInsercion_escribirNombre (interfazAutenticacion);
+    uiAutenticacion->uiAcceso->foco = ESCRIBIR_NOMBRE;
+    uiAutenticacion->foco = UI_AUTENTICACION_NINGUNO;
+    posicionar_punto_insercion_nombre (uiAutenticacion);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_escribirContrasenia (const sfRenderWindow *renderizado, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_click_escribir_contrasenia (const sfRenderWindow *renderizado, UiAutenticacion *uiAutenticacion)
 {
-    if (!clickEnRectangulo (renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia))
+    if (!se_clickeo_en_rectangulo (renderizado, uiAutenticacion->uiAcceso->elementos.barraEscribirContrasenia))
         return EVENTO_NO_MANEJADO;
 
-    interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_CONTRASENIA;
-    interfazAutenticacion->estadoFoco = IA_NINGUNO;
-    posicionarPuntoInsercion_escribirContrasenia (interfazAutenticacion);
+    uiAutenticacion->uiAcceso->foco = ESCRIBIR_CONTRASENIA;
+    uiAutenticacion->foco = UI_AUTENTICACION_NINGUNO;
+    posicionar_punto_insercion_contrasenia (uiAutenticacion);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_click_intentar_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->elementos.botonIngresar))
+    if (!se_clickeo_en_rectangulo (contextoAplicacion->renderizado, uiAutenticacion->uiAcceso->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
         
-    if (!comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (!comunicacion_hay_solicitud_en_curso (contextoAplicacion))
     {
-        deshabilitarFocos (interfazAutenticacion);
-        intentarAutenticarYProcesarResultadoOperacion (contextoAplicacion, interfazAutenticacion);
+        ResultadoIntentoAutenticacion resultadoIntentoAutenticacion;
+
+        deshabilitar_focos (uiAutenticacion);
+        resultadoIntentoAutenticacion = _ui_autenticacion_intentar_autenticacion (contextoAplicacion, uiAutenticacion);
+        procesar_resultado_autenticacion (contextoAplicacion, uiAutenticacion, resultadoIntentoAutenticacion);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_cambiarAInterfazRegistro (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_click_cambiar_a_ui_registro (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if (!clickEnTexto (contextoAplicacion->renderizado, interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.cambiarInterfaz))
+    if (!se_clickeo_en_texto (contextoAplicacion->renderizado, uiAutenticacion->uiAcceso->textos.cambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    _interfazAutenticacion_cambiarAInterfaz_registro (contextoAplicacion, interfazAutenticacion);
+    _ui_autenticacion_cambiar_a_ui_registro (contextoAplicacion, uiAutenticacion);
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar)
+static bool procesar_escribir_nombre (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, sfEvent eventoChar)
 {
-    if (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
+    if (uiAutenticacion->uiAcceso->foco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO, eventoChar) == EXITO)
+    if (ingresar_caracter_a_buffer (uiAutenticacion->uiAcceso->logica.nombreUsuario, MAX_NOMBRE_USUARIO, eventoChar) == EXITO)
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
-        posicionarPuntoInsercion_escribirNombre (interfazAutenticacion);
+        limitar_visualizacion_texto_sobre_barra_escritura (uiAutenticacion->uiAcceso->textos.auxEscribirNombre, uiAutenticacion->uiAcceso->logica.nombreUsuario, 415);
+        posicionar_punto_insercion_nombre (uiAutenticacion);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, sfEvent eventoChar)
+static bool procesar_escribir_contrasenia (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, sfEvent eventoChar)
 {
-    if (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
+    if (uiAutenticacion->uiAcceso->foco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA, eventoChar) == EXITO)
+    if (ingresar_caracter_a_buffer (uiAutenticacion->uiAcceso->logica.contrasenia, MAX_CONTRASENIA, eventoChar) == EXITO)
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
-        posicionarPuntoInsercion_escribirContrasenia (interfazAutenticacion);
+        limitar_visualizacion_texto_sobre_barra_escritura (uiAutenticacion->uiAcceso->textos.auxEscribirContrasenia, uiAutenticacion->uiAcceso->logica.contrasenia, 415);
+        posicionar_punto_insercion_contrasenia (uiAutenticacion);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_enter_intentarAutenticar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_enter_intentar_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE) &&
-        (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA))
+    if ((uiAutenticacion->uiAcceso->foco != ESCRIBIR_NOMBRE) &&
+        (uiAutenticacion->uiAcceso->foco != ESCRIBIR_CONTRASENIA))
         return EVENTO_NO_MANEJADO;
 
-    if (!comunicacion_haySolicitudEnCurso (contextoAplicacion))
-        intentarAutenticarYProcesarResultadoOperacion (contextoAplicacion, interfazAutenticacion);
+    if (!comunicacion_hay_solicitud_en_curso (contextoAplicacion))
+    {
+        ResultadoIntentoAutenticacion resultadoIntentoAutenticacion;
+
+        resultadoIntentoAutenticacion = _ui_autenticacion_intentar_autenticacion (contextoAplicacion, uiAutenticacion);
+        procesar_resultado_autenticacion (contextoAplicacion, uiAutenticacion, resultadoIntentoAutenticacion);
+    }
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_pegar_nombre_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
+    if (uiAutenticacion->uiAcceso->foco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (pegarTextoDesdePortapapelesABuffer (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO) == EXITO)
+    if (pegar_texto_desde_portapapeles_a_buffer (uiAutenticacion->uiAcceso->logica.nombreUsuario, MAX_NOMBRE_USUARIO) == EXITO)
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
-        posicionarPuntoInsercion_escribirNombre (interfazAutenticacion);
+        limitar_visualizacion_texto_sobre_barra_escritura (uiAutenticacion->uiAcceso->textos.auxEscribirNombre, uiAutenticacion->uiAcceso->logica.nombreUsuario, 415);
+        posicionar_punto_insercion_nombre (uiAutenticacion);
     }
 
     return EVENTO_MANEJADO;
 }
  
-static bool procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static bool procesar_pegar_contrasenia_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    if (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
+    if (uiAutenticacion->uiAcceso->foco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (pegarTextoDesdePortapapelesABuffer (interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA) == EXITO)
+    if (pegar_texto_desde_portapapeles_a_buffer (uiAutenticacion->uiAcceso->logica.contrasenia, MAX_CONTRASENIA) == EXITO)
     {
-        limitarVisualizacionTextoSobreBarraEscritura (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
-        posicionarPuntoInsercion_escribirContrasenia (interfazAutenticacion);
+        limitar_visualizacion_texto_sobre_barra_escritura (uiAutenticacion->uiAcceso->textos.auxEscribirContrasenia, uiAutenticacion->uiAcceso->logica.contrasenia, 415);
+        posicionar_punto_insercion_contrasenia (uiAutenticacion);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static void deshabilitarFocos (t_interfazAutenticacion *interfazAutenticacion)
+static void deshabilitar_focos (UiAutenticacion *uiAutenticacion)
 {
-    interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
-    interfazAutenticacion->estadoFoco = IA_NINGUNO;
+    uiAutenticacion->uiAcceso->foco = UI_ACCESO_NINGUNO;
+    uiAutenticacion->foco = UI_AUTENTICACION_NINGUNO;
 }
 

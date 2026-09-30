@@ -32,21 +32,21 @@
    ============================================================================================================================================ */
 
 
-void _interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos);
-void _interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos);
+void _ui_registro_inicializar_textos (UiRegistroTextos *textos);
+void _ui_registro_inicializar_elementos (UiRegistroElementos *elementos);
 
-t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes);
-t_codigoRetorno _interfazRegistro_inicializarElementos (t_interfazRegistroElementos *elementos);
+CodigoRetorno _ui_registro_crear_textos (UiRegistroTextos *textos, const UiAccesoFuentes *fuentes);
+CodigoRetorno _ui_registro_crear_elementos (UiRegistroElementos *elementos);
 
-void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro);
-void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos);
-void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos);
+void _ui_registro_configurar_interfaz (UiRegistro *uiRegistro);
+void _ui_registro_configurar_textos (UiRegistroTextos *textos);
+void _ui_registro_configurar_elementos (UiRegistroElementos *elementos);
 
-void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos);
-void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos);
+void _ui_registro_establecer_tam_y_pos_ventana_textos (UiRegistroTextos *textos);
+void _ui_registro_establecer_tam_y_pos_ventana_elementos (UiRegistroElementos *elementos);
 
-void _interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos);
-void _interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos);
+void _ui_registro_liberar_textos (UiRegistroTextos *textos);
+void _ui_registro_liberar_elementos (UiRegistroElementos *elementos);
 
 
 #endif // INTERFAZREGISTRO_RECURSOS_H_INCLUDED

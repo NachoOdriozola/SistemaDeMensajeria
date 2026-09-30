@@ -1,23 +1,23 @@
 #include "logica/utiles.h"
 
 
-int funcionHash (const void *clave)
+int aplicar_hash_id_cliente (const void *clave)
 {
     return *((int*)clave) % CANT_BUCKETS_TABLA_HASH;
 }
 
-int cmpIdCliente (const void *cliente, const void *clave)
+int cmp_id_cliente (const void *cliente, const void *clave)
 {
-    return (*((t_cliente*)cliente)).id - *((int*)clave);
+    return (*((Cliente*)cliente)).id - *((int*)clave);
 }
 
-void mostrarCliente (void *cliente)
+void mostrar_cliente (void *cliente)
 {
-    printf ("%d\n", (*((t_cliente*)cliente)).id);
+    printf ("%d\n", (*((Cliente*)cliente)).id);
 }
 
-void liberarCliente (void *cliente)
+void liberar_cliente (void *cliente)
 {
-    socket_cerrar (&(((t_cliente*)cliente)->sock));
+    socket_cerrar (&(((Cliente*)cliente)->sock));
 }
 

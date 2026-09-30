@@ -1,7 +1,7 @@
 #include "tablaHash.h"
 
 
-int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
+int tabla_hash_crear (TablaHash *tablaHash, int cantBuckets)
 {
     int i;
 
@@ -9,7 +9,7 @@ int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
         return 0;
 
     tablaHash->cantBuckets = cantBuckets;
-    tablaHash->buckets = (t_listaDoble*) malloc (cantBuckets * sizeof (t_listaDoble));
+    tablaHash->buckets = (ListaDoble*) malloc (cantBuckets * sizeof (ListaDoble));
     if (!tablaHash->buckets)
     {
         perror ("ERROR - Sin memoria.\n");
@@ -17,27 +17,27 @@ int crearTablaHash (t_tablaHash *tablaHash, int cantBuckets)
     }
 
     for (i = 0; i < cantBuckets; i++)
-        crearListaDoble (&(tablaHash->buckets[i]));
+        lista_doble_crear (&(tablaHash->buckets[i]));
 
     return 0;
 }
 
-int insertarEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), const void *dato, unsigned tamDato)
+int tabla_hash_insertar (TablaHash *tablaHash, const void *clave, int hash (const void*), const void *dato, unsigned tamDato)
 {
-    return insertarAlInicioListaDoble (&(tablaHash->buckets[funcionHash(clave)]), dato, tamDato);
+    return lista_doble_insertar_al_inicio (&(tablaHash->buckets[hash(clave)]), dato, tamDato);
 }
 
-void vincularNodoATablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), t_nodoListaDoble *nodoAVincular)
+void tabla_hash_vincular_nodo (TablaHash *tablaHash, const void *clave, int hash (const void*), NodoListaDoble *nodoAVincular)
 {
-    vincularNodoAlInicioListaDoble (&(tablaHash->buckets[funcionHash(clave)]), nodoAVincular);
+    lista_doble_vincular_nodo_al_inicio (&(tablaHash->buckets[hash(clave)]), nodoAVincular);
 }
 
-int buscarClaveUnicaEnTablaHash (t_tablaHash *tablaHash, const void *clave, int funcionHash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
+int tabla_hash_buscar_clave_unica (TablaHash *tablaHash, const void *clave, int hash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
 {
-    return buscarClaveUnicaEnListaDoble (&(tablaHash->buckets[funcionHash(clave)]), clave, returnDato, tamDato, cmp);
+    return lista_doble_buscar_clave_unica (&(tablaHash->buckets[hash(clave)]), clave, returnDato, tamDato, cmp);
 }
 
-void mapTablaHash (t_tablaHash *tablaHash, void accion (void*))
+void tabla_hash_map (TablaHash *tablaHash, void accion (void*))
 {
     int i;
 
@@ -45,15 +45,15 @@ void mapTablaHash (t_tablaHash *tablaHash, void accion (void*))
         return;
 
     for (i = 0; i < tablaHash->cantBuckets; i ++)
-        mapListaDoble (&(tablaHash->buckets[i]), accion);
+        lista_doble_map (&(tablaHash->buckets[i]), accion);
 }
 
-void eliminarTablaHashConAccion (t_tablaHash *tablaHash, void accion (void*))
+void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void*))
 {
     int i;
 
     for (i = 0; i < tablaHash->cantBuckets; i ++)
-        vaciarListaDobleConAccion (&(tablaHash->buckets[i]), accion);
+        lista_doble_vaciar_con_accion (&(tablaHash->buckets[i]), accion);
 
     free (tablaHash->buckets);
     tablaHash->buckets = NULL;

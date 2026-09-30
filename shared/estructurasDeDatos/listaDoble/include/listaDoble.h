@@ -24,7 +24,7 @@
    ============================================================================================================================================ */
 
 
-/** \struct t_nodoListaDoble
+/** \struct NodoListaDoble
  * \brief Define la estructura base de un nodo de una lista doblemente enlazada. Utiliza el s_nodoListaDoble como recursivo.
  */
 typedef struct s_nodoListaDoble
@@ -33,9 +33,9 @@ typedef struct s_nodoListaDoble
     unsigned tam;
     struct s_nodoListaDoble *sig;
     struct s_nodoListaDoble *ant;
-} t_nodoListaDoble;
+} NodoListaDoble;
 
-typedef t_nodoListaDoble *t_listaDoble;
+typedef NodoListaDoble *ListaDoble;
 
 
 /* ============================================================================================================================================
@@ -48,7 +48,7 @@ typedef t_nodoListaDoble *t_listaDoble;
  * \param pl Direccion de la lista doble.
  *
  */
-void crearListaDoble (t_listaDoble *pl);
+void lista_doble_crear (ListaDoble *pl);
 
 /** \brief Insertar al inicio de la lista doble.
  *
@@ -61,7 +61,7 @@ void crearListaDoble (t_listaDoble *pl);
  * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
-int insertarAlInicioListaDoble (t_listaDoble *pl, const void *dato, unsigned tamDato);
+int lista_doble_insertar_al_inicio (ListaDoble *pl, const void *dato, unsigned tamDato);
 
 /** \brief Vincula un nodo ya creado al inicio de la lista doble.
  *
@@ -69,7 +69,7 @@ int insertarAlInicioListaDoble (t_listaDoble *pl, const void *dato, unsigned tam
  * \param nodoAVincular Puntero al nodo a vincular.
  *
  */
-void vincularNodoAlInicioListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoAVincular);
+void lista_doble_vincular_nodo_al_inicio (ListaDoble *pl, NodoListaDoble *nodoAVincular);
 
 /** \brief Funcion map sobre la lista doble.
  *
@@ -77,7 +77,7 @@ void vincularNodoAlInicioListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoAVi
  * \param accion Funcion de accion a realizar sobre la lista doble.
  *
  */
-void mapListaDoble (t_listaDoble *pl, void accion (void*));
+void lista_doble_map (ListaDoble *pl, void accion (void*));
 
 /** \brief Funcion map con un complemento sobre la lista doble.
  *
@@ -86,7 +86,7 @@ void mapListaDoble (t_listaDoble *pl, void accion (void*));
  * \param complemento Complemento que se utilizara en la funcion de accion.
  *
  */
-void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), void *complemento);
+void lista_doble_map_con_complemento (ListaDoble *pl, void accion (void*, void*), void *complemento);
 
 /** \brief Buscar una clave unica en la lista doble.
  *
@@ -103,7 +103,7 @@ void mapListaDobleConComplemento (t_listaDoble *pl, void accion (void*, void*), 
  * \return 1 si encontro la clave, 0 en caso contrario.
  *
  */
-int buscarClaveUnicaEnListaDoble (t_listaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
+int lista_doble_buscar_clave_unica (ListaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b));
 
 /** \brief Desvincular un nodo de la lista doble.
  *
@@ -113,7 +113,7 @@ int buscarClaveUnicaEnListaDoble (t_listaDoble *pl, const void *key, void *retur
  * \param nodoADesvincular Doble puntero al nodo a desvincular.
  *
  */
-void desvincularNodoDeListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoADesvincular);
+void lista_doble_desvincular_nodo (ListaDoble *pl, NodoListaDoble *nodoADesvincular);
 
 /** \brief Eliminar el nodo, realizando una accion sobre el dato previamente, apuntado por la lista doble.
  *
@@ -127,7 +127,7 @@ void desvincularNodoDeListaDoble (t_listaDoble *pl, t_nodoListaDoble *nodoADesvi
  * \param accion Funcion de accion a realizar sobre el dato del nodo antes de eliminarlo.
  *
  */
-void eliminarNodoConAccionListaDoble (t_listaDoble *pl, void *returnDato, unsigned tamDato, void accion (void*));
+void lista_doble_eliminar_nodo_con_accion (ListaDoble *pl, void *returnDato, unsigned tamDato, void accion (void*));
 
 /** \brief Vaciar la lista doble, realizando una accion sobre los datos previamente.
  *
@@ -137,7 +137,7 @@ void eliminarNodoConAccionListaDoble (t_listaDoble *pl, void *returnDato, unsign
  * \param accion Funcion de accion a realizar sobre los datos de los nodos antes de eliminarlos.
  *
  */
-void vaciarListaDobleConAccion (t_listaDoble *pl, void accion (void *dato));
+void lista_doble_vaciar_con_accion (ListaDoble *pl, void accion (void *dato));
 
 
 #endif // LISTADOBLE_H_INCLUDED

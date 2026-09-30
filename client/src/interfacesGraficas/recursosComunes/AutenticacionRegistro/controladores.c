@@ -6,13 +6,13 @@
    ============================================================================================================================================ */
 
 
-static void resetearInterfaz (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+static void resetear_interfaz (UiAcceso *uiAcceso);
 
-static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
-static void activarInterfazAutenticacion_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
+static void configurar_textos_ui_autenticacion (UiAccesoTextos *textos);
+static void configurar_elementos_ui_autenticacion (UiAccesoElementos *elementos);
 
-static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos);
-static void activarInterfazRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos);
+static void configurar_textos_ui_registro (UiAccesoTextos *textos);
+static void configurar_elementos_ui_registro (UiAccesoElementos *elementos);
 
 
 /* ============================================================================================================================================
@@ -20,30 +20,30 @@ static void activarInterfazRegistro_configurarElementos (t_recursosComunesAutent
    ============================================================================================================================================ */
 
 
-void _recursosComunesAutenticacionRegistro_activarInterfazAutenticacion (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _ui_acceso_activar_interfaz_autenticacion (UiAcceso *uiAcceso)
 {
     // --------------- RESETEAR INTERFAZ ---------------
-    resetearInterfaz (recursosComunesAutenticacionRegistro);
+    resetear_interfaz (uiAcceso);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTO
-    activarInterfazAutenticacion_configurarTextos (&(recursosComunesAutenticacionRegistro->textos));
+    configurar_textos_ui_autenticacion (&(uiAcceso->textos));
 
     // ELEMENTOS
-    activarInterfazAutenticacion_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    configurar_elementos_ui_autenticacion (&(uiAcceso->elementos));
 }
 
-void _recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+void _ui_acceso_activar_interfaz_registro (UiAcceso *uiAcceso)
 {
     // --------------- RESETEAR INTERFAZ ---------------
-    resetearInterfaz (recursosComunesAutenticacionRegistro);
+    resetear_interfaz (uiAcceso);
 
     // --------------- CONFIGURAR RECURSOS GRAFICOS ---------------
     // TEXTO
-    activarInterfazRegistro_configurarTextos (&(recursosComunesAutenticacionRegistro->textos));
+    configurar_textos_ui_registro (&(uiAcceso->textos));
 
     // ELEMENTOS
-    activarInterfazRegistro_configurarElementos (&(recursosComunesAutenticacionRegistro->elementos));
+    configurar_elementos_ui_registro (&(uiAcceso->elementos));
 }
 
 
@@ -52,21 +52,21 @@ void _recursosComunesAutenticacionRegistro_activarInterfazRegistro (t_recursosCo
    ============================================================================================================================================ */
 
 
-static void resetearInterfaz (t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro)
+static void resetear_interfaz (UiAcceso *uiAcceso)
 {
     // Deshabilitar foco
-    recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
+    uiAcceso->foco = UI_ACCESO_NINGUNO;
 
     // Setear cadenas vacias
-    *(recursosComunesAutenticacionRegistro->logica.contrasenia) = '\0';
-    *(recursosComunesAutenticacionRegistro->logica.nombreUsuario) = '\0';
+    *(uiAcceso->logica.contrasenia) = '\0';
+    *(uiAcceso->logica.nombreUsuario) = '\0';
 
     // Resetear el punto de insecion
-    resetearPuntoInsercion (&(recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    punto_insercion_resetear (&(uiAcceso->logica.puntoInsercion));
 }
 
 
-static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+static void configurar_textos_ui_autenticacion (UiAccesoTextos *textos)
 {
     // auxEscribirContrasenia
     sfText_setString (textos->auxEscribirContrasenia, "");
@@ -80,12 +80,12 @@ static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAute
 
     // botonIngresar
     sfText_setString (textos->botonIngresar, "INGRESAR");
-    centrarTextoEnArea (textos->botonIngresar, 180, 405, 140, 35);
+    centrar_texto_en_area (textos->botonIngresar, 180, 405, 140, 35);
 
     // cambiarInterfaz
     uint32_t bufferCambiarInterfaz [] = {0x00bf, 'N', 'o', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'R', 'e', 'g', 'i', 's', 't', 'r', 'a', 't', 'e', ' ', 'a', 'c', 0x00e1, 0};
     sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
-    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+    centrar_texto_en_area (textos->cambiarInterfaz, 0, 530, 500, 90);
 
     // feedbackUsuario
     sfText_setString (textos->feedbackUsuario, "");
@@ -102,7 +102,7 @@ static void activarInterfazAutenticacion_configurarTextos (t_recursosComunesAute
     sfText_setPosition (textos->tituloInterfaz, (sfVector2f){120, 25});
 }
 
-static void activarInterfazAutenticacion_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+static void configurar_elementos_ui_autenticacion (UiAccesoElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){35, 315});
@@ -119,7 +119,7 @@ static void activarInterfazAutenticacion_configurarElementos (t_recursosComunesA
 }
 
 
-static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutenticacionRegistroTextos *textos)
+static void configurar_textos_ui_registro (UiAccesoTextos *textos)
 {
     // auxEscribirContrasenia
     sfText_setString (textos->auxEscribirContrasenia, "");
@@ -131,12 +131,12 @@ static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutentica
 
     // botonIngresar
     sfText_setString (textos->botonIngresar, "REGISTRAR");
-    centrarTextoEnArea (textos->botonIngresar, 180, 452, 140, 35);
+    centrar_texto_en_area (textos->botonIngresar, 180, 452, 140, 35);
 
     // cambiarInterfaz
     uint32_t bufferCambiarInterfaz [] = {0x00bf, 'Y', 'a', ' ', 't', 'e', 'n', 0x00e9, 's', ' ', 'c', 'u', 'e', 'n', 't', 'a', '?', ' ', 'I', 'n', 'i', 'c', 'i', 0x00e1, ' ', 's', 'e', 's', 'i', 0x00f3, 'n', ' ', 'a', 'c', 0x00e1, 0};
     sfText_setUnicodeString (textos->cambiarInterfaz, bufferCambiarInterfaz);
-    centrarTextoEnArea (textos->cambiarInterfaz, 0, 530, 500, 90);
+    centrar_texto_en_area (textos->cambiarInterfaz, 0, 530, 500, 90);
 
     // feedbackUsuario
     sfText_setString (textos->feedbackUsuario, "");
@@ -152,7 +152,7 @@ static void activarInterfazRegistro_configurarTextos (t_recursosComunesAutentica
     sfText_setPosition (textos->tituloInterfaz, (sfVector2f){130, 25});
 }
 
-static void activarInterfazRegistro_configurarElementos (t_recursosComunesAutenticacionRegistroElementos *elementos)
+static void configurar_elementos_ui_registro (UiAccesoElementos *elementos)
 {
     // barraEscribirContrasenia
     sfRectangleShape_setPosition (elementos->barraEscribirContrasenia, (sfVector2f){35, 295});

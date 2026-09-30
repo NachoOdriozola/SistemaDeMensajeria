@@ -6,9 +6,9 @@
    ============================================================================================================================================ */
 
 
-static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados);
-void recibirSolicitudesEnListaDoble (t_listaDoble *listaDoble, t_cola *solicitudes);
-void recibirSolicitudesEnTablaHash (t_tablaHash *tablaHash, t_cola *solicitudes);
+static void procesar_nuevo_cliente (Cliente *nuevoCliente, ListaDoble *clientesNoAutenticados);
+void recibir_solicitudes_lista_doble (ListaDoble *listaDoble, Cola *solicitudes);
+void recibir_solicitudes_tabla_hash (TablaHash *tablaHash, Cola *solicitudes);
 
 
 /* ============================================================================================================================================
@@ -16,35 +16,35 @@ void recibirSolicitudesEnTablaHash (t_tablaHash *tablaHash, t_cola *solicitudes)
    ============================================================================================================================================ */
 
 
-void aceptarNuevosClientes (t_socket sockServidor, t_listaDoble *clientesNoAutenticados)
+void aceptar_nuevos_clientes (Socket sockServidor, ListaDoble *clientesNoAutenticados)
 {
-    t_cliente nuevoCliente;
+    Cliente nuevoCliente;
     
-    nuevoCliente.sock = socket_aceptarNuevoCliente (sockServidor);
+    nuevoCliente.sock = socket_aceptar_nuevo_cliente (sockServidor);
     if (nuevoCliente.sock != SOCKET_INVALIDO)
-        procesarNuevoCliente (&nuevoCliente, clientesNoAutenticados);
+        procesar_nuevo_cliente (&nuevoCliente, clientesNoAutenticados);
 }
 
-void recibirSolicitudes (t_contextoServidor *contextoServidor)
+void recibir_solicitudes (ContextoServidor *contextoServidor)
 {
-    recibirSolicitudesEnListaDoble (&(contextoServidor->clientesNoAutenticados), &(contextoServidor->solicitudes));
-    recibirSolicitudesEnTablaHash (&(contextoServidor->clientes), &(contextoServidor->solicitudes));
+    recibir_solicitudes_lista_doble (&(contextoServidor->clientesNoAutenticados), &(contextoServidor->solicitudes));
+    recibir_solicitudes_tabla_hash (&(contextoServidor->clientes), &(contextoServidor->solicitudes));
 }
 
-t_resultadoEnvio enviarRespuestaACliente (t_contextoServidor *contextoServidor, t_respuestaCliente *respuestaCliente)
+ResultadoEnvio enviar_respuesta_cliente (ContextoServidor *contextoServidor, RespuestaCliente *respuestaCliente)
 {
-    t_resultadoEnvio resultadoEnvio;
+    ResultadoEnvio resultadoEnvio;
 
-    resultadoEnvio = socket_enviarTodo (respuestaCliente->clienteAResponder->sock, respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
+    resultadoEnvio = socket_enviar_todo (respuestaCliente->clienteAResponder->sock, respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
     if (resultadoEnvio == ENVIO_BUFFER_LLENO)
-        insertarAlInicioListaSimple (&(contextoServidor->respuestasPendientes), respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
+        lista_simple_insertar_al_inicio (&(contextoServidor->respuestasPendientes), respuestaCliente->datosAEnviar, respuestaCliente->tamDatosAEnviar);
 
     return resultadoEnvio;
 }
 
-t_resultadoEnvio intentarEnviarRespuestaPendienteACliente (t_respuestaCliente *respuestaPendienteACliente)
+ResultadoEnvio intentar_enviar_respuesta_pendiente_cliente (RespuestaCliente *respuestaPendienteCliente)
 {
-    return (socket_enviarTodo (respuestaPendienteACliente->clienteAResponder->sock, respuestaPendienteACliente->datosAEnviar, respuestaPendienteACliente->tamDatosAEnviar));
+    return (socket_enviar_todo (respuestaPendienteCliente->clienteAResponder->sock, respuestaPendienteCliente->datosAEnviar, respuestaPendienteCliente->tamDatosAEnviar));
 }
 
 
@@ -53,49 +53,49 @@ t_resultadoEnvio intentarEnviarRespuestaPendienteACliente (t_respuestaCliente *r
    ============================================================================================================================================ */
 
 
-static void procesarNuevoCliente (t_cliente *nuevoCliente, t_listaDoble *clientesNoAutenticados)
+static void procesar_nuevo_cliente (Cliente *nuevoCliente, ListaDoble *clientesNoAutenticados)
 {
     printf ("Nuevo cliente conectado.\n\n");
-    socket_establecerModoNoBloqueante (&(nuevoCliente->sock));
+    socket_establecer_modo_no_bloqueante (&(nuevoCliente->sock));
     nuevoCliente->id = ID_INVALIDO; // Le asigna una ID invalida hasta que se autentifique.
 
-    insertarAlInicioListaDoble (clientesNoAutenticados, nuevoCliente, sizeof (t_cliente));
+    lista_doble_insertar_al_inicio (clientesNoAutenticados, nuevoCliente, sizeof (Cliente));
 }
 
 
-static void desconectarCliente (t_listaDoble *listaDoble, int idCliente)
+static void desconectar_cliente (ListaDoble *listaDoble, int idCliente)
 {
     printf ("Cliente ID: %d desconectado.\n\n", idCliente);
-    eliminarNodoConAccionListaDoble (listaDoble, NULL, 0, liberarCliente); // Elimina el cliente desconectado de la lista simple.
+    lista_doble_eliminar_nodo_con_accion (listaDoble, NULL, 0, liberar_cliente); // Elimina el cliente desconectado de la lista simple.
 }
 
-void recibirSolicitudesEnListaDoble (t_listaDoble *listaDoble, t_cola *solicitudes)
+void recibir_solicitudes_lista_doble (ListaDoble *listaDoble, Cola *solicitudes)
 {
-    t_cliente *cliente;
-    t_solicitudCliente solicitudCliente;
-    t_resultadoRecepcion resultadoRecepcion;
+    Cliente *cliente;
+    SolicitudCliente solicitudCliente;
+    ResultadoRecepcion resultadoRecepcion;
 
     while (*listaDoble != NULL) // Mientras haya clientes en la lista doble.
     {
-        cliente = (t_cliente*)((*listaDoble)->dato);
-        resultadoRecepcion = socket_recibirTodo (cliente->sock, solicitudCliente.solicitud);
+        cliente = (Cliente*)((*listaDoble)->dato);
+        resultadoRecepcion = socket_recibir_todo (cliente->sock, solicitudCliente.solicitud);
         if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
         {
             solicitudCliente.clienteAProcesar = *listaDoble;
-            insertarACola (solicitudes, &solicitudCliente, sizeof (t_solicitudCliente));
+            cola_insertar (solicitudes, &solicitudCliente, sizeof (SolicitudCliente));
         }
         
         if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
-            desconectarCliente (listaDoble, cliente->id);
+            desconectar_cliente (listaDoble, cliente->id);
         else
             listaDoble = &((*listaDoble)->sig);
     }
 }
 
-void recibirSolicitudesEnTablaHash (t_tablaHash *tablaHash, t_cola *solicitudes)
+void recibir_solicitudes_tabla_hash (TablaHash *tablaHash, Cola *solicitudes)
 {
     int i;
 
     for (i = 0; i < tablaHash->cantBuckets; i++) // Por cada bucket de la tabla hash.
-        recibirSolicitudesEnListaDoble (&(tablaHash->buckets[i]), solicitudes); // Recibir solicitudes en su lista doble.
+        recibir_solicitudes_lista_doble (&(tablaHash->buckets[i]), solicitudes); // Recibir solicitudes en su lista doble.
 }

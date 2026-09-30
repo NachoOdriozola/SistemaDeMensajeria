@@ -28,26 +28,26 @@
    ============================================================================================================================================ */
 
 
-/** \struct t_interfazContactosVistas
+/** \struct UiContactosVistas
  * \brief Contiene las vistas de la interfaz de contactos.
  */
 typedef struct
 {
     sfView *ui;                                                     /**< Vista fija que muestra la interfaz del usuario. */
     sfView *mensajes;                                         /**< Vista movil que navega sobre el historial de mensajes. */
-} t_interfazContactosVistas;
+} UiContactosVistas;
 
 /**
- * \struct t_interfazContactosFuentes
+ * \struct UiContactosFuentes
  * \brief  Contiene las fuentes graficas de textos de la interfaz de contactos.
  */
 typedef struct
 {
     sfFont *ui;                                                         /**< Fuente utilizada en textos de la interfaz grafica. */
     sfFont *cuerpo;                                                /**< Fuente utilizada en mensajes y areas en donde el usuario escribe texto. */
-} t_interfazContactosFuentes;
+} UiContactosFuentes;
 
-/** \struct t_interfazContactosTextos
+/** \struct UiContactosTextos
  * \brief Contiene todos los textos graficos de la interfaz de contactos.
  */
 typedef struct
@@ -55,13 +55,13 @@ typedef struct
     sfText *auxContactoSeleccionado;                     /**< Nombre del contacto que el usuario selecciono para comunicar. */
     sfText *auxEscribirMensaje;                               /**< Muestra el mensaje que escribe el usuario. */
     sfText *botonEnviar;                                          /**< Texto encontrado dentro del boton para enviar mensaje. */
-    sfText *feedbackUsuario;                                  /**< Texto que muestra informacion util sobre el estado de los procedimientos que se encuentra realizando la aplicacion. */
+    sfText *feedbackUsuario;                                  /**< Texto que muestra informacion util sobre el EstadoSolicitud de los procedimientos que se encuentra realizando la aplicacion. */
     sfText *informacionSeleccionChat;                   /**< Texto informativo que le indica al usuario que debe seleccionar un chat con un usuario. */
     sfText *nombreUsuario;                                     /**< Muestra el nombre del usuario. */
     sfText *tituloContactos;                                     /**< Titulo que muestra los contactos del usuario. */
-} t_interfazContactosTextos;
+} UiContactosTextos;
 
-/** \struct t_interfazContactosElementos
+/** \struct UiContactosElementos
  * \brief Contiene todos los elementos graficos de la interfaz de contactos.
  */
 typedef struct
@@ -77,63 +77,63 @@ typedef struct
     sfRectangleShape *separacionTitulo;                       /**< Barra decorativa que separa el panel del titulo de contactos. */
     sfRectangleShape *panelInterfaz;                            /**< Panel principal de la interfaz ubicado a la izquierda de la ventana. */
     sfRectangleShape *puntoInsercion;                         /**< Punto de insercion para escritura de texto. */
-} t_interfazContactosElementos;
+} UiContactosElementos;
 
-/** \enum t_interfazContactosFoco
- * \brief Contiene los estados de foco de la interfaz de contactos.
+/** \enum UiContactosFoco
+ * \brief Contiene los EstadoSolicituds de foco de la interfaz de contactos.
  */
 typedef enum
 {
     AREA_MENSAJES,                      /**< Indicar si el area de mensajes fue seleccionado/deseleccionado por el usuario. */
     ESCRIBIR_MENSAJE,                  /**< Habilitar/deshabilitar el ingreso de texto por parte del usuario para escribir un mensaje. */
-    ICT_NINGUNO                           /**< Ningun foco establecido. */
-} t_interfazContactosFoco;
+    UI_CONTACTOS_NINGUNO                           /**< Ningun foco establecido. */
+} UiContactosFoco;
 
 /**
- * \enum t_origenMensaje
+ * \enum OrigenMensaje
  * \brief Indica el origen de un mensaje dentro de la aplicacion.
  */
 typedef enum
 {
     MENSAJE_PROPIO,                 /**< Mensaje enviado por el usuario local. */
     MENSAJE_REMOTO                /**< Mensaje recibido por otro usuario. */
-} t_origenMensaje;
+} OrigenMensaje;
 
 /**
- * \struct t_contextoMensajes
- * \brief Contexto sobre el manejo y el estado de los mensajes.
+ * \struct ContextoMensajes
+ * \brief Contexto sobre el manejo y el EstadoSolicitud de los mensajes.
  */
 typedef struct
 {
-    t_listaDoble mensajes;                                   /**< Lista doble que contiene los mensajes sfText. */
+    ListaDoble mensajes;                                   /**< Lista doble que contiene los mensajes sfText. */
     char mensaje [MAX_MENSAJE];                    /**< Cadena donde se guarda el mensaje escrito por el usuario. */
-    t_nodoListaDoble *ultimoMensaje;               /**< Puntero que apunta al ultimo mensaje de la lista */
-} t_contextoMensajes;
+    NodoListaDoble *ultimoMensaje;               /**< Puntero que apunta al ultimo mensaje de la lista */
+} ContextoMensajes;
 
-/** \enum t_interfazContactosLogica
+/** \enum UiContactosLogica
  * \brief Contiene la logica de la interfaz de contactos.
  */
 typedef struct
 {
-    t_contextoMensajes contextoMensajes;
-    t_puntoInsercion puntoInsercion;
-    int idUsuarioDelChatSeleccionado;                                                               /**< ID del usuario del chat seleccionado para comunicarse. */
+    ContextoMensajes contextoMensajes;
+    PuntoInsercion puntoInsercion;
+    int idUsuarioChatSeleccionado;                                                               /**< ID del usuario del chat seleccionado para comunicarse. */
     char nombreUsuarioDelChatSeleccionado [MAX_NOMBRE_USUARIO];      /**< Nombre del usuario del chat seleccionado para comunicarse. */
-    t_textoDeCarga textoDeCarga;
-} t_interfazContactosLogica;
+    TextoDeCarga textoDeCarga;
+} UiContactosLogica;
 
-/** \struct t_interfazContactos
+/** \struct UiContactos
  * \brief Estructura base que contiene la logica y une los recursos graficos de la interfaz de contactos.
  */
 typedef struct
 {
-    t_interfazContactosFuentes fuentes;
-    t_interfazContactosTextos textos;
-    t_interfazContactosElementos elementos;
-    t_interfazContactosVistas vistas;
-    t_interfazContactosFoco estadoFoco;
-    t_interfazContactosLogica logica;
-} t_interfazContactos;
+    UiContactosFuentes fuentes;
+    UiContactosTextos textos;
+    UiContactosElementos elementos;
+    UiContactosVistas vistas;
+    UiContactosFoco foco;
+    UiContactosLogica logica;
+} UiContactos;
 
 
 #endif // INTERFAZCONTACTOS_ESTRUCTURAS_H_INCLUDED

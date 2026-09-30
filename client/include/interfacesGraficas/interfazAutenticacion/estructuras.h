@@ -24,41 +24,41 @@
    ESTRUCTURAS
    ============================================================================================================================================ */
 
-   
-/** \struct t_interfazAutenticacionTextos
+
+/** \struct UiAutenticacionTextos
  * \brief Contiene todos los textos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
    sfText *aux;                                 /**< Declaracion de variable unicamente para que sea posible la creacion de la estructura. */
-} t_interfazAutenticacionTextos;
+} UiAutenticacionTextos;
 
-/** \struct t_interfazAutenticacionElementos
+/** \struct UiAutenticacionElementos
  * \brief Contiene todos los elementos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
    sfRectangleShape *aux;                     /**< Declaracion de variable unicamente para que sea posible la creacion de la estructura. */
-} t_interfazAutenticacionElementos;
+} UiAutenticacionElementos;
 
-/** \enum t_interfazAutenticacionFoco
- * \brief Contiene todos los estados de foco de la interfaz de autenticacion.
+/** \enum UiAutenticacionFoco
+ * \brief Contiene todos los EstadoSolicituds de foco de la interfaz de autenticacion.
  */
 typedef enum
 {
-   IA_NINGUNO                                /**< Ningun foco establecido. */
-} t_interfazAutenticacionFoco;
+   UI_AUTENTICACION_NINGUNO                                /**< Ningun foco establecido. */
+} UiAutenticacionFoco;
 
-/** \struct t_interfazAutenticacion
+/** \struct UiAutenticacion
  * \brief Estructura base que contiene la logica y une los recursos graficos de la interfaz de autenticacion.
  */
 typedef struct
 {
-   t_interfazAutenticacionTextos textos;
-   t_interfazAutenticacionElementos elementos;
-   t_interfazAutenticacionFoco estadoFoco;
-   t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro;
-} t_interfazAutenticacion;
+   UiAutenticacionTextos textos;
+   UiAutenticacionElementos elementos;
+   UiAutenticacionFoco foco;
+   UiAcceso *uiAcceso;
+} UiAutenticacion;
 
 
 #endif // INTERFAZAUTENTICACION_ESTRUCTURAS_H_INCLUDED

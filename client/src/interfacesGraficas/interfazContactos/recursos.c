@@ -1,13 +1,13 @@
 #include "interfacesGraficas/interfazContactos/recursos.h"
 
 
-void _interfazContactos_inicializarValoresNulosFuentes (t_interfazContactosFuentes *fuentes)
+void _ui_contactos_inicializar_fuentes (UiContactosFuentes *fuentes)
 {
     fuentes->cuerpo = NULL;
     fuentes->ui = NULL;
 }
 
-void _interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos *textos)
+void _ui_contactos_inicializar_textos (UiContactosTextos *textos)
 {
     textos->auxContactoSeleccionado = NULL;
     textos->auxEscribirMensaje = NULL;
@@ -18,7 +18,7 @@ void _interfazContactos_inicializarValoresNulosTextos (t_interfazContactosTextos
     textos->tituloContactos = NULL;
 }
 
-void _interfazContactos_inicializarValoresNulosElementos (t_interfazContactosElementos *elementos)
+void _ui_contactos_inicializar_elementos (UiContactosElementos *elementos)
 {
     elementos->areaContactoSeleccionado = NULL;
     elementos->areaMensajes = NULL;
@@ -33,14 +33,14 @@ void _interfazContactos_inicializarValoresNulosElementos (t_interfazContactosEle
     elementos->separacionTitulo = NULL;
 }
 
-void _interfazContactos_inicializarValoresNulosVistas (t_interfazContactosVistas *vistas)
+void _ui_contactos_inicializar_vistas (UiContactosVistas *vistas)
 {
     vistas->mensajes = NULL;
     vistas->ui = NULL;
 }
 
 
-t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuentes *fuentes)
+CodigoRetorno _ui_contactos_crear_fuentes (UiContactosFuentes *fuentes)
 {
     fuentes->ui = sfFont_createFromFile ("assets/fonts/fuenteUI.ttf");
     if (!fuentes->ui)
@@ -59,7 +59,7 @@ t_codigoRetorno _interfazContactos_inicializarFuentes (t_interfazContactosFuente
     return EXITO;
 }
 
-t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos *textos, const t_interfazContactosFuentes *fuentes)
+CodigoRetorno _ui_contactos_crear_textos (UiContactosTextos *textos, const UiContactosFuentes *fuentes)
 {
     textos->auxContactoSeleccionado = sfText_create (fuentes->cuerpo);
     if (!textos->auxContactoSeleccionado)
@@ -113,7 +113,7 @@ t_codigoRetorno _interfazContactos_inicializarTextos (t_interfazContactosTextos 
     return EXITO;
 }
 
-t_codigoRetorno _interfazContactos_inicializarElementos (t_interfazContactosElementos *elementos)
+CodigoRetorno _ui_contactos_crear_elementos (UiContactosElementos *elementos)
 {
     elementos->areaContactoSeleccionado = sfRectangleShape_create ();
     if (!elementos->areaContactoSeleccionado)
@@ -195,7 +195,7 @@ t_codigoRetorno _interfazContactos_inicializarElementos (t_interfazContactosElem
     return EXITO;
 }
 
-t_codigoRetorno _interfazContactos_inicializarVistas (t_interfazContactosVistas *vistas)
+CodigoRetorno _ui_contactos_crear_vistas (UiContactosVistas *vistas)
 {
     vistas->ui = sfView_create ();
     if (!vistas->ui)
@@ -215,23 +215,23 @@ t_codigoRetorno _interfazContactos_inicializarVistas (t_interfazContactosVistas 
 }
 
 
-void _interfazContactos_configurarInterfaz (t_interfazContactos *interfazContactos)
+void _ui_contactos_configurar_interfaz (UiContactos *uiContactos)
 {
     // Establecer un id invalido al usuario del chat seleccionado
-    interfazContactos->logica.idUsuarioDelChatSeleccionado = ID_INVALIDO;
+    uiContactos->logica.idUsuarioChatSeleccionado = ID_INVALIDO;
 
     // Setear cadena vacia
-    *(interfazContactos->logica.nombreUsuarioDelChatSeleccionado) = '\0';
-    *(interfazContactos->logica.contextoMensajes.mensaje) = '\0';
+    *(uiContactos->logica.nombreUsuarioDelChatSeleccionado) = '\0';
+    *(uiContactos->logica.contextoMensajes.mensaje) = '\0';
 
     // Deshabilitar foco
-    interfazContactos->estadoFoco = ICT_NINGUNO;
+    uiContactos->foco = UI_CONTACTOS_NINGUNO;
 
     // Inicializar punto de insercion
-    resetearPuntoInsercion (&(interfazContactos->logica.puntoInsercion));
+    punto_insercion_resetear (&(uiContactos->logica.puntoInsercion));
 }
 
-void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos)
+void _ui_contactos_configurar_textos (UiContactosTextos *textos)
 {
     // auxContactoSeleccionado
     sfText_setFillColor (textos->auxContactoSeleccionado, sfColor_fromRGB (94, 91, 87));
@@ -258,7 +258,7 @@ void _interfazContactos_configurarTextos (t_interfazContactosTextos *textos)
     sfText_setFillColor (textos->tituloContactos, sfColor_fromRGB (43, 43, 43));
 }
 
-void _interfazContactos_configurarElementos (t_interfazContactosElementos *elementos)
+void _ui_contactos_configurar_elementos (UiContactosElementos *elementos)
 {
     // areaContactoSeleccionado
     sfRectangleShape_setFillColor (elementos->areaContactoSeleccionado, sfColor_fromRGBA (244, 241, 236, 0));
@@ -304,11 +304,11 @@ void _interfazContactos_configurarElementos (t_interfazContactosElementos *eleme
 }
 
 
-void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
+void _ui_contactos_establecer_tam_y_pos_ventana_textos (UiContactosTextos *textos)
 {
     // auxContactoSeleccionado
     sfText_setCharacterSize (textos->auxContactoSeleccionado, 24);
-    centrarTextoEnArea (textos->auxContactoSeleccionado, 852, 25, 600, 40);
+    centrar_texto_en_area (textos->auxContactoSeleccionado, 852, 25, 600, 40);
     
     // auxEscribirMensaje
     sfText_setPosition (textos->auxEscribirMensaje, (sfVector2f){449, 912});
@@ -316,7 +316,7 @@ void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
 
     // botonEnviar
     sfText_setCharacterSize (textos->botonEnviar, 22);
-    centrarTextoEnArea (textos->botonEnviar, 1747, 909, 115, 35);
+    centrar_texto_en_area (textos->botonEnviar, 1747, 909, 115, 35);
 
     // feedbackUsuario
     sfText_setCharacterSize (textos->feedbackUsuario, 22);
@@ -324,14 +324,14 @@ void _interfazContactos_tamYPosVentanaTextos (t_interfazContactosTextos *textos)
 
     // informacionSeleccionChat
     sfText_setCharacterSize (textos->informacionSeleccionChat, 30);
-    centrarTextoEnArea (textos->informacionSeleccionChat, 442, 90, 1420, 780);
+    centrar_texto_en_area (textos->informacionSeleccionChat, 442, 90, 1420, 780);
 
     // tituloContactos
     sfText_setCharacterSize (textos->tituloContactos, 36);
-    centrarTextoEnArea (textos->tituloContactos, 0, 0, 340, 120);
+    centrar_texto_en_area (textos->tituloContactos, 0, 0, 340, 120);
 }
 
-void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *elementos)
+void _ui_contactos_establecer_tam_y_pos_ventana_elementos (UiContactosElementos *elementos)
 {
     // areaContactoSeleccionado
     sfRectangleShape_setPosition (elementos->areaContactoSeleccionado, (sfVector2f){852, 25});
@@ -385,7 +385,7 @@ void _interfazContactos_tamYPosVentanaElementos (t_interfazContactosElementos *e
     sfRectangleShape_setSize (elementos->puntoInsercion, (sfVector2f){28, 2});
 }
 
-void _interfazContactos_tamVistas (t_interfazContactosVistas *vistas)
+void _ui_contactos_establecer_tam_vistas (UiContactosVistas *vistas)
 {
     // UI
     sfView_setSize (vistas->ui, (sfVector2f){ANCHO_LOGICO_VENTANA, ALTO_LOGICO_VENTANA});
@@ -398,13 +398,13 @@ void _interfazContactos_tamVistas (t_interfazContactosVistas *vistas)
 }
 
 
-void _interfazContactos_liberarFuentes (t_interfazContactosFuentes *fuentes)
+void _ui_contactos_liberar_fuentes (UiContactosFuentes *fuentes)
 {
     DESTRUCTOR_SEGURO_FUENTE (fuentes->cuerpo);
     DESTRUCTOR_SEGURO_FUENTE (fuentes->ui);
 }
 
-void _interfazContactos_liberarTextos (t_interfazContactosTextos *textos)
+void _ui_contactos_liberar_textos (UiContactosTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxContactoSeleccionado);
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirMensaje);
@@ -415,7 +415,7 @@ void _interfazContactos_liberarTextos (t_interfazContactosTextos *textos)
     DESTRUCTOR_SEGURO_TEXTO (textos->tituloContactos);
 }
 
-void _interfazContactos_liberarElementos (t_interfazContactosElementos *elementos)
+void _ui_contactos_liberar_elementos (UiContactosElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->areaContactoSeleccionado);
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->areaMensajes);
@@ -430,7 +430,7 @@ void _interfazContactos_liberarElementos (t_interfazContactosElementos *elemento
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->separacionTitulo);
 }
 
-void _interfazContactos_liberarVistas (t_interfazContactosVistas *vistas)
+void _ui_contactos_liberar_vistas (UiContactosVistas *vistas)
 {
     DESTRUCTOR_SEGURO_VISTA (vistas->mensajes);
     DESTRUCTOR_SEGURO_VISTA (vistas->ui);

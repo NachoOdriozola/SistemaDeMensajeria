@@ -6,13 +6,13 @@
    ============================================================================================================================================ */
 
 
-static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
-static void puntoInsercion (t_interfazAutenticacion *interfazAutenticacion);
-static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+static void recibir_y_procesar_respuesta_servidor (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
+static void punto_insercion (UiAutenticacion *uiAutenticacion);
+static void texto_de_carga (const ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
-static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion);
+static void mostrar_feedback_error_conexion (UiAutenticacion *uiAutenticacion);
 
-static void solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta);
+static void procesar_respuesta_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, const char *respuesta);
 
 
 /* ============================================================================================================================================
@@ -20,11 +20,11 @@ static void solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *cont
    ============================================================================================================================================ */
 
 
-void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+void _ui_autenticacion_actualizar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
-    recibirYProcesarRespuestaServidor (contextoAplicacion, interfazAutenticacion);
-    puntoInsercion (interfazAutenticacion);
-    textoDeCarga (contextoAplicacion, interfazAutenticacion);
+    recibir_y_procesar_respuesta_servidor (contextoAplicacion, uiAutenticacion);
+    punto_insercion (uiAutenticacion);
+    texto_de_carga (contextoAplicacion, uiAutenticacion);
 }
 
 
@@ -33,64 +33,64 @@ void _interfazAutenticacion_actualizar (t_contextoAplicacion *contextoAplicacion
    ============================================================================================================================================ */
 
 
-static void recibirYProcesarRespuestaServidor (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static void recibir_y_procesar_respuesta_servidor (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
     char bufferRespuesta [MAX_BUFFER_RESPUESTA];
-    t_resultadoRecepcion resultadoRecepcion;
+    ResultadoRecepcion resultadoRecepcion;
 
-    resultadoRecepcion = recibirRespuesta (contextoAplicacion->sock, bufferRespuesta);
+    resultadoRecepcion = comunicacion_recibir_respuesta (contextoAplicacion->sock, bufferRespuesta);
 
     if (resultadoRecepcion == RECEPCION_RECIBIO_DATOS)
     {
-        switch (comunicacion_obtenerTipoRespuesta (bufferRespuesta))
+        switch (comunicacion_obtener_tipo_respuesta (bufferRespuesta))
         {
             case RESPUESTA_SOLICITUD_AUTENTICACION:
-                solicitudAutenticacion_procesarRespuesta (contextoAplicacion, interfazAutenticacion, bufferRespuesta);
+                procesar_respuesta_autenticacion (contextoAplicacion, uiAutenticacion, bufferRespuesta);
                 break;
 
             default:
-                log_warning_respuestaRecibidaDeOtraInterfaz ();
+                log_warning_respuesta_recibida_otra_ui ();
                 break;
         }
     }
 
     if (resultadoRecepcion == RECEPCION_ERROR_CONEXION)
     {
-        _interfazAutenticacion_manejarError_conexion (contextoAplicacion);
-        mostrar_feedback_errorConexion (interfazAutenticacion);
+        _ui_autenticacion_manejar_error_conexion (contextoAplicacion);
+        mostrar_feedback_error_conexion (uiAutenticacion);
     }
 }
 
-static void puntoInsercion (t_interfazAutenticacion *interfazAutenticacion)
+static void punto_insercion (UiAutenticacion *uiAutenticacion)
 {
-    if ((interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_NOMBRE) ||
-        (interfazAutenticacion->recursosComunesAutenticacionRegistro->estadoFoco == ESCRIBIR_CONTRASENIA))
-        actualizarPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
-    else if (puntoInsercionHabilitado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion)))
-        resetearPuntoInsercion (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.puntoInsercion));
+    if ((uiAutenticacion->uiAcceso->foco == ESCRIBIR_NOMBRE) ||
+        (uiAutenticacion->uiAcceso->foco == ESCRIBIR_CONTRASENIA))
+        punto_insercion_actualizar (&(uiAutenticacion->uiAcceso->logica.puntoInsercion));
+    else if (punto_insercion_esta_habilitado (&(uiAutenticacion->uiAcceso->logica.puntoInsercion)))
+        punto_insercion_resetear (&(uiAutenticacion->uiAcceso->logica.puntoInsercion));
 }
 
-static void textoDeCarga (const t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion)
+static void texto_de_carga (const ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion)
 {
     char texto [] = "Cargando";
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
     {
-        if (textoDeCarga_actualizar (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.textoDeCarga)))
+        if (texto_de_carga_actualizar (&(uiAutenticacion->uiAcceso->logica.textoDeCarga)))
         {
-            textoDeCarga_modificarTextoSegunEstado (&(interfazAutenticacion->recursosComunesAutenticacionRegistro->logica.textoDeCarga), texto);
-            sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, texto);
-            centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+            texto_de_carga_modificar_texto (&(uiAutenticacion->uiAcceso->logica.textoDeCarga), texto);
+            sfText_setString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, texto);
+            centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
         }
     }
 }
 
 
-static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_error_conexion (UiAutenticacion *uiAutenticacion)
 {
     uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setUnicodeString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, bufferErrorConexion);
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
 
@@ -99,33 +99,33 @@ static void mostrar_feedback_errorConexion (t_interfazAutenticacion *interfazAut
    ============================================================================================================================================ */
 
 
-static void mostrar_feedback_credencialesInvalidas (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_credenciales_invalidas (UiAutenticacion *uiAutenticacion)
 {
     uint32_t bufferErrorCredenciales [] = {'N', 'o', 'm', 'b', 'r', 'e', ' ', 'o', ' ', 'c', 'o', 'n', 't', 'r', 'a', 's', 'e', 0x00f1, 'a', ' ', 'i', 'n', 'c', 'o', 'r', 'r', 'e', 'c', 't', 'o', 's', 0};
-    sfText_setUnicodeString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorCredenciales);
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setUnicodeString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, bufferErrorCredenciales);
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void mostrar_feedback_operacionInvalida (t_interfazAutenticacion *interfazAutenticacion)
+static void mostrar_feedback_operacion_invalida (UiAutenticacion *uiAutenticacion)
 {
-    sfText_setString (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Usuario ya conectado");
-    centrarTextoEnArea (interfazAutenticacion->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setString (uiAutenticacion->uiAcceso->textos.feedbackUsuario, "Usuario ya conectado");
+    centrar_texto_en_area (uiAutenticacion->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void solicitudAutenticacion_procesarRespuestaSegunEstado (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, _t_datosUI_respuesta_solicitudAutenticacion *datosUI_respuesta_solicitudAutenticacion)
+static void reaccionar_respuesta_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, RespuestaAutenticacionUi *respuestaAutenticacionUi)
 {
-    switch (datosUI_respuesta_solicitudAutenticacion->estadoSolicitud)
+    switch (respuestaAutenticacionUi->estado)
     {
         case SOLICITUD_EXITO:
-            _interfazAutenticacion_cambiarAInterfaz_contactos (contextoAplicacion, interfazAutenticacion, datosUI_respuesta_solicitudAutenticacion);
+            _ui_autenticacion_cambiar_a_ui_contactos (contextoAplicacion, uiAutenticacion, respuestaAutenticacionUi);
             break;
 
         case SOLICITUD_ERROR_CREDENCIALES_INVALIDAS:
-            mostrar_feedback_credencialesInvalidas (interfazAutenticacion);
+            mostrar_feedback_credenciales_invalidas (uiAutenticacion);
             break;
 
         case SOLICITUD_ERROR_OPERACION_INVALIDA:
-            mostrar_feedback_operacionInvalida (interfazAutenticacion);
+            mostrar_feedback_operacion_invalida (uiAutenticacion);
             break;
 
         default:
@@ -133,10 +133,10 @@ static void solicitudAutenticacion_procesarRespuestaSegunEstado (t_contextoAplic
     }
 }
 
-static void solicitudAutenticacion_procesarRespuesta (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion, const char *respuesta)
+static void procesar_respuesta_autenticacion (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion, const char *respuesta)
 {
-    _t_datosUI_respuesta_solicitudAutenticacion datosUI_respuesta_solicitudAutenticacion;
+    RespuestaAutenticacionUi respuestaAutenticacionUi;
 
-    datosUI_respuesta_solicitudAutenticacion = _interfazAutenticacion_solicitudAutenticacion_procesarRespuesta (contextoAplicacion, respuesta);
-    solicitudAutenticacion_procesarRespuestaSegunEstado (contextoAplicacion, interfazAutenticacion, &datosUI_respuesta_solicitudAutenticacion);
+    respuestaAutenticacionUi = _ui_autenticacion_procesar_respuesta_autenticacion (contextoAplicacion, respuesta);
+    reaccionar_respuesta_autenticacion (contextoAplicacion, uiAutenticacion, &respuestaAutenticacionUi);
 }

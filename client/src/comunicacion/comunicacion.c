@@ -6,7 +6,7 @@
    ============================================================================================================================================ */
 
 
-void comunicacion_inicializar (t_contextoAplicacion *contextoAplicacion)
+void comunicacion_inicializar (ContextoAplicacion *contextoAplicacion)
 {
     contextoAplicacion->sock = SOCKET_INVALIDO;
     contextoAplicacion->solicitudEnCurso = false;
@@ -14,7 +14,7 @@ void comunicacion_inicializar (t_contextoAplicacion *contextoAplicacion)
 
 static bool socketConectado;
 
-t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
+EstadoSolicitud comunicacion_intentar_conectar_con_servidor (Socket *returnSock)
 {
     if (*returnSock == SOCKET_INVALIDO)
     {
@@ -25,10 +25,10 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
     
     if (!socketConectado)
     {
-        if (socket_conectarCliente (returnSock) == EXITO)
+        if (socket_conectar_cliente (returnSock) == EXITO)
         {
-            socket_establecerTimeout (returnSock, 5000);
-            socket_establecerModoNoBloqueante (returnSock);
+            socket_establecer_timeout (returnSock, 5000);
+            socket_establecer_modo_no_bloqueante (returnSock);
             socketConectado = true;
         }
         else
@@ -47,26 +47,26 @@ t_estadoSolicitud intentarConectarConServidor (t_socket *returnSock)
    ============================================================================================================================================ */
 
 
-t_resultadoRecepcion recibirRespuesta (t_socket sock, char *bufferRespuesta)
+ResultadoRecepcion comunicacion_recibir_respuesta (Socket sock, char *bufferRespuesta)
 {
-    return (socket_recibirTodo (sock, bufferRespuesta));
+    return (socket_recibir_todo (sock, bufferRespuesta));
 }
 
-void enviarSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia)
+void comunicacion_enviar_solicitud_autenticacion (ContextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia)
 {
-    t_datosEnvioSolicitudAutenticacion datosEnvioSolicitudAutenticacion;
+    SolicitudAutenticacion solicitudAutenticacion;
 
-    datosEnvioSolicitudAutenticacion.header.tipo = SOLICITUD_AUTENTICACION;
-    datosEnvioSolicitudAutenticacion.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudAutenticacion);
+    solicitudAutenticacion.header.tipoPaquete = SOLICITUD_AUTENTICACION;
+    solicitudAutenticacion.header.bytesTransmitidos = sizeof (SolicitudAutenticacion);
 
-    strcpy (datosEnvioSolicitudAutenticacion.nombreUsuario, nombreUsuario);
-    strcpy (datosEnvioSolicitudAutenticacion.contrasenia, contrasenia);
+    strcpy (solicitudAutenticacion.nombreUsuario, nombreUsuario);
+    strcpy (solicitudAutenticacion.contrasenia, contrasenia);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudAutenticacion), sizeof (t_datosEnvioSolicitudAutenticacion)) == ENVIO_COMPLETO)
+        if (socket_enviar_todo (contextoAplicacion->sock, (char*)(&solicitudAutenticacion), sizeof (SolicitudAutenticacion)) == ENVIO_COMPLETO)
         {
-            printf ("\nSolicitud enviada: %c|%s|%s\n", datosEnvioSolicitudAutenticacion.header.tipo, datosEnvioSolicitudAutenticacion.nombreUsuario, datosEnvioSolicitudAutenticacion.contrasenia);
+            printf ("\nSolicitud enviada: %c|%s|%s\n", solicitudAutenticacion.header.tipoPaquete, solicitudAutenticacion.nombreUsuario, solicitudAutenticacion.contrasenia);
             contextoAplicacion->solicitudEnCurso = true;
         }
     }
@@ -74,22 +74,22 @@ void enviarSolicitudAutenticacion (t_contextoAplicacion *contextoAplicacion, con
         printf ("\nYa hay una solicitud en curso.\n");
 }
 
-void enviarSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
+void comunicacion_enviar_solicitud_registro (ContextoAplicacion *contextoAplicacion, const char *nombreUsuario, const char *contrasenia, const char *correoElectronico)
 {
-    t_datosEnvioSolicitudRegistro datosEnvioSolicitudRegistro;
+    SolicitudRegistro solicitudRegistro;
 
-    datosEnvioSolicitudRegistro.header.tipo = SOLICITUD_REGISTRO;
-    datosEnvioSolicitudRegistro.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudRegistro);
+    solicitudRegistro.header.tipoPaquete = SOLICITUD_REGISTRO;
+    solicitudRegistro.header.bytesTransmitidos = sizeof (SolicitudRegistro);
 
-    strcpy (datosEnvioSolicitudRegistro.nombreUsuario, nombreUsuario);
-    strcpy (datosEnvioSolicitudRegistro.contrasenia, contrasenia);
-    strcpy (datosEnvioSolicitudRegistro.correoElectronico, correoElectronico);
+    strcpy (solicitudRegistro.nombreUsuario, nombreUsuario);
+    strcpy (solicitudRegistro.contrasenia, contrasenia);
+    strcpy (solicitudRegistro.correoElectronico, correoElectronico);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudRegistro), sizeof (t_datosEnvioSolicitudRegistro)) == ENVIO_COMPLETO)
+        if (socket_enviar_todo (contextoAplicacion->sock, (char*)(&solicitudRegistro), sizeof (SolicitudRegistro)) == ENVIO_COMPLETO)
         {
-            printf ("\nSolicitud enviada: %c|%s|%s|%s\n", datosEnvioSolicitudRegistro.header.tipo, datosEnvioSolicitudRegistro.nombreUsuario, datosEnvioSolicitudRegistro.contrasenia, datosEnvioSolicitudRegistro.correoElectronico);
+            printf ("\nSolicitud enviada: %c|%s|%s|%s\n", solicitudRegistro.header.tipoPaquete, solicitudRegistro.nombreUsuario, solicitudRegistro.contrasenia, solicitudRegistro.correoElectronico);
             contextoAplicacion->solicitudEnCurso = true;
         }
     }
@@ -97,22 +97,22 @@ void enviarSolicitudRegistro (t_contextoAplicacion *contextoAplicacion, const ch
         printf ("\nYa hay una solicitud en curso.\n");
 }
 
-void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int idUsuario, int idReceptor, const char* mensaje)
+void comunicacion_enviar_solicitud_envio_mensaje (ContextoAplicacion *contextoAplicacion, int idUsuario, int idReceptor, const char* mensaje)
 {
-    t_datosEnvioSolicitudEnvioMensaje datosEnvioSolicitudEnvioMensaje;
+    SolicitudEnvioMensaje solicitudEnvioMensaje;
 
-    datosEnvioSolicitudEnvioMensaje.header.tipo = SOLICITUD_ENVIO_MENSAJE;
-    datosEnvioSolicitudEnvioMensaje.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudEnvioMensaje);
+    solicitudEnvioMensaje.header.tipoPaquete = SOLICITUD_ENVIO_MENSAJE;
+    solicitudEnvioMensaje.header.bytesTransmitidos = sizeof (SolicitudEnvioMensaje);
 
-    datosEnvioSolicitudEnvioMensaje.idEmisor = idUsuario;
-    datosEnvioSolicitudEnvioMensaje.idReceptor = idReceptor;
-    strcpy (datosEnvioSolicitudEnvioMensaje.texto, mensaje);
+    solicitudEnvioMensaje.idEmisor = idUsuario;
+    solicitudEnvioMensaje.idReceptor = idReceptor;
+    strcpy (solicitudEnvioMensaje.texto, mensaje);
     
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudEnvioMensaje), sizeof (t_datosEnvioSolicitudEnvioMensaje)) == ENVIO_COMPLETO)
+        if (socket_enviar_todo (contextoAplicacion->sock, (char*)(&solicitudEnvioMensaje), sizeof (SolicitudEnvioMensaje)) == ENVIO_COMPLETO)
         {
-            printf ("\nSolicitud enviada: %c|%d|%d|%s\n", datosEnvioSolicitudEnvioMensaje.header.tipo, datosEnvioSolicitudEnvioMensaje.idEmisor, datosEnvioSolicitudEnvioMensaje.idReceptor, datosEnvioSolicitudEnvioMensaje.texto);
+            printf ("\nSolicitud enviada: %c|%d|%d|%s\n", solicitudEnvioMensaje.header.tipoPaquete, solicitudEnvioMensaje.idEmisor, solicitudEnvioMensaje.idReceptor, solicitudEnvioMensaje.texto);
             contextoAplicacion->solicitudEnCurso = true;
         }
     }
@@ -120,20 +120,20 @@ void enviarSolicitudEnvioMensaje (t_contextoAplicacion *contextoAplicacion, int 
         puts ("\nYa hay una solicitud en curso.");
 }
 
-void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, const char *nombreUsuarioChatSeleccionado)
+void comunicacion_enviar_solicitud_seleccion_chat (ContextoAplicacion *contextoAplicacion, const char *nombreUsuarioChatSeleccionado)
 {
-    t_datosEnvioSolicitudSeleccionChat datosEnvioSolicitudSeleccionChat;
+    SolicitudSeleccionChat solicitudSeleccionChat;
 
-    datosEnvioSolicitudSeleccionChat.header.tipo = SOLICITUD_SELECCION_CHAT;
-    datosEnvioSolicitudSeleccionChat.header.bytesTransmitidos = sizeof (t_datosEnvioSolicitudSeleccionChat);
+    solicitudSeleccionChat.header.tipoPaquete = SOLICITUD_SELECCION_CHAT;
+    solicitudSeleccionChat.header.bytesTransmitidos = sizeof (SolicitudSeleccionChat);
 
-    strcpy (datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado, nombreUsuarioChatSeleccionado);
+    strcpy (solicitudSeleccionChat.nombreUsuarioChatSeleccionado, nombreUsuarioChatSeleccionado);
 
     if (!(contextoAplicacion->solicitudEnCurso))
     {
-        if (socket_enviarTodo (contextoAplicacion->sock, (char*)(&datosEnvioSolicitudSeleccionChat), sizeof (t_datosEnvioSolicitudSeleccionChat)) == ENVIO_COMPLETO)
+        if (socket_enviar_todo (contextoAplicacion->sock, (char*)(&solicitudSeleccionChat), sizeof (SolicitudSeleccionChat)) == ENVIO_COMPLETO)
         {
-            printf ("\nSolicitud enviada: %c|%s\n", datosEnvioSolicitudSeleccionChat.header.tipo, datosEnvioSolicitudSeleccionChat.nombreUsuarioChatSeleccionado);
+            printf ("\nSolicitud enviada: %c|%s\n", solicitudSeleccionChat.header.tipoPaquete, solicitudSeleccionChat.nombreUsuarioChatSeleccionado);
             contextoAplicacion->solicitudEnCurso = true;
         }
     }
@@ -147,17 +147,17 @@ void enviarSolicitudSeleccionChat (t_contextoAplicacion *contextoAplicacion, con
    ============================================================================================================================================ */
 
 
-bool comunicacion_haySolicitudEnCurso (const t_contextoAplicacion *contextoAplicacion)
+bool comunicacion_hay_solicitud_en_curso (const ContextoAplicacion *contextoAplicacion)
 {
     return (contextoAplicacion->solicitudEnCurso);
 }
 
-void comunicacion_finalizarSolicitudEnCurso (t_contextoAplicacion *contextoAplicacion)
+void comunicacion_finalizar_solicitud_en_curso (ContextoAplicacion *contextoAplicacion)
 {
     contextoAplicacion->solicitudEnCurso = false;
 }
 
-void comunicacion_finalizar (t_socket *sock)
+void comunicacion_finalizar (Socket *sock)
 {
     socket_cerrar (sock);
 }
@@ -168,38 +168,38 @@ void comunicacion_finalizar (t_socket *sock)
    ============================================================================================================================================ */
 
 
-t_tipoRespuesta comunicacion_obtenerTipoRespuesta (const char *respuesta)
+TipoRespuesta comunicacion_obtener_tipo_respuesta (const char *respuesta)
 {
-    t_header header;
+    Header header;
 
-    memcpy (&header, respuesta, sizeof (t_header));
+    memcpy (&header, respuesta, sizeof (Header));
 
-    return header.tipo;
+    return header.tipoPaquete;
 }
 
 
-void comunicacion_extraerDatosRespuesta_solicitudAutenticacion (const char *respuesta, t_datosRespuestaSolicitudAutenticacion *returnDatosRespuestaSolicitudAutenticacion)
+void comunicacion_extraer_respuesta_autenticacion (const char *respuesta, RespuestaAutenticacion *returnRespuestaAutenticacion)
 {
-    memcpy (returnDatosRespuestaSolicitudAutenticacion, respuesta, sizeof (t_datosRespuestaSolicitudAutenticacion));
+    memcpy (returnRespuestaAutenticacion, respuesta, sizeof (RespuestaAutenticacion));
 }
 
-void comunicacion_extraerDatosRespuesta_solicitudRegistro (const char *respuesta, t_datosRespuestaSolicitudRegistro *returnDatosRespuestaSolicitudRegistro)
+void comunicacion_extraer_respuesta_registro (const char *respuesta, RespuestaRegistro *returnRespuestaRegistro)
 {
-    memcpy (returnDatosRespuestaSolicitudRegistro, respuesta, sizeof (t_datosRespuestaSolicitudRegistro));
+    memcpy (returnRespuestaRegistro, respuesta, sizeof (RespuestaRegistro));
 }
 
-void comunicacion_extraerDatosRespuesta_solicitudSeleccionChat (const char *respuesta, t_datosRespuestaSolicitudSeleccionChat *returnDatosRespuestaSolicitudSeleccionChat)
+void comunicacion_extraer_respuesta_seleccion_chat (const char *respuesta, RespuestaSeleccionChat *returnRespuestaSeleccionChat)
 {
-    memcpy (returnDatosRespuestaSolicitudSeleccionChat, respuesta, sizeof (t_datosRespuestaSolicitudSeleccionChat));
+    memcpy (returnRespuestaSeleccionChat, respuesta, sizeof (RespuestaSeleccionChat));
 }
 
-void comunicacion_extraerDatosRespuesta_solicitudEnvioMensaje (const char *respuesta, t_datosRespuestaSolicitudEnvioMensaje *returnDatosRespuestaSolicitudEnvioMensaje)
+void comunicacion_extraer_respuesta_envio_mensaje (const char *respuesta, RespuestaEnvioMensaje *returnRespuestaEnvioMensaje)
 {
-    memcpy (returnDatosRespuestaSolicitudEnvioMensaje, respuesta, sizeof (t_datosRespuestaSolicitudEnvioMensaje));
+    memcpy (returnRespuestaEnvioMensaje, respuesta, sizeof (RespuestaEnvioMensaje));
 }
 
-void comunicacion_extraerDatosRespuesta_recepcionMensaje (const char *respuesta, t_datosRespuestaRecepcionMensaje *returnDatosRespuestaRecepcionMensaje)
+void comunicacion_extraer_respuesta_recepcion_mensaje (const char *respuesta, RespuestaRecepcionMensaje *returnRespuestaRecepcionMensaje)
 {
-    memcpy (returnDatosRespuestaRecepcionMensaje, respuesta, sizeof (t_datosRespuestaRecepcionMensaje));
+    memcpy (returnRespuestaRecepcionMensaje, respuesta, sizeof (RespuestaRecepcionMensaje));
 }
 

@@ -42,27 +42,27 @@
 
 /** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de registro.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param uiRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  *
  */
-void interfazRegistro_inicializarValoresNulos (t_interfazRegistro *interfazRegistro);
+void ui_registro_inicializar (UiRegistro *uiRegistro);
 
 /** \brief Inicializar los recursos graficos de la interfaz de registro. Ademas, asigna los recursos comunes.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
- * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
+ * \param uiRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param uiAcceso Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  *
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-t_codigoRetorno interfazRegistro_inicializar (t_interfazRegistro *interfazRegistro, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+CodigoRetorno ui_registro_crear (UiRegistro *uiRegistro, UiAcceso *uiAcceso);
 
 /** \brief Configurar los recursos graficos y logica de la interfaz de registro.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param uiRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  * 
  */
-void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro);
+void ui_registro_configurar (UiRegistro *uiRegistro);
 
 /** \brief Ejecutar la interfaz de registro.
  *
@@ -71,18 +71,18 @@ void interfazRegistro_configurar (t_interfazRegistro *interfazRegistro);
  * 2) Actualizacion: Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc).
  * 3) Renderizado: Limpiar la ventana anterior y mostrar los recursos graficos actualizados de la interfaz de registro en la ventana.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global de la aplicacion.
+ * \param uiRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  *
  */
-void interfazRegistro_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+void ui_registro_ejecutar (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de registro.
  *
- * \param interfazRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
+ * \param uiRegistro Puntero a la estructura base de los recursos graficos y logica de la interfaz de registro.
  *
  */
-void interfazRegistro_liberar (t_interfazRegistro *interfazRegistro);
+void ui_registro_liberar (UiRegistro *uiRegistro);
 
 
 #endif // INTERFAZREGISTRO_H_INCLUDED

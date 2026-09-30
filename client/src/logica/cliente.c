@@ -6,13 +6,13 @@
    ============================================================================================================================================ */
 
 
-static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
+static void inicializar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas);
 
-static bool usuarioSeAutentico (t_contextoAplicacion *contextoAplicacion);
-static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
+static bool usuario_se_autentico (ContextoAplicacion *contextoAplicacion);
+static void cambiar_a_ui_contactos (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas);
 
-static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion);
-static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas);
+static bool usuario_salio_ui_contactos (ContextoAplicacion *contextoAplicacion);
+static void cambiar_ui (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas);
 
 
 /* ============================================================================================================================================
@@ -20,14 +20,14 @@ static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_inter
    ============================================================================================================================================ */
 
 
-t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+CodigoRetorno aplicacion_inicializar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     printf ("-INICIALIZANDO LOS RECURSOS DE LA APLICACION-\t");
 
 
     // --------------- INICIALIZAR VALORES NULOS DE LA APLICACION ---------------
 
-    inicializarValoresNulosAplicacion (contextoAplicacion, interfacesGraficas);
+    inicializar (contextoAplicacion, interfacesGraficas);
 
     // --------------- INICIALIZAR SOCKET ---------------
 
@@ -45,7 +45,7 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
 
     // --------------- INICIALIZAR RECURSOS GRAFICOS COMUNES ---------------
 
-    if (recursosComunesAutenticacionRegistro_inicializar (&(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
+    if (ui_acceso_crear (&(interfacesGraficas->uiAcceso)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar recursos comunes autenticacion-registro.\n");
         return ERROR_INICIALIZACION;
@@ -53,19 +53,19 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
 
     // --------------- INICIALIZAR INTERFACES GRAFICAS ---------------
 
-    if (interfazContactos_inicializar (&(interfacesGraficas->contactos)) == ERROR_INICIALIZACION)
+    if (ui_contactos_crear (&(interfacesGraficas->uiContactos)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de contactos.\n");
         return ERROR_INICIALIZACION;
     }
     
-    if (interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
+    if (ui_autenticacion_crear (&(interfacesGraficas->uiAutenticacion), &(interfacesGraficas->uiAcceso)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de autenticacion.\n");
         return ERROR_INICIALIZACION;
     }
     
-    if (interfazRegistro_inicializar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro)) == ERROR_INICIALIZACION)
+    if (ui_registro_crear (&(interfacesGraficas->uiRegistro), &(interfacesGraficas->uiAcceso)) == ERROR_INICIALIZACION)
     {
         perror ("\nERROR - Inicializar interfaz de registro.\n");
         return ERROR_INICIALIZACION;
@@ -75,7 +75,7 @@ t_codigoRetorno inicializarAplicacion (t_contextoAplicacion *contextoAplicacion,
     return EXITO;
 }
 
-void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+void aplicacion_configurar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DE LA APLICACION-\t");
 
@@ -85,60 +85,60 @@ void configurarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interface
     sfRenderWindow_setFramerateLimit (contextoAplicacion->renderizado, 60);
     contextoAplicacion->interfazActual = INTERFAZ_AUTENTICACION;
     comunicacion_inicializar (contextoAplicacion);
-    omitirEventosPendientes (contextoAplicacion->renderizado);
+    omitir_eventos_pendientes (contextoAplicacion->renderizado);
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS COMUNES ---------------
 
-    recursosComunesAutenticacionRegistro_configurar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    ui_acceso_configurar (&(interfacesGraficas->uiAcceso));
 
     // --------------- CONFIGURAR LOS RECURSOS GRAFICOS DE LAS INTERFACES Y ASIGNAR LOS RECURSOS COMUNES ---------------
 
-    interfazContactos_configurar (&(interfacesGraficas->contactos));
-    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion));
-    interfazRegistro_configurar (&(interfacesGraficas->registro));
+    ui_contactos_configurar (&(interfacesGraficas->uiContactos));
+    ui_autenticacion_configurar (&(interfacesGraficas->uiAutenticacion));
+    ui_registro_configurar (&(interfacesGraficas->uiRegistro));
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
 }
 
-void ejecutarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+void aplicacion_ejecutar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     switch (contextoAplicacion->interfazActual)
         {
         case INTERFAZ_AUTENTICACION:
-            interfazAutenticacion_ejecutar (contextoAplicacion, &(interfacesGraficas->autenticacion));
-            if (usuarioSeAutentico (contextoAplicacion))
-                cambiarAInterfazContactos (contextoAplicacion, interfacesGraficas);
+            ui_autenticacion_ejecutar (contextoAplicacion, &(interfacesGraficas->uiAutenticacion));
+            if (usuario_se_autentico (contextoAplicacion))
+                cambiar_a_ui_contactos (contextoAplicacion, interfacesGraficas);
             break;
 
         case INTERFAZ_REGISTRO:
-            interfazRegistro_ejecutar (contextoAplicacion, &(interfacesGraficas->registro));
-            if (usuarioSeAutentico (contextoAplicacion))
-                cambiarAInterfazContactos (contextoAplicacion, interfacesGraficas);
+            ui_registro_ejecutar (contextoAplicacion, &(interfacesGraficas->uiRegistro));
+            if (usuario_se_autentico (contextoAplicacion))
+                cambiar_a_ui_contactos (contextoAplicacion, interfacesGraficas);
             break;
 
         case INTERFAZ_CONTACTOS:
-            interfazContactos_ejecutar (contextoAplicacion, &(interfacesGraficas->contactos));
-            if (usuarioSalioDelMenuPrincipal (contextoAplicacion))
-                cambiarDeInterfaz (contextoAplicacion, interfacesGraficas);
+            ui_contactos_ejecutar (contextoAplicacion, &(interfacesGraficas->uiContactos));
+            if (usuario_salio_ui_contactos (contextoAplicacion))
+                cambiar_ui (contextoAplicacion, interfacesGraficas);
             break;
         }
 }
 
-void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+void aplicacion_liberar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     printf ("-LIBERANDO LOS RECURSOS DE LA APLICACION-\t");
 
 
     // --------------- LIBERAR INTERFACES GRAFICAS ---------------
 
-    interfazAutenticacion_liberar (&(interfacesGraficas->autenticacion));
-    interfazRegistro_liberar (&(interfacesGraficas->registro));
-    interfazContactos_liberar (&(interfacesGraficas->contactos));
+    ui_autenticacion_liberar (&(interfacesGraficas->uiAutenticacion));
+    ui_registro_liberar (&(interfacesGraficas->uiRegistro));
+    ui_contactos_liberar (&(interfacesGraficas->uiContactos));
 
     // --------------- LIBERAR RECURSOS GRAFICOS COMUNES ---------------
 
-    recursosComunesAutenticacionRegistro_liberar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    ui_acceso_liberar (&(interfacesGraficas->uiAcceso));
 
     // --------------- LIBERAR SOCKET ---------------
 
@@ -165,68 +165,68 @@ void liberarAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGr
 * Inicializar con valores nulos todos los recursos de la aplicacion.
 * Evita problemas en la liberacion de recursos en caso de errores.
 */
-static void inicializarValoresNulosAplicacion (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+static void inicializar (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     // --------------- CONTEXTO DE LA APLICACION ---------------
     contextoAplicacion->renderizado = NULL;
     contextoAplicacion->sock = INVALID_SOCKET;
 
     // --------------- RECURSOS GRAFICOS COMUNES ---------------
-    recursosComunesAutenticacionRegistro_inicializarValoresNulos (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    ui_acceso_inicializar (&(interfacesGraficas->uiAcceso));
 
     // --------------- INTERFACES GRAFICAS ---------------
-    interfazContactos_inicializarValoresNulos (&(interfacesGraficas->contactos));
-    interfazAutenticacion_inicializarValoresNulos (&(interfacesGraficas->autenticacion));
-    interfazRegistro_inicializarValoresNulos (&(interfacesGraficas->registro));
+    ui_contactos_inicializar (&(interfacesGraficas->uiContactos));
+    ui_autenticacion_inicializar (&(interfacesGraficas->uiAutenticacion));
+    ui_registro_inicializar (&(interfacesGraficas->uiRegistro));
 }
 
 
-static bool usuarioSeAutentico (t_contextoAplicacion *contextoAplicacion)
+static bool usuario_se_autentico (ContextoAplicacion *contextoAplicacion)
 {
     return (contextoAplicacion->interfazActual == INTERFAZ_CONTACTOS);
 }
 
-static void liberarRecursosGraficosAutenticacion (t_interfacesGraficas *interfacesGraficas)
+static void liberar_uis_acceso (InterfacesGraficas *interfacesGraficas)
 {
-    recursosComunesAutenticacionRegistro_liberar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazAutenticacion_liberar (&(interfacesGraficas->autenticacion));
-    interfazRegistro_liberar (&(interfacesGraficas->registro));
+    ui_acceso_liberar (&(interfacesGraficas->uiAcceso));
+    ui_autenticacion_liberar (&(interfacesGraficas->uiAutenticacion));
+    ui_registro_liberar (&(interfacesGraficas->uiRegistro));
 }
 
-static void cambiarAInterfazContactos (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+static void cambiar_a_ui_contactos (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
-    liberarRecursosGraficosAutenticacion (interfacesGraficas);
-    interfazContactos_prepararInterfaz (contextoAplicacion, &(interfacesGraficas->contactos));
+    liberar_uis_acceso (interfacesGraficas);
+    ui_contactos_preparar (contextoAplicacion, &(interfacesGraficas->uiContactos));
 }
 
 
-static bool usuarioSalioDelMenuPrincipal (t_contextoAplicacion *contextoAplicacion)
+static bool usuario_salio_ui_contactos (ContextoAplicacion *contextoAplicacion)
 {
     return (contextoAplicacion->interfazActual != INTERFAZ_CONTACTOS);
 }
 
-static void prepararInterfacesAutenticacion (sfRenderWindow *renderizado, t_interfacesGraficas *interfacesGraficas)
+static void preparar_uis_acceso (sfRenderWindow *renderizado, InterfacesGraficas *interfacesGraficas)
 {
     sfRenderWindow_setSize (renderizado, (sfVector2u){500, 620});
 
-    recursosComunesAutenticacionRegistro_inicializar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazAutenticacion_inicializar (&(interfacesGraficas->autenticacion), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazRegistro_inicializar (&(interfacesGraficas->registro), &(interfacesGraficas->recursosComunesAutenticacionRegistro));
+    ui_acceso_crear (&(interfacesGraficas->uiAcceso));
+    ui_autenticacion_crear (&(interfacesGraficas->uiAutenticacion), &(interfacesGraficas->uiAcceso));
+    ui_registro_crear (&(interfacesGraficas->uiRegistro), &(interfacesGraficas->uiAcceso));
 
-    recursosComunesAutenticacionRegistro_configurar (&(interfacesGraficas->recursosComunesAutenticacionRegistro));
-    interfazAutenticacion_configurar (&(interfacesGraficas->autenticacion));
-    interfazRegistro_configurar (&(interfacesGraficas->registro));
+    ui_acceso_configurar (&(interfacesGraficas->uiAcceso));
+    ui_autenticacion_configurar (&(interfacesGraficas->uiAutenticacion));
+    ui_registro_configurar (&(interfacesGraficas->uiRegistro));
 
-    sfRenderWindow_setView (renderizado, interfacesGraficas->recursosComunesAutenticacionRegistro.vistas.ui);
+    sfRenderWindow_setView (renderizado, interfacesGraficas->uiAcceso.vistas.ui);
 
     uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, bufferErrorConexion);
-    centrarTextoEnArea (interfacesGraficas->recursosComunesAutenticacionRegistro.textos.feedbackUsuario, 0, 440, 500, 130);
+    sfText_setUnicodeString (interfacesGraficas->uiAcceso.textos.feedbackUsuario, bufferErrorConexion);
+    centrar_texto_en_area (interfacesGraficas->uiAcceso.textos.feedbackUsuario, 0, 440, 500, 130);
 }
 
-static void cambiarDeInterfaz (t_contextoAplicacion *contextoAplicacion, t_interfacesGraficas *interfacesGraficas)
+static void cambiar_ui (ContextoAplicacion *contextoAplicacion, InterfacesGraficas *interfacesGraficas)
 {
     if (contextoAplicacion->interfazActual == INTERFAZ_AUTENTICACION)
-        prepararInterfacesAutenticacion (contextoAplicacion->renderizado, interfacesGraficas);
+        preparar_uis_acceso (contextoAplicacion->renderizado, interfacesGraficas);
 }
 

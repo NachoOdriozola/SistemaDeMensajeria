@@ -35,7 +35,7 @@
  * 3) Muestra la ventana actualizada.
  * Procura el orden de los objetos graficos renderizados para que no se superpongan.
 */
-void _interfazContactos_renderizar (sfRenderWindow *renderizado, t_interfazContactos *interfazContactos);
+void _ui_contactos_renderizar (sfRenderWindow *renderizado, UiContactos *uiContactos);
 
 
 #endif // INTERFAZCONTACTOS_RENDERIZAR_H_INCLUDED

@@ -2,19 +2,19 @@
 
 int main()
 {
-    t_contextoAplicacion contextoAplicacion;
-    t_interfacesGraficas interfacesGraficas;
+    ContextoAplicacion contextoAplicacion;
+    InterfacesGraficas interfacesGraficas;
 
-    if (inicializarAplicacion (&contextoAplicacion, &interfacesGraficas) == ERROR_INICIALIZACION)
+    if (aplicacion_inicializar (&contextoAplicacion, &interfacesGraficas) == ERROR_INICIALIZACION)
     {
-        liberarAplicacion (&contextoAplicacion, &interfacesGraficas);
+        aplicacion_liberar (&contextoAplicacion, &interfacesGraficas);
         return ERROR_INICIALIZACION;
     }
-    configurarAplicacion (&contextoAplicacion, &interfacesGraficas);
+    aplicacion_configurar (&contextoAplicacion, &interfacesGraficas);
 
     while (APLICACION_ESTA_EJECUTANDOSE (contextoAplicacion.renderizado))
-        ejecutarAplicacion (&contextoAplicacion, &interfacesGraficas);
+        aplicacion_ejecutar (&contextoAplicacion, &interfacesGraficas);
 
-    liberarAplicacion (&contextoAplicacion, &interfacesGraficas);
+    aplicacion_liberar (&contextoAplicacion, &interfacesGraficas);
     return EXITO;
 }

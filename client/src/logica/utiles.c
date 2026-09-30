@@ -6,7 +6,7 @@
    ============================================================================================================================================ */
 
 
-bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo)
+bool se_clickeo_en_rectangulo (const sfRenderWindow *renderizado, const sfRectangleShape *rectangulo)
 {
     sfVector2i mousePixel;
     sfVector2f mouseMundo;
@@ -19,7 +19,7 @@ bool clickEnRectangulo (const sfRenderWindow *renderizado, const sfRectangleShap
     return sfFloatRect_contains (&limiteRectangulo, (sfVector2f){mouseMundo.x, mouseMundo.y});
 }
 
-bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
+bool se_clickeo_en_texto (const sfRenderWindow *renderizado, const sfText *texto)
 {
     sfVector2i mousePixel;
     sfVector2f mouseMundo;
@@ -32,7 +32,7 @@ bool clickEnTexto (const sfRenderWindow *renderizado, const sfText *texto)
     return sfFloatRect_contains (&limiteTexto, (sfVector2f){mouseMundo.x, mouseMundo.y});
 }
 
-void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea)
+void centrar_texto_en_area (sfText *texto, float posXInicial, float posYInicial, float anchoArea, float altoArea)
 {
     sfFloatRect limites;
 
@@ -45,28 +45,29 @@ void centrarTextoEnArea (sfText *texto, float posXInicial, float posYInicial, fl
                         });
 }
 
-static bool textoEntraEnBarraEscritura (sfText *texto, float anchoBarraEscritura)
+static bool texto_entra_en_barra_escritura (sfText *texto, float anchoBarraEscritura)
 {
     sfFloatRect limitesTexto = sfText_getLocalBounds(texto);
 
     return (limitesTexto.size.x <= anchoBarraEscritura);
 }
 
-void limitarVisualizacionTextoSobreBarraEscritura (sfText *texto, const char *cadena, float anchoBarraEscritura)
+void limitar_visualizacion_texto_sobre_barra_escritura (sfText *texto, const char *cadena, float anchoBarraEscritura)
 {
     unsigned short int i;
 
     for (i = 0; i <= (strlen(cadena)); i++)
     {
         sfText_setString(texto, cadena + i);
-        if (textoEntraEnBarraEscritura (texto, anchoBarraEscritura))
+        if (texto_entra_en_barra_escritura (texto, anchoBarraEscritura))
             return;
     }
 }
 
-void omitirEventosPendientes (sfRenderWindow *renderizado)
+void omitir_eventos_pendientes (sfRenderWindow *renderizado)
 {
     sfEvent evento;
+    
     while (sfRenderWindow_pollEvent (renderizado, &evento)){continue;}
 }
 
@@ -76,85 +77,85 @@ void omitirEventosPendientes (sfRenderWindow *renderizado)
    ============================================================================================================================================ */
 
 
-static bool noEsCaracterImprimible (char caracter)
+static bool no_es_caracter_imprimible (char caracter)
 {
     return ((caracter < 32) || (caracter > 126));
 }
 
-static bool noEsBackspace (char caracter)
+static bool no_es_backspace (char caracter)
 {
     return (caracter != 8);
 }
 
-static void agregarCaracterAlBuffer (char *buffer, char caracter, int largoBuffer)
+static void agregar_caracter_al_buffer (char *buffer, char caracter, int largoBuffer)
 {
     buffer [largoBuffer] = caracter;
     buffer [largoBuffer + 1] = '\0';
 }
 
-static void eliminarUltimoCaracter (char *buffer, int largoBuffer)
+static void eliminar_ultimo_caracter (char *buffer, int largoBuffer)
 {
     buffer [largoBuffer - 1] = '\0';
 }
 
-t_codigoRetorno ingresarCaracterABuffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
+CodigoRetorno ingresar_caracter_a_buffer (char *buffer, int tamMaxBuffer, sfEvent eventoChar)
 {
     int largoBuffer;
     char caracter = (char)eventoChar.text.unicode;
 
-    if (noEsCaracterImprimible (caracter) && noEsBackspace (caracter))
+    if (no_es_caracter_imprimible (caracter) && no_es_backspace (caracter))
         return ERROR_OPERACION;
 
     // Se utiliza largoBuffer y se envia como argumento para evitar calcularlo multiples veces.
     largoBuffer = strlen (buffer);
 
-    if (noEsBackspace (caracter))
+    if (no_es_backspace (caracter))
     {
         if (largoBuffer < tamMaxBuffer - 1) // tamMaxBuffer - 1 para asegurar el '\0' al final del buffer.
-            agregarCaracterAlBuffer (buffer, caracter, largoBuffer);
+            agregar_caracter_al_buffer (buffer, caracter, largoBuffer);
     }
     else if (largoBuffer > 0) // Si el caracter es "Backspace" y el buffer no esta vacio.
-        eliminarUltimoCaracter (buffer, largoBuffer);
+        eliminar_ultimo_caracter (buffer, largoBuffer);
 
     return EXITO;
 }
 
-t_codigoRetorno pegarTextoDesdePortapapelesABuffer (char *buffer, int tamMaxBuffer)
+CodigoRetorno pegar_texto_desde_portapapeles_a_buffer (char *buffer, int tamMaxBuffer)
 {
-    const uint32_t *texto, *pTexto;
+    const uint32_t *texto, *auxTexto;
     int largoBuffer, espacioDisponibleEnBuffer, largoTextoPortapapeles = 0;
 
     texto = sfClipboard_getUnicodeString ();
-    pTexto = texto;
+    auxTexto = texto;
 
     largoBuffer = strlen (buffer);
     espacioDisponibleEnBuffer = tamMaxBuffer - largoBuffer - 1; // -1 para asegurar el '\0' al final del buffer.
 
-    while (*pTexto != 0)
+    while (*auxTexto != 0)
     {
-        if (noEsCaracterImprimible ((char)(*pTexto)))
+        if (no_es_caracter_imprimible ((char)(*auxTexto)))
             return ERROR_OPERACION;
         largoTextoPortapapeles ++;
-        pTexto ++;
+        auxTexto ++;
     }
 
     if (largoTextoPortapapeles > espacioDisponibleEnBuffer)
         return ERROR_OPERACION;
 
-    pTexto = texto;
+    auxTexto = texto;
     buffer = buffer + largoBuffer;
-    while (*pTexto != 0)
+    while (*auxTexto != 0)
     {
-        *buffer = (char)(*pTexto);
+        *buffer = (char)(*auxTexto);
         buffer ++;
-        pTexto ++;
+        auxTexto ++;
     }
     *buffer = '\0';
 
     return EXITO;
 }
 
-bool sonTodosEspacios (const char *mensaje)
+bool son_todos_espacios (const char *mensaje)
 {
     if (*mensaje == '\0')
         return false;
@@ -173,21 +174,21 @@ bool sonTodosEspacios (const char *mensaje)
    ============================================================================================================================================ */
 
 
-bool esNombreValido (const char *nombre)
+bool es_nombre_valido (const char *nombre)
 {
     int largoNombre = strlen (nombre);
 
-    return (((largoNombre >= 3) && (largoNombre < MAX_NOMBRE_USUARIO)) && (!sonTodosEspacios (nombre)));
+    return (((largoNombre >= 3) && (largoNombre < MAX_NOMBRE_USUARIO)) && (!son_todos_espacios (nombre)));
 }
 
-bool esContraseniaValida (const char *contrasenia)
+bool es_contrasenia_valida (const char *contrasenia)
 {
     int largoContrasenia = strlen (contrasenia);
 
-    return (((largoContrasenia >= 8) && (largoContrasenia < MAX_CONTRASENIA)) && (!sonTodosEspacios (contrasenia)));
+    return (((largoContrasenia >= 8) && (largoContrasenia < MAX_CONTRASENIA)) && (!son_todos_espacios (contrasenia)));
 }
 
-bool esCorreoElectronicoValido (const char *correo)
+bool es_correo_electronico_valido (const char *correo)
 {
     char *ptr = strchr (correo, '@'); // Se posiciona en el @
 
@@ -205,23 +206,23 @@ bool esCorreoElectronicoValido (const char *correo)
    ============================================================================================================================================ */
 
 
-void resetearPuntoInsercion (t_puntoInsercion *puntoInsercion)
+void punto_insercion_resetear (PuntoInsercion *puntoInsercion)
 {
     puntoInsercion->estado = DESHABILITADO;
     puntoInsercion->contador = CONTADOR_REINICIAR;
 }
 
-bool puntoInsercionHabilitado (const t_puntoInsercion *puntoInsercion)
+bool punto_insercion_esta_habilitado (const PuntoInsercion *puntoInsercion)
 {
     if (puntoInsercion->estado == HABILITADO)
         return 1;
     return 0;
 }
 
-void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion)
+void punto_insercion_actualizar (PuntoInsercion *puntoInsercion)
 {
     puntoInsercion->contador ++;
-    if (puntoInsercion->contador >= VELOCIDAD_PARPADEO_PUNTO_INSERCION)
+    if (puntoInsercion->contador >= PUNTO_INSERCION_VELOCIDAD_PARPADEO)
     {
         puntoInsercion->contador = CONTADOR_REINICIAR;
         if (puntoInsercion->estado == DESHABILITADO)
@@ -237,13 +238,13 @@ void actualizarPuntoInsercion (t_puntoInsercion *puntoInsercion)
    ============================================================================================================================================ */
 
 
-void textoDeCarga_iniciar (t_textoDeCarga *textoDeCarga)
+void texto_de_carga_iniciar (TextoDeCarga *textoDeCarga)
 {
     textoDeCarga->estado = TEXTO_DE_CARGA_ESTADO_INICIAL;
     textoDeCarga->contador = CONTADOR_REINICIAR;
 }
 
-bool textoDeCarga_actualizar (t_textoDeCarga *textoDeCarga)
+bool texto_de_carga_actualizar (TextoDeCarga *textoDeCarga)
 {
     if (textoDeCarga->contador >= TEXTO_DE_CARGA_VELOCIDAD_ACTUALIZACION)
     {
@@ -260,7 +261,7 @@ bool textoDeCarga_actualizar (t_textoDeCarga *textoDeCarga)
     }
 }
 
-void textoDeCarga_modificarTextoSegunEstado (t_textoDeCarga *textoDeCarga, char *texto)
+void texto_de_carga_modificar_texto (TextoDeCarga *textoDeCarga, char *texto)
 {
     switch (textoDeCarga->estado)
     {
@@ -292,7 +293,7 @@ void log_error_conexion ()
     puts ("\nERROR - Se perdio la conexion con el servidor");
 }
 
-void log_warning_respuestaRecibidaDeOtraInterfaz ()
+void log_warning_respuesta_recibida_otra_ui ()
 {
     puts ("\nWARNING - La respuesta recibida del servidor no corresponde a la interfaz sobre la que esta situado el usuario.");
 }

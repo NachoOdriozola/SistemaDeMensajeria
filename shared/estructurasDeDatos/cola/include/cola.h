@@ -24,7 +24,7 @@
    ============================================================================================================================================ */
 
 
-/** \struct t_nodoCola
+/** \struct NodoCola
  * \brief Define la estructura base de un nodo de una cola. Utiliza el s_nodoCola como recursivo.
  */
 typedef struct s_nodoCola
@@ -32,13 +32,13 @@ typedef struct s_nodoCola
     void *dato;
     unsigned tam;
     struct s_nodoCola *sig;
-} t_nodoCola;
+} NodoCola;
 
 typedef struct
 {
-    t_nodoCola *pri;
-    t_nodoCola *ult;
-} t_cola;
+    NodoCola *pri;
+    NodoCola *ult;
+} Cola;
 
 
 /* ============================================================================================================================================
@@ -51,7 +51,7 @@ typedef struct
  * \param c Direccion de la cola.
  *
  */
-void crearCola (t_cola *c);
+void cola_crear (Cola *c);
 
 /** \brief Insertar a la cola.
  *
@@ -64,9 +64,9 @@ void crearCola (t_cola *c);
  * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
-int insertarACola (t_cola *c, void *dato, unsigned tamDato);
+int cola_insertar (Cola *c, void *dato, unsigned tamDato);
 
-/** \brief Desacolar el primer elemento de la cola.
+/** \brief cola_sacar el primer elemento de la cola.
  *
  * Elimina el nodo desacolado con su dato almacenado.
  *
@@ -75,7 +75,7 @@ int insertarACola (t_cola *c, void *dato, unsigned tamDato);
  * \param tamDato tamanio en bytes del dato.
  *
  */
-void desacolar (t_cola *c, void *returnDato, unsigned tamDato);
+void cola_sacar (Cola *c, void *returnDato, unsigned tamDato);
 
 /** \brief Verificar si la cola no esta vacia.
  *
@@ -84,14 +84,14 @@ void desacolar (t_cola *c, void *returnDato, unsigned tamDato);
  * \return True si la cola no esta vacia, False en caso contrario.
  * 
  */
-bool noEsColaVacia (t_cola *c);
+bool cola_no_esta_vacia (Cola *c);
 
 /** \brief Vaciar la cola. Asegura que la cola apunte a NULL.
  *
  * \param c Direccion de la cola.
  *
  */
-void vaciarCola (t_cola *c);
+void cola_vaciar (Cola *c);
 
 
 #endif // COLA_H_INCLUDED

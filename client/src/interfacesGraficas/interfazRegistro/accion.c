@@ -6,23 +6,23 @@
    ============================================================================================================================================ */
 
 
-static bool procesar_click_escribirNombre (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-static bool procesar_click_escribirContrasenia (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-static bool procesar_click_escribirCorreo (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro);
-static bool procesar_click_intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-static bool procesar_click_cambiarAInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+static bool procesar_click_escribir_nombre (const sfRenderWindow *renderizado, UiRegistro *uiRegistro);
+static bool procesar_click_escribir_contrasenia (const sfRenderWindow *renderizado, UiRegistro *uiRegistro);
+static bool procesar_click_escribir_correo (const sfRenderWindow *renderizado, UiRegistro *uiRegistro);
+static bool procesar_click_intentar_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
+static bool procesar_click_cambiar_a_ui_autenticacion (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
-static bool procesar_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
-static bool procesar_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
-static bool procesar_escribir_correo (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar);
+static bool procesar_escribir_nombre (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar);
+static bool procesar_escribir_contrasenia (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar);
+static bool procesar_escribir_correo (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar);
 
-static bool procesar_enter_intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+static bool procesar_enter_intentar_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-static bool procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
-static bool procesar_pegarTextoDesdePortapapeles_escribir_correo (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro);
+static bool procesar_pegar_nombre_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
+static bool procesar_pegar_contrasenia_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
+static bool procesar_pegar_correo_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro);
 
-static void deshabilitarFocos (t_interfazRegistro *interfazRegistro);
+static void deshabilitar_focos (UiRegistro *uiRegistro);
 
 
 /* ============================================================================================================================================
@@ -30,7 +30,7 @@ static void deshabilitarFocos (t_interfazRegistro *interfazRegistro);
    ============================================================================================================================================ */
 
 
-void _interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+void _ui_registro_accionar (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
     sfEvent evento;
 
@@ -52,32 +52,32 @@ void _interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_inter
         case sfEvtMouseButtonPressed:
             if (evento.mouseButton.button == sfMouseLeft)
             {
-                if (procesar_click_escribirNombre (contextoAplicacion->renderizado, interfazRegistro)) break;
-                if (procesar_click_escribirContrasenia (contextoAplicacion->renderizado, interfazRegistro)) break;
-                if (procesar_click_escribirCorreo (contextoAplicacion->renderizado, interfazRegistro)) break;
-                if (procesar_click_intentarRegistrar (contextoAplicacion, interfazRegistro)) break;
-                if (procesar_click_cambiarAInterfazAutenticacion (contextoAplicacion, interfazRegistro)) break;
-                deshabilitarFocos (interfazRegistro);
+                if (procesar_click_escribir_nombre (contextoAplicacion->renderizado, uiRegistro)) break;
+                if (procesar_click_escribir_contrasenia (contextoAplicacion->renderizado, uiRegistro)) break;
+                if (procesar_click_escribir_correo (contextoAplicacion->renderizado, uiRegistro)) break;
+                if (procesar_click_intentar_registro (contextoAplicacion, uiRegistro)) break;
+                if (procesar_click_cambiar_a_ui_autenticacion (contextoAplicacion, uiRegistro)) break;
+                deshabilitar_focos (uiRegistro);
             }
             break;
 
 
         case sfEvtTextEntered:
-            if (procesar_escribir_nombre (contextoAplicacion, interfazRegistro, evento)) break;
-            if (procesar_escribir_contrasenia (contextoAplicacion, interfazRegistro, evento)) break;
-            if (procesar_escribir_correo (contextoAplicacion, interfazRegistro, evento)) break;
+            if (procesar_escribir_nombre (contextoAplicacion, uiRegistro, evento)) break;
+            if (procesar_escribir_contrasenia (contextoAplicacion, uiRegistro, evento)) break;
+            if (procesar_escribir_correo (contextoAplicacion, uiRegistro, evento)) break;
             break;
 
 
         case sfEvtKeyPressed:
             if (evento.key.code == sfKeyEnter)
-                if (procesar_enter_intentarRegistrar (contextoAplicacion, interfazRegistro)) break;
+                if (procesar_enter_intentar_registro (contextoAplicacion, uiRegistro)) break;
 
             if (evento.key.control && evento.key.code == sfKeyV)
             {
-                if (procesar_pegarTextoDesdePortapapeles_escribir_nombre (contextoAplicacion, interfazRegistro)) break;
-                if (procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (contextoAplicacion, interfazRegistro)) break;
-                if (procesar_pegarTextoDesdePortapapeles_escribir_correo (contextoAplicacion, interfazRegistro)) break;
+                if (procesar_pegar_nombre_desde_portapapeles (contextoAplicacion, uiRegistro)) break;
+                if (procesar_pegar_contrasenia_desde_portapapeles (contextoAplicacion, uiRegistro)) break;
+                if (procesar_pegar_correo_desde_portapapeles (contextoAplicacion, uiRegistro)) break;
             }
             
             break;
@@ -95,57 +95,54 @@ void _interfazRegistro_accion (t_contextoAplicacion *contextoAplicacion, t_inter
    ============================================================================================================================================ */
 
 
-static void mostrar_feedback_cargando (t_interfazRegistro *interfazRegistro)
+static void mostrar_feedback_cargando_solicitud (UiRegistro *uiRegistro)
 {
-    textoDeCarga_iniciar (&(interfazRegistro->recursosComunesAutenticacionRegistro->logica.textoDeCarga));
-    sfText_setString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, "Cargando");
-    centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
+    texto_de_carga_iniciar (&(uiRegistro->uiAcceso->logica.textoDeCarga));
+    sfText_setString (uiRegistro->uiAcceso->textos.feedbackUsuario, "Cargando");
+    centrar_texto_en_area (uiRegistro->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 180);
 }
 
-static void mostrar_feedback_errorConexion (t_interfazRegistro *interfazRegistro)
+static void mostrar_feedback_error_conexion (UiRegistro *uiRegistro)
 {
     uint32_t bufferErrorConexion [] = {'S', 'e', ' ', 'p', 'e', 'r', 'd', 'i', 0x00f3, ' ', 'l', 'a', ' ', 'c', 'o', 'n', 'e', 'x', 'i', 0x00f3, 'n', ' ', 'c', 'o', 'n', ' ', 'e', 'l', ' ','s', 'e', 'r', 'v', 'i', 'd', 'o', 'r', 0};
-    sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferErrorConexion);
-    centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
+    sfText_setUnicodeString (uiRegistro->uiAcceso->textos.feedbackUsuario, bufferErrorConexion);
+    centrar_texto_en_area (uiRegistro->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 180);
 }
 
-static void mostrar_feedback_credencialesInvalidas (t_interfazRegistro *interfazRegistro)
+static void mostrar_feedback_credenciales_invalidas (UiRegistro *uiRegistro)
 {
     uint32_t bufferDatosInvalidos [] = {'D', 'a', 't', 'o', 's', ' ', 'i', 'n', 'v', 0x00e1, 'l', 'i', 'd', 'o', 's', 0};
-    sfText_setUnicodeString (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, bufferDatosInvalidos);
-    centrarTextoEnArea (interfazRegistro->recursosComunesAutenticacionRegistro->textos.feedbackUsuario, 0, 440, 500, 180);
+    sfText_setUnicodeString (uiRegistro->uiAcceso->textos.feedbackUsuario, bufferDatosInvalidos);
+    centrar_texto_en_area (uiRegistro->uiAcceso->textos.feedbackUsuario, 0, 440, 500, 180);
 }
 
-static void mostrar_datosInvalidos (t_interfazRegistro *interfazRegistro, const _t_resultado_validacionDatosRegistro *resultado_validacionDatosRegistro)
+static void mostrar_datos_invalidos (UiRegistro *uiRegistro, const ValidacionRegistro *validacionRegistro)
 {
-    if (!resultado_validacionDatosRegistro->nombreValido)
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
+    if (!validacionRegistro->nombreValido)
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirNombre, sfColor_fromRGB (160, 100, 90));
 
-    if (!resultado_validacionDatosRegistro->contraseniaValida)
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
+    if (!validacionRegistro->contraseniaValida)
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirContrasenia, sfColor_fromRGB (160, 100, 90));
 
-    if (!resultado_validacionDatosRegistro->correoValido)
-        sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
+    if (!validacionRegistro->correoValido)
+        sfText_setFillColor (uiRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (160, 100, 90));
 }
 
-static void intentarRegistrarYProcesarResultadoOperacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static void procesar_resultado_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, ResultadoIntentoRegistro resultadoIntentoRegistro)
 {
-    _t_resultado_intentarRegistrar resultado_intentarRegistrar;
-
-    resultado_intentarRegistrar = _interfazRegsitro_intentar_registrar (contextoAplicacion, interfazRegistro);
-    switch (resultado_intentarRegistrar.tipo)
+    switch (resultadoIntentoRegistro.estado)
     {
-        case INTENTARREGISTRAR_RESULTADO_EXITO:
-            mostrar_feedback_cargando (interfazRegistro);
+        case INTENTO_REGISTRO_SOLICITUD_ENVIADA:
+            mostrar_feedback_cargando_solicitud (uiRegistro);
             break;
         
-        case INTENTARREGISTRAR_RESULTADO_ERROR_CONEXION:
-            mostrar_feedback_errorConexion (interfazRegistro);
+        case INTENTO_REGISTRO_ERROR_CONEXION:
+            mostrar_feedback_error_conexion (uiRegistro);
             break;
         
-        case INTENTARREGISTRAR_RESULTADO_CREDENCIALES_INVALIDAS:
-            mostrar_feedback_credencialesInvalidas (interfazRegistro);
-            mostrar_datosInvalidos (interfazRegistro, &(resultado_intentarRegistrar.validacion));
+        case INTENTO_REGISTRO_CREDENCIALES_INVALIDAS:
+            mostrar_feedback_credenciales_invalidas (uiRegistro);
+            mostrar_datos_invalidos (uiRegistro, &(resultadoIntentoRegistro.validacion));
             break;
 
         default:
@@ -154,222 +151,230 @@ static void intentarRegistrarYProcesarResultadoOperacion (t_contextoAplicacion *
 }
 
 
-static void posicionarPuntoInsercion_escribirNombre (t_interfazRegistro *interfazRegistro)
+static void posicionar_punto_insercion_nombre (UiRegistro *uiRegistro)
 {
     sfFloatRect limitesAuxEscribirNombre;
     
-    limitesAuxEscribirNombre = sfText_getGlobalBounds (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 198});
+    limitesAuxEscribirNombre = sfText_getGlobalBounds (uiRegistro->uiAcceso->textos.auxEscribirNombre);
+    sfRectangleShape_setPosition (uiRegistro->uiAcceso->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirNombre.size.x, 198});
 }
 
-static void posicionarPuntoInsercion_escribirContrasenia (t_interfazRegistro *interfazRegistro)
+static void posicionar_punto_insercion_contrasenia (UiRegistro *uiRegistro)
 {
     sfFloatRect limitesAuxEscribirContrasenia;
     
-    limitesAuxEscribirContrasenia = sfText_getGlobalBounds (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 323});
+    limitesAuxEscribirContrasenia = sfText_getGlobalBounds (uiRegistro->uiAcceso->textos.auxEscribirContrasenia);
+    sfRectangleShape_setPosition (uiRegistro->uiAcceso->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirContrasenia.size.x, 323});
 }
 
-static void posicionarPuntoInsercion_escribirCorreo (t_interfazRegistro *interfazRegistro)
+static void posicionar_punto_insercion_correo (UiRegistro *uiRegistro)
 {
     sfFloatRect limitesAuxEscribirCorreo;
 
-    limitesAuxEscribirCorreo = sfText_getGlobalBounds (interfazRegistro->textos.auxEscribirCorreo);
-    sfRectangleShape_setPosition (interfazRegistro->recursosComunesAutenticacionRegistro->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirCorreo.size.x, 420});
+    limitesAuxEscribirCorreo = sfText_getGlobalBounds (uiRegistro->textos.auxEscribirCorreo);
+    sfRectangleShape_setPosition (uiRegistro->uiAcceso->elementos.puntoInsercion, (sfVector2f){44 + limitesAuxEscribirCorreo.size.x, 420});
 }
 
 
-static bool procesar_click_escribirNombre (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro)
+static bool procesar_click_escribir_nombre (const sfRenderWindow *renderizado, UiRegistro *uiRegistro)
 {
-    if (!clickEnRectangulo (renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->elementos.barraEscribirNombre))
+    if (!se_clickeo_en_rectangulo (renderizado, uiRegistro->uiAcceso->elementos.barraEscribirNombre))
         return EVENTO_NO_MANEJADO;
 
-    interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_NOMBRE;
-    interfazRegistro->estadoFoco = IR_NINGUNO;
-    posicionarPuntoInsercion_escribirNombre (interfazRegistro);
+    uiRegistro->uiAcceso->foco = ESCRIBIR_NOMBRE;
+    uiRegistro->foco = UI_REGISTRO_NINGUNO;
+    posicionar_punto_insercion_nombre (uiRegistro);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_escribirContrasenia (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro)
+static bool procesar_click_escribir_contrasenia (const sfRenderWindow *renderizado, UiRegistro *uiRegistro)
 {
-    if (!clickEnRectangulo (renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->elementos.barraEscribirContrasenia))
+    if (!se_clickeo_en_rectangulo (renderizado, uiRegistro->uiAcceso->elementos.barraEscribirContrasenia))
         return EVENTO_NO_MANEJADO;
 
-    interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco = ESCRIBIR_CONTRASENIA;
-    interfazRegistro->estadoFoco = IR_NINGUNO;
-    posicionarPuntoInsercion_escribirContrasenia (interfazRegistro);
+    uiRegistro->uiAcceso->foco = ESCRIBIR_CONTRASENIA;
+    uiRegistro->foco = UI_REGISTRO_NINGUNO;
+    posicionar_punto_insercion_contrasenia (uiRegistro);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_escribirCorreo (const sfRenderWindow *renderizado, t_interfazRegistro *interfazRegistro)
+static bool procesar_click_escribir_correo (const sfRenderWindow *renderizado, UiRegistro *uiRegistro)
 {
-    if (!clickEnRectangulo (renderizado, interfazRegistro->elementos.barraEscribirCorreo))
+    if (!se_clickeo_en_rectangulo (renderizado, uiRegistro->elementos.barraEscribirCorreo))
         return EVENTO_NO_MANEJADO;
 
-    interfazRegistro->estadoFoco = ESCRIBIR_CORREO;
-    interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
-    posicionarPuntoInsercion_escribirCorreo (interfazRegistro);
+    uiRegistro->foco = ESCRIBIR_CORREO;
+    uiRegistro->uiAcceso->foco = UI_ACCESO_NINGUNO;
+    posicionar_punto_insercion_correo (uiRegistro);
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_click_intentar_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    if (!clickEnRectangulo (contextoAplicacion->renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->elementos.botonIngresar))
+    if (!se_clickeo_en_rectangulo (contextoAplicacion->renderizado, uiRegistro->uiAcceso->elementos.botonIngresar))
         return EVENTO_NO_MANEJADO;
         
-    if (!comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (!comunicacion_hay_solicitud_en_curso (contextoAplicacion))
     {
-        deshabilitarFocos (interfazRegistro);
-        intentarRegistrarYProcesarResultadoOperacion (contextoAplicacion, interfazRegistro);
+        ResultadoIntentoRegistro resultadoIntentoRegistro;
+
+        deshabilitar_focos (uiRegistro);
+        resultadoIntentoRegistro = _ui_registro_intentar_registro (contextoAplicacion, uiRegistro);
+        procesar_resultado_registro (contextoAplicacion, uiRegistro, resultadoIntentoRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_click_cambiarAInterfazAutenticacion (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_click_cambiar_a_ui_autenticacion (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    if (!clickEnTexto (contextoAplicacion->renderizado, interfazRegistro->recursosComunesAutenticacionRegistro->textos.cambiarInterfaz))
+    if (!se_clickeo_en_texto (contextoAplicacion->renderizado, uiRegistro->uiAcceso->textos.cambiarInterfaz))
         return EVENTO_NO_MANEJADO;
 
-    _interfazRegistro_cambiarAInterfaz_autenticacion (contextoAplicacion, interfazRegistro);
+    _ui_registro_cambiar_a_ui_autenticacion (contextoAplicacion, uiRegistro);
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar)
+static bool procesar_escribir_nombre (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar)
 {
-    if (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
+    if (uiRegistro->uiAcceso->foco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO, eventoChar) == EXITO)
+    if (ingresar_caracter_a_buffer (uiRegistro->uiAcceso->logica.nombreUsuario, MAX_NOMBRE_USUARIO, eventoChar) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
-        posicionarPuntoInsercion_escribirNombre (interfazRegistro);
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->uiAcceso->textos.auxEscribirNombre, uiRegistro->uiAcceso->logica.nombreUsuario, 415);
+        posicionar_punto_insercion_nombre (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar)
+static bool procesar_escribir_contrasenia (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar)
 {
-    if (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
+    if (uiRegistro->uiAcceso->foco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA, eventoChar) == EXITO)
+    if (ingresar_caracter_a_buffer (uiRegistro->uiAcceso->logica.contrasenia, MAX_CONTRASENIA, eventoChar) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
-        posicionarPuntoInsercion_escribirContrasenia (interfazRegistro);
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->uiAcceso->textos.auxEscribirContrasenia, uiRegistro->uiAcceso->logica.contrasenia, 415);
+        posicionar_punto_insercion_contrasenia (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_escribir_correo (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro, sfEvent eventoChar)
+static bool procesar_escribir_correo (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro, sfEvent eventoChar)
 {
-    if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
+    if (uiRegistro->foco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (ingresarCaracterABuffer (interfazRegistro->logica.correoElectronico, MAX_CORREO_ELECTRONICO, eventoChar) == EXITO)
+    if (ingresar_caracter_a_buffer (uiRegistro->logica.correoElectronico, MAX_CORREO_ELECTRONICO, eventoChar) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->textos.auxEscribirCorreo, interfazRegistro->logica.correoElectronico, 415);
-        posicionarPuntoInsercion_escribirCorreo (interfazRegistro);
+        sfText_setFillColor (uiRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->textos.auxEscribirCorreo, uiRegistro->logica.correoElectronico, 415);
+        posicionar_punto_insercion_correo (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static bool procesar_enter_intentarRegistrar (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_enter_intentar_registro (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    if ((interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE) &&
-        (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA) &&
-        (interfazRegistro->estadoFoco != ESCRIBIR_CORREO))
+    if ((uiRegistro->uiAcceso->foco != ESCRIBIR_NOMBRE) &&
+        (uiRegistro->uiAcceso->foco != ESCRIBIR_CONTRASENIA) &&
+        (uiRegistro->foco != ESCRIBIR_CORREO))
         return EVENTO_NO_MANEJADO;
 
-    if (!comunicacion_haySolicitudEnCurso (contextoAplicacion))
-        intentarRegistrarYProcesarResultadoOperacion (contextoAplicacion, interfazRegistro);
+    if (!comunicacion_hay_solicitud_en_curso (contextoAplicacion))
+    {
+        ResultadoIntentoRegistro resultadoIntentoRegistro;
+
+        resultadoIntentoRegistro = _ui_registro_intentar_registro (contextoAplicacion, uiRegistro);
+        procesar_resultado_registro (contextoAplicacion, uiRegistro, resultadoIntentoRegistro);
+    }
 
     return EVENTO_NO_MANEJADO;
 }
 
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_nombre (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_pegar_nombre_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
-    if (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_NOMBRE)
+    if (uiRegistro->uiAcceso->foco != ESCRIBIR_NOMBRE)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (pegarTextoDesdePortapapelesABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, MAX_NOMBRE_USUARIO) == EXITO)
+    if (pegar_texto_desde_portapapeles_a_buffer (uiRegistro->uiAcceso->logica.nombreUsuario, MAX_NOMBRE_USUARIO) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirNombre, interfazRegistro->recursosComunesAutenticacionRegistro->logica.nombreUsuario, 415);
-        posicionarPuntoInsercion_escribirNombre (interfazRegistro);
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirNombre, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->uiAcceso->textos.auxEscribirNombre, uiRegistro->uiAcceso->logica.nombreUsuario, 415);
+        posicionar_punto_insercion_nombre (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_contrasenia (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_pegar_contrasenia_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
     sfFloatRect limiteTextoAux;
 
-    if (interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco != ESCRIBIR_CONTRASENIA)
+    if (uiRegistro->uiAcceso->foco != ESCRIBIR_CONTRASENIA)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (pegarTextoDesdePortapapelesABuffer (interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, MAX_CONTRASENIA) == EXITO)
+    if (pegar_texto_desde_portapapeles_a_buffer (uiRegistro->uiAcceso->logica.contrasenia, MAX_CONTRASENIA) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->recursosComunesAutenticacionRegistro->textos.auxEscribirContrasenia, interfazRegistro->recursosComunesAutenticacionRegistro->logica.contrasenia, 415);
-        posicionarPuntoInsercion_escribirContrasenia (interfazRegistro);
+        sfText_setFillColor (uiRegistro->uiAcceso->textos.auxEscribirContrasenia, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->uiAcceso->textos.auxEscribirContrasenia, uiRegistro->uiAcceso->logica.contrasenia, 415);
+        posicionar_punto_insercion_contrasenia (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
-static bool procesar_pegarTextoDesdePortapapeles_escribir_correo (t_contextoAplicacion *contextoAplicacion, t_interfazRegistro *interfazRegistro)
+static bool procesar_pegar_correo_desde_portapapeles (ContextoAplicacion *contextoAplicacion, UiRegistro *uiRegistro)
 {
     sfFloatRect limiteTextoAux;
 
-    if (interfazRegistro->estadoFoco != ESCRIBIR_CORREO)
+    if (uiRegistro->foco != ESCRIBIR_CORREO)
         return EVENTO_NO_MANEJADO;
 
-    if (comunicacion_haySolicitudEnCurso (contextoAplicacion))
+    if (comunicacion_hay_solicitud_en_curso (contextoAplicacion))
         return EVENTO_MANEJADO;
 
-    if (pegarTextoDesdePortapapelesABuffer (interfazRegistro->logica.correoElectronico, MAX_CORREO_ELECTRONICO) == EXITO)
+    if (pegar_texto_desde_portapapeles_a_buffer (uiRegistro->logica.correoElectronico, MAX_CORREO_ELECTRONICO) == EXITO)
     {
-        sfText_setFillColor (interfazRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
-        limitarVisualizacionTextoSobreBarraEscritura (interfazRegistro->textos.auxEscribirCorreo, interfazRegistro->logica.correoElectronico, 415);
-        posicionarPuntoInsercion_escribirCorreo (interfazRegistro);
+        sfText_setFillColor (uiRegistro->textos.auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
+        limitar_visualizacion_texto_sobre_barra_escritura (uiRegistro->textos.auxEscribirCorreo, uiRegistro->logica.correoElectronico, 415);
+        posicionar_punto_insercion_correo (uiRegistro);
     }
 
     return EVENTO_MANEJADO;
 }
 
 
-static void deshabilitarFocos (t_interfazRegistro *interfazRegistro)
+static void deshabilitar_focos (UiRegistro *uiRegistro)
 {
-    interfazRegistro->recursosComunesAutenticacionRegistro->estadoFoco = RCAR_NINGUNO;
-    interfazRegistro->estadoFoco = IR_NINGUNO;
+    uiRegistro->uiAcceso->foco = UI_ACCESO_NINGUNO;
+    uiRegistro->foco = UI_REGISTRO_NINGUNO;
 }

@@ -6,12 +6,12 @@
    ============================================================================================================================================ */
 
 
-static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db);
-static t_codigoRetorno crearEsquema (sqlite3 *db);
-static t_codigoRetorno inicializarSentenciasSqlite (sqlite3 *db, t_sentenciasSqlite *sentencias);
-static void liberarSentenciasSqlite (t_sentenciasSqlite *sentencias);
+static ResultadoInicializacionBD existe_tabla_usuarios (sqlite3 *bd);
+static CodigoRetorno crear_esquema (sqlite3 *bd);
+static CodigoRetorno crear_sentencias_sqlite (sqlite3 *bd, SentenciasSqlite *sentencias);
+static void liberar_sentencias_sqlite (SentenciasSqlite *sentencias);
 
-static bool encontroUnUsuario (int resultadoConsulta);
+static bool encontro_usuario (int resultadoConsulta);
 
 
 /* ============================================================================================================================================
@@ -19,59 +19,59 @@ static bool encontroUnUsuario (int resultadoConsulta);
    ============================================================================================================================================ */
 
 
-t_codigoRetorno inicializarBaseDatos (sqlite3 **db, t_sentenciasSqlite *sentenciasSqlite)
+CodigoRetorno bd_inicializar (sqlite3 **bd, SentenciasSqlite *sentenciasSqlite)
 {
-    t_respuestaInicializacionDB respuestaInicializacionDB;
+    ResultadoInicializacionBD respuestaInicializacionBD;
 
-    if (sqlite3_open ("database/database.db", db) != SQLITE_OK)
+    if (sqlite3_open ("database/database.bd", bd) != SQLITE_OK)
     {
-        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*db));
+        printf("\nERROR - Abrir base de datos: %s.\n", sqlite3_errmsg (*bd));
         return ERROR_INICIALIZACION;
     }
     
-    respuestaInicializacionDB = existeTablaUsuarios (*db);
+    respuestaInicializacionBD = existe_tabla_usuarios (*bd);
 
-    if (respuestaInicializacionDB == ERROR_PREPARACION_CONSULTA)
+    if (respuestaInicializacionBD == ERROR_PREPARACION_CONSULTA)
         return ERROR_INICIALIZACION;
 
-    if (respuestaInicializacionDB == TABLA_NO_EXISTE)
-        if (crearEsquema(*db) == ERROR_INICIALIZACION)
+    if (respuestaInicializacionBD == TABLA_NO_EXISTE)
+        if (crear_esquema(*bd) == ERROR_INICIALIZACION)
             return ERROR_INICIALIZACION;
 
-    if (inicializarSentenciasSqlite (*db, sentenciasSqlite) == ERROR_INICIALIZACION)
+    if (crear_sentencias_sqlite (*bd, sentenciasSqlite) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     return EXITO;
 }
 
-void configurarBaseDeDatos (sqlite3 *db)
+void bd_configurar (sqlite3 *bd)
 {
-    sqlite3_exec (db, "PRAGMA journal_mode=WAL;", NULL, NULL, NULL);
+    sqlite3_exec (bd, "PRAGMA journal_mode=WAL;", NULL, NULL, NULL);
 }
 
-void liberarBaseDeDatos (sqlite3 *db, t_sentenciasSqlite *sentenciasSqlite)
+void bd_liberar (sqlite3 *bd, SentenciasSqlite *sentenciasSqlite)
 {
-    if (db != NULL)
-        sqlite3_close (db);
+    if (bd != NULL)
+        sqlite3_close (bd);
 
-    liberarSentenciasSqlite (sentenciasSqlite);
+    liberar_sentencias_sqlite (sentenciasSqlite);
 }
 
 
-bool buscarUsuarioPorNombre_recuperarId (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarId, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario)
+bool bd_buscar_id_por_nombre (sqlite3_stmt *sentenciaBuscarIdPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario)
 {
     int resultadoConsulta;
 
-    sqlite3_reset (sentenciaBuscarUsuarioPorNombre_recuperarId);                   // Limpia el estado de la ejecucion anterior.
-    sqlite3_clear_bindings (sentenciaBuscarUsuarioPorNombre_recuperarId);    // Limpia bindings previos.
+    sqlite3_reset (sentenciaBuscarIdPorNombre);                   // Limpia el estado de la ejecucion anterior.
+    sqlite3_clear_bindings (sentenciaBuscarIdPorNombre);    // Limpia bindings previos.
 
-    sqlite3_bind_text (sentenciaBuscarUsuarioPorNombre_recuperarId, 1, datosBuscarUsuarioPorNombre->nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaBuscarIdPorNombre, 1, parametrosBuscarUsuarioPorNombre->nombreUsuario, -1, SQLITE_STATIC);
 
-    resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorNombre_recuperarId);
-    if (encontroUnUsuario (resultadoConsulta))
+    resultadoConsulta = sqlite3_step (sentenciaBuscarIdPorNombre);
+    if (encontro_usuario (resultadoConsulta))
     {
         if (returnIdUsuario != NULL)
-            *returnIdUsuario = sqlite3_column_int (sentenciaBuscarUsuarioPorNombre_recuperarId, 0);
+            *returnIdUsuario = sqlite3_column_int (sentenciaBuscarIdPorNombre, 0);
         return true;
     }
     else
@@ -82,21 +82,21 @@ bool buscarUsuarioPorNombre_recuperarId (sqlite3_stmt *sentenciaBuscarUsuarioPor
     }
 }
 
-bool buscarUsuarioPorNombre_recuperarIdYContrasenia (sqlite3_stmt *sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, const t_datosBuscarUsuarioPorNombre *datosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia)
+bool bd_buscar_id_y_contrasenia_por_nombre (sqlite3_stmt *sentenciaBuscarIdYContraseniaPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia)
 {
     int resultadoConsulta;
     const char *auxContrasenia;
 
-    sqlite3_reset (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia);                   // Limpia el estado de la ejecucion anterior.
-    sqlite3_clear_bindings (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia);    // Limpia bindings previos.
+    sqlite3_reset (sentenciaBuscarIdYContraseniaPorNombre);                   // Limpia el estado de la ejecucion anterior.
+    sqlite3_clear_bindings (sentenciaBuscarIdYContraseniaPorNombre);    // Limpia bindings previos.
 
-    sqlite3_bind_text (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, 1, datosBuscarUsuarioPorNombre->nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaBuscarIdYContraseniaPorNombre, 1, parametrosBuscarUsuarioPorNombre->nombreUsuario, -1, SQLITE_STATIC);
 
-    resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia);
-    if (encontroUnUsuario (resultadoConsulta))
+    resultadoConsulta = sqlite3_step (sentenciaBuscarIdYContraseniaPorNombre);
+    if (encontro_usuario (resultadoConsulta))
     {
-        *returnIdUsuario = sqlite3_column_int (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, 0);
-        auxContrasenia = (const char *) sqlite3_column_text (sentenciaBuscarUsuarioPorNombre_recuperarIdYContrasenia, 1);
+        *returnIdUsuario = sqlite3_column_int (sentenciaBuscarIdYContraseniaPorNombre, 0);
+        auxContrasenia = (const char *) sqlite3_column_text (sentenciaBuscarIdYContraseniaPorNombre, 1);
         strcpy (returnContrasenia, auxContrasenia);
         return true;
     }
@@ -108,41 +108,41 @@ bool buscarUsuarioPorNombre_recuperarIdYContrasenia (sqlite3_stmt *sentenciaBusc
     }
 }
 
-bool buscarUsuarioPorCorreo (sqlite3_stmt *sentenciaBuscarUsuarioPorCorreo, const t_datosBuscarUsuarioPorCorreo *datosBuscarUsuarioPorCorreo)
+bool bd_existe_usuario_con_correo (sqlite3_stmt *sentenciaBuscarIdPorCorreo, const ParametrosBuscarUsuarioPorCorreo *parametrosBuscarUsuarioPorCorreo)
 {
     int resultadoConsulta;
 
-    sqlite3_reset (sentenciaBuscarUsuarioPorCorreo);                   // Limpia el estado de la ejecucion anterior.
-    sqlite3_clear_bindings (sentenciaBuscarUsuarioPorCorreo);    // Limpia bindings previos.
+    sqlite3_reset (sentenciaBuscarIdPorCorreo);                   // Limpia el estado de la ejecucion anterior.
+    sqlite3_clear_bindings (sentenciaBuscarIdPorCorreo);    // Limpia bindings previos.
 
-    sqlite3_bind_text (sentenciaBuscarUsuarioPorCorreo, 1, datosBuscarUsuarioPorCorreo->correoElectronico, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaBuscarIdPorCorreo, 1, parametrosBuscarUsuarioPorCorreo->correoElectronico, -1, SQLITE_STATIC);
 
-    resultadoConsulta = sqlite3_step (sentenciaBuscarUsuarioPorCorreo);
-    if (encontroUnUsuario (resultadoConsulta))
+    resultadoConsulta = sqlite3_step (sentenciaBuscarIdPorCorreo);
+    if (encontro_usuario (resultadoConsulta))
         return true;
     return false;
 }
 
-void insertarUsuario (sqlite3_stmt *sentenciaInsertarUsuario, const t_datosInsertarUsuario *datosInsertarUsuario)
+void bd_insertar_usuario (sqlite3_stmt *sentenciaInsertarUsuario, const ParametrosInsertarUsuario *parametrosInsertarUsuario)
 {
     sqlite3_reset (sentenciaInsertarUsuario);                   // Limpia el estado de la ejecucion anterior.
     sqlite3_clear_bindings (sentenciaInsertarUsuario);    // Limpia bindings previos.
 
-    sqlite3_bind_text (sentenciaInsertarUsuario, 1, datosInsertarUsuario->nombreUsuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentenciaInsertarUsuario, 2, datosInsertarUsuario->contrasenia, -1, SQLITE_STATIC);
-    sqlite3_bind_text (sentenciaInsertarUsuario, 3, datosInsertarUsuario->correoElectronico, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaInsertarUsuario, 1, parametrosInsertarUsuario->nombreUsuario, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaInsertarUsuario, 2, parametrosInsertarUsuario->contrasenia, -1, SQLITE_STATIC);
+    sqlite3_bind_text (sentenciaInsertarUsuario, 3, parametrosInsertarUsuario->correoElectronico, -1, SQLITE_STATIC);
 
     sqlite3_step (sentenciaInsertarUsuario);
 }
 
-void insertarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosInsertarMensaje *datosInsertarMensaje)
+void bd_insertar_mensaje (sqlite3_stmt *sentenciaInsertarMensaje, const ParametrosInsertarMensaje *parametrosInsertarMensaje)
 {
     sqlite3_reset (sentenciaInsertarMensaje);                   // Limpia el estado de la ejecucion anterior.
     sqlite3_clear_bindings (sentenciaInsertarMensaje);    // Limpia bindings previos.
 
-    sqlite3_bind_int (sentenciaInsertarMensaje, 1, datosInsertarMensaje->idEmisor);
-    sqlite3_bind_int (sentenciaInsertarMensaje, 2, datosInsertarMensaje->idReceptor);
-    sqlite3_bind_text (sentenciaInsertarMensaje, 3, datosInsertarMensaje->texto, -1, SQLITE_STATIC);
+    sqlite3_bind_int (sentenciaInsertarMensaje, 1, parametrosInsertarMensaje->idEmisor);
+    sqlite3_bind_int (sentenciaInsertarMensaje, 2, parametrosInsertarMensaje->idReceptor);
+    sqlite3_bind_text (sentenciaInsertarMensaje, 3, parametrosInsertarMensaje->texto, -1, SQLITE_STATIC);
 
     sqlite3_step (sentenciaInsertarMensaje);
 }
@@ -153,14 +153,14 @@ void insertarMensaje (sqlite3_stmt *sentenciaInsertarMensaje, const t_datosInser
    ============================================================================================================================================ */
 
 
-static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db)
+static ResultadoInicializacionBD existe_tabla_usuarios (sqlite3 *bd)
 {
     sqlite3_stmt *sentencia;
     int resultado;
 
-    if (sqlite3_prepare_v2 (db, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';", -1, &sentencia, NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'usuarios';", -1, &sentencia, NULL) != SQLITE_OK)
     {
-        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (db));
+        printf ("\nERROR - Preparando consulta SQLite: %s.\n", sqlite3_errmsg (bd));
         return ERROR_PREPARACION_CONSULTA;
     }
 
@@ -172,7 +172,7 @@ static t_respuestaInicializacionDB existeTablaUsuarios (sqlite3 *db)
     return TABLA_NO_EXISTE;
 }
 
-static t_codigoRetorno crearEsquema (sqlite3 *db)
+static CodigoRetorno crear_esquema (sqlite3 *bd)
 {
     FILE *archEsquema;
     long tamArchEsquema;
@@ -200,7 +200,7 @@ static t_codigoRetorno crearEsquema (sqlite3 *db)
     fread (consulta, 1, tamArchEsquema, archEsquema);
     consulta[tamArchEsquema] = '\0';
 
-    if (sqlite3_exec (db, consulta, NULL, NULL, NULL) != SQLITE_OK)
+    if (sqlite3_exec (bd, consulta, NULL, NULL, NULL) != SQLITE_OK)
     {
         perror ("\nERROR - Ejecutar schema.sql.\n");
         fclose(archEsquema);
@@ -214,33 +214,33 @@ static t_codigoRetorno crearEsquema (sqlite3 *db)
     return EXITO;
 }
 
-static t_codigoRetorno inicializarSentenciasSqlite (sqlite3 *db, t_sentenciasSqlite *sentencias)
+static CodigoRetorno crear_sentencias_sqlite (sqlite3 *bd, SentenciasSqlite *sentencias)
 {
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE nombre = ?;", -1, &(sentencias->buscarUsuarioPorNombre_recuperarId), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "SELECT id FROM usuarios WHERE nombre = ?;", -1, &(sentencias->buscarIdPorNombre), NULL) != SQLITE_OK)
     {
-        perror ("\nERROR - Preparando consulta buscarUsuarioPorNombre_recuperarId.\n");
+        perror ("\nERROR - Preparando consulta buscarIdPorNombre.\n");
         return ERROR_INICIALIZACION;
     }
 
-    if (sqlite3_prepare_v2 (db, "SELECT id, hashContrasenia FROM usuarios WHERE nombre = ?;", -1, &(sentencias->buscarUsuarioPorNombre_recuperarIdYContrasenia), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "SELECT id, hashContrasenia FROM usuarios WHERE nombre = ?;", -1, &(sentencias->buscarIdYContraseniaPorNombre), NULL) != SQLITE_OK)
     {
-        perror ("\nERROR - Preparando consulta buscarUsuarioPorNombre_recuperarIdYContrasenia.\n");
+        perror ("\nERROR - Preparando consulta buscarIdYContraseniaPorNombre.\n");
         return ERROR_INICIALIZACION;
     }
 
-    if (sqlite3_prepare_v2 (db, "SELECT id FROM usuarios WHERE correoElectronico = ?;", -1, &(sentencias->buscarUsuarioPorCorreo), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "SELECT id FROM usuarios WHERE correoElectronico = ?;", -1, &(sentencias->buscarIdPorCorreo), NULL) != SQLITE_OK)
     {
-        perror ("\nERROR - Preparando consulta buscarUsuarioPorCorreo.\n");
+        perror ("\nERROR - Preparando consulta buscarIdPorCorreo.\n");
         return ERROR_INICIALIZACION;
     }
 
-    if (sqlite3_prepare_v2 (db, "INSERT INTO usuarios (nombre, hashContrasenia, correoElectronico) VALUES (?, ?, ?);", -1, &(sentencias->insertarUsuario), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "INSERT INTO usuarios (nombre, hashContrasenia, correoElectronico) VALUES (?, ?, ?);", -1, &(sentencias->insertarUsuario), NULL) != SQLITE_OK)
     {
         perror ("\nERROR - Preparando consulta insertarUsuario.\n");
         return ERROR_INICIALIZACION;
     }
 
-    if (sqlite3_prepare_v2 (db, "INSERT INTO mensajes (idEmisor, idReceptor, texto) VALUES (?, ?, ?);", -1, &(sentencias->insertarMensaje), NULL) != SQLITE_OK)
+    if (sqlite3_prepare_v2 (bd, "INSERT INTO mensajes (idEmisor, idReceptor, texto) VALUES (?, ?, ?);", -1, &(sentencias->insertarMensaje), NULL) != SQLITE_OK)
     {
         perror ("\nERROR - Preparando consulta insertarMensaje.\n");
         return ERROR_INICIALIZACION;
@@ -249,17 +249,17 @@ static t_codigoRetorno inicializarSentenciasSqlite (sqlite3 *db, t_sentenciasSql
     return EXITO;
 }
 
-static void liberarSentenciasSqlite (t_sentenciasSqlite *sentencias)
+static void liberar_sentencias_sqlite (SentenciasSqlite *sentencias)
 {
-    sqlite3_finalize (sentencias->buscarUsuarioPorNombre_recuperarId);
-    sqlite3_finalize (sentencias->buscarUsuarioPorNombre_recuperarIdYContrasenia);
-    sqlite3_finalize (sentencias->buscarUsuarioPorCorreo);
+    sqlite3_finalize (sentencias->buscarIdPorNombre);
+    sqlite3_finalize (sentencias->buscarIdYContraseniaPorNombre);
+    sqlite3_finalize (sentencias->buscarIdPorCorreo);
     sqlite3_finalize (sentencias->insertarUsuario);
     sqlite3_finalize (sentencias->insertarMensaje);
 }
 
 
-static bool encontroUnUsuario (int resultadoConsulta)
+static bool encontro_usuario (int resultadoConsulta)
 {
     return ((resultadoConsulta == SQLITE_ROW) ? (true) : (false));
 }

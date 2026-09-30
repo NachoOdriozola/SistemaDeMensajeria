@@ -38,7 +38,7 @@
    ============================================================================================================================================ */
 
    
-void _interfazContactos_actualizar (t_contextoAplicacion *contextoAplicacion, t_interfazContactos *interfazContactos);
+void _ui_contactos_actualizar (ContextoAplicacion *contextoAplicacion, UiContactos *uiContactos);
 
 
 #endif // INTERFAZCONTACTOS_ACTUALIZAR_H_INCLUDED

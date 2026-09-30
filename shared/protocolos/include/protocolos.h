@@ -4,8 +4,8 @@
  */
 
 
-#ifndef PROTOCOLO_H_INCLUDED
-#define PROTOCOLO_H_INCLUDED
+#ifndef PROTOCOLOS_H_INCLUDED
+#define PROTOCOLOS_H_INCLUDED
 
 
 /* ============================================================================================================================================
@@ -52,7 +52,7 @@
 
 
 /**
- * \enum t_tipoSolicitud
+ * \enum TipoSolicitud
  * \brief Indice del tipo de solicitud, enviado por el cliente hacia el servidor.
  */
 typedef enum
@@ -61,11 +61,11 @@ typedef enum
     SOLICITUD_REGISTRO = 'b',
     SOLICITUD_ENVIO_MENSAJE = 'c',
     SOLICITUD_SELECCION_CHAT = 'd',
-} t_tipoSolicitud;
+} TipoSolicitud;
 
 /**
- * \enum t_estadoSolicitud
- * \brief Indice sobre el estado de la solicitud, enviado por el servidor hacia el cliente.
+ * \enum EstadoSolicitud
+ * \brief Indice sobre el EstadoSolicitud de la solicitud, enviado por el servidor hacia el cliente.
  */
 typedef enum
 {
@@ -76,10 +76,10 @@ typedef enum
     SOLICITUD_ERROR_OPERACION_INVALIDA = 'e',
     SOLICITUD_ERROR_NOMBRE_YA_EXISTENTE = 'f',
     SOLICITUD_ERROR_CORREO_YA_EXISTENTE = 'g'
-} t_estadoSolicitud;
+} EstadoSolicitud;
 
 /**
- * \enum t_tipoRespuesta
+ * \enum TipoRespuesta
  * \brief Indice del tipo de respuesta, enviado por el servidor hacia el cliente.
  */
 typedef enum
@@ -89,128 +89,128 @@ typedef enum
     RESPUESTA_SOLICITUD_ENVIO_MENSAJE = 'C',
     RESPUESTA_SOLICITUD_SELECCION_CHAT = 'D',
     RESPUESTA_RECEPCION_MENSAJE = 'E',
-} t_tipoRespuesta;
-
-
-/* ============================================================================================================================================
-   ESTRUCTURAS DE ENVIO DE DATOS DE SOLICITUDES
-   ============================================================================================================================================ */
+} TipoRespuesta;
 
 
 /**
- * \struct t_header
+ * \struct Header
  * \brief Header que contiene los datos del paquete a transmitir.
  */
 typedef struct
 {
-    char tipo;
+    char tipoPaquete;
     short int bytesTransmitidos;
-} t_header;
-
-
-/**
- * \struct t_datosEnvioSolicitudAutenticacion
- * \brief Datos enviados por el cliente para realizar la solicitud.
- */
-typedef struct
-{
-    t_header header;
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
-    char contrasenia [MAX_CONTRASENIA];
-} t_datosEnvioSolicitudAutenticacion;
-
-/**
- * \struct t_datosEnvioSolicitudRegistro
- * \brief Datos enviados por el cliente para realizar la solicitud.
- */
-typedef struct
-{
-    t_header header;
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
-    char contrasenia [MAX_CONTRASENIA];
-    char correoElectronico [MAX_CORREO_ELECTRONICO];
-} t_datosEnvioSolicitudRegistro;
-
-/**
- * \struct t_datosEnvioSolicitudEnvioMensaje
- * \brief Datos enviados por el cliente para realizar la solicitud.
- */
-typedef struct
-{
-    t_header header;
-    int idEmisor, idReceptor;
-    char texto [MAX_MENSAJE];
-} t_datosEnvioSolicitudEnvioMensaje;
-
-/**
- * \struct t_datosEnvioSolicitudSeleccionChat
- * \brief Datos enviados por el cliente para realizar la solicitud.
- */
-typedef struct
-{
-    t_header header;
-    char nombreUsuarioChatSeleccionado [MAX_NOMBRE_USUARIO];
-} t_datosEnvioSolicitudSeleccionChat;
+} Header;
 
 
 /* ============================================================================================================================================
-   ESTRUCTURAS DE DATOS DE RESPUESTAS DE SOLICITUDES
+   ESTRUCTURAS DE DATOS DE ENVIO DE SOLICITUDES: cliente -> servidor
    ============================================================================================================================================ */
 
 
 /**
- * \struct t_datosRespuestaSolicitudAutenticacion
+ * \struct SolicitudAutenticacion
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    Header header;
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    char contrasenia [MAX_CONTRASENIA];
+} SolicitudAutenticacion;
+
+/**
+ * \struct SolicitudRegistro
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    Header header;
+    char nombreUsuario [MAX_NOMBRE_USUARIO];
+    char contrasenia [MAX_CONTRASENIA];
+    char correoElectronico [MAX_CORREO_ELECTRONICO];
+} SolicitudRegistro;
+
+/**
+ * \struct SolicitudEnvioMensaje
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    Header header;
+    int idEmisor, idReceptor;
+    char texto [MAX_MENSAJE];
+} SolicitudEnvioMensaje;
+
+/**
+ * \struct SolicitudSeleccionChat
+ * \brief Datos enviados por el cliente para realizar la solicitud.
+ */
+typedef struct
+{
+    Header header;
+    char nombreUsuarioChatSeleccionado [MAX_NOMBRE_USUARIO];
+} SolicitudSeleccionChat;
+
+
+/* ============================================================================================================================================
+   ESTRUCTURAS DE DATOS DE RESPUESTAS DE SOLICITUDES: servidor -> cliente
+   ============================================================================================================================================ */
+
+
+/**
+ * \struct RespuestaAutenticacion
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
 {
-    t_header header;
-    char estadoSolicitud;
+    Header header;
+    char estado;
     int idUsuario;
-} t_datosRespuestaSolicitudAutenticacion;
+} RespuestaAutenticacion;
 
 /**
- * \struct t_datosRespuestaSolicitudRegistro
+ * \struct RespuestaRegistro
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
 {
-    t_header header;
-    char estadoSolicitud;
+    Header header;
+    char estado;
     int idUsuario;
-} t_datosRespuestaSolicitudRegistro;
+} RespuestaRegistro;
 
 /**
- * \struct t_datosRespuestaSolicitudEnvioMensaje
+ * \struct RespuestaEnvioMensaje
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
 {
-    t_header header;
-    char estadoSolicitud;
-} t_datosRespuestaSolicitudEnvioMensaje;
+    Header header;
+    char estado;
+} RespuestaEnvioMensaje;
 
 /**
- * \struct t_datosRespuestaSolicitudRegistro
+ * \struct RespuestaRegistro
  * \brief Datos de respuesta a enviar al cliente.
  */
 typedef struct
 {
-    t_header header;
+    Header header;
     int idEmisor;
     char texto [MAX_MENSAJE];
-} t_datosRespuestaRecepcionMensaje;
+} RespuestaRecepcionMensaje;
 
 /**
- * \struct t_datosRespuestaSolicitudSeleccionChat
+ * \struct RespuestaSeleccionChat
  * \brief Datos de respuesta de la solicitud a enviar al cliente.
  */
 typedef struct
 {
-    t_header header;
-    char estadoSolicitud;
-    int idUsuarioDelChatSeleccionado;
-} t_datosRespuestaSolicitudSeleccionChat;
+    Header header;
+    char estado;
+    int idUsuarioChatSeleccionado;
+} RespuestaSeleccionChat;
 
 
-#endif // PROTOCOLO_H_INCLUDED
+#endif // PROTOCOLOS_H_INCLUDED

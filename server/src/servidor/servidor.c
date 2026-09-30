@@ -1,7 +1,7 @@
 #include "servidor/servidor.h"
 
 
-t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
+CodigoRetorno servidor_inicializar (ContextoServidor *contextoServidor)
 {
     printf ("-INICIALIZANDO LOS RECURSOS DEL SERVIDOR-\t");
 
@@ -11,23 +11,23 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
     // --------------- INICIALIZAR VALORES NULOS ---------------
 
     contextoServidor->sock = INVALID_SOCKET;
-    contextoServidor->baseDeDatos = NULL;
+    contextoServidor->bd = NULL;
 
     // --------------- CREAR TABLA HASH DE CLIENTES ---------------
 
-    crearTablaHash (&(contextoServidor->clientes), CANT_BUCKETS_TABLA_HASH);
+    tabla_hash_crear (&(contextoServidor->clientes), CANT_BUCKETS_TABLA_HASH);
 
     // --------------- CREAR LISTA DOBLE DE CLIENTES NO AUTENTICADOS ---------------
 
-    crearListaDoble (&(contextoServidor->clientesNoAutenticados));
+    lista_doble_crear (&(contextoServidor->clientesNoAutenticados));
 
     // --------------- CREAR COLA DE SOLICITUDES ---------------
 
-    crearCola (&(contextoServidor->solicitudes));
+    cola_crear (&(contextoServidor->solicitudes));
 
     // --------------- CREAR LISTA SIMPLE DE RESPUESTAS PENDIENTES ---------------
 
-    crearListaSimple (&(contextoServidor->respuestasPendientes));
+    lista_simple_crear (&(contextoServidor->respuestasPendientes));
 
     // --------------- INICIALIZAR SOCKET ---------------
 
@@ -39,7 +39,7 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- INICIALIZAR BASE DE DATOS ---------------
 
-    if (inicializarBaseDatos (&(contextoServidor->baseDeDatos), &(contextoServidor->sentenciasSqlite)) == ERROR_INICIALIZACION)
+    if (bd_inicializar (&(contextoServidor->bd), &(contextoServidor->sentenciasSqlite)) == ERROR_INICIALIZACION)
         return ERROR_INICIALIZACION;
 
     // --------------- INICIALIZAR SODIUM ---------------
@@ -55,14 +55,14 @@ t_codigoRetorno inicializarServidor (t_contextoServidor *contextoServidor)
     return EXITO;
 }
 
-t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
+CodigoRetorno servidor_configurar (ContextoServidor *contextoServidor)
 {
     printf ("-CONFIGURANDO LOS RECURSOS DEL SERVIDOR-\t");
 
 
     // --------------- CONFIGURAR MANEJADOR DE CONSOLA ---------------
 
-    if (!SetConsoleCtrlHandler (manejadorConsola, TRUE))
+    if (!SetConsoleCtrlHandler (manejador_consola, TRUE))
     {
         printf ("\nERROR - Configurar el manejador de cierre de la consola.\n");
         return ERROR_CONFIGURACION;
@@ -70,15 +70,15 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
 
     // --------------- CONFIGURAR SOCKET ---------------
 
-    if (socket_conectarServidor (&(contextoServidor->sock)) == ERROR_CONFIGURACION)
+    if (socket_conectar_servidor (&(contextoServidor->sock)) == ERROR_CONFIGURACION)
         return ERROR_CONFIGURACION;
         
-    socket_establecerModoNoBloqueante (&(contextoServidor->sock));
-    socket_establecerKeepAlive (&(contextoServidor->sock));
+    socket_establecer_modo_no_bloqueante (&(contextoServidor->sock));
+    socket_establecer_keep_alive (&(contextoServidor->sock));
 
     // --------------- CONFIGURAR BASE DE DATOS ---------------
 
-    configurarBaseDeDatos (contextoServidor->baseDeDatos);
+    bd_configurar (contextoServidor->bd);
 
 
     printf ("-CONFIGURACION EXITOSA-\n");
@@ -87,30 +87,30 @@ t_codigoRetorno configurarServidor (t_contextoServidor *contextoServidor)
     return EXITO;
 }
 
-void liberarServidor (t_contextoServidor *contextoServidor)
+void servidor_liberar (ContextoServidor *contextoServidor)
 {
     printf ("-LIBERANDO LOS RECURSOS DEL SERVIDOR-\t");
 
 
     // --------------- LIBERAR COLA DE SOLICITUDES ---------------
 
-    vaciarCola (&(contextoServidor->solicitudes));
+    cola_vaciar (&(contextoServidor->solicitudes));
 
     // --------------- LIBERAR LISTA SIMPLE DE RESPUESTAS PENDIENTES ---------------
 
-    vaciarListaSimple (&(contextoServidor->respuestasPendientes));
+    lista_simple_vaciar (&(contextoServidor->respuestasPendientes));
 
     // --------------- LIBERAR LISTA DOBLE DE CLIENTES NO AUTENTICADOS ---------------
 
-    vaciarListaDobleConAccion (&(contextoServidor->clientesNoAutenticados), liberarCliente);
+    lista_doble_vaciar_con_accion (&(contextoServidor->clientesNoAutenticados), liberar_cliente);
 
     // --------------- LIBERAR TABLA HASH ---------------
 
-    eliminarTablaHashConAccion (&(contextoServidor->clientes), liberarCliente);
+    tabla_hash_eliminar_con_accion (&(contextoServidor->clientes), liberar_cliente);
 
     // --------------- CERRAR BASE DE DATOS ---------------
 
-    liberarBaseDeDatos (contextoServidor->baseDeDatos, &(contextoServidor->sentenciasSqlite));
+    bd_liberar (contextoServidor->bd, &(contextoServidor->sentenciasSqlite));
     
     // --------------- CERRAR SOCKET ---------------
 
@@ -125,7 +125,7 @@ void liberarServidor (t_contextoServidor *contextoServidor)
 
 BOOL servidorActivo = TRUE;
 
-BOOL WINAPI manejadorConsola(DWORD tipoEvento)
+BOOL WINAPI manejador_consola (DWORD tipoEvento)
 {
     switch (tipoEvento)
     {

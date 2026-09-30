@@ -42,27 +42,27 @@
 
 /** \brief Inicializar todas las variables graficas en NULL de los recursos graficos de la interfaz de autenticacion.
  *
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param uiAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_inicializarValoresNulos (t_interfazAutenticacion *interfazAutenticacion);
+void ui_autenticacion_inicializar (UiAutenticacion *uiAutenticacion);
 
 /** \brief Inicializar los recursos graficos de la interfaz de autenticacion. Ademas, asigna los recursos comunes.
  *
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param uiAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  * \param recursosComunesAutenticacionRegistro Puntero a la estructura base de los recursos graficos y logica comunes entre las interfaces de autenticacion y registro.
  * 
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de error.
  *
  */
-t_codigoRetorno interfazAutenticacion_inicializar (t_interfazAutenticacion *interfazAutenticacion, t_recursosComunesAutenticacionRegistro *recursosComunesAutenticacionRegistro);
+CodigoRetorno ui_autenticacion_crear (UiAutenticacion *uiAutenticacion, UiAcceso *uiAcceso);
 
 /** \brief Configurar y establecer un tamanio y una posicion sobre la ventana a cada recurso grafico de la interfaz de autenticacion.
  *
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param uiAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutenticacion);
+void ui_autenticacion_configurar (UiAutenticacion *uiAutenticacion);
 
 /** \brief Ejecutar la interfaz de autenticacion.
  *
@@ -71,18 +71,18 @@ void interfazAutenticacion_configurar (t_interfazAutenticacion *interfazAutentic
  * 2) Actualizacion: Capturar y manejar los eventos no generados por el usuario directamente (recepcion de mensajes o notificaciones, etc).
  * 3) Renderizado: Limpiar la ventana anterior y mostrar los recursos graficos actualizados de la interfaz de contactos en la ventana.
  *
- * \param contextoAplicacion Puntero a la estructura que provee contexto (estados y recursos) global de la aplicacion.
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param contextoAplicacion Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global de la aplicacion.
+ * \param uiAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_ejecutar (t_contextoAplicacion *contextoAplicacion, t_interfazAutenticacion *interfazAutenticacion);
+void ui_autenticacion_ejecutar (ContextoAplicacion *contextoAplicacion, UiAutenticacion *uiAutenticacion);
 
 /** \brief Liberar, de manera segura, todos los recursos graficos de la interfaz de autenticacion.
  *
- * \param interfazAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
+ * \param uiAutenticacion Puntero a la estructura base de los recursos graficos y logica de la interfaz de autenticacion.
  *
  */
-void interfazAutenticacion_liberar (t_interfazAutenticacion *interfazAutenticacion);
+void ui_autenticacion_liberar (UiAutenticacion *uiAutenticacion);
 
 
 #endif // INTERFAZAUTENTICACION_H_INCLUDED

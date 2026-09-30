@@ -1,7 +1,7 @@
 #include "interfacesGraficas/interfazRegistro/recursos.h"
 
 
-void _interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *textos)
+void _ui_registro_inicializar_textos (UiRegistroTextos *textos)
 {
     textos->auxEscribirCorreo = NULL;
     textos->ingresarCorreo = NULL;
@@ -9,13 +9,13 @@ void _interfazRegistro_inicializarValoresNulosTextos (t_interfazRegistroTextos *
     textos->informacionNombre = NULL;
 }
 
-void _interfazRegistro_inicializarValoresNulosElementos (t_interfazRegistroElementos *elementos)
+void _ui_registro_inicializar_elementos (UiRegistroElementos *elementos)
 {
     elementos->barraEscribirCorreo = NULL;
 }
 
 
-t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *textos, const t_recursosComunesAutenticacionRegistroFuentes *fuentes)
+CodigoRetorno _ui_registro_crear_textos (UiRegistroTextos *textos, const UiAccesoFuentes *fuentes)
 {
     textos->auxEscribirCorreo = sfText_create (fuentes->cuerpo);
     if (!textos->auxEscribirCorreo)
@@ -49,7 +49,7 @@ t_codigoRetorno _interfazRegistro_inicializarTextos (t_interfazRegistroTextos *t
     return EXITO;
 }
 
-t_codigoRetorno _interfazRegistro_inicializarElementos (t_interfazRegistroElementos *elementos)
+CodigoRetorno _ui_registro_crear_elementos (UiRegistroElementos *elementos)
 {
     elementos->barraEscribirCorreo = sfRectangleShape_create ();
     if (!elementos->barraEscribirCorreo)
@@ -63,16 +63,16 @@ t_codigoRetorno _interfazRegistro_inicializarElementos (t_interfazRegistroElemen
 }
 
 
-void _interfazRegistro_configurarInterfaz (t_interfazRegistro *interfazRegistro)
+void _ui_registro_configurar_interfaz (UiRegistro *uiRegistro)
 {
     // Deshabilitar foco
-    interfazRegistro->estadoFoco = IR_NINGUNO;
+    uiRegistro->foco = UI_REGISTRO_NINGUNO;
 
     // Setear cadena vacia
-    *(interfazRegistro->logica.correoElectronico) = '\0';
+    *(uiRegistro->logica.correoElectronico) = '\0';
 }
 
-void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos)
+void _ui_registro_configurar_textos (UiRegistroTextos *textos)
 {
     // auxEscribirCorreo
     sfText_setFillColor (textos->auxEscribirCorreo, sfColor_fromRGB (53, 53, 53));
@@ -93,7 +93,7 @@ void _interfazRegistro_configurarTextos (t_interfazRegistroTextos *textos)
     sfText_setUnicodeString (textos->informacionNombre, bufferInformacionNombre);
 }
 
-void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *elementos)
+void _ui_registro_configurar_elementos (UiRegistroElementos *elementos)
 {
     // barraEscribirCorreo
     sfRectangleShape_setFillColor (elementos->barraEscribirCorreo, sfColor_fromRGB (222, 216, 204));
@@ -101,7 +101,7 @@ void _interfazRegistro_configurarElementos (t_interfazRegistroElementos *element
 }
 
 
-void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos)
+void _ui_registro_establecer_tam_y_pos_ventana_textos (UiRegistroTextos *textos)
 {
     // auxEscribirCorreo
     sfText_setPosition (textos->auxEscribirCorreo, (sfVector2f){42, 392});
@@ -120,7 +120,7 @@ void _interfazRegistro_tamYPosVentanaTextos (t_interfazRegistroTextos *textos)
     sfText_setCharacterSize (textos->informacionNombre, 20);
 }
 
-void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *elementos)
+void _ui_registro_establecer_tam_y_pos_ventana_elementos (UiRegistroElementos *elementos)
 {
     // barraEscribirCorro
     sfRectangleShape_setPosition (elementos->barraEscribirCorreo, (sfVector2f){35, 392});
@@ -129,7 +129,7 @@ void _interfazRegistro_tamYPosVentanaElementos (t_interfazRegistroElementos *ele
 }
 
 
-void _interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos)
+void _ui_registro_liberar_textos (UiRegistroTextos *textos)
 {
     DESTRUCTOR_SEGURO_TEXTO (textos->auxEscribirCorreo);
     DESTRUCTOR_SEGURO_TEXTO (textos->ingresarCorreo);
@@ -137,7 +137,7 @@ void _interfazRegistro_liberarTextos (t_interfazRegistroTextos *textos)
     DESTRUCTOR_SEGURO_TEXTO (textos->informacionNombre);
 }
 
-void _interfazRegistro_liberarElementos (t_interfazRegistroElementos *elementos)
+void _ui_registro_liberar_elementos (UiRegistroElementos *elementos)
 {
     DESTRUCTOR_SEGURO_RECTANGULO (elementos->barraEscribirCorreo);
 }
