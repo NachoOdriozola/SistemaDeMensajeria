@@ -1,11 +1,11 @@
 /**
- * \file   listaSimple.h
+ * \file   lista_simple.h
  * \brief  Contiene las funciones primitivas de lista simplemente enlazada.
  */
 
 
-#ifndef LISTASIMPLE_H_INCLUDED
-#define LISTASIMPLE_H_INCLUDED
+#ifndef LISTA_SIMPLE_H_INCLUDED
+#define LISTA_SIMPLE_H_INCLUDED
 
 
 /* ============================================================================================================================================
@@ -22,7 +22,7 @@
    DEFINES
    ============================================================================================================================================ */
 
-   
+
 /** \struct NodoListaSimple
  * \brief Define la estructura base de un nodo de una lista doblemente enlazada. Utiliza el s_nodoListaSimple como recursivo.
  */
@@ -139,7 +139,7 @@ void lista_simple_vaciar (ListaSimple *pl);
 void lista_simple_vaciar_con_accion (ListaSimple *pl, void accion (void *dato));
 
 
-#endif // LISTASIMPLE_H_INCLUDED
+#endif // LISTA_SIMPLE_H_INCLUDED
 
 
 

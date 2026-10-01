@@ -1,4 +1,4 @@
-#include "listaSimple.h"
+#include "lista_simple.h"
 
 
 void lista_simple_crear (ListaSimple *pl)

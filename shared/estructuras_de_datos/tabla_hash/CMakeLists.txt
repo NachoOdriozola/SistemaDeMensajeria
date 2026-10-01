@@ -5,7 +5,7 @@ project(tablaHash LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-add_library(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/tablaHash.c)
+add_library(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/tabla_hash.c)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

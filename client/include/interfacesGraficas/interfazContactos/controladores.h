@@ -22,7 +22,7 @@
 #include "CSFML/Window.h"
 #include "CSFML/Graphics.h"
 
-#include "listaDoble.h"
+#include "lista_doble.h"
 
 #include "logica/estructuras.h"
 #include "logica/utiles.h"

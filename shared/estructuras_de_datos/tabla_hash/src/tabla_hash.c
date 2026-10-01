@@ -1,4 +1,4 @@
-#include "tablaHash.h"
+#include "tabla_hash.h"
 
 
 int tabla_hash_crear (TablaHash *tablaHash, int cantBuckets)

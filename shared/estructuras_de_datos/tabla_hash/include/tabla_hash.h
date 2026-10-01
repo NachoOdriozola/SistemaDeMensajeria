@@ -1,11 +1,11 @@
 /**
- * \file   tablaHash.h
+ * \file   tabla_hash.h
  * \brief  Contiene las funciones primitivas de tabla hash.
  */
 
 
-#ifndef TABLAHASH_H_INCLUDED
-#define TABLAHASH_H_INCLUDED
+#ifndef TABLA_HASH_H_INCLUDED
+#define TABLA_HASH_H_INCLUDED
 
 
 /* ============================================================================================================================================
@@ -18,7 +18,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "listaDoble.h"
+#include "lista_doble.h"
 
 
 /* ============================================================================================================================================
@@ -114,7 +114,7 @@ void tabla_hash_map (TablaHash *tablaHash, void accion (void*));
 void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void*));
 
 
-#endif // TABLAHASH_H_INCLUDED
+#endif // TABLA_HASH_H_INCLUDED
 
 
 

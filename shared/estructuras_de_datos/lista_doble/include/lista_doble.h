@@ -1,11 +1,11 @@
 /**
- * \file   listaDoble.h
+ * \file   lista_doble.h
  * \brief  Contiene las funciones primitivas de lista doblemente enlazada.
  */
 
 
-#ifndef LISTADOBLE_H_INCLUDED
-#define LISTADOBLE_H_INCLUDED
+#ifndef LISTA_DOBLE_H_INCLUDED
+#define LISTA_DOBLE_H_INCLUDED
 
 
 
@@ -140,4 +140,4 @@ void lista_doble_eliminar_nodo_con_accion (ListaDoble *pl, void *returnDato, uns
 void lista_doble_vaciar_con_accion (ListaDoble *pl, void accion (void *dato));
 
 
-#endif // LISTADOBLE_H_INCLUDED
+#endif // LISTA_DOBLE_H_INCLUDED
