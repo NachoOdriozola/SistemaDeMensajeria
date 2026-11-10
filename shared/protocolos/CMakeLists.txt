@@ -5,8 +5,8 @@ project(protocolos LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/frame.c)
 
-target_include_directories(${PROJECT_NAME} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} INTERFACE constantes)
+target_link_libraries(${PROJECT_NAME} PUBLIC constantes)
