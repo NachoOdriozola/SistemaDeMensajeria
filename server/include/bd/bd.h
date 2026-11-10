@@ -1,11 +1,11 @@
 /**
- * \file   baseDeDatos.h
+ * \file   bd.h
  * \brief  Contiene funciones de la base de datos SQLite.
  */
 
 
-#ifndef BASEDEDATOS_H_INCLUDED
-#define BASEDEDATOS_H_INCLUDED
+#ifndef BD_H_INCLUDED
+#define BD_H_INCLUDED
 
 
 /* ============================================================================================================================================
@@ -17,9 +17,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
 #include "sqlite3.h"
 
 #include "constantes.h"
+
+#include "logs.h"
 
 
 /* ============================================================================================================================================
@@ -33,14 +36,16 @@
  */
 typedef enum
 {
-   TABLA_EXISTE,
-   TABLA_NO_EXISTE,
-   ERROR_PREPARACION_CONSULTA
-} ResultadoInicializacionBD;
+    BD_EXITO,
+    BD_ENCONTRO,
+    BD_NO_ENCONTRO,
+    BD_ERROR_INICIALIZACION,
+    BD_ERROR_EJECUCION
+} ResultadoBd;
 
 
 /**
- * \struct SentenciasSqlite
+ * \struct Sentencias
  * \brief  Cache de sentencias de consultas de base de datos.
  */
 typedef struct
@@ -50,26 +55,14 @@ typedef struct
     sqlite3_stmt *buscarIdPorCorreo;
     sqlite3_stmt *insertarUsuario;
     sqlite3_stmt *insertarMensaje;
-} SentenciasSqlite;
+} Sentencias;
 
-
-/**
- * \struct ParametrosBuscarUsuarioPorNombre
- * \brief  Estructura que contiene los datos necesarios para realizar la consulta de buscarUsuarioPorNombre.
- */
 typedef struct
 {
-    char nombreUsuario [MAX_NOMBRE_USUARIO];
-} ParametrosBuscarUsuarioPorNombre;
+    sqlite3 *conexion;
+    Sentencias sentencias;
+} Bd;
 
-/**
- * \struct ParametrosBuscarUsuarioPorCorreo
- * \brief  Estructura que contiene los datos necesarios para realizar la consulta de buscarUsuarioPorCorreo.
- */
-typedef struct
-{
-    char correoElectronico [MAX_CORREO_ELECTRONICO];
-} ParametrosBuscarUsuarioPorCorreo;
 
 /**
  * \struct ParametrosInsertarUsuario
@@ -90,8 +83,15 @@ typedef struct
 {
     int idEmisor;
     int idReceptor;
-    char texto [MAX_MENSAJE];
+    char texto [MAX_TEXTO];
 } ParametrosInsertarMensaje;
+
+
+typedef struct
+{
+    int idUsuario;
+    char contrasenia [MAX_CONTRASENIA];
+} ResultadoConsultaIdYContrasenia;
 
 
 /* ============================================================================================================================================
@@ -104,6 +104,7 @@ typedef struct
  * Verificar si existen las tablas del disenio.
  * En caso de que existan, la base de datos existe y conserva sus datos.
  * En caso contrario, intenta abrir el archivo "schema.sql" que contiene las consultas SQLite de creacion de tablas, segun el disenio, para ejecutarlas.
+ * Establece el journal en modo WAL para mejorar el rendimiento sin sacrificar confiabilidad.
  * No cierra la base de datos en caso de fallas.
  *
  * \param bd Direccion del puntero que contiene la base de datos del contexto del servidor.
@@ -112,14 +113,7 @@ typedef struct
  * \return Retorna EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al preparar consultas, abrir archivos y asignar memoria.
  *
  */
-CodigoRetorno bd_inicializar (sqlite3 **bd, SentenciasSqlite *sentenciasSqlite);
-
-/** \brief Configurar la base de datos. Establece el journal en modo WAL para mejorar el rendimiento sin sacrificar confiabilidad.
- *
- * \param bd Puntero que contiene la base de datos del contexto del servidor.
- *
- */
-void bd_configurar (sqlite3 *bd);
+ResultadoBd bd_inicializar (Bd *bd);
 
 /** \brief Cerrar la base de datos y liberar las sentencias de consultas de base de datos.
  *
@@ -127,7 +121,7 @@ void bd_configurar (sqlite3 *bd);
  * \param sentenciasSqlite Puntero a la cache de sentencias de consultas de base de datos.
  *
  */
-void bd_liberar (sqlite3 *bd, SentenciasSqlite *sentenciasSqlite);
+void bd_liberar (Bd *bd);
 
 
 /** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID correspondiente.
@@ -139,7 +133,7 @@ void bd_liberar (sqlite3 *bd, SentenciasSqlite *sentenciasSqlite);
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool bd_buscar_id_por_nombre (sqlite3_stmt *sentenciaBuscarIdPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario);
+ResultadoBd bd_buscar_id_usuario_por_nombre (Bd *bd, const char *nombre, int *returnId);
 
 /** \brief Buscar un usuario en la base de datos por su nombre, y retornar su ID y contrasenia correspondiente.
  *
@@ -151,7 +145,7 @@ bool bd_buscar_id_por_nombre (sqlite3_stmt *sentenciaBuscarIdPorNombre, const Pa
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool bd_buscar_id_y_contrasenia_por_nombre (sqlite3_stmt *sentenciaBuscarIdYContraseniaPorNombre, const ParametrosBuscarUsuarioPorNombre *parametrosBuscarUsuarioPorNombre, int *returnIdUsuario, char *returnContrasenia);
+ResultadoBd bd_buscar_id_y_contrasenia_usuario_por_nombre (Bd *bd, const char *nombre, ResultadoConsultaIdYContrasenia *returnResultadoConsultaIdYContrasenia);
 
 /** \brief Buscar un usuario en la base de datos por su correo electronico.
  *
@@ -161,7 +155,7 @@ bool bd_buscar_id_y_contrasenia_por_nombre (sqlite3_stmt *sentenciaBuscarIdYCont
  * \return True en caso de que encontro un usuario, False en caso contrario.
  * 
  */
-bool bd_existe_usuario_con_correo (sqlite3_stmt *sentenciaBuscarIdPorCorreo, const ParametrosBuscarUsuarioPorCorreo *parametrosBuscarUsuarioPorCorreo);
+ResultadoBd bd_buscar_id_usuario_por_correo (Bd *bd, const char *correo, int *returnId);
 
 /** \brief Insertar un usuario en la base de datos.
  *
@@ -169,7 +163,7 @@ bool bd_existe_usuario_con_correo (sqlite3_stmt *sentenciaBuscarIdPorCorreo, con
  * \param parametrosInsertarUsuario Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * 
  */
-void bd_insertar_usuario (sqlite3_stmt *sentenciaInsertarUsuario, const ParametrosInsertarUsuario *parametrosInsertarUsuario);
+ResultadoBd bd_insertar_usuario (Bd *bd, const ParametrosInsertarUsuario *parametrosInsertarUsuario);
 
 /** \brief Insertar un mensaje en la base de datos.
  *
@@ -177,7 +171,7 @@ void bd_insertar_usuario (sqlite3_stmt *sentenciaInsertarUsuario, const Parametr
  * \param parametrosInsertarMensaje Puntero a la estructura que contiene los datos necesarios para realizar la consulta..
  * 
  */
-void bd_insertar_mensaje (sqlite3_stmt *sentenciaInsertarMensaje, const ParametrosInsertarMensaje *parametrosInsertarMensaje);
+ResultadoBd bd_insertar_mensaje (Bd *bd, const ParametrosInsertarMensaje *parametrosInsertarMensaje);
 
 
-#endif // BASEDEDATOS_H_INCLUDED
+#endif // BD_H_INCLUDED

@@ -21,9 +21,9 @@ typedef  enum
 {
    EXITO,
    ERROR_INICIALIZACION,
-   ERROR_CONFIGURACION,
    ERROR_SIN_MEMORIA,
-   ERROR_OPERACION
+   ERROR_EJECUCION,
+   ERROR_OPERACION_INVALIDA,
 } CodigoRetorno;
 
 
@@ -36,7 +36,7 @@ typedef  enum
  * \def MAX_MENSAJE
  * \brief Longitud maxima para el mensaje escrito por el usuario. Incluye el '0'.
  */
-#define MAX_MENSAJE 751
+#define MAX_TEXTO 751
 
 /**
  * \def MAX_NOMBRE_USUARIO
@@ -66,7 +66,9 @@ typedef  enum
  * \def ID_INVALIDO
  * \brief ID de usuario invalido.
  */
-#define ID_INVALIDO -1
+#define ID_NO_AUTENTICADO -1
+
+#define ID_INVALIDO -2
 
 
 #endif // CONSTANTES_H_INCLUDED

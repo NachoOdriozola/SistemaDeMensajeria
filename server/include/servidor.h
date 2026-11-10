@@ -16,32 +16,30 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "constantes.h"
-#include "protocolos.h"
-#include "sockets.h"
-#include "cola.h"
-#include "listaDoble.h"
-#include "tablaHash.h"
 
-#include "sodium.h"
+#include "logs.h"
 
-#include "logica/estructuras.h"
-#include "logica/utiles.h"
-
-#include "baseDeDatos/baseDeDatos.h"
+#include "plataforma/signals.h"
+#include "bd/bd.h"
+#include "clientes/registro_clientes.h"
+#include "red/comunicacion.h"
+#include "servicios/servicios.h"
 
 
 /* ============================================================================================================================================
-   DEFINES
+   ESTRUCTURAS
    ============================================================================================================================================ */
 
 
-/*
-* Variable para mantener activo o apagar el servidor. Es modificada en el manejador de la consola.
-*/
-extern BOOL servidorActivo;
+typedef struct
+{
+   Bd bd;
+   RegistroClientes registroClientes;
+   Servicios servicios;
+   Comunicacion comunicacion;
+} Servidor;
 
 
 /* ============================================================================================================================================
@@ -58,19 +56,9 @@ extern BOOL servidorActivo;
  * \return EXITO si se inicializo correctamente, ERROR_INICIALIZACION en caso de fallas al inicializar recursos.
  *
  */
-CodigoRetorno servidor_inicializar (ContextoServidor *contextoServidor);
+CodigoRetorno servidor_inicializar (Servidor *servidor);
 
-/** \brief Configurar los recursos del servidor.
- *
- * Configurar el manejador de cierre de la consola, el socket del del servidor para escuchar conexiones de cualquier direccion IP en el puerto asignado y establecerlo como modo no bloqueante,
- * y la base de datos.
- *
- * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
- *
- * \return EXITO si se configuro correctamente, ERROR_CONFIGURACION en caso de error.
- *
- */
-CodigoRetorno servidor_configurar (ContextoServidor *contextoServidor);
+void servidor_ejecutar (Servidor *servidor);
 
 /** \brief Liberar los recursos del servidor.
  *
@@ -80,21 +68,8 @@ CodigoRetorno servidor_configurar (ContextoServidor *contextoServidor);
  * \param contextoServidor Puntero a la estructura que provee contexto (EstadoSolicituds y recursos) global del servidor.
  *
  */
-void servidor_liberar (ContextoServidor *contextoServidor);
+void servidor_liberar (Servidor *servidor);
 
-/** \brief Manejar eventos de cierre de la consola.
- *
- * Al recibir un evento de cierre de consola o interrupcion, modifica el valor de la variable global servidorActivo a FALSE para
- * finalizar la ejecucion del servidor.
- * No libera recursos directamente.
- * Esta funcion es registrada en al configuracion del servidor y es invocada automaticamente por el sistema operativo.
- *
- * \param tipoEvento Tipo de evento de control recibido por la consola.
- * 
- * \return TRUE si el evento fue manejado, FALSE en caso contrario.
- *
- */
-BOOL WINAPI manejador_consola (DWORD tipoEvento);
 
 
 #endif // SERVIDOR_H_INCLUDED

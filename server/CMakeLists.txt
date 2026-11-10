@@ -5,18 +5,21 @@ project(server LANGUAGES C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+file(GLOB PLATAFORMA_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/plataforma/*.c)
+file(GLOB BD_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/bd/*.c)
+file(GLOB CLIENTES_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/clientes/*.c)
+file(GLOB SERVICIOS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/servicios/*.c)
+file(GLOB COMUNICACION_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/red/*.c)
+file(GLOB SERVIDOR_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/servidor.c)
 file(GLOB MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c)
-file(GLOB BASEDEDATOS_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/baseDeDatos/*.c)
-file(GLOB LOGICA_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/logica/*.c)
-file(GLOB SERVIDOR_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/servidor/*.c)
 
-add_executable(${PROJECT_NAME} ${MAIN_SRC} ${BASEDEDATOS_SRC} ${LOGICA_SRC} ${SERVIDOR_SRC})
+add_executable(${PROJECT_NAME} ${PLATAFORMA_SRC} ${BD_SRC} ${CLIENTES_SRC} ${SERVICIOS_SRC} ${COMUNICACION_SRC} ${SERVIDOR_SRC} ${MAIN_SRC})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 find_package(SQLite3 REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC sockets cola listaSimple listaDoble tablaHash constantes protocolos SQLite3::SQLite3 sodium)
+target_link_libraries(${PROJECT_NAME} PUBLIC sockets logs cola listaDoble tablaHash constantes protocolos SQLite3::SQLite3 sodium)
 
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PUBLIC ws2_32)
@@ -41,6 +44,7 @@ endforeach()
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 COMMAND ${CMAKE_COMMAND} -E make_directory
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/database"
+        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/logs"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/database/schema.sql"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/database/schema.sql"
