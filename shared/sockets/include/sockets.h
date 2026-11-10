@@ -33,7 +33,22 @@
 #include <stdbool.h>
 
 #include "constantes.h"
-#include "protocolos.h"
+
+#include "logs.h"
+
+#include "frame.h"
+
+
+/* ============================================================================================================================================
+   CONEXION
+   ============================================================================================================================================ */
+
+
+/**
+ * \def PUERTO
+ * \brief Puerto en el que se comunicaran los sockets.
+ */
+#define PUERTO 8070
 
 
 /* ============================================================================================================================================
@@ -47,9 +62,10 @@
  */
 typedef enum
 {
-    ENVIO_COMPLETO,
-    ENVIO_ERROR_CONEXION,
-    ENVIO_BUFFER_LLENO
+   ENVIO_EXITO,
+   ENVIO_NO_REALIZADO,
+   ENVIO_BLOQUEADO,
+   ENVIO_ERROR_CONEXION
 } ResultadoEnvio;
 
 /**
@@ -60,6 +76,8 @@ typedef enum
 {
    RECEPCION_RECIBIO_DATOS,
    RECEPCION_NO_RECIBIO_DATOS,
+   RECEPCION_NO_REALIZADA,
+   RECEPCION_CERRADA_ORDENADA,
    RECEPCION_ERROR_CONEXION
 } ResultadoRecepcion;
 
@@ -103,6 +121,8 @@ CodigoRetorno socket_conectar_servidor (Socket *sock);
  */
 CodigoRetorno socket_conectar_cliente (Socket *sock);
 
+bool socket_es_valido (Socket sock);
+
 /** \brief Establecer el socket como modo bloqueante.
  *
  * \param sock Puntero al socket a procesar.
@@ -139,7 +159,7 @@ CodigoRetorno socket_establecer_keep_alive (Socket *sock);
  * \return Resultado del socket aceptado del nuevo cliente.
  *
  */
-Socket socket_aceptar_nuevo_cliente (Socket sockServidor);
+Socket socket_aceptar_nuevo_cliente (Socket socketServidor);
 
 /** \brief Enviar al socket un buffer. Iterar hasta enviar todos los datos.
  * 
@@ -150,7 +170,7 @@ Socket socket_aceptar_nuevo_cliente (Socket sockServidor);
  * \return ENVIO_COMPLETO si pudo enviar todos los datos correctamente, ENVIO_BUFFER_LLENO si el buffer del socket se encuentra agotado y no se pueden cargar mas datos, ENVIO_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-ResultadoEnvio socket_enviar_todo (Socket sock, const char *buffer, size_t tamBuffer);
+ResultadoEnvio socket_enviar (Socket sock, const char *buffer, size_t tam);
 
 /** \brief Recibir un buffer del socket. Iterar hasta recibir todos los datos.
  *
@@ -162,27 +182,7 @@ ResultadoEnvio socket_enviar_todo (Socket sock, const char *buffer, size_t tamBu
  * \return RECEPCION_RECIBIO_DATOS en caso de haber recibido datos, RECEPCION_NO_RECIBIO_DATOS en caso contrario, y RECEPCION_ERROR_CONEXION en caso de error de conexion.
  * 
  */
-ResultadoRecepcion socket_recibir_todo (Socket sock, char *returnBuffer);
-
-/** \brief Preguntar si el socket no recibio datos en modo no bloqueante. Ademas, asegura que no haya recibido datos en caso de que el socket no se haya inicializado.
- *
- * \param sock Socket a procesar.
- * \param bytesRecibidos Bytes recibidos al intentar recibir datos del socket (recv()).
- *
- * \return true si no recibio datos, false en caso contrario.
- * 
- */
-bool socket_no_recibio_datos (Socket sock, int bytesRecibidos);
-
-/** \brief Preguntar si el socket perdio la conexion.
- *
- * \param sock Socket a procesar.
- * \param bytesRecibidos Bytes recibidos al intentar recibir datos del socket (recv()).
- *
- * \return true si el socket perdio la conexion, false en caso contrario.
- * 
- */
-bool socket_perdio_conexion (Socket sock, int bytesRecibidos);
+ResultadoRecepcion socket_recibir (Socket sock, char *returnBuffer, size_t tamBuffer);
 
 /** \brief Cerrar el socket. Verifica que sea un socket valido. Si es un socket valido, asegura que su contenido sea SOCKET_INVALIDO al finalizar.
  *

@@ -3,7 +3,6 @@
 
 static bool estadoWinsock = false; // Estado de Winsock API
 
-
 CodigoRetorno socket_inicializar ()
 {
     WSADATA wsaData;
@@ -12,7 +11,7 @@ CodigoRetorno socket_inicializar ()
     resultado = WSAStartup (MAKEWORD (2, 2), &wsaData);
     if (resultado != 0)
     {
-        printf ("\nERROR - Inicializar Winsock: %d.\n", resultado);
+        logs_escribir (LOG_ERROR, "sockets", "Inicializacion: Winsock.");
         return ERROR_INICIALIZACION;
     }
     estadoWinsock = true;
@@ -25,7 +24,7 @@ CodigoRetorno socket_crear (Socket *sock)
     *sock = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (*sock == SOCKET_INVALIDO)
     {
-        printf ("\nERROR - Crear socket del servidor: %d.\n", WSAGetLastError ());
+        logs_escribir (LOG_ERROR, "sockets", "Creacion: %d", WSAGetLastError ());
         return ERROR_INICIALIZACION;
     }
 
@@ -42,14 +41,14 @@ CodigoRetorno socket_conectar_servidor (Socket *sock)
 
     if (bind (*sock, (struct sockaddr*)(&dirServidor), sizeof (dirServidor)) == ERROR_SOCKET)
     {
-        printf ("\nERROR - Enlazar socket al servidor: %d.\n", WSAGetLastError ());
-        return ERROR_CONFIGURACION;
+        logs_escribir (LOG_ERROR, "sockets", "Bind socket del servidor: %d", WSAGetLastError ());
+        return ERROR_INICIALIZACION;
     }
 
     if (listen (*sock, SOMAXCONN) == ERROR_SOCKET)
     {
-        printf ("\nERROR - Escuchar socket del servidor %d.\n", WSAGetLastError ());
-        return ERROR_CONFIGURACION;
+        logs_escribir (LOG_ERROR, "sockets", "Listen socket del servidor: %d", WSAGetLastError ());
+        return ERROR_INICIALIZACION;
     }
 
     return EXITO;
@@ -65,11 +64,16 @@ CodigoRetorno socket_conectar_cliente (Socket *sock)
 
     if (connect (*sock, (struct sockaddr*)(&dirCliente), sizeof (dirCliente)) == ERROR_SOCKET)
     {
-        printf ("\nERROR - Conectarse con el servidor: %d.\n", WSAGetLastError ());
-        return ERROR_CONFIGURACION;
+        logs_escribir (LOG_ERROR, "sockets", "Conexion con el servidor: %d", WSAGetLastError ());
+        return ERROR_INICIALIZACION;
     }
 
     return EXITO;
+}
+
+bool socket_es_valido (Socket sock)
+{
+    return (sock != SOCKET_INVALIDO);
 }
 
 void socket_establecer_modo_bloqueante (Socket *sock)
@@ -102,95 +106,91 @@ CodigoRetorno socket_establecer_keep_alive (Socket *sock)
     keepAlive.keepaliveinterval = 5000; // 5 segundos entre sondas
 
     if (WSAIoctl (*sock, SIO_KEEPALIVE_VALS, &keepAlive, sizeof(keepAlive), NULL, 0, &bytesRetornados, NULL, NULL) == ERROR_SOCKET)
+    {
+        logs_escribir (LOG_ERROR, "sockets", "Establecimiento de keep alive: %d", WSAGetLastError ());
         return ERROR_INICIALIZACION;
+    }
 
     return EXITO;
 }
 
-Socket socket_aceptar_nuevo_cliente (Socket sockServidor)
+Socket socket_aceptar_nuevo_cliente (Socket socketServidor)
 {
     Socket sockCliente;
     struct sockaddr_in dirNuevoCliente;
     int tamNuevoCliente = sizeof (dirNuevoCliente);
 
-    sockCliente = accept (sockServidor, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
+    sockCliente = accept (socketServidor, (struct sockaddr*)(&dirNuevoCliente), &tamNuevoCliente);
 
     return sockCliente;
 }
 
-ResultadoEnvio socket_enviar_todo (Socket sock, const char *buffer, size_t tamBuffer)
+ResultadoEnvio socket_enviar (Socket sock, const char *buffer, size_t tam)
 {
-    int bytesEnviadosTotales = 0, bytesEnviadosParciales;
+    int bytesEnviados, resultado;
 
-    do
+    if (tam <= 0)
     {
-        bytesEnviadosParciales = send (sock, buffer + bytesEnviadosTotales, tamBuffer - bytesEnviadosTotales, 0);
-        if (bytesEnviadosParciales == ERROR_SOCKET)
-        {
-            if (WSAGetLastError() == WSAEWOULDBLOCK)
-                return ENVIO_BUFFER_LLENO;
-            else
-                return ENVIO_ERROR_CONEXION;
-        }
-        bytesEnviadosTotales += bytesEnviadosParciales;
-    } while (bytesEnviadosTotales < tamBuffer);
+        logs_escribir (LOG_ERROR, "sockets", "Envio de datos: tamanio de buffer invalido.");
+        return ENVIO_NO_REALIZADO;
+    }
 
-    return ENVIO_COMPLETO;
+    bytesEnviados = send (sock, buffer, (int)tam, 0);
+
+    if (bytesEnviados >= 0)
+        return ENVIO_EXITO;
+
+    resultado = WSAGetLastError ();
+    logs_escribir (LOG_ERROR, "sockets", "Envio de datos: %d", resultado);
+    if (resultado == WSAEWOULDBLOCK)
+        return ENVIO_BLOQUEADO;
+    return ENVIO_ERROR_CONEXION;
 }
 
-ResultadoRecepcion socket_recibir_todo (Socket sock, char *returnBuffer)
+ResultadoRecepcion socket_recibir (Socket sock, char *returnBuffer, size_t tamBuffer)
 {
     Header header;
-    int bytesRecibidosTotales = 0, bytesRecibidosParciales;
+    int bytesRecibidos, resultado;
 
-    do
+    if (sizeof (Header) > tamBuffer)
     {
-        bytesRecibidosParciales = recv (sock, (char*)(&header), sizeof (Header), 0);
-    
-        if (socket_no_recibio_datos (sock, bytesRecibidosParciales))
-            return RECEPCION_NO_RECIBIO_DATOS;
-    
-        if (socket_perdio_conexion (sock, bytesRecibidosParciales))
-            return RECEPCION_ERROR_CONEXION;
+        logs_escribir (LOG_ERROR, "sockets", "Recepcion de datos: tamanio de buffer invalido.");
+        return RECEPCION_NO_REALIZADA;
+    }
 
-        bytesRecibidosTotales += bytesRecibidosParciales;
-    } while (bytesRecibidosTotales < sizeof (Header));
+    bytesRecibidos = recv (sock, (char*)(&header), sizeof (Header), 0);
+    if (bytesRecibidos == 0)
+    {
+        logs_escribir (LOG_INFO, "sockets", "Recepcion de datos: cliente cerro ordenadamente la conexion.");
+        return RECEPCION_CERRADA_ORDENADA;
+    }
+    else if (bytesRecibidos < 0)
+    {
+        resultado = WSAGetLastError ();
+        if (resultado != WSAEWOULDBLOCK)
+        {
+            logs_escribir (LOG_AVISO, "sockets", "Recepcion de datos: %d", resultado);
+            return RECEPCION_ERROR_CONEXION;
+        }
+        return RECEPCION_NO_RECIBIO_DATOS;
+    }
+
+    if (header.longitud + sizeof (Header) > tamBuffer)
+    {
+        logs_escribir (LOG_INFO, "sockets", "Recepcion de datos: Paquete supera el tamanio del buffer.");
+        return RECEPCION_ERROR_CONEXION;
+    }
 
     memcpy (returnBuffer, &header, sizeof (Header));
-    returnBuffer += bytesRecibidosTotales;
-    
-    bytesRecibidosTotales = 0;
-    do
+
+    bytesRecibidos = recv (sock, returnBuffer + sizeof (Header), header.longitud, 0);
+    if (bytesRecibidos <= 0)
     {
-        bytesRecibidosParciales = recv (sock, returnBuffer, header.bytesTransmitidos - sizeof (Header), 0);
-    
-        if (socket_perdio_conexion (sock, bytesRecibidosParciales))
-            return RECEPCION_ERROR_CONEXION;
-
-        bytesRecibidosTotales += bytesRecibidosParciales;
-    } while (bytesRecibidosTotales < header.bytesTransmitidos - sizeof (Header));
-
-    returnBuffer += bytesRecibidosTotales;
-    *returnBuffer = '\0';
+        logs_escribir (LOG_INFO, "sockets", "Recepcion de datos: Paquete de datos incompleto.");
+        return RECEPCION_ERROR_CONEXION;
+    }
 
     return RECEPCION_RECIBIO_DATOS;
-}
-
-bool socket_no_recibio_datos (Socket sock, int bytesRecibidos)
-{
-    return ((bytesRecibidos == ERROR_SOCKET) && 
-                ((WSAGetLastError() == WSAEWOULDBLOCK) || (WSAGetLastError() == WSAENOTSOCK)));
-}
-
-bool socket_perdio_conexion (Socket sock, int bytesRecibidos)
-{
-    if (bytesRecibidos == 0) // Si el cliente cerro la conexion de forma ordenada.
-        return true;
-
-    if ((bytesRecibidos == ERROR_SOCKET) && (WSAGetLastError () != WSAEWOULDBLOCK)) // Si el cliente cerro la conexion de forma abrupta. Verifica que no sea por el socket no bloqueante.
-        return true;
-
-    return false;
 }
 
 void socket_cerrar (Socket *sock)
