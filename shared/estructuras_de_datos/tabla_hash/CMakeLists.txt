@@ -9,4 +9,4 @@ add_library(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/tabla_hash.c)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC listaDoble)
+target_link_libraries(${PROJECT_NAME} PUBLIC listaDoble constantes logs)

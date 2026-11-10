@@ -1,127 +1,191 @@
 #include "lista_doble.h"
 
 
-void lista_doble_crear (ListaDoble *pl)
+void lista_doble_crear (ListaDoble *listaDoble)
 {
-    *pl = NULL;
+    *listaDoble = NULL;
 }
 
-int lista_doble_insertar_al_inicio (ListaDoble *pl, const void *dato, unsigned tamDato)
+CodigoRetorno lista_doble_insertar_al_inicio (ListaDoble *listaDoble, const void *dato, size_t tamDato)
 {
     NodoListaDoble *nuevoNodo;
 
     nuevoNodo = malloc (sizeof(NodoListaDoble));
     if (!nuevoNodo)
-        return 1;
+    {
+        logs_escribir (LOG_ERROR, "lista doble", "Insercion de dato: sin memoria.");
+        return ERROR_SIN_MEMORIA;
+    }
 
     nuevoNodo->dato = malloc (tamDato);
     if (!(nuevoNodo->dato))
-        return 1;
+    {
+        free (nuevoNodo);
+        logs_escribir (LOG_ERROR, "lista doble", "Insercion de dato: sin memoria.");
+        return ERROR_SIN_MEMORIA;
+    }
 
     nuevoNodo->tam = tamDato;
     memcpy (nuevoNodo->dato, dato, tamDato);
 
-    if (*pl != NULL)
-        (*pl)->ant = nuevoNodo;
+    if (*listaDoble != NULL)
+        (*listaDoble)->ant = nuevoNodo;
     nuevoNodo->ant = NULL;
-    nuevoNodo->sig = *pl;
-    *pl = nuevoNodo;
+    nuevoNodo->sig = *listaDoble;
+    *listaDoble = nuevoNodo;
 
-    return 0;
+    return EXITO;
 }
 
-void lista_doble_vincular_nodo_al_inicio (ListaDoble *pl, NodoListaDoble *nodoAVincular)
+void lista_doble_map (ListaDoble *listaDoble, void accion (void *dato))
 {
-    if (*pl != NULL)
-        (*pl)->ant = nodoAVincular;
-    nodoAVincular->ant = NULL;
-    nodoAVincular->sig = *pl;
-    *pl = nodoAVincular;
-}
-
-void lista_doble_map (ListaDoble *pl, void accion (void*))
-{
-    while (*pl != NULL)
+    while (*listaDoble != NULL)
     {
-        accion ((*pl)->dato);
-        pl = &((*pl)->sig);
+        accion ((*listaDoble)->dato);
+        listaDoble = &((*listaDoble)->sig);
     }
 }
 
-void lista_doble_map_con_complemento (ListaDoble *pl, void accion (void*, void*), void *complemento)
+void lista_doble_map_con_contexto (ListaDoble *listaDoble, void accion (void *dato, void *contexto), void *contexto)
 {
-    while (*pl != NULL)
+    while (*listaDoble != NULL)
     {
-        accion ((*pl)->dato, complemento);
-        pl = &((*pl)->sig);
+        accion ((*listaDoble)->dato, contexto);
+        listaDoble = &((*listaDoble)->sig);
     }
 }
 
-int lista_doble_buscar_clave_unica (ListaDoble *pl, const void *key, void *returnDato, unsigned tamDato, int cmp (const void *a, const void *b))
+CodigoRetorno lista_doble_map_con_contexto_y_error (ListaDoble *listaDoble, CodigoRetorno accion (void *dato, void *contexto), void *contexto)
 {
-    while (*pl != NULL)
+    CodigoRetorno resultado;
+
+    while (*listaDoble != NULL)
     {
-        if (cmp ((*pl)->dato, key) == 0)
+        resultado = accion ((*listaDoble)->dato, contexto);
+        if (resultado != EXITO)
+            return resultado;
+        listaDoble = &((*listaDoble)->sig);
+    }
+    return EXITO;
+}
+
+void lista_doble_filter_con_accion (ListaDoble *listaDoble, bool filtro (const void *dato), void accion (void *dato))
+{
+    NodoListaDoble *actual, *auxAnt, *auxSig;
+
+    while (*listaDoble != NULL)
+    {
+        if (!filtro ((*listaDoble)->dato))
+        {
+            actual = *listaDoble;
+            auxAnt = actual->ant;
+            auxSig = actual->sig;
+
+            if (auxAnt)
+                auxAnt->sig = auxSig;
+            else
+                *listaDoble = auxSig;
+            if (auxSig)
+                auxSig->ant = auxAnt;
+
+            accion (actual->dato);
+            free (actual->dato);
+            free (actual);
+        }
+        else
+            listaDoble = &((*listaDoble)->sig);
+    }
+}
+
+bool lista_doble_buscar_elemento_con_clave (ListaDoble *listaDoble, const void *key, void **returnDato, int cmp (const void *a, const void *b))
+{
+    while (*listaDoble != NULL)
+    {
+        if (cmp ((*listaDoble)->dato, key) == 0)
         {
             if (returnDato != NULL)
-                memcpy (returnDato, (*pl)->dato, ((tamDato < (*pl)->tam) ? tamDato : (*pl)->tam));
+                *returnDato = (*listaDoble)->dato;
             return 1;
         }
-        pl = &((*pl)->sig);
+        listaDoble = &((*listaDoble)->sig);
     }
 
     return 0;
 }
 
-void lista_doble_desvincular_nodo (ListaDoble *pl, NodoListaDoble *nodoADesvincular)
+bool lista_doble_eliminar_elemento_con_clave (ListaDoble *listaDoble, const void *key, void *returnDato, size_t tamDato, int cmp (const void *a, const void *b))
 {
-    NodoListaDoble *ant = nodoADesvincular->ant, *sig = nodoADesvincular->sig;
+    NodoListaDoble *actual = *listaDoble;
 
-    if (ant != NULL)
-        ant->sig = sig;
-    else
-        *pl = sig;
-    if (sig != NULL)
-        sig->ant = ant;
+    while (actual != NULL)
+    {
+        if (cmp (actual->dato, key) == 0)
+        {
+            NodoListaDoble *auxAnt = actual->ant;
+            NodoListaDoble *auxSig = actual->sig;
 
-    nodoADesvincular->ant = NULL;
-    nodoADesvincular->sig = NULL;
+            if (returnDato != NULL)
+                memcpy (returnDato, actual->dato, ((tamDato < actual->tam) ? tamDato : actual->tam));
+
+            if (auxAnt)
+                auxAnt->sig = auxSig;
+            else
+                *listaDoble = auxSig;
+            if (auxSig)
+                auxSig->ant = auxAnt;
+
+            free (actual->dato);
+            free (actual);
+
+            return 1;
+        }
+        actual = actual->sig;
+    }
+
+    return 0;
 }
 
-void lista_doble_eliminar_nodo_con_accion (ListaDoble *pl, void *returnDato, unsigned tamDato, void accion (void*))
+bool lista_doble_eliminar_elemento_con_clave_y_accion (ListaDoble *listaDoble, const void *key, void *returnDato, size_t tamDato, int cmp (const void *a, const void *b), void accion (void *dato))
 {
-    NodoListaDoble *nodoElim, *ant, *sig;
+    NodoListaDoble *actual = *listaDoble;
 
-    if (*pl == NULL)
-        return;
+    while (actual != NULL)
+    {
+        if (cmp (actual->dato, key) == 0)
+        {
+            NodoListaDoble *auxAnt = actual->ant;
+            NodoListaDoble *auxSig = actual->sig;
 
-    nodoElim = *pl;
-    ant = (*pl)->ant;
-    sig = (*pl)->sig;
+            if (returnDato != NULL)
+                memcpy (returnDato, actual->dato, ((tamDato < actual->tam) ? tamDato : actual->tam));
 
-    if (returnDato != NULL)
-        memcpy (returnDato, nodoElim->dato, ((tamDato < (*pl)->tam) ? tamDato : (*pl)->tam));
-    
-    if (ant != NULL)
-        ant->sig = sig;
-    else
-        *pl = sig;
-    if (sig != NULL)
-        sig->ant = ant;
+            if (auxAnt)
+                auxAnt->sig = auxSig;
+            else
+                *listaDoble = auxSig;
+            if (auxSig)
+                auxSig->ant = auxAnt;
 
-    accion (nodoElim->dato);
-    free (nodoElim->dato);
-    free (nodoElim);
+            accion (actual->dato);
+            free (actual->dato);
+            free (actual);
+
+            return 1;
+        }
+        actual = actual->sig;
+    }
+
+    return 0;
 }
 
-void lista_doble_vaciar_con_accion (ListaDoble *pl, void accion (void *dato))
+void lista_doble_vaciar_con_accion (ListaDoble *listaDoble, void accion (void *dato))
 {
     NodoListaDoble *nodoElim;
 
-    while (*pl != NULL)
+    while (*listaDoble != NULL)
     {
-        nodoElim = *pl;
-        *pl = (*pl)->sig;
+        nodoElim = *listaDoble;
+        *listaDoble = (*listaDoble)->sig;
         accion (nodoElim->dato);
         free (nodoElim->dato);
         free (nodoElim);

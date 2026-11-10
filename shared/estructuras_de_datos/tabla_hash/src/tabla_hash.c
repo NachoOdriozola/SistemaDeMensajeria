@@ -1,43 +1,47 @@
 #include "tabla_hash.h"
 
 
-int tabla_hash_crear (TablaHash *tablaHash, int cantBuckets)
+CodigoRetorno tabla_hash_crear (TablaHash *tablaHash, unsigned short int cantBuckets)
 {
     int i;
 
     if (cantBuckets <= 0)
-        return 0;
+    {
+        logs_escribir (LOG_ERROR, "tabla hash", "Creacion: cantidad de buckets invalida.");
+        return ERROR_OPERACION_INVALIDA;
+    }
 
     tablaHash->cantBuckets = cantBuckets;
     tablaHash->buckets = (ListaDoble*) malloc (cantBuckets * sizeof (ListaDoble));
     if (!tablaHash->buckets)
     {
-        perror ("ERROR - Sin memoria.\n");
-        return 1;
+        logs_escribir (LOG_ERROR, "tabla hash", "Creacion: sin memoria.");
+        return ERROR_SIN_MEMORIA;
     }
 
     for (i = 0; i < cantBuckets; i++)
         lista_doble_crear (&(tablaHash->buckets[i]));
 
-    return 0;
+    return EXITO;
 }
 
-int tabla_hash_insertar (TablaHash *tablaHash, const void *clave, int hash (const void*), const void *dato, unsigned tamDato)
+CodigoRetorno tabla_hash_insertar (TablaHash *tablaHash, const void *clave, int hash (const void*), const void *dato, size_t tamDato)
 {
-    return lista_doble_insertar_al_inicio (&(tablaHash->buckets[hash(clave)]), dato, tamDato);
+    if (lista_doble_insertar_al_inicio (&(tablaHash->buckets[hash(clave)]), dato, tamDato) != EXITO)
+    {
+        logs_escribir (LOG_ERROR, "tabla hash", "Insercion de dato: sin memoria.");
+        return ERROR_SIN_MEMORIA;
+    }
+
+    return EXITO;
 }
 
-void tabla_hash_vincular_nodo (TablaHash *tablaHash, const void *clave, int hash (const void*), NodoListaDoble *nodoAVincular)
+bool tabla_hash_buscar_elemento_con_clave (TablaHash *tablaHash, const void *clave, int hash (const void*), void **returnDato, int cmp (const void *a, const void *b))
 {
-    lista_doble_vincular_nodo_al_inicio (&(tablaHash->buckets[hash(clave)]), nodoAVincular);
+    return lista_doble_buscar_elemento_con_clave (&(tablaHash->buckets[hash(clave)]), clave, returnDato, cmp);
 }
 
-int tabla_hash_buscar_clave_unica (TablaHash *tablaHash, const void *clave, int hash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*))
-{
-    return lista_doble_buscar_clave_unica (&(tablaHash->buckets[hash(clave)]), clave, returnDato, tamDato, cmp);
-}
-
-void tabla_hash_map (TablaHash *tablaHash, void accion (void*))
+void tabla_hash_map (TablaHash *tablaHash, void accion (void *dato))
 {
     int i;
 
@@ -48,15 +52,62 @@ void tabla_hash_map (TablaHash *tablaHash, void accion (void*))
         lista_doble_map (&(tablaHash->buckets[i]), accion);
 }
 
-void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void*))
+CodigoRetorno tabla_hash_map_con_contexto_y_error (TablaHash *tablaHash, CodigoRetorno accion (void *dato, void *contexto), void *contexto)
+{
+    CodigoRetorno resultado;
+    int i;
+
+    if (tablaHash->buckets == NULL)
+        return EXITO;
+
+    for (i = 0; i < tablaHash->cantBuckets; i ++)
+    {
+        resultado = lista_doble_map_con_contexto_y_error (&(tablaHash->buckets[i]), accion, contexto);
+        if (resultado != EXITO)
+            return resultado;
+    }
+
+    return EXITO;
+}
+
+void tabla_hash_filter_con_accion (TablaHash *tablaHash, bool filtro (const void *dato), void accion (void *dato))
+{
+    int i;
+
+    if (tablaHash->buckets == NULL)
+        return;
+
+    for (i = 0; i < tablaHash->cantBuckets; i ++)
+        lista_doble_filter_con_accion (&(tablaHash->buckets[i]), filtro, accion);
+}
+
+void tabla_hash_mostrar (TablaHash *tablaHash, void mostrar (void *dato))
+{
+    int i;
+
+    if (tablaHash->buckets == NULL)
+        return;
+
+    for (i = 0; i < tablaHash->cantBuckets; i ++)
+    {
+        printf ("Bucket %d: ", i);
+        lista_doble_map (&(tablaHash->buckets[i]), mostrar);
+        puts ("");
+    }
+}
+
+void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void *dato))
 {
     int i;
 
     for (i = 0; i < tablaHash->cantBuckets; i ++)
         lista_doble_vaciar_con_accion (&(tablaHash->buckets[i]), accion);
 
-    free (tablaHash->buckets);
-    tablaHash->buckets = NULL;
+    if (tablaHash->buckets != NULL)
+    {
+        free (tablaHash->buckets);
+        tablaHash->buckets = NULL;
+    }
 }
 
 

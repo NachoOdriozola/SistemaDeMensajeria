@@ -18,6 +18,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "constantes.h"
+
+#include "logs.h"
+
 #include "lista_doble.h"
 
 
@@ -31,8 +35,8 @@
  */
 typedef struct
 {
-    ListaDoble *buckets;
-    unsigned short int cantBuckets;
+   ListaDoble *buckets;
+   unsigned short int cantBuckets;
 } TablaHash;
 
 
@@ -52,7 +56,7 @@ typedef struct
  * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
-int tabla_hash_crear (TablaHash *tablaHash, int cantBuckets);
+CodigoRetorno tabla_hash_crear (TablaHash *tablaHash, unsigned short int cantBuckets);
 
 /** \brief Insertar dato en la tabla hash.
  *
@@ -67,17 +71,7 @@ int tabla_hash_crear (TablaHash *tablaHash, int cantBuckets);
  * \return 0 si se ejecuto correctamente, 1 en caso de no poder asignar memoria.
  *
  */
-int tabla_hash_insertar (TablaHash *tablaHash, const void *clave, int hash (const void*), const void *dato, unsigned tamDato);
-
-/** \brief Vincula un nodo ya creado a la lista simple que pertenece al bucket de la clave.
- *
- * \param tablaHash Direccion de la tabla hash.
- * \param clave Puntero a la clave a la que se le aplicara la funcion hash para obtener el indice del bucket.
- * \param hash funcion hash que se le aplicara a la clave.
- * \param nodoAVincular Puntero al nodo a vincular.
- *
- */
-void tabla_hash_vincular_nodo (TablaHash *tablaHash, const void *clave, int hash (const void*), NodoListaDoble *nodoAVincular);
+CodigoRetorno tabla_hash_insertar (TablaHash *tablaHash, const void *clave, int hash (const void*), const void *dato, size_t tamDato);
 
 /** \brief Busca una clave unica en la lista simple que pertenece al bucket de la clave.
  *
@@ -91,7 +85,7 @@ void tabla_hash_vincular_nodo (TablaHash *tablaHash, const void *clave, int hash
  * \return 1 si encontro la clave, 0 en caso contrario.
  *
  */
-int tabla_hash_buscar_clave_unica (TablaHash *tablaHash, const void *clave, int hash (const void*), void *returnDato, unsigned tamDato, int cmp (const void*, const void*));
+bool tabla_hash_buscar_elemento_con_clave (TablaHash *tablaHash, const void *clave, int hash (const void*), void **returnDato, int cmp (const void *a, const void *b));
 
 /** \brief Funcion map sobre la tabla hash.
  *
@@ -101,7 +95,13 @@ int tabla_hash_buscar_clave_unica (TablaHash *tablaHash, const void *clave, int 
  * \param accion Funcion de accion a realizar sobre la tabla hash.
  *
  */
-void tabla_hash_map (TablaHash *tablaHash, void accion (void*));
+void tabla_hash_map (TablaHash *tablaHash, void accion (void *dato));
+
+CodigoRetorno tabla_hash_map_con_contexto_y_error (TablaHash *tablaHash, CodigoRetorno accion (void *dato, void *contexto), void *contexto);
+
+void tabla_hash_filter_con_accion (TablaHash *tablaHash, bool filtro (const void *dato), void accion (void *dato));
+
+void tabla_hash_mostrar (TablaHash *tablaHash, void mostrar (void *dato));
 
 /** \brief Elimina la tabla hash, realizando una accion sobre los datos previamente.
  *
@@ -111,7 +111,7 @@ void tabla_hash_map (TablaHash *tablaHash, void accion (void*));
  * \param accion Funcion de accion a realizar sobre los datos de los nodos antes de eliminarlos.
  *
  */
-void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void*));
+void tabla_hash_eliminar_con_accion (TablaHash *tablaHash, void accion (void *dato));
 
 
 #endif // TABLA_HASH_H_INCLUDED

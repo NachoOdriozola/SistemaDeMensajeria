@@ -1,72 +1,79 @@
 #include "cola.h"
 
-void cola_crear (Cola *c)
+void cola_crear (Cola *cola)
 {
-    c->pri = NULL;
-    c->ult = NULL;
+    cola->pri = NULL;
+    cola->ult = NULL;
 }
 
-int cola_insertar (Cola *c, void *dato, unsigned tamDato)
+CodigoRetorno cola_insertar (Cola *cola, const void *dato, size_t tamDato)
 {
     NodoCola *nuevoNodo;
 
     nuevoNodo = malloc (sizeof (NodoCola));
     if (!nuevoNodo)
-        return 1;
+    {
+        logs_escribir (LOG_ERROR, "cola", "Insercion de dato: sin memoria.");
+        return ERROR_SIN_MEMORIA;
+    }
 
     nuevoNodo->dato = malloc (tamDato);
     if (!nuevoNodo->dato)
-        return 1;
+    {
+        free (nuevoNodo);
+        logs_escribir (LOG_ERROR, "cola", "Insercion de dato: sin memoria.");
+        return ERROR_SIN_MEMORIA;
+    }
 
     memcpy (nuevoNodo->dato, dato, tamDato);
     nuevoNodo->tam = tamDato;
     nuevoNodo->sig = NULL;
 
-    if (c->pri == NULL)
-        c->pri = nuevoNodo;
+    if (cola->pri == NULL)
+        cola->pri = nuevoNodo;
 
-    if (c->ult == NULL)
-        c->ult = nuevoNodo;
+    if (cola->ult == NULL)
+        cola->ult = nuevoNodo;
     else
     {
-        c->ult->sig = nuevoNodo;
-        c->ult = nuevoNodo;
+        cola->ult->sig = nuevoNodo;
+        cola->ult = nuevoNodo;
     }
 
-    return 0;
+    return EXITO;
 }
 
-void cola_sacar (Cola *c, void *returnDato, unsigned tamDato)
+void cola_sacar (Cola *cola, void *returnDato, size_t tamDato)
 {
     NodoCola *nodoElim;
 
-    if (c->pri == NULL)
+    if (cola->pri == NULL)
         return;
 
-    nodoElim = c->pri;
-    c->pri = nodoElim->sig;
-    if (c->pri == NULL)
-        c->ult = NULL;
+    nodoElim = cola->pri;
+    cola->pri = nodoElim->sig;
+    if (cola->pri == NULL)
+        cola->ult = NULL;
     memcpy (returnDato, nodoElim->dato, ((tamDato < nodoElim->tam) ? tamDato : nodoElim->tam));
     free (nodoElim->dato);
     free (nodoElim);
 }
 
-bool cola_no_esta_vacia (Cola *c)
+bool cola_no_esta_vacia (Cola *cola)
 {
-    return (c->pri != NULL);
+    return (cola->pri != NULL);
 }
 
-void cola_vaciar (Cola *c)
+void cola_vaciar (Cola *cola)
 {
     NodoCola *nodoElim;
 
-    while (c->pri != NULL)
+    while (cola->pri != NULL)
     {
-        nodoElim = c->pri;
-        c->pri = nodoElim->sig;
+        nodoElim = cola->pri;
+        cola->pri = nodoElim->sig;
         free (nodoElim->dato);
         free (nodoElim);
     }
-    c->ult = NULL;
+    cola->ult = NULL;
 }
